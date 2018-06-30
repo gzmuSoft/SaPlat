@@ -4,11 +4,16 @@ import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
+import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
+import io.jboot.admin.validator.RegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.SecurityUtils;
@@ -17,6 +22,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
+
+import java.util.List;
 
 /**
  * 主控制器
@@ -28,6 +35,9 @@ public class MainController extends BaseController {
 
     @JbootrpcService
     private UserService userService;
+
+    @JbootrpcService
+    private RoleService roleService;
 
     public void index() {
         render("index.html");
@@ -41,8 +51,32 @@ public class MainController extends BaseController {
         }
     }
 
+    public void register() {
+        List<Role> roleList = roleService.findByStatusUsed();
+        setAttr("roleList", roleList).render("add.html");
+        render("register.html");
+    }
+
     public void captcha() {
         renderCaptcha();
+    }
+
+    @Before({POST.class, RegisterValidator.class})
+    public void postRegister(){
+        User sysUser = getBean(User.class, "user");
+        System.out.println(sysUser.toJson());
+        Long[] roles = getParaValuesToLong("userRole");
+
+        if (userService.hasUser(sysUser.getName())) {
+            throw new BusinessException("用户名已经存在");
+        }
+
+        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        if (!userService.saveUser(sysUser, roles)) {
+            throw new BusinessException("保存失败");
+        }
+
+        renderJson(RestResult.buildSuccess());
     }
 
     @Before( {POST.class, LoginValidator.class} )
