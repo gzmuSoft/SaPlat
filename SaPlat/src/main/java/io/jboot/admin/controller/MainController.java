@@ -63,14 +63,13 @@ public class MainController extends BaseController {
     @Before({POST.class, RegisterValidator.class})
     public void postRegister(){
         User sysUser = getBean(User.class, "user");
-        System.out.println(sysUser.toJson());
         Long[] roles = getParaValuesToLong("userRole");
 
         if (userService.hasUser(sysUser.getName())) {
             throw new BusinessException("用户名已经存在");
         }
 
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysUser.setLastUpdAcct("register");
         if (!userService.saveUser(sysUser, roles)) {
             throw new BusinessException("保存失败");
         }
