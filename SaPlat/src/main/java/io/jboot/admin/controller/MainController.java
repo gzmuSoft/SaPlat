@@ -53,8 +53,7 @@ public class MainController extends BaseController {
 
     public void register() {
         List<Role> roleList = roleService.findByStatusUsed();
-        setAttr("roleList", roleList).render("add.html");
-        render("register.html");
+        setAttr("roleList", roleList).render("register.html");
     }
 
     public void captcha() {
