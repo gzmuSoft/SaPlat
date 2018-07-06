@@ -23,6 +23,8 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,7 +54,13 @@ public class MainController extends BaseController {
     }
 
     public void register() {
-        List<Role> roleList = roleService.findByStatusUsed();
+        List<Role> roleList = Collections.synchronizedList(new ArrayList<Role> ());
+        roleService.findByStatusUsed().forEach(role -> {
+            if ("1".equals(role.getStatus())){
+                roleList.add(role);
+            }
+        });
+        roleList.remove(0);
         setAttr("roleList", roleList).render("register.html");
     }
 
@@ -60,22 +68,6 @@ public class MainController extends BaseController {
         renderCaptcha();
     }
 
-    @Before({POST.class, RegisterValidator.class})
-    public void postRegister(){
-        User sysUser = getBean(User.class, "user");
-        Long[] roles = getParaValuesToLong("userRole");
-
-        if (userService.hasUser(sysUser.getName())) {
-            throw new BusinessException("用户名已经存在");
-        }
-
-        sysUser.setLastUpdAcct("register");
-        if (!userService.saveUser(sysUser, roles)) {
-            throw new BusinessException("保存失败");
-        }
-
-        renderJson(RestResult.buildSuccess());
-    }
 
     @Before( {POST.class, LoginValidator.class} )
     public void postLogin() {
