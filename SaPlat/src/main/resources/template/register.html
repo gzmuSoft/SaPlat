@@ -11,99 +11,25 @@
 <body class="login-body body">
 
 <div class="login-box">
-    <form id="addForm" class="layui-form" action="">
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>用户名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="user.name" placeholder="用户名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>登录密码</label>
-            <div class="layui-input-block">
-                <input type="password" name="user.pwd" placeholder="登录密码" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">电话号码</label>
-            <div class="layui-input-block">
-                <input type="text" name="user.phone" placeholder="电话号码" class="layui-input" value="" autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">邮箱</label>
-            <div class="layui-input-block">
-                <input type="text" name="user.email" placeholder="邮箱" class="layui-input" value="" autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户角色</label>
-            <div class="layui-input-block">
-                #for (role : roleList)
-                <input type="checkbox" name="userRole" value="#(role.id)" title="#(role.name)">
-                #end
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block">
-                <select id='status' name="user.status" lay-verify="required">
-                    <option></option>
-                    #statusOption(io.jboot.admin.service.entity.status.system.UserStatus::me(), '1')
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
-                保存
-            </button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
-    </form>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>欢迎注册</legend>
+    </fieldset>
+    #for (role : roleList)
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn-fluid" value="#(role.id)" id="#(role.lastUpdAcct)">#(role.name)</button>
+    </div>
+    #end
 </div>
 
 #include("/template/common/include/_js.html")
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
-        // 操作对象
-        var form = layui.form
-            , layer = layui.layer
-            , $ = layui.jquery;
 
-        // 表单验证
-        // ......
-
-        // 提交监听
-        form.on('submit(sub)', function (data) {
-            util.sendAjax ({
-                type: 'POST',
-                url: '#(ctxPath)/postRegister',
-                data: $.param(data.field),
-                loadFlag: true,
-                success : function(data) {
-                    setTimeout(function () {
-                        window.location.href = "/";
-                    },3000);
-                },
-                complete : function() {
-                    // 刷新验证码
-                    $("#captchaImg").attr('src', '#(ctxPath)/captcha?'+Math.random());
-                }
-            });
-
-            return false;
-        });
-        $(document).on('click','#login',function(){
-            window.location.href = "/login";
-        });
-    })
+    $("button").each(function () {
+       $(this).click(function () {
+           console.log("/app/" + $(this).attr("id") + "/register");
+           window.location.href = "/app/" + $(this).attr("id") + "/register";
+       });
+    });
 
 </script>
 </body>
