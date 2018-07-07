@@ -13,7 +13,7 @@
 <div class="login-box">
     <form class="layui-form layui-form-pane" method="get" action="">
         <div class="layui-form-item">
-            <h3>#(APP.name)个人群体注册</h3>
+            <h3>#(APP.name)</h3>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>账号(名称)</label>
@@ -61,7 +61,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="person.email" placeholder="邮箱" required lay-verify="email" autocomplete="off" class="layui-input">
+                <input type="text" name="user.email" placeholder="邮箱" required lay-verify="email" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -98,10 +98,13 @@
                 data: $.param(data.field),
                 loadFlag: true,
                 success : function(data) {
-                    window.location.href = "/";
+                    layer.msg('注册成功，正在跳转！');
+                    setTimeout(function () {
+                        window.location.href = "#(ctxPath)/";
+                    },3000);
                 },
-                complete : function() {
-
+                error : function (data) {
+                    console.log(data);
                 }
             });
 
