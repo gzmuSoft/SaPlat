@@ -1,4 +1,4 @@
-package io.jboot.admin.validator;
+package io.jboot.admin.validator.app;
 
 import com.jfinal.core.Controller;
 import io.jboot.admin.base.web.base.JsonValidator;
@@ -12,10 +12,8 @@ public class PersonRegisterValidator extends JsonValidator {
 
     @Override
     protected void validate(Controller c) {
-        validateString("person.name",1,16,"账号请在1-16位");
-        System.out.println(c.getPara("user.pwd"));
-        System.out.println(c.getPara("rePwd"));
-        System.out.println(c.getPara("user.pwd").equals(c.getPara("rePwd")));
+        validateString("person.name",4,16,"账号请在4-16位");
+        validateString("user.pwd", 6, 16, "密码长度6-16");
         if (!c.getPara("user.pwd").equals(c.getPara("rePwd"))){
             addError("两次密码输入不一致");
         }
