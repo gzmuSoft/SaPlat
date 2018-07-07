@@ -13,7 +13,6 @@ import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
-//import io.jboot.admin.validator.RegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.SecurityUtils;
@@ -23,8 +22,6 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,12 +51,7 @@ public class MainController extends BaseController {
     }
 
     public void register() {
-        List<Role> roleList = Collections.synchronizedList(new ArrayList<Role> ());
-        roleService.findByStatusUsed().forEach(role -> {
-            if ("1".equals(role.getStatus())){
-                roleList.add(role);
-            }
-        });
+        List<Role> roleList = roleService.findByStatusUsed();
         roleList.remove(0);
         setAttr("roleList", roleList).render("register.html");
     }
