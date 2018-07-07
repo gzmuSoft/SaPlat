@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Person;
+import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
@@ -53,6 +54,19 @@ public interface PersonService  {
 
 
     /**
+<<<<<<< HEAD
+     * 保存个人群体并创建用户
+     * @param model 个人
+     * @param user 用户
+     * @param roles 用户权限
+     * @return 执行结果
+     */
+    public boolean savePerson(Person model, User user, Long[] roles);
+
+
+    /**
+=======
+>>>>>>> origin/master
      * save or update model
      *
      * @param model
