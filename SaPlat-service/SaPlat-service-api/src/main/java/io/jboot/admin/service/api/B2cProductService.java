@@ -2,15 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Person;
-<<<<<<< HEAD
-import io.jboot.admin.service.entity.model.User;
-=======
->>>>>>> origin/master
+import io.jboot.admin.service.entity.model.B2cProduct;
 
 import java.util.List;
 
-public interface PersonService  {
+public interface B2cProductService  {
 
     /**
      * find model by primary key
@@ -18,15 +14,15 @@ public interface PersonService  {
      * @param id
      * @return
      */
-    public Person findById(Object id);
+    public B2cProduct findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <Person
+     * @return all <B2cProduct
      */
-    public List<Person> findAll();
+    public List<B2cProduct> findAll();
 
 
     /**
@@ -44,7 +40,7 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean delete(Person model);
+    public boolean delete(B2cProduct model);
 
 
     /**
@@ -53,29 +49,16 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean save(Person model);
+    public boolean save(B2cProduct model);
 
 
     /**
-<<<<<<< HEAD
-     * 保存个人群体并创建用户
-     * @param model 个人
-     * @param user 用户
-     * @param roles 用户权限
-     * @return 执行结果
-     */
-    public boolean savePerson(Person model, User user, Long[] roles);
-
-
-    /**
-=======
->>>>>>> origin/master
      * save or update model
      *
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Person model);
+    public boolean saveOrUpdate(B2cProduct model);
 
 
     /**
@@ -84,7 +67,7 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean update(Person model);
+    public boolean update(B2cProduct model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

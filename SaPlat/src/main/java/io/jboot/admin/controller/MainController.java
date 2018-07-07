@@ -4,12 +4,14 @@ import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
+import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -20,8 +22,6 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
