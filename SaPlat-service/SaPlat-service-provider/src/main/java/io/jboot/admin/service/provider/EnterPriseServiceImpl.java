@@ -9,6 +9,6 @@ import javax.inject.Singleton;
 
 @Bean
 @Singleton
-public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implements EnterpriseService {
+public class EnterPriseServiceImpl extends JbootServiceBase<Enterprise> implements EnterpriseService {
 
 }
