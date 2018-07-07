@@ -26,4 +26,9 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         return Db.tx(() -> userService.saveUser(user, roles) && save(model));
     }
 
+    @Override
+    public Person findByUser(User user) {
+        return  DAO.findFirstByColumn("name", user.getName());
+    }
+
 }
