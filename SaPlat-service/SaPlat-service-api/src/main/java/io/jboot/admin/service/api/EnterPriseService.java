@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.EnterPrise;
+import io.jboot.admin.service.entity.model.Enterprise;
 
 import java.util.List;
 
-public interface EnterPriseService {
+public interface EnterpriseService  {
 
     /**
      * find model by primary key
@@ -14,7 +14,7 @@ public interface EnterPriseService {
      * @param id
      * @return
      */
-    public EnterPrise findById(Object id);
+    public Enterprise findById(Object id);
 
 
     /**
@@ -22,7 +22,7 @@ public interface EnterPriseService {
      *
      * @return all <Enterprise
      */
-    public List<EnterPrise> findAll();
+    public List<Enterprise> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface EnterPriseService {
      * @param model
      * @return
      */
-    public boolean delete(EnterPrise model);
+    public boolean delete(Enterprise model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface EnterPriseService {
      * @param model
      * @return
      */
-    public boolean save(EnterPrise model);
+    public boolean save(Enterprise model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface EnterPriseService {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(EnterPrise model);
+    public boolean saveOrUpdate(Enterprise model);
 
 
     /**
@@ -67,7 +67,7 @@ public interface EnterPriseService {
      * @param model
      * @return
      */
-    public boolean update(EnterPrise model);
+    public boolean update(Enterprise model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
