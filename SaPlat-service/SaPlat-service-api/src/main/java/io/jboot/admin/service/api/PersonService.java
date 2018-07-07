@@ -3,10 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Person;
-<<<<<<< HEAD
 import io.jboot.admin.service.entity.model.User;
-=======
->>>>>>> origin/master
 
 import java.util.List;
 
