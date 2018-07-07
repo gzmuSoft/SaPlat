@@ -16,6 +16,27 @@ public interface ExpertGroupService  {
      */
     public ExpertGroup findById(Object id);
 
+    /**
+     * 分页查询系统 专家团体 信息
+     * @param expert_group 专家团体
+     * @return 页
+     */
+    public Page<ExpertGroup> findPage(ExpertGroup expert_group, int pageNumber, int pageSize);
+
+    /**
+     * 根据书名查询 专家团体 信息
+     * @param name
+     * @return
+     */
+    public ExpertGroup findByName(String name);
+
+
+    /**
+     * 专家团体 是否存在
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean hasExpertGroup(String name);
 
     /**
      * find all model
