@@ -33,7 +33,7 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -43,16 +43,16 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/book/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val(), $('#des').val());
                         },
@@ -61,15 +61,15 @@
                         }
                     })
                 });
-            } else if(obj.event === 'edit'){
-                pop_show('编辑书籍','#(ctxPath)/system/book/update?id=' + data.id,'','', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑书籍', '#(ctxPath)/system/book/update?id=' + data.id, '', '', function () {
                     reloadTable($('#name').val(), $('#des').val());
                 });
             }
         });
 
-        $("#add").click(function(){
-            pop_show('添加书籍','#(ctxPath)/system/book/add','','', function(){
+        $("#add").click(function () {
+            pop_show('添加书籍', '#(ctxPath)/system/book/add', '', '', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
@@ -77,11 +77,11 @@
         reloadTable = function (name, des) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/book/tableData'
-                ,where: {name: name, des: des} //设定异步数据接口的额外参数
+                , where: {name: name, des: des} //设定异步数据接口的额外参数
             });
         };
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.name, data.field.des);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -92,34 +92,35 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" action="" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">书籍名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" placeholder="书籍名称" class="layui-input"/>
-                    </div>
-                    <label class="layui-form-label">书籍描述</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="des" name="des" placeholder="书籍描述" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">书籍名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="书籍名称" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">书籍描述</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="des" name="des" placeholder="书籍描述" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <div class="layui-btn-group">
-                #shiroHasPermission('/system/book/add')
-                <button id="add" class="layui-btn layui-btn-small">添加书籍111</button>
-                #end
-            </div>
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            #shiroHasPermission('/system/book/add')
+            <button id="add" class="layui-btn layui-btn-small">添加书籍111</button>
+            #end
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/system/book/update')
