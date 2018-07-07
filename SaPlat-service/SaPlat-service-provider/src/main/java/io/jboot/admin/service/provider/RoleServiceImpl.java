@@ -83,4 +83,9 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
     public List<Role> findByStatusUsed() {
         return DAO.findListByColumn("status", RoleStatus.USED);
     }
+
+    @Override
+    public Role findByName(String name) {
+        return DAO.findFirstByColumn("name", name);
+    }
 }
