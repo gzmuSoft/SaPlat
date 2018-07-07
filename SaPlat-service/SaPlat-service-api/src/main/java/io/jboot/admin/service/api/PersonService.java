@@ -19,6 +19,14 @@ public interface PersonService  {
 
 
     /**
+     * find model by user
+     *
+     * @param user
+     * @return
+     */
+    public Person findByUser(User user);
+
+    /**
      * find all model
      *
      * @return all <Person
