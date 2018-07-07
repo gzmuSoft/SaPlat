@@ -30,6 +30,15 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#worktime' //指定元素
+        });
+    });
 </script>
 #end
 
@@ -39,14 +48,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
-                <input type="text" name="expert_group.name" placeholder="名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
             <div class="layui-input-block">
-                <input type="text" name="expert_group.worktime" placeholder="工作时间" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+                <input id="worktime" type="text" name="model.worktime" placeholder="工作时间" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
