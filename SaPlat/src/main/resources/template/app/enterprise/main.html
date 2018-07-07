@@ -25,11 +25,10 @@
             , cols: [[                  //标题栏
                 {checkbox: false, sort: true, fixed: true, space: true}
                 , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '书籍名称', width: 100}
-                , {field: 'des', title: '描述', width: 200}
+                , {field: 'name', title: '名称', width: 100}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/system/book/tableData'
+            , url: '#(ctxPath)/app/enterprise/tableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -49,7 +48,7 @@
                 layer.confirm('真的删除行么', function (index) {
                     util.sendAjax({
                         type: 'POST',
-                        url: '#(ctxPath)/system/book/delete',
+                        url: '#(ctxPath)/app/enterprise/delete',
                         data: {id: data.id},
                         loadFlag: true,
                         success: function (data) {
@@ -62,21 +61,47 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑书籍', '#(ctxPath)/system/book/update?id=' + data.id, '', '', function () {
+                pop_show('编辑企业机构', '#(ctxPath)/app/enterprise/update?id=' + data.id, '500', '210', function () {
                     reloadTable($('#name').val(), $('#des').val());
+                });
+            } else if(obj.event === 'use'){
+                util.sendAjax ({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/enterprise/use',
+                    data: {id : data.id},
+                    loadFlag: true,
+                    success : function(data){
+                        reloadTable($('#name').val());
+                    }
+                });
+            } else if(obj.event === 'unuse'){
+                layer.confirm('确定禁用该企业机构吗', function(index){
+                    util.sendAjax ({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/enterprise/unuse',
+                        data: {id : data.id},
+                        loadFlag: true,
+                        success : function(data){
+                            layer.close(index);
+                            reloadTable($('#name').val());
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    });
                 });
             }
         });
 
         $("#add").click(function () {
-            pop_show('添加书籍', '#(ctxPath)/system/book/add', '', '', function () {
+            pop_show('添加企业机构', '#(ctxPath)/app/enterprise/add', '500', '210', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
 
         reloadTable = function (name, des) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/system/book/tableData'
+                url: '#(ctxPath)/app/enterprise/tableData'
                 , where: {name: name, des: des} //设定异步数据接口的额外参数
             });
         };
@@ -96,13 +121,9 @@
     <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label">书籍名称</label>
+                <label class="layui-form-label">名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="name" name="name" placeholder="书籍名称" class="layui-input"/>
-                </div>
-                <label class="layui-form-label">书籍描述</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="des" name="des" placeholder="书籍描述" class="layui-input"/>
+                    <input type="text" id="name" name="name" placeholder="企业机构名称" class="layui-input"/>
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
@@ -114,8 +135,8 @@
     <hr>
     <div class="layui-row">
         <div class="layui-btn-group">
-            #shiroHasPermission('/system/book/add')
-            <button id="add" class="layui-btn layui-btn-small">添加书籍111</button>
+            #shiroHasPermission('/app/enterprise/add')
+            <button id="add" class="layui-btn layui-btn-small">添加企业机构</button>
             #end
         </div>
         <table id="dateTable" lay-filter="dateTable"></table>
@@ -123,11 +144,31 @@
 </div>
 
 <script type="text/html" id="barOption">
-    #shiroHasPermission('/system/book/update')
+    #shiroHasPermission('/app/enterprise/update')
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     #end
 
-    #shiroHasPermission('/system/book/delete')
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    #shiroHasPermission('/app/enterprise/use')
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="use">启用</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.status == '1'){ }}
+    ]]#
+    #shiroHasPermission('/app/enterprise/unuse')
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="unuse">禁用</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+    #shiroHasPermission('/app/enterprise/delete')
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     #end
 </script>

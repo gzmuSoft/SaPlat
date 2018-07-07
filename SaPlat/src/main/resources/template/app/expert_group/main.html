@@ -69,6 +69,32 @@
                 pop_show('编辑专家团体','#(ctxPath)/app/expert_group/update?id=' + data.id,'','', function(){
                     reloadTable($('#name').val(), $('#des').val());
                 });
+            } else if(obj.event === 'use'){
+                util.sendAjax ({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/expert_group/use',
+                    data: {id : data.id},
+                    loadFlag: true,
+                    success : function(data){
+                        reloadTable($('#name').val());
+                    }
+                });
+            } else if(obj.event === 'unuse'){
+                layer.confirm('确定禁用该专家团体吗', function(index){
+                    util.sendAjax ({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/expert_group/unuse',
+                        data: {id : data.id},
+                        loadFlag: true,
+                        success : function(data){
+                            layer.close(index);
+                            reloadTable($('#name').val());
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
 
@@ -100,7 +126,7 @@
         <form id="searchForm" class="layui-form x-center" action="" >
             <div class="layui-form-pane">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">专家团体名称</label>
+                    <label class="layui-form-label">名称</label>
                     <div class="layui-input-inline">
                         <input type="text" id="name" name="name" placeholder="专家团体名称" class="layui-input"/>
                     </div>
@@ -125,6 +151,26 @@
     #shiroHasPermission('/app/expert_group/update')
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     #end
+
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    #shiroHasPermission('/app/expert_group/use')
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="use">启用</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.status == '1'){ }}
+    ]]#
+    #shiroHasPermission('/app/expert_group/unuse')
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="unuse">禁用</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
 
     #shiroHasPermission('/app/expert_group/delete')
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>

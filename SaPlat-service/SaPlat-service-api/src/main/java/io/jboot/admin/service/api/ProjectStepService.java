@@ -2,12 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Person;
-import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.ProjectStep;
 
 import java.util.List;
 
-public interface PersonService  {
+public interface ProjectStepService  {
 
     /**
      * find model by primary key
@@ -15,15 +14,36 @@ public interface PersonService  {
      * @param id
      * @return
      */
-    public Person findById(Object id);
+    public ProjectStep findById(Object id);
 
     /**
      * find all model
      *
-     * @return all <Person
+     * @return all <ProjectStep
      */
-    public List<Person> findAll();
+    public List<ProjectStep> findAll();
 
+    /**
+     * 分页查询 项目阶段 信息
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<ProjectStep> findPage(ProjectStep model, int pageNumber, int pageSize);
+
+    /**
+     * 根据名称查询 项目阶段 信息
+     * @param name
+     * @return
+     */
+    public ProjectStep findByName(String name);
+
+
+    /**
+     * 项目阶段 是否存在
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
 
     /**
      * delete model by primary key
@@ -40,7 +60,7 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean delete(Person model);
+    public boolean delete(ProjectStep model);
 
 
     /**
@@ -49,32 +69,8 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean save(Person model);
+    public boolean save(ProjectStep model);
 
-
-    /**
-     * 保存个人群体并创建用户
-     * @param model 个人
-     * @param user 用户
-     * @param roles 用户权限
-     * @return 执行结果
-     */
-    public boolean savePerson(Person model, User user, Long[] roles);
-
-    /**
-     * 通过用户获取个人群体
-     * @param user 用户
-     * @return 个人群体
-     */
-    public Person findByUser(User user);
-
-    /**
-     * 更新资料
-     * @param person 个人群体
-     * @param user 用户
-     * @return
-     */
-    public boolean update(Person person,User user);
 
     /**
      * save or update model
@@ -82,7 +78,7 @@ public interface PersonService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Person model);
+    public boolean saveOrUpdate(ProjectStep model);
 
 
     /**
@@ -91,7 +87,7 @@ public interface PersonService  {
      * @param model
      * @return
      */
-    public boolean update(Person model);
+    public boolean update(ProjectStep model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

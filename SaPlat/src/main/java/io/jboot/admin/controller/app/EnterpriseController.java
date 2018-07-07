@@ -6,8 +6,9 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.ExpertGroupService;
-import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.admin.service.api.EnterpriseService;
+import io.jboot.admin.service.entity.model.Enterprise;
+import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -22,11 +23,11 @@ import java.util.Date;
  * -----------------------------
  * @date 10:05 2018/7/2
  */
-@RequestMapping("/app/expert_group")
-public class ExpertGroupController extends BaseController{
+@RequestMapping("/app/enterprise")
+public class EnterpriseController extends BaseController{
 
     @JbootrpcService
-    private ExpertGroupService expertGroupService;
+    private EnterpriseService enterpriseService;
 
     /**
      * index
@@ -41,12 +42,12 @@ public class ExpertGroupController extends BaseController{
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
 
-        ExpertGroup model = new ExpertGroup();
+        Enterprise model = new Enterprise();
         model.setName(getPara("name"));
 
-        Page<ExpertGroup> page = expertGroupService.findPage(model, pageNumber, pageSize);
+        Page<Enterprise> page = enterpriseService.findPage(model, pageNumber, pageSize);
 
-        renderJson(new DataTable<ExpertGroup>(page));
+        renderJson(new DataTable<Enterprise>(page));
     }
 
     /**
@@ -54,7 +55,7 @@ public class ExpertGroupController extends BaseController{
      */
     public void delete(){
         Long id = getParaToLong("id");
-        if (!expertGroupService.deleteById(id)){
+        if (!enterpriseService.deleteById(id)){
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -63,7 +64,7 @@ public class ExpertGroupController extends BaseController{
     @NotNullPara({"id"})
     public void update(){
         Long id = getParaToLong("id");
-        ExpertGroup model = expertGroupService.findById(id);
+        Enterprise model = enterpriseService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
@@ -72,37 +73,37 @@ public class ExpertGroupController extends BaseController{
     }
 
     public void postAdd(){
-        ExpertGroup model = getBean(ExpertGroup.class, "model");
-        if (expertGroupService.hasExpertGroup(model.getName())){
-            throw new BusinessException("所指定的专家团体名称已存在");
+        Enterprise model = getBean(Enterprise.class, "model");
+        if (enterpriseService.isExisted(model.getName())){
+            throw new BusinessException("所指定的项目阶段名称已存在");
         }
         model.setIsEnable(1);
-        if (!expertGroupService.save(model)){
+        if (!enterpriseService.save(model)){
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     public void postUpdate(){
-        ExpertGroup model = getBean(ExpertGroup.class, "model");
-        ExpertGroup byId = expertGroupService.findById(model.getId());
+        Enterprise model = getBean(Enterprise.class, "model");
+        Enterprise byId = enterpriseService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的专家团体名称不存在");
+            throw new BusinessException("所指定的项目阶段名称不存在");
         }
-        if (!expertGroupService.update(model)){
+        if (!enterpriseService.update(model)){
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     /**
-     * 启用专家团体
+     * 启用企业机构
      */
     @NotNullPara({"id"})
     public void use() {
         Long id = getParaToLong("id");
 
-        ExpertGroup model = expertGroupService.findById(id);
+        Enterprise model = enterpriseService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -111,7 +112,7 @@ public class ExpertGroupController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("启用对象");
 
-        if (!expertGroupService.update(model)) {
+        if (!enterpriseService.update(model)) {
             throw new BusinessException("启用失败");
         }
 
@@ -119,13 +120,13 @@ public class ExpertGroupController extends BaseController{
     }
 
     /**
-     * 禁用专家团体
+     * 禁用企业机构
      */
     @NotNullPara({"id"})
     public void unuse() {
         Long id = getParaToLong("id");
 
-        ExpertGroup model = expertGroupService.findById(id);
+        Enterprise model = enterpriseService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -134,7 +135,7 @@ public class ExpertGroupController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("禁用对象");
 
-        if (!expertGroupService.update(model)) {
+        if (!enterpriseService.update(model)) {
             throw new BusinessException("禁用失败");
         }
 

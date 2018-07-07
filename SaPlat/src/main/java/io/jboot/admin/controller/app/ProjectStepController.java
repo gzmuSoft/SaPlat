@@ -9,8 +9,12 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectStepService;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.ProjectStep;
+import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * -----------------------------
@@ -39,10 +43,10 @@ public class ProjectStepController extends BaseController{
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
 
-        ProjectStep project_step = new ProjectStep();
-        project_step.setName(getPara("name"));
+        ProjectStep model = new ProjectStep();
+        model.setName(getPara("name"));
 
-        Page<ProjectStep> page = projectStepService.findPage(project_step, pageNumber, pageSize);
+        Page<ProjectStep> page = projectStepService.findPage(model, pageNumber, pageSize);
 
         renderJson(new DataTable<ProjectStep>(page));
     }
@@ -61,8 +65,8 @@ public class ProjectStepController extends BaseController{
     @NotNullPara({"id"})
     public void update(){
         Long id = getParaToLong("id");
-        ProjectStep project_step = projectStepService.findById(id);
-        setAttr("expert_group", project_step).render("update.html");
+        ProjectStep model = projectStepService.findById(id);
+        setAttr("model", model).render("update.html");
     }
 
     public void add(){
@@ -70,25 +74,71 @@ public class ProjectStepController extends BaseController{
     }
 
     public void postAdd(){
-        ProjectStep project_step = getBean(ProjectStep.class, "project_step");
-        if (projectStepService.hasProjectStep(project_step.getName())){
-            throw new BusinessException("所指定的专家团体名称已存在");
+        ProjectStep model = getBean(ProjectStep.class, "model");
+        if (projectStepService.isExisted(model.getName())){
+            throw new BusinessException("所指定的项目阶段名称已存在");
         }
-        if (!projectStepService.save(project_step)){
+        model.setIsEnable(true);
+        if (!projectStepService.save(model)){
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     public void postUpdate(){
-        ProjectStep project_step = getBean(ProjectStep.class, "project_step");
-        ProjectStep byId = projectStepService.findById(project_step.getId());
+        ProjectStep model = getBean(ProjectStep.class, "model");
+        ProjectStep byId = projectStepService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的专家团体名称不存在");
+            throw new BusinessException("所指定的项目阶段名称不存在");
         }
-        if (!projectStepService.update(project_step)){
+        if (!projectStepService.update(model)){
             throw new BusinessException("修改失败");
         }
+        renderJson(RestResult.buildSuccess());
+    }
+    /**
+     * 启用项目阶段
+     */
+    @NotNullPara({"id"})
+    public void use() {
+        Long id = getParaToLong("id");
+
+        ProjectStep model = projectStepService.findById(id);
+        if (model == null) {
+            throw new BusinessException("对象不存在");
+        }
+
+        model.setStatus(DataStatus.USED);
+        model.setLastAccessTime(new Date());
+        model.setRemark("启用对象");
+
+        if (!projectStepService.update(model)) {
+            throw new BusinessException("启用失败");
+        }
+
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 禁用项目阶段
+     */
+    @NotNullPara({"id"})
+    public void unuse() {
+        Long id = getParaToLong("id");
+
+        ProjectStep model = projectStepService.findById(id);
+        if (model == null) {
+            throw new BusinessException("对象不存在");
+        }
+
+        model.setStatus(DataStatus.UNUSED);
+        model.setLastAccessTime(new Date());
+        model.setRemark("禁用对象");
+
+        if (!projectStepService.update(model)) {
+            throw new BusinessException("禁用失败");
+        }
+
         renderJson(RestResult.buildSuccess());
     }
 }

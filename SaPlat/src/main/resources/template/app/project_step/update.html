@@ -19,7 +19,7 @@
 
             util.sendAjax ({
                 type: 'POST',
-                url: '#(ctxPath)/app/expert_group/postUpdate',
+                url: '#(ctxPath)/app/project_step/postUpdate',
                 data: $('#addForm').serialize(),
                 loadFlag: true,
                 success : function(data){
@@ -36,21 +36,13 @@
 #define content()
 <div class="x-body">
     <form id="addForm" class="layui-form" action="">
-        <input type="hidden" name="book.id" value="#(book.id)">
+        <input type="hidden" name="model.id" value="#(model.id)">
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>书籍名称</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="书籍名称" class="layui-input" value="#(book.name)" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="#(model.name)" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">书籍描述</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.des" placeholder="书籍描述" class="layui-input" value="#(book.des)" autocomplete="off"/>
-            </div>
-        </div>
-
 
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
