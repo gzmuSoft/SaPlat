@@ -54,7 +54,6 @@ public interface PersonService  {
 
 
     /**
-<<<<<<< HEAD
      * 保存个人群体并创建用户
      * @param model 个人
      * @param user 用户
@@ -63,10 +62,22 @@ public interface PersonService  {
      */
     public boolean savePerson(Person model, User user, Long[] roles);
 
+    /**
+     * 通过用户获取个人群体
+     * @param user 用户
+     * @return 个人群体
+     */
+    public Person findByUser(User user);
 
     /**
-=======
->>>>>>> origin/master
+     * 更新资料
+     * @param person 个人群体
+     * @param user 用户
+     * @return
+     */
+    public boolean update(Person person,User user);
+
+    /**
      * save or update model
      *
      * @param model
