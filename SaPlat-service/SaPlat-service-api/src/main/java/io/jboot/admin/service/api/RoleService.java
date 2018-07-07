@@ -34,7 +34,15 @@ public interface RoleService  {
      * @return
      */
     public List<Role> findByStatusUsed();
-    
+
+    /**
+     * 通过名字查询权限
+     * @param name 名称
+     * @return 权限
+     */
+    public Role findByName(String name);
+
+
     /**
      * 根据ID查找model
      *
