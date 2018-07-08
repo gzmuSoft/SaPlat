@@ -70,6 +70,7 @@ public interface OrganizationService  {
      */
     public boolean update(Organization model);
 
+
     public boolean saveOrganization(Organization model, User user, Long[] roles);
 
     public void join(Page<? extends Model> page, String joinOnField);

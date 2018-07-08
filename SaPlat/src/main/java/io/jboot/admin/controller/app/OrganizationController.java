@@ -51,6 +51,7 @@ public class OrganizationController extends BaseController{
             renderJson(RestResult.buildError("用户名已存在"));
             throw new BusinessException("用户名已存在");
         }
+
         organization.setCreateTime(new Date());
         organization.setLastAccessTime(new Date());
         organization.setIsEnable(1);

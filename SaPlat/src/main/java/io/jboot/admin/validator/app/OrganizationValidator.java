@@ -10,7 +10,7 @@ import io.jboot.admin.base.web.base.JsonValidator;
  *
  */
 public class OrganizationValidator extends JsonValidator {
-
+ 
     @Override
     protected void validate(Controller c) {
         validateString("organization.name",4,16,"组织名请在4-16位");
