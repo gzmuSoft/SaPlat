@@ -1,0 +1,209 @@
+-------------本文档在开发过程中会持续更新-------------------
+本次采用vue来做前端的工具进行开发
+#   https://cn.vuejs.org/v2/guide/      vue官网
+
+关于VUE
+    使用Vue进行开发需要先学习中高级别的H5.CSS.JS相关知识
+
+如何使用Vue
+    引用Vue
+        一、
+        # <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+         直接引用 @后为对应Vue的版本号
+        二、
+        # 直接引用SaPlat\doc\UI\Vue.js
+
+     Vue需要注意什么
+        Vue是事时相应性的一个开发工具
+        可以直接在浏览器中调出控制台 然后在控制台中直接修改
+        输入 VueId.name 如 app.product = ""
+        就可以直接更改.
+        其他的修改也是一样的
+
+Vue起步
+
+    ##源代码
+
+    <div id = "app">
+        <h2>X are in stock.</h2>
+    </div>
+
+    <script>
+        var product = 'Boots'
+    <script>
+
+   ##修改为Vue的风格后
+    <div id = "app">
+            <h2>{{ product }} are in stock.</h2>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <script>
+        const app = new Vue({
+        el: '#app',
+        date;{
+          product; 'Boots'
+              }
+                             })
+    <script>
+     说明
+     el是元素（element）的缩写
+     然后将数据放入一个对象 这个对象可以是任何名字
+     这里对象叫做product，放入其中的是字符串 “Boots”
+     然后product又将其传入到上方
+     <h2>{{ product }} are in stock.</h2> 的product中
+     实际上就相当于把 Boots字符串 传入到了
+      <h2>{{ product }} are in stock.</h2> 这行代码中
+      等效于 <h2> Boots are in stock.</h2>.
+
+     ###源代码中是一个 字符串 形式的显示
+     如果我们将 product 作为一个 字符串数组 显示 代码会变成下面这样
+     <div id = "app">
+        <ul>
+            <li v-for = "product in products">
+                {{ product }}
+            </li>
+        </ul>
+     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+     <script>
+        const app = new Vue({
+        el: '#app',
+         date;{
+           product;[ 'Boots',
+                     'Jacket',
+                     'Hiking Socks'
+                    ]
+               }
+                             })
+     <script>
+     说明
+     将product中的数据改为数组型 记得加括号
+     然后用将数据放在''中 用,隔开每个数据
+     再将 h2 删除 修改为列表 如上代码所示 即可（v-for是Vue中的一个指令） .
+
+
+     当然 网页的数据信息量是庞大的 我们要修改时一个个修改会很麻烦
+     这里可以直接使用api
+          <div id = "app">
+             <ul>
+                 <li v-for = "product in products">
+                     {{ product.xxx }}{{product.xxx }}
+                     <span v-if = "product.x(product是id,x是api中对象的名字) === 0(这里输入条件，如此处条件为0,0前面是3个=)  ">
+                       xxxxx在这输入标记内容
+                     <span>
+                 </li>
+             </ul>
+          </div>
+
+          <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+          <script>
+             const app = new Vue({
+             el: '#app',
+             date;{
+               product;[  ]
+                   },
+             created(){
+                  fetch('api地址')
+                   .then(response => response.json())
+                   .then(json => {
+                     this.product = json.products
+                                  })
+                        }
+
+                                  })
+          <script>
+          将product中的数组数据删掉
+          然后如上代码所示 可以直接获取 api中对象信息
+          在列表下 输入你想要显示的 api 中的对象的信息
+          如果 api 中 有name id number rank 等属性
+          如果你只希望显示 name 和 rank
+          就在列表下
+          输入
+          {{ product.rank }}{{product.name }}
+          就行
+
+          如果需要对某个对象的属性的后方进行条件筛选 做出标记的话
+          则在下方加入如下代码
+          例如 api中有属性 rank（排名） 我想看到排名第一的 给他在后面加入标记
+          <span v-if = "product.rank === 1 ">
+               -这是第一名
+          <span>
+
+          在显示时 就会显示
+          3  张三
+          21 李四
+          39 王强
+          1  孙健 -这是第一名
+
+          #####因为这是无序列表 所以标记功能给了页面更多开发选项
+
+          如果我们想计算一共有多少个同学
+          则如下修改
+          <div id = "app">
+             <ul>
+                 <li v-for = "product in products">
+                     {{ product.xxx }}{{product.xxx }}
+                     <span v-if = "product.x(product是id,x是api中对象的名字) === 0(这里输入条件，如此处条件为0,0前面是3个=)  ">
+                       xxxxx在这输入标记内容
+                     <span>
+                 </li>
+             </ul>
+           <h2>Total People: {{ totalPeople }} </h2>
+          </div>
+
+          <script>
+             const app = new Vue({
+             el: '#app',
+             date;{
+               product;[  ]
+                   },
+             computed:{
+                totalPeople(){
+                    return this.products.reduce((sum,product) => {
+                        return sum + product.name
+                                                                  },0)
+                              }
+                       }
+             created(){
+                  fetch('api地址')
+                   .then(response => response.json())
+                   .then(json => {
+                     this.product = json.products
+                                  })
+                        }
+
+                                  })
+          <script>
+
+     1\在div中增加一个 h2标题  <h2>Total People: {{ totalPeople }} </h2>
+     2\在script中增加计算的方法
+             computed:{
+                totalPeople(){
+                    return this.products.reduce((sum,product) => {
+                        return sum + product.name
+                                                                  },0)
+                              }
+                       }
+      这就相当于是一个函数 totalPeople 是函数名
+      最后的显示效果是
+      Total People : 加起来的总和
+-----------------这些文档会在开发过程中保持更新-------------------------------------------
+-----------------如果发现错误请反馈 谢谢---------- 龚宇阳 2018/7/08 ----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
