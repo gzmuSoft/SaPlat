@@ -86,7 +86,7 @@ public abstract class BaseProjectStep<M extends BaseProjectStep<M>> extends Jboo
 	}
 	
 	public java.lang.Boolean getIsEnable() {
-		return getBoolean("isEnable");
+		return get("isEnable");
 	}
 
 }
