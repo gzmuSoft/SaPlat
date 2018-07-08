@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Organization;
+import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
@@ -69,6 +70,7 @@ public interface OrganizationService  {
      */
     public boolean update(Organization model);
 
+    public boolean saveOrganization(Organization model, User user, Long[] roles);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
