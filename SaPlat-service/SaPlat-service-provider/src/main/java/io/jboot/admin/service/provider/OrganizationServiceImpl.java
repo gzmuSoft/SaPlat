@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService {
+
     @Inject
     private UserService userService;
 
