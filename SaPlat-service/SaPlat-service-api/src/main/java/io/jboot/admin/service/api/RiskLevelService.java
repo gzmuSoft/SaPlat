@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.ProjectStep;
 import io.jboot.admin.service.entity.model.RiskLevel;
 
 import java.util.List;
@@ -23,7 +24,27 @@ public interface RiskLevelService  {
      * @return all <RiskLevel
      */
     public List<RiskLevel> findAll();
+    /**
+     * 分页查询 项目阶段 信息
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<RiskLevel> findPage(RiskLevel model, int pageNumber, int pageSize);
 
+    /**
+     * 根据名称查询 项目阶段 信息
+     * @param name
+     * @return
+     */
+    public RiskLevel findByName(String name);
+
+
+    /**
+     * 项目阶段 是否存在
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
 
     /**
      * delete model by primary key
