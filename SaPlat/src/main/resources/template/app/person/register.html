@@ -78,20 +78,20 @@
                        lay-verify="required" autocomplete="off"/>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="upload"><em class="require-mark">*</em>身份证证件照</label>
-            <div class="layui-input-block">
-                <div class="layui-upload">
-                    <div class="layui-upload">
-                        <button type="button" class="layui-btn" name="upload" id="upload"><i class="layui-icon"></i>上传文件
-                        </button>
-                        <label class="layui-hide" for="person.identity"></label><input type="text" class="layui-hide"
-                                                                                       name="person.identity"
-                                                                                       id="person.identity">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label" for="upload"><em class="require-mark">*</em>身份证证件照</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<div class="layui-upload">-->
+                    <!--<div class="layui-upload">-->
+                        <!--<button type="button" class="layui-btn" name="upload" id="upload"><i class="layui-icon"></i>上传文件-->
+                        <!--</button>-->
+                        <!--<label class="layui-hide" for="person.identity"></label><input type="text" class="layui-hide"-->
+                                                                                       <!--name="person.identity"-->
+                                                                                       <!--id="person.identity">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
             <button class="layui-btn" lay-filter="sub" lay-submit id="sub">
@@ -132,17 +132,17 @@
 
         });
 
-        upload.render({ //允许上传的文件后缀
-            elem: '#upload'
-            , url: '#(ctxPath)/app/person/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#person.identity").text(res.path);
-                $("#person.identity").val(res.path);
-                $("#person.identity").html(res.path);
-            }
-        });
+        // upload.render({ //允许上传的文件后缀
+        //     elem: '#upload'
+        //     , url: '#(ctxPath)/app/person/upload'
+        //     , accept: 'file' //普通文件
+        //     , exts: 'doc|docx|pdf' //只允许上传压缩文件
+        //     , done: function (res) {
+        //         $("#person.identity").text(res.path);
+        //         $("#person.identity").val(res.path);
+        //         $("#person.identity").html(res.path);
+        //     }
+        // });
 
 
     })

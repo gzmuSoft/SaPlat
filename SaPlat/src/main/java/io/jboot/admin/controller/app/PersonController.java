@@ -77,13 +77,13 @@ public class PersonController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
-    public void upload(){
-        UploadFile upload = getFile("file",new SimpleDateFormat("YYYY-MM-DD").format(new Date()));
-        ConcurrentHashMap<String,String> map = new ConcurrentHashMap<>();
-        map.put("path",upload.getFile().getAbsolutePath());
-        map.put("code", ResultCode.SUCCESS);
-        renderJson(map);
-    }
+//    public void upload(){
+//        UploadFile upload = getFile("file",new SimpleDateFormat("YYYY-MM-DD").format(new Date()));
+//        ConcurrentHashMap<String,String> map = new ConcurrentHashMap<>();
+//        map.put("path",upload.getFile().getAbsolutePath());
+//        map.put("code", ResultCode.SUCCESS);
+//        renderJson(map);
+//    }
 
     @Before(POST.class)
     public void update(){
