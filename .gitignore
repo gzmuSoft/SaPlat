@@ -135,3 +135,6 @@ Icon
 !wrapper/*.jar
 !**/wrapper/*.jar
 
+/SaPlat-service/SaPlat-service-provider/src/main/resources/jboot.properties
+/SaPlat-service/SaPlat-service-entity/src/main/resources/jboot.properties
+/SaPlat-service/SaPlat-service-api/src/main/resources/jboot.properties
