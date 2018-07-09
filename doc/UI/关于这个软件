@@ -6,5 +6,5 @@
 # Q 前端的文件放在哪的？
   A SaPlat\SaPlat\src\main\resources下
     Static 文件夹下用来存储静态的文件 如Css Js文件等
-    Template 文件夹下用来存储动态文件 模板 页面.
+    Template 文件夹下用来存储动态文件 模板 页面
 ---------以后遇到什么问题都会持续更新到这个文件---------
