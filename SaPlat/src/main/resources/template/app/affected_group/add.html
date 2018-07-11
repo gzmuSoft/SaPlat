@@ -1,0 +1,162 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function(data){
+
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/affected_group/postAdd',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success : function(data){
+                    pop_close();
+                }
+            });
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#worktime' //指定元素
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>出生日期</label>
+            <div class="layui-input-block">
+                <input  id="birthday" type="text" name="model.birthday" placeholder="出生日期" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>手机号码</label>
+            <div class="layui-input-block">
+                <input id="phone" type="text" name="model.phone" placeholder="手机号码" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>政治面貌</label>
+            <div class="layui-input-block">
+                <input id="politics" type="text" name="model.politics" placeholder="政治面貌" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>民族</label>
+            <div class="layui-input-block">
+                <input id="nation" type="text" name="model.nation" placeholder="民族" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>国籍</label>
+            <div class="layui-input-block">
+                <input id="nationality" type="text" name="model.nationality" placeholder="国籍" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>学历</label>
+            <div class="layui-input-block">
+                <input id="education" type="text" name="model.education" placeholder="学历" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>曾用名</label>
+            <div class="layui-input-block">
+                <input id="othername" type="text" name="model.othername" placeholder="曾用名" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>职务</label>
+            <div class="layui-input-block">
+                <input id="duty" type="text" name="model.duty" placeholder="职务" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>长期居住地址</label>
+            <div class="layui-input-block">
+                <input id="residence" type="text" name="model.residence" placeholder="长期居住地址" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>邮箱</label>
+            <div class="layui-input-block">
+                <input id="mail" type="text" name="model.mail" placeholder="邮箱" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>工作简历</label>
+            <div class="layui-input-block">
+                <input id="resume" type="text" name="model.resume" placeholder="工作简历" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>子女情况</label>
+            <div class="layui-input-block">
+                <input id="children" type="text" name="model.children" placeholder="子女情况" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>婚姻状况</label>
+            <div class="layui-input-block">
+                <input id="maritalstatus" type="text" name="model.maritalstatus" placeholder="婚姻状况" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>户籍</label>
+            <div class="layui-input-block">
+                <input id="census" type="text" name="model.census" placeholder="户籍" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>职业</label>
+            <div class="layui-input-block">
+                <input id="occupation" type="text" name="model.occupation" placeholder="职业" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button  class="layui-btn" lay-filter="sub" lay-submit>
+                保存
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end
