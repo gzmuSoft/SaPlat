@@ -39,14 +39,18 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="fac_agency.name">服务机构名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="fac_agency.name" name="fac_agency.name" value="#(organization.name)" class="layui-input"/>
+                    <input type="text" id="fac_agency.name" name="fac_agency.name" value="#(organization.name)"
+                           class="layui-input layui-disabled layui-hide" required/>
+                    <p>#(organization.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="fac_agency.orgID">服务机构代码</label>
+                <label class="layui-form-label" for="fac_agency.orgID">组织机构编号</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="fac_agency.orgID" name="fac_agency.orgID" value="#(organization.code)" class="layui-input"/>
+                    <input type="number" id="fac_agency.orgID" name="fac_agency.orgID" value="#(organization.id)"
+                           class="layui-input layui-disabled layui-hide" required/>
+                    <p>#(organization.id)</p>
                 </div>
             </div>
 
@@ -177,12 +181,11 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer','upload','upload1'], function () {
+    layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , upload = layui.upload
-            , upload1 = layui.upload1;
+            , upload = layui.upload;
 
         upload.render({ //允许上传的文件后缀
             elem: '#upload'
@@ -196,17 +199,6 @@
             }
         });
 
-        upload1.render({ //允许上传的文件后缀
-            elem: '#upload1'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#fac_agency.pictrue").text(res.path);
-                $("#fac_agency.pictrue").val(res.path);
-                $("#fac_agency.pictrue").html(res.path);
-            }
-        });
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
