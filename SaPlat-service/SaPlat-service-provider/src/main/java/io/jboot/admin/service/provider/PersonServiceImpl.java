@@ -28,7 +28,7 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     @Override
     public Person findByUser(User user) {
-        return DAO.findFirstByColumn("name", user.getName());
+        return findById(user.getUserID());
     }
 
     @Override

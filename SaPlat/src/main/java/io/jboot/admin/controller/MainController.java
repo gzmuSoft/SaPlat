@@ -22,6 +22,8 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,9 +53,8 @@ public class MainController extends BaseController {
     }
 
     public void register() {
-        List<Role> roleList = roleService.findByStatusUsed();
-        roleList.remove(0);
-        setAttr("roleList", roleList).render("register.html");
+        setAttr("roleList", roleService.findByNames("个人群体","组织机构"))
+                .render("register.html");
     }
 
     public void captcha() {
