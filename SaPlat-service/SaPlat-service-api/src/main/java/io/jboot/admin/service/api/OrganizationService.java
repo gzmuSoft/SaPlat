@@ -78,6 +78,14 @@ public interface OrganizationService {
      */
     public boolean update(Organization model, User user);
 
+    /**
+     * 组织机构是否存在
+     *
+     * @param name
+     * @return 存在返回true，否则返回false
+     */
+    public boolean hasUser(String name);
+
     public void join(Page<? extends Model> page, String joinOnField);
 
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
