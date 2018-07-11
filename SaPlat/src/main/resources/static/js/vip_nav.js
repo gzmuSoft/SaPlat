@@ -21,9 +21,15 @@ layui.define(['layer', 'element'], function (exports) {
                 async : false,//取消异步
                 success : function(res){
                     var view = "";
+                    var isFirst = true;
                     if (res.data) {
                         $(res.data).each(function (k, v) {
-                            v.subset && treeStatus ? view += '<li class="layui-nav-item layui-nav-itemed">' : view += '<li class="layui-nav-item" >';
+                            if(isFirst == true) {//默认展开第一个菜单项
+                                v.subset && treeStatus ? view += '<li class="layui-nav-item layui-nav-itemed">' : view += '<li class="layui-nav-item" >';
+                                isFirst = false;
+                            }
+                            else
+                                v.subset && treeStatus ? view += '<li class="layui-nav-item">' : view += '<li class="layui-nav-item" >';
                             if (v.subset) {
                                 view += '<a href="javascript:;"><i class="layui-icon">' + v.icon + '</i>' + v.text + '</a><dl class="layui-nav-child">';
                                 $(v.subset).each(function (ko, vo) {
