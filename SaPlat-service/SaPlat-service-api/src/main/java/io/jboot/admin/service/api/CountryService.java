@@ -24,6 +24,28 @@ public interface CountryService  {
      */
     public List<Country> findAll();
 
+    /**
+     * 分页查询 项目阶段 信息
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<Country> findPage(Country model, int pageNumber, int pageSize);
+
+    /**
+     * 根据名称查询 项目阶段 信息
+     * @param name
+     * @return
+     */
+    public Country findByName(String name);
+
+
+    /**
+     * 项目阶段 是否存在
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
+
 
     /**
      * delete model by primary key
