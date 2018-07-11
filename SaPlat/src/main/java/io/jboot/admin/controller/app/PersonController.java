@@ -7,10 +7,7 @@ import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.Person;
-import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -43,6 +40,9 @@ public class PersonController extends BaseController {
     @JbootrpcService
     private AuthService authService;
 
+    @JbootrpcService
+    private AffectedGroupService affectedGroupService;
+
     /**
      * 初始化
      */
@@ -71,6 +71,7 @@ public class PersonController extends BaseController {
         Person person = getBean(Person.class, "person");
         User user = getBean(User.class, "user");
         user.setPhone(person.getPhone());
+        user.setUserSource(0);
         if (userService.hasUser(user.getName())) {
             renderJson(RestResult.buildError("用户名已存在"));
             throw new BusinessException("用户名已存在");
@@ -114,14 +115,13 @@ public class PersonController extends BaseController {
 
     /**
      * 专家团体页面
-     * 如果存在 设置 status
      */
     public void expertGroup() {
         User user = AuthUtils.getLoginUser();
         ExpertGroup expertGroup = expertGroupService.findByPersonId(user.getUserID());
         Auth auth = new Auth();
         if (expertGroup != null) {
-            auth = authService.findByUser(user);
+            auth = authService.findByUserAndRole(user,roleService.findByName("专家团体").getId());
         }
         setAttr("auth",auth);
         setAttr("expertGroup", expertGroup);
@@ -157,9 +157,9 @@ public class PersonController extends BaseController {
         auth.setRoleId(roleService.findByName("专家团体").getId());
         auth.setLastUpdTime(new Date());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (!expertGroupService.saveOrUpdateExpertGroupAndAuth(expertGroup, auth)) {
-            renderJson(RestResult.buildError("认证失败"));
-            throw new BusinessException("认证失败");
+        if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
+            renderJson(RestResult.buildError("专家团体认证上传失败"));
+            throw new BusinessException("专家团体认证上传失败");
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -170,10 +170,78 @@ public class PersonController extends BaseController {
     public void cancelExpertGroupAuth(){
         User user = AuthUtils.getLoginUser();
         ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());
-        Auth auth = authService.findByUser(user);
+        Auth auth = authService.findByUserAndRole(user,roleService.findByName("专家团体").getId());
         auth.setStatus(AuthStatus.NOT_VERIFY);
         expertGroup.setIsEnable(0);
-        if (!expertGroupService.saveOrUpdateExpertGroupAndAuth(expertGroup,auth)){
+        if (!expertGroupService.saveOrUpdate(expertGroup,auth)){
+            renderJson(RestResult.buildError("修改认证状态失败"));
+            throw new BusinessException("修改认证状态失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 影响群体页面
+     */
+    public void affectedGroup(){
+        User user = AuthUtils.getLoginUser();
+        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(user.getUserID());
+        Auth auth = new Auth();
+        if (affectedGroup != null){
+            auth = authService.findByUserAndRole(user,roleService.findByName("影响群体").getId());
+        }
+        setAttr("auth",auth);
+        setAttr("affectedGroup",affectedGroup);
+        render("affectedGroup.html");
+    }
+
+    /**
+     * 影响群体认证认证
+     */
+    public void affectedGroupVerify(){
+        AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
+        User user = AuthUtils.getLoginUser();
+        Person person = personService.findByUser(user);
+        affectedGroup.setName(person.getName());
+        affectedGroup.setPhone(person.getPhone());
+        affectedGroup.setMail(user.getEmail());
+        affectedGroup.setCreateTime(new Date());
+        affectedGroup.setLastAccessTime(new Date());
+        affectedGroup.setPersonID(person.getId());
+        affectedGroup.setIsEnable(1);
+        AffectedGroup name = affectedGroupService.findByName(affectedGroup.getName());
+
+        if ( name != null ) {
+            if (name.getIsEnable() == 1){
+                renderJson(RestResult.buildError("影响群体已存在"));
+                throw new BusinessException("影响群体已存在");
+            }
+            affectedGroup.setId(name.getId());
+        }
+
+
+        Auth auth = new Auth();
+        auth.setUserId(user.getId());
+        auth.setRoleId(roleService.findByName("影响群体").getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus(AuthStatus.VERIFYING);
+        if (!affectedGroupService.saveOrUpdate(affectedGroup, auth)) {
+            renderJson(RestResult.buildError("影响群体认证上传失败"));
+            throw new BusinessException("影响群体认证上传失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 影响群体取消认证
+     */
+    public void cancelAffectedGroup(){
+        User user = AuthUtils.getLoginUser();
+        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(personService.findByUser(user).getId());
+        Auth auth = authService.findByUserAndRole(user,roleService.findByName("影响群体").getId());
+        auth.setStatus(AuthStatus.NOT_VERIFY);
+        affectedGroup.setIsEnable(0);
+        if (!affectedGroupService.saveOrUpdate(affectedGroup,auth)){
             renderJson(RestResult.buildError("修改认证状态是啊比"));
             throw new BusinessException("修改认证状态是啊比");
         }

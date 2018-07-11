@@ -217,12 +217,12 @@ public abstract class BaseFacAgency<M extends BaseFacAgency<M>> extends JbootMod
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Boolean isEnable) {
+	public void setIsEnable(java.lang.Integer isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Boolean getIsEnable() {
-		return getBoolean("isEnable");
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
 	}
 
 }

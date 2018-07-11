@@ -11,16 +11,17 @@ import io.jboot.admin.service.entity.model.base.BaseFacAgency;
 public class FacAgency extends BaseFacAgency<FacAgency> {
     public void setStatus(java.lang.String status) {
         if (status == DataStatus.USED) {
-            setIsEnable(true);
+            setIsEnable(1);
         } else {
-            setIsEnable(false);
+            setIsEnable(0);
         }
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if (this.getIsEnable() == 1) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 }

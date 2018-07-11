@@ -42,6 +42,14 @@ public interface AuthService  {
     public Auth findByUser(User user);
 
     /**
+     * 更护用户和权限查询认证
+     * @param user 用户
+     * @param role 权限
+     * @return 认证信息
+     */
+    public Auth findByUserAndRole(User user,long role);
+
+    /**
      * delete model
      *
      * @param model
