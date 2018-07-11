@@ -1,0 +1,267 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'laydate'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form
+            , laydate = layui.laydate;
+        laydate.render({
+            elem: '#expertGroup.worktime'
+        });
+        laydate.render({
+            elem: '#expertGroup.birthday'
+        });
+
+
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/person/expertGroupVerify',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('上传成功，请耐心等待审核！');
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+
+        });
+
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>专家团体</legend>
+    </fieldset>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.name">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="person.name" id="person.name" value="#(person.name)" required
+                       disabled="disabled" class="layui-input layui-disabled"
+                       lay-verify="required" placeholder="请输入姓名" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.othername">曾用名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.othername" id="expertGroup.othername" value="#(expertGroup.othername)"
+                       placeholder="请输入曾用名" autocomplete="off" class="layui-input ">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.mail">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="email" name="expertGroup.mail" id="expertGroup.mail" lay-verify="required"
+                       placeholder="请输入邮箱" autocomplete="off" class="layui-input layui-disabled" value="#(user.email)"
+                       disabled="disabled">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.name">专业团体名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required" value="#(expertGroup.name)"
+                       placeholder="请输入专业团体名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.nation">民族</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.nation" id="expertGroup.nation" lay-verify="required" value="#(expertGroup.nation)"
+                       placeholder="请输入民族" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.residence">长期居住地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="expertGroup.residence" id="expertGroup.residence" lay-verify="required" value="#(expertGroup.residence)"
+                       autocomplete="off" placeholder="请输入..." class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.nationality">国籍</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.nationality" id="expertGroup.nationality" lay-verify="required" value="#(expertGroup.nationalit)"
+                       placeholder="请输入国籍" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.census">户籍</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.census" id="expertGroup.census" lay-verify="required" value="#(expertGroup.census)"
+                       placeholder="请输入国籍" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.education">学历</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.education" id="expertGroup.education" lay-verify="required" value="#(expertGroup.education)"
+                       placeholder="请输入学历" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.workstate">在职状态</label>
+            <div class="layui-input-inline">
+                <select name="expertGroup.workstate" id="expertGroup.workstate">
+                    <option value="">请选择</option>
+                    #if(expertGroup.wokstate == 0)
+                        <option value="1">在职</option>
+                        <option value="0" selected="">离职</option>
+                    #else
+                        <option value="1" selected="">在职</option>
+                        <option value="0">离职</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="expertGroup.birthday">出生日期</label>
+                <div class="layui-input-block">
+                    <input type="date" name="expertGroup.birthday" id="expertGroup.birthday" value="#(expertGroup.birthday)" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.politics">政治面貌</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.politics" id="expertGroup.politics" lay-verify="required" value="#(expertGroup.politics)"
+                       placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.occupation">职业</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expertGroup.occupation" id="expertGroup.occupation" lay-verify="required" value="#(expertGroup.occupation)"
+                       placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.maritalstatus">婚姻状况</label>
+            <div class="layui-input-inline">
+                <select name="expertGroup.maritalstatus" id="expertGroup.maritalstatus">
+                    #if(expertGroup.maritalstatus == 0)
+                        <option value="1">请选择</option>
+                        <option value="1" >已婚</option>
+                        <option value="0" selected="">未婚</option>
+                    #else
+                        <option value="1">请选择</option>
+                        <option value="1"  selected="">已婚</option>
+                        <option value="0">未婚</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertGroup.children">子女情况</label>
+            <div class="layui-input-block">
+                <input type="text" name="expertGroup.children" id="expertGroup.children" autocomplete="off"
+                       value="#(expertGroup.children)" placeholder="请输入标题" class="layui-input">
+            </div>
+
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="expertGroup.worktime">工作时间</label>
+                <div class="layui-input-block">
+                    <input type="date" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
+                           value="#(expertGroup.worktime)" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="expertGroup.department">部门名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
+                           value="#(expertGroup.department)" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="expertGroup.duty">职务</label>
+                <div class="layui-input-block">
+                    <input type="text" name="expertGroup.duty" id="expertGroup.duty" autocomplete="off"
+                           value="#(expertGroup.duty)" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="expertGroup.workpictrue">工作证件照片</label>
+            <div class="layui-upload-drag" name="expertGroup.workpictrue" id="expertGroup.workpictrue">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="expertGroup.profess">专业资格内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
+                          class="layui-textarea" >#(expertGroup.profess)</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="expertGroup.certificate">专业资格证书</label>
+            <div class="layui-upload-drag" name="expertGroup.certificate" id="expertGroup.certificate">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="expertGroup.project">参与项目经历</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="expertGroup.project" id="expertGroup.project"
+                          class="layui-textarea">#(expertGroup.project)</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="expertGroup.resume">工作简历</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="expertGroup.resume" id="expertGroup.resume"
+                          class="layui-textarea">#(expertGroup.project)</textarea>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-filter="sub" lay-submit id="sub">
+                保存
+            </button>
+        </div>
+    </form>
+    <hr>
+</div>
+
+#end
