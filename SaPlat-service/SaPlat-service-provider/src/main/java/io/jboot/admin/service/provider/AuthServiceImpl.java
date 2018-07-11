@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.entity.model.Auth;
@@ -14,7 +15,7 @@ import javax.inject.Singleton;
 public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthService {
 
     @Override
-    public Auth findByUserId(Long userId) {
-        return DAO.findFirstByColumn("userId", userId);
+    public Auth findByUser(User user) {
+        return DAO.findFirstByColumn("userId", user.getId());
     }
 }
