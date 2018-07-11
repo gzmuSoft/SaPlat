@@ -1,0 +1,141 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/organization/update',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('编辑成功');
+                    $(".layui-btn").addClass("layui-hide");
+                    $("#edit").removeClass("layui-hide");
+                    $(":input[disabled='disabled']").addClass("layui-disabled").prop("disabled","disabled");
+                    setTimeout(function () {
+                        return true;
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+        $('#edit').click(function () {
+            $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
+            $(".layui-btn").removeClass("layui-hide");
+            $(this).addClass("layui-hide");
+            return false;
+        });
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>组织机构资料</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" >登录账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="user.name" name="user.name" value="#(user.name)"
+                           class="layui-input layui-disabled layui-hide"  required/>
+                    <p>#(user.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" >组织机构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
+                           class="layui-input layui-disabled layui-hide"  required/>
+                    <p>#(organization.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="organization.code" >组织机构代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="organization.code" name="organization.code" value="#(organization.code)"
+                           class="layui-input layui-disabled layui-hide"  required/>
+                    <p>#(organization.code)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="organization.addr">组织机构地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="organization.addr" name="organization.addr" value="#(organization.addr)"
+                           class="layui-input layui-disabled" disabled="disabled" required
+                    />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="organization.principal">委办负责人名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="organization.principal" name="organization.principal" value="#(organization.principal)"
+                           class="layui-input layui-disabled" disabled="disabled" required
+                    />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="organization.contact">委办负责人联系方式</label>
+                <div class="layui-input-inline">
+                    <input type="tel" id="organization.contact" name="organization.contact" value="#(organization.contact)"
+                           class="layui-input layui-disabled" disabled="disabled" required
+                    />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="user.email">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="email" id="user.email" name="user.email" value="#(user.email)"
+                           class="layui-input layui-disabled" disabled="disabled" required
+                    />
+                </div>
+            </div>
+
+            <!--隐藏获取空值repwd作为更新验证器忽略密码字段验证的先决条件-->
+            <input type="text" id="user.repwd" name="user.repwd" value="#(user.repwd)"
+                   class="layui-input layui-disabled layui-hide"  required/>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-hide" lay-submit lay-filter="sub">保存</button>
+                    <button class="layui-btn layui-btn-warm layui-hide" id="reset">取消</button>
+                    <button class="layui-btn layui-btn-normal" id="edit">编辑</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <hr>
+</div>
+
+#end
