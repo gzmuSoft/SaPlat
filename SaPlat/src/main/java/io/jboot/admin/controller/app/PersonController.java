@@ -121,7 +121,7 @@ public class PersonController extends BaseController {
         ExpertGroup expertGroup = expertGroupService.findByPersonId(user.getUserID());
         Auth auth = new Auth();
         if (expertGroup != null) {
-            auth = authService.findByUserId(user.getId());
+            auth = authService.findByUser(user);
         }
         setAttr("auth",auth);
         setAttr("expertGroup", expertGroup);
@@ -141,16 +141,22 @@ public class PersonController extends BaseController {
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
-        if (expertGroupService.findByName(expertGroup.getName()) != null) {
-            renderJson(RestResult.buildError("专家团体已存在"));
-            throw new BusinessException("专家团体已存在");
+        expertGroup.setIsEnable(1);
+        ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
+        if ( name != null ) {
+            if (name.getIsEnable() == 1){
+                renderJson(RestResult.buildError("专家团体已存在"));
+                throw new BusinessException("专家团体已存在");
+            }
+            expertGroup.setId(name.getId());
         }
+
 
         Auth auth = new Auth();
         auth.setUserId(user.getId());
         auth.setRoleId(roleService.findByName("专家团体").getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (!expertGroupService.saveOrUpdateExpertGroupAndAuth(expertGroup, auth)) {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");
@@ -158,4 +164,19 @@ public class PersonController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
+    /**
+     * 专家团体取消认证
+     */
+    public void cancelExpertGroupAuth(){
+        User user = AuthUtils.getLoginUser();
+        ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());
+        Auth auth = authService.findByUser(user);
+        auth.setStatus(AuthStatus.NOT_VERIFY);
+        expertGroup.setIsEnable(0);
+        if (!expertGroupService.saveOrUpdateExpertGroupAndAuth(expertGroup,auth)){
+            renderJson(RestResult.buildError("修改认证状态是啊比"));
+            throw new BusinessException("修改认证状态是啊比");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
 }

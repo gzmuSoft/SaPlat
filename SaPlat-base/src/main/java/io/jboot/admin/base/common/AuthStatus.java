@@ -20,5 +20,5 @@ public class AuthStatus {
     /**
      * 审核中
      */
-    public static final int VERIFIING = 2;
+    public static final int VERIFYING = 2;
 }

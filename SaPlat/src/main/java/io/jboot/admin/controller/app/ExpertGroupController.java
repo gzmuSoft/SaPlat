@@ -162,6 +162,10 @@ public class ExpertGroupController extends BaseController{
         ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
         if (expertGroup == null){
             expertGroup = new ExpertGroup();
+        } else {
+            if (expertGroup.getIsEnable() == 0){
+                expertGroup = new ExpertGroup();
+            }
         }
         setAttr("expertGroup",expertGroup)
                 .setAttr("person",person)

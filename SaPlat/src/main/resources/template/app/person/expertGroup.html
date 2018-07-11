@@ -22,9 +22,23 @@
             window.location.href = "#(ctxPath)/app/expert_group/verify";
         });
 
-        $('#.exit').click(function () {
-            layer.msg("正在研发。。。");
-        })
+        $('#exit').click(function () {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/person/cancelExpertGroupAuth',
+                data: null,
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('注册成功，正在跳转！');
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
     });
 
 
