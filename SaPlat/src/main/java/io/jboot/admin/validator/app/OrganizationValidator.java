@@ -24,7 +24,7 @@ public class OrganizationValidator extends JsonValidator {
         if(!c.getPara("organization.code").equals("")) {
             validateRequiredString("organization.code", "请输入组织机构代码");
         }
-        if (!c.getPara("user.repwd").equals("")&&!c.getPara("user.pwd").equals(c.getPara("rePwd"))){
+        if (!c.getPara("rePwd").equals("")&&!c.getPara("user.pwd").equals(c.getPara("rePwd"))){
             addError("两次密码输入不一致");
         }
         validateMobile("organization.contact","电话号码格式不正确");
