@@ -52,6 +52,14 @@ public interface OrganizationService {
      */
     public boolean save(Organization model);
 
+    /**
+     * 保存组织
+     * @param model 组织
+     * @param user 用户
+     * @param roles 权限
+     * @return 结果
+     */
+    public boolean saveOrganization(Organization model, User user, Long[] roles);
 
     /**
      * update data model
