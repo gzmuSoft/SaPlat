@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Bean
@@ -50,37 +51,44 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
     @Override
     public boolean auth(Long id, String resIds) {
         List<RoleRes> roleResList = new ArrayList<RoleRes>();
-
-        return Db.tx(new IAtom() {
-            @Override
-            public boolean run() throws SQLException {
-                roleResService.deleteByRoleId(id);
-
-                if (StrKit.notBlank(resIds)) {
-                    String[] ress = resIds.split(",");
-
-                    for (String resId : ress) {
-                        RoleRes roleRes = new RoleRes();
-                        roleRes.setRoleId(id);
-                        roleRes.setResId(Long.parseLong(resId));
-                        roleResList.add(roleRes);
-                    }
-
-                    int[] rets = Db.batchSave(roleResList, roleResList.size());
-                    for (int ret : rets) {
-                        if (ret < 1) {
-                            return false;
-                        }
+        return Db.tx(() -> {
+            roleResService.deleteByRoleId(id);
+            if (StrKit.notBlank(resIds)) {
+                String[] ress = resIds.split(",");
+                for (String resId : ress) {
+                    RoleRes roleRes = new RoleRes();
+                    roleRes.setRoleId(id);
+                    roleRes.setResId(Long.parseLong(resId));
+                    roleResList.add(roleRes);
+                }
+                int[] rets = Db.batchSave(roleResList, roleResList.size());
+                for (int ret : rets) {
+                    if (ret < 1) {
+                        return false;
                     }
                 }
-
-                return true;
             }
+
+            return true;
         });
     }
 
     @Override
     public List<Role> findByStatusUsed() {
         return DAO.findListByColumn("status", RoleStatus.USED);
+    }
+
+    @Override
+    public List<Role> findByNames(String... names) {
+        List<Role> roleList = Collections.synchronizedList(new ArrayList<Role>());
+        for (String name : names) {
+            roleList.add(findByName(name));
+        }
+        return roleList;
+    }
+
+    @Override
+    public Role findByName(String name) {
+        return DAO.findFirstByColumn("name", name);
     }
 }

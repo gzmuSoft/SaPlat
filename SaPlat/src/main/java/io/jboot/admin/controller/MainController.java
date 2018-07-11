@@ -13,7 +13,6 @@ import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
-import io.jboot.admin.validator.RegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.SecurityUtils;
@@ -23,6 +22,8 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,32 +53,14 @@ public class MainController extends BaseController {
     }
 
     public void register() {
-        List<Role> roleList = roleService.findByStatusUsed();
-        setAttr("roleList", roleList).render("add.html");
-        render("register.html");
+        setAttr("roleList", roleService.findByNames("个人群体","组织机构"))
+                .render("register.html");
     }
 
     public void captcha() {
         renderCaptcha();
     }
 
-    @Before({POST.class, RegisterValidator.class})
-    public void postRegister(){
-        User sysUser = getBean(User.class, "user");
-        System.out.println(sysUser.toJson());
-        Long[] roles = getParaValuesToLong("userRole");
-
-        if (userService.hasUser(sysUser.getName())) {
-            throw new BusinessException("用户名已经存在");
-        }
-
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        if (!userService.saveUser(sysUser, roles)) {
-            throw new BusinessException("保存失败");
-        }
-
-        renderJson(RestResult.buildSuccess());
-    }
 
     @Before( {POST.class, LoginValidator.class} )
     public void postLogin() {

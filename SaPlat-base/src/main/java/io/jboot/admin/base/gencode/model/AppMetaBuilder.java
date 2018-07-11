@@ -25,7 +25,11 @@ public class AppMetaBuilder extends MetaBuilder {
 
     @Override
     protected boolean isSkipTable(String tableName) {
+        if (skipPre == null){
+            return false;
+        }
         for (String skip : skipPre) {
+
             if (tableName.startsWith(skip)) {
                 return true;
             }
