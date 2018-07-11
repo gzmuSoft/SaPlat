@@ -60,11 +60,15 @@ public class OrganizationController extends BaseController{
     @Before({POST.class, OrganizationValidator.class})
     public void postRegister(){
         Organization organization = getBean(Organization.class, "organization");
-        if (userService.hasUser(organization.getName())){
+        User user = getBean(User.class,"user");
+        if (userService.hasUser(user.getName())) {
             renderJson(RestResult.buildError("用户名已存在"));
             throw new BusinessException("用户名已存在");
         }
-        User user = getBean(User.class,"user");
+        if (organizationService.hasUser(organization.getName())) {
+            renderJson(RestResult.buildError("组织机构已存在"));
+            throw new BusinessException("组织机构已存在");
+        }
         Long[] roles = new Long[]{roleService.findByName("组织机构").getId()};
         user.setPhone(organization.getContact());
         user.setOnlineStatus("0");

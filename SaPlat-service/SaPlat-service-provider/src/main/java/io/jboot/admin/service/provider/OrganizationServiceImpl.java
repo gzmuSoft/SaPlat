@@ -30,6 +30,11 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     }
 
     @Override
+    public boolean hasUser(String name) {
+        return findByName(name) != null;
+    }
+
+    @Override
     public Organization findByName(String name) {
         return DAO.findFirstByColumn("name",name);
     }
