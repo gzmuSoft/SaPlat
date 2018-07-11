@@ -19,13 +19,13 @@
         $('.go').click(function () {
             $('h1').fadeOut("fast");
             $(this).fadeOut("fast");
-            window.location.href = "#(ctxPath)/app/expert_group/verify";
+            window.location.href = "#(ctxPath)/app/affected_group/verify";
         });
 
         $('#exit').click(function () {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/person/cancelExpertGroupAuth',
+                url: '#(ctxPath)/app/person/cancelAffectedGroup',
                 data: null,
                 loadFlag: true,
                 success: function (data) {
@@ -53,20 +53,20 @@
     </fieldset>
 
 
-    #shiroHasRole('专家团体')
-        您好，您拥有了角色 '专家团体'
+    #shiroHasRole('影响群体')
+    您好，您拥有了角色 '影响群体'
     #end
 
 
-    #shiroNotHasRole('专家团体')
-        #if(auth.status == 2)
-            <h1>您的认证信息正在审核中。。。</h1>
-            <button class="layui-btn layui-btn-normal go" >点击查看</button>
-            <button class="layui-btn layui-btn-normal" id="exit">取消认证</button>
-        #else
-            <h1>您当前未认证专家团体</h1>
-            <button class="layui-btn layui-btn-normal go">点击认证</button>
-        #end
+    #shiroNotHasRole('影响群体')
+    #if(auth.status == 2)
+    <h1>您的认证信息正在审核中。。。</h1>
+    <button class="layui-btn layui-btn-normal go" >点击查看</button>
+    <button class="layui-btn layui-btn-normal" id="exit">取消认证</button>
+    #else
+    <h1>您当前未认证影响群体</h1>
+    <button class="layui-btn layui-btn-normal go">点击认证</button>
+    #end
     #end
     <hr>
 </div>

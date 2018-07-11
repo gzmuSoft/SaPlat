@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.AffectedGroup;
+import io.jboot.admin.service.entity.model.Auth;
 
 import java.util.List;
 
@@ -38,6 +39,12 @@ public interface AffectedGroupService  {
      */
     public AffectedGroup findByName(String name);
 
+    /**
+     * 根据个人群体 id 查询影响群体
+     * @param userID 用户id
+     * @return 影响群体
+     */
+    public AffectedGroup findByPersonId(Long userID);
 
     /**
      * 项目阶段 是否存在
@@ -83,6 +90,15 @@ public interface AffectedGroupService  {
 
 
     /**
+     * 保存或更新影响群体以及全新
+     * @param model 影响群体
+     * @param auth 认证信息
+     * @return 是否成功
+     */
+    public boolean saveOrUpdate(AffectedGroup model, Auth auth);
+
+
+    /**
      * update data model
      *
      * @param model
@@ -106,4 +122,6 @@ public interface AffectedGroupService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
+
 }
