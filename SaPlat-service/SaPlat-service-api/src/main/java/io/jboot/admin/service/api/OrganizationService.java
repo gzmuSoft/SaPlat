@@ -7,7 +7,7 @@ import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
-public interface OrganizationService  {
+public interface OrganizationService {
 
     /**
      * find model by primary key
@@ -54,15 +54,6 @@ public interface OrganizationService  {
 
 
     /**
-     * save or update model
-     *
-     * @param model
-     * @return if save or update success
-     */
-    public boolean saveOrUpdate(Organization model);
-
-
-    /**
      * update data model
      *
      * @param model
@@ -70,22 +61,49 @@ public interface OrganizationService  {
      */
     public boolean update(Organization model);
 
+    /**
+     * 通过组织机构名称获取组织机构
+     *
+     * @param name 组织机构名称
+     * @return 组织机构
+     */
+    public Organization findByName(String name);
 
-    public boolean saveOrganization(Organization model, User user, Long[] roles);
+    /**
+     * 更新资料
+     *
+     * @param model 组织机构
+     * @param user  用户
+     * @return
+     */
+    public boolean update(Organization model, User user);
 
     public void join(Page<? extends Model> page, String joinOnField);
+
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField);
+
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
+
     public void join(Model model, String joinOnField);
+
     public void join(Model model, String joinOnField, String[] attrs);
+
     public void join(Model model, String joinOnField, String joinName);
+
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
     public void keep(Model model, String... attrs);
+
     public void keep(List<? extends Model> models, String... attrs);
+
 }

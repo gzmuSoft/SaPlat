@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Management;
+import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
@@ -69,6 +70,10 @@ public interface ManagementService  {
      */
     public boolean update(Management model);
 
+    public Management findByUser(User user);
+
+    public boolean update(Management management, User user);
+
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
@@ -85,4 +90,6 @@ public interface ManagementService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
+
 }

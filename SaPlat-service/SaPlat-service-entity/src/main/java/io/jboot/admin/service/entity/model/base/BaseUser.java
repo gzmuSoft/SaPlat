@@ -25,6 +25,38 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 		return getStr("name");
 	}
 
+	public void setSpell(java.lang.String spell) {
+		set("spell", spell);
+	}
+	
+	public java.lang.String getSpell() {
+		return getStr("spell");
+	}
+
+	public void setUserID(java.lang.Long userID) {
+		set("userID", userID);
+	}
+	
+	public java.lang.Long getUserID() {
+		return getLong("userID");
+	}
+
+	public void setUserSource(java.lang.Integer userSource) {
+		set("userSource", userSource);
+	}
+	
+	public java.lang.Integer getUserSource() {
+		return getInt("userSource");
+	}
+
+	public void setSalt(java.lang.String salt) {
+		set("salt", salt);
+	}
+	
+	public java.lang.String getSalt() {
+		return getStr("salt");
+	}
+
 	public void setPwd(java.lang.String pwd) {
 		set("pwd", pwd);
 	}
@@ -57,14 +89,6 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 		return getStr("email");
 	}
 
-	public void setCreatedate(java.util.Date createdate) {
-		set("createdate", createdate);
-	}
-	
-	public java.util.Date getCreatedate() {
-		return get("createdate");
-	}
-
 	public void setPhone(java.lang.String phone) {
 		set("phone", phone);
 	}
@@ -79,6 +103,22 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 	
 	public java.lang.String getSalt2() {
 		return getStr("salt2");
+	}
+
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
+	}
+
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+	
+	public java.util.Date getCreateTime() {
+		return get("createTime");
 	}
 
 	public void setOnlineStatus(java.lang.String onlineStatus) {
@@ -111,6 +151,30 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 	
 	public java.lang.String getNote() {
 		return getStr("note");
+	}
+
+	public void setSort(java.lang.Integer sort) {
+		set("sort", sort);
+	}
+	
+	public java.lang.Integer getSort() {
+		return getInt("sort");
+	}
+
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
+
+	public void setIsEnable(java.lang.Integer isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
 	}
 
 }
