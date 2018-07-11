@@ -273,4 +273,12 @@ public abstract class BaseExpertGroup<M extends BaseExpertGroup<M>> extends Jboo
 		return getInt("isEnable");
 	}
 
+	public void setStatus(java.lang.String status) {
+		set("status", status);
+	}
+	
+	public java.lang.String getStatus() {
+		return getStr("status");
+	}
+
 }

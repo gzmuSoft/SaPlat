@@ -7,8 +7,13 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ExpertGroupService;
+import io.jboot.admin.service.api.PersonService;
+import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.admin.service.entity.model.Person;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -27,6 +32,13 @@ public class ExpertGroupController extends BaseController{
 
     @JbootrpcService
     private ExpertGroupService expertGroupService;
+
+    @JbootrpcService
+    private PersonService personService;
+
+    @JbootrpcService
+    private RoleService roleService;
+
 
     /**
      * index
@@ -139,5 +151,22 @@ public class ExpertGroupController extends BaseController{
         }
 
         renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 专家群体认证,信息填写页面
+     */
+    public void verify(){
+        User user = AuthUtils.getLoginUser();
+        Person person = personService.findByUser(user);
+        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
+        if (expertGroup == null){
+            expertGroup = new ExpertGroup();
+        }
+        setAttr("expertGroup",expertGroup)
+                .setAttr("person",person)
+                .setAttr("user",user)
+                .render("verify.html");
+
     }
 }
