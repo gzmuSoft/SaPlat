@@ -180,12 +180,11 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer','upload','upload1'], function () {
+    layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , upload = layui.upload
-            , upload1 = layui.upload1;
+            , upload = layui.upload;
 
         upload.render({ //允许上传的文件后缀
             elem: '#upload'
@@ -199,17 +198,6 @@
             }
         });
 
-        upload1.render({ //允许上传的文件后缀
-            elem: '#upload1'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#enterprise.pictrue").text(res.path);
-                $("#enterprise.pictrue").val(res.path);
-                $("#enterprise.pictrue").html(res.path);
-            }
-        });
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
