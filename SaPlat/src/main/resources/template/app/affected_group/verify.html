@@ -39,14 +39,14 @@
             return false;
 
         });
-        $(function(){
+        $(function () {
             var test = "#(affectedGroup.nation)";
-            if (test.length > 0){
-                $("input").prop("disabled","disabled").addClass("layui-disabled");
-                $("textarea").prop("disabled","disabled").addClass("layui-disabled");
-                $("select").prop("disabled","disabled").addClass("layui-disabled");
+            if (test.length > 0) {
+                $("input").prop("disabled", "disabled").addClass("layui-disabled");
+                $("textarea").prop("disabled", "disabled").addClass("layui-disabled");
+                $("select").prop("disabled", "disabled").addClass("layui-disabled");
                 $(".layui-select-title").unbind();
-                $("option").prop("disabled","disabled").addClass("layui-disabled");
+                $("option").prop("disabled", "disabled").addClass("layui-disabled");
                 $("#sub").hide();
             }
         });
@@ -63,7 +63,7 @@
 #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>专家团体</legend>
+        <legend>影响群体</legend>
     </fieldset>
     <form class="layui-form layui-form-pane" action="">
         <div class="layui-form-item">
@@ -77,7 +77,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.othername">曾用名</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.othername" id="affectedGroup.othername" value="#(affectedGroup.othername)"
+                <input type="text" name="affectedGroup.othername" id="affectedGroup.othername"
+                       value="#(affectedGroup.othername)"
                        placeholder="请输入曾用名" autocomplete="off" class="layui-input ">
             </div>
         </div>
@@ -93,21 +94,24 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.name">名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.name" id="affectedGroup.name" required lay-verify="required" value="#(affectedGroup.name)"
+                <input type="text" name="affectedGroup.name" id="affectedGroup.name" required lay-verify="required"
+                       value="#(affectedGroup.name)"
                        placeholder="请输入影响群体名称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.nation">民族</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.nation" id="affectedGroup.nation" lay-verify="required" value="#(affectedGroup.nation)"
+                <input type="text" name="affectedGroup.nation" id="affectedGroup.nation" lay-verify="required"
+                       value="#(affectedGroup.nation)"
                        placeholder="请输入民族" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.residence">长期居住地址</label>
             <div class="layui-input-block">
-                <input type="text" name="affectedGroup.residence" id="affectedGroup.residence" lay-verify="required" value="#(affectedGroup.residence)"
+                <input type="text" name="affectedGroup.residence" id="affectedGroup.residence" lay-verify="required"
+                       value="#(affectedGroup.residence)"
                        autocomplete="off" placeholder="请输入..." class="layui-input">
             </div>
         </div>
@@ -116,21 +120,24 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.nationality">国籍</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.nationality" id="affectedGroup.nationality" lay-verify="required" value="#(affectedGroup.nationality)"
+                <input type="text" name="affectedGroup.nationality" id="affectedGroup.nationality" lay-verify="required"
+                       value="#(affectedGroup.nationality)"
                        placeholder="请输入国籍" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.census">户籍</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.census" id="affectedGroup.census" lay-verify="required" value="#(affectedGroup.census)"
+                <input type="text" name="affectedGroup.census" id="affectedGroup.census" lay-verify="required"
+                       value="#(affectedGroup.census)"
                        placeholder="请输入国籍" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.education">学历</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.education" id="affectedGroup.education" lay-verify="required" value="#(affectedGroup.education)"
+                <input type="text" name="affectedGroup.education" id="affectedGroup.education" lay-verify="required"
+                       value="#(affectedGroup.education)"
                        placeholder="请输入学历" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -155,7 +162,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label" for="affectedGroup.birthday">出生日期</label>
                 <div class="layui-input-block">
-                    <input type="date" name="affectedGroup.birthday" id="affectedGroup.birthday" value="#(affectedGroup.birthday)" autocomplete="off"
+                    <input type="date" name="affectedGroup.birthday" id="affectedGroup.birthday"
+                           value="#(affectedGroup.birthday)" autocomplete="off"
                            class="layui-input">
                 </div>
             </div>
@@ -163,14 +171,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.politics">政治面貌</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.politics" id="affectedGroup.politics" lay-verify="required" value="#(affectedGroup.politics)"
+                <input type="text" name="affectedGroup.politics" id="affectedGroup.politics" lay-verify="required"
+                       value="#(affectedGroup.politics)"
                        placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
             <div class="layui-input-inline">
-                <input type="text" name="affectedGroup.occupation" id="affectedGroup.occupation" lay-verify="required" value="#(affectedGroup.occupation)"
+                <input type="text" name="affectedGroup.occupation" id="affectedGroup.occupation" lay-verify="required"
+                       value="#(affectedGroup.occupation)"
                        placeholder="请输入政治面貌" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -180,11 +190,11 @@
                 <select name="affectedGroup.maritalstatus" id="affectedGroup.maritalstatus">
                     #if(affectedGroup.maritalstatus == 0)
                     <option value="1">请选择</option>
-                    <option value="1" >已婚</option>
+                    <option value="1">已婚</option>
                     <option value="0" selected="">未婚</option>
                     #else
                     <option value="1">请选择</option>
-                    <option value="1"  selected="">已婚</option>
+                    <option value="1" selected="">已婚</option>
                     <option value="0">未婚</option>
                     #end
                 </select>
