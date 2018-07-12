@@ -49,13 +49,13 @@ public abstract class BaseAuth<M extends BaseAuth<M>> extends JbootModel<M> impl
 		return get("lastUpdTime");
 	}
 
-	public void setStatus(java.lang.Integer status) {
-		set("status", status);
+    public void setStatus(java.lang.String status) {
+        set("status", status);
 	}
-	
-	public java.lang.Integer getStatus() {
-		return getInt("status");
-	}
+
+    public java.lang.String getStatus() {
+        return getStr("status");
+    }
 
 	public void setIsEnable(java.lang.Integer isEnable) {
 		set("isEnable", isEnable);
