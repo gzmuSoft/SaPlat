@@ -118,7 +118,7 @@ public class PersonController extends BaseController {
         if (affectedGroup.getResidence() == null){
             affectedGroup.setResidence(person.getAddr());
         }
-        if (!personService.update(person, loginUser)) {
+        if (!personService.update(person, loginUser,affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
         }
