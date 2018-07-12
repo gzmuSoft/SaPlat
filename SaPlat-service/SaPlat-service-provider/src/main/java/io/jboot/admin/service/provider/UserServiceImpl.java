@@ -69,7 +69,7 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
         }
 
         user.setOnlineStatus(UserOnlineStatus.OFFLINE);
-        user.setCreatedate(new Date());
+        user.setCreateTime(new Date());
         user.setLastUpdTime(new Date());
         user.setNote("保存系统用户");
 

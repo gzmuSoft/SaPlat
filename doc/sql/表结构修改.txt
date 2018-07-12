@@ -1,0 +1,15 @@
+2018-07-09 sys-user表
+
+修改字段： createdata 修改为 createTime
+
+新增字段：
+spell	     varchar（255）	      注释：用户全拼                默认值：NULL
+userID	     bigint（20）          注释：用户主体编号             默认值：NULL
+userSource	 int（11）	          注释：0：个人群体、1：组织机构    默认值：NULL
+salt2	     varchar（254）	      注释：用于用户密码的加盐处理      默认值：NULL
+sort	     int（11）	          注释：排序                    默认值：NULL
+remark	     varchar（254）        注释：备注	                  默认值：NULL
+isEnable	 smallint	          注释：是否可用                 默认值：true:是, false:否
+createUserID bigint（20）	      注释：创建用户编号			  默认值：NULL
+
+

@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 
 import java.util.List;
@@ -38,6 +39,15 @@ public interface ExpertGroupService  {
      */
     public boolean hasExpertGroup(String name);
 
+
+    /**
+     * 通过 person id 查询
+     * @param id 专家团体
+     * @return 查询到的专家
+     */
+    public ExpertGroup findByPersonId(Long id);
+
+
     /**
      * find all model
      *
@@ -72,6 +82,13 @@ public interface ExpertGroupService  {
      */
     public boolean save(ExpertGroup model);
 
+    /**
+     * 保存专家群体以及认证记录
+     * @param model 专家群体
+     * @param auth 认证
+     * @return 结果
+     */
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth);
 
     /**
      * save or update model

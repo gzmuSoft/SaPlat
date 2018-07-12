@@ -18,6 +18,14 @@ public interface EnterpriseService  {
 
 
     /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public Enterprise findByOrgID(Long orgID);
+
+    /**
      * find all model
      *
      * @return all <Enterprise
