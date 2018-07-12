@@ -2,7 +2,6 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import io.jboot.admin.base.common.AuthStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.web.base.BaseController;
@@ -11,6 +10,7 @@ import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;

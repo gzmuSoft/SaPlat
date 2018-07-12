@@ -20,8 +20,17 @@ public class UserRoleServiceImpl extends JbootServiceBase<UserRole> implements U
         return Db.update("delete from sys_user_role where user_id = ?", userId);
     }
 
+    /*
+    这个bug在这里五年了
+    我是它的第42个维护者
+     */
     @Override
     public int[] batchSave(List<UserRole> list) {
         return Db.batchSave(list, list.size());
+    }
+
+    @Override
+    public UserRole findByUserId(Long userId) {
+        return DAO.findFirstByColumn("userId", userId);
     }
 }

@@ -1,6 +1,7 @@
 package io.jboot.admin.service.provider;
 
 import io.jboot.admin.service.api.ReviewGroupService;
+import io.jboot.admin.service.entity.model.Management;
 import io.jboot.admin.service.entity.model.ReviewGroup;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -12,6 +13,9 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implements ReviewGroupService {
-
+    @Override
+    public ReviewGroup findByOrgID(Long orgID) {
+        return DAO.findFirstByColumn("orgID", orgID);
+    }
 
 }

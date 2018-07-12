@@ -16,6 +16,13 @@ public interface FacAgencyService  {
      */
     public FacAgency findById(Object id);
 
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public FacAgency findByOrgID(Long orgID);
 
     /**
      * find all model

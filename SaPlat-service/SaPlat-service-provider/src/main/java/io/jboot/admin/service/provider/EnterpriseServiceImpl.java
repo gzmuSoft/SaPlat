@@ -35,6 +35,9 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
         return DAO.findFirstByColumn("name", name);
     }
 
-
+    @Override
+    public Enterprise findByOrgID(Long orgID) {
+        return DAO.findFirstByColumn("orgID", orgID);
+    }
 
 }

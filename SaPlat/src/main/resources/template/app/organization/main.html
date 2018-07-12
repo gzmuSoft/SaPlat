@@ -25,7 +25,8 @@
                     layer.msg('编辑成功');
                     $(".layui-btn").addClass("layui-hide");
                     $("#edit").removeClass("layui-hide");
-                    $(":input[disabled='disabled']").addClass("layui-disabled").prop("disabled","disabled");
+                    $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+                    $("#edit").removeClass("layui-disabled");
                     setTimeout(function () {
                         return true;
                     }, 3000);
@@ -42,6 +43,13 @@
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
             return false;
+        });
+
+        $('#reset').click(function () {
+            $(".layui-btn").addClass("layui-hide");
+            $("#edit").removeClass("layui-hide");
+            $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+            $("#edit").removeClass("layui-disabled");
         });
     });
 

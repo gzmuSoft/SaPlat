@@ -12,5 +12,8 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements ProfGroupService {
-
+    @Override
+    public ProfGroup findByOrgID(Long orgID) {
+        return DAO.findFirstByColumn("orgID", orgID);
+    }
 }
