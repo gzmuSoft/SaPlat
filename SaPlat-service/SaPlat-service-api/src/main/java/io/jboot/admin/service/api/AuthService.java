@@ -50,6 +50,25 @@ public interface AuthService  {
     public Auth findByUserAndRole(User user,long role);
 
     /**
+     * 更具用户id和认证状态查询认证信息以获得认证角色
+     *
+     * @param userId 用户id
+     * @param status
+     * @return 认证信息
+     */
+    public Auth findByUserIdAndStatus(Long userId, String status);
+
+    /**
+     * 更具用户id和认证状态查询认证信息以列表形式存储
+     *
+     * @param userId 用户id
+     * @param status
+     * @return 认证信息
+     */
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status);
+
+
+    /**
      * delete model
      *
      * @param model

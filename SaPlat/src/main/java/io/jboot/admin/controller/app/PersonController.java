@@ -118,13 +118,12 @@ public class PersonController extends BaseController {
         if (affectedGroup.getResidence() == null){
             affectedGroup.setResidence(person.getAddr());
         }
-        if (!personService.update(person, loginUser,affectedGroup)) {
+        if (!personService.update(person, loginUser)) {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
         }
         renderJson(RestResult.buildSuccess());
     }
-
 
     /**
      * 专家团体页面
@@ -135,29 +134,11 @@ public class PersonController extends BaseController {
         Auth auth = new Auth();
         auth.setStatus("5");
         if (expertGroup != null) {
-            auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
+            auth = authService.findByUserAndRole(user,roleService.findByName("专家团体").getId());
         }
-        setAttr("auth", auth);
+        setAttr("auth",auth);
         setAttr("expertGroup", expertGroup);
         render("expertGroup.html");
-    }
-
-
-    /**
-     * 专家群体认证,信息填写页面
-     */
-    public void verify(){
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        if (expertGroup == null){
-            expertGroup = new ExpertGroup();
-        }
-        setAttr("expertGroup",expertGroup)
-                .setAttr("person",person)
-                .setAttr("user",user)
-                .render("verify.html");
-
     }
 
     /**
@@ -177,8 +158,8 @@ public class PersonController extends BaseController {
         expertGroup.setPersonID(person.getId());
         expertGroup.setIsEnable(1);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
-        if (name != null) {
-            if (name.getIsEnable() == 1) {
+        if ( name != null ) {
+            if (name.getIsEnable() == 1){
                 renderJson(RestResult.buildError("专家团体已存在"));
                 throw new BusinessException("专家团体已存在");
             }

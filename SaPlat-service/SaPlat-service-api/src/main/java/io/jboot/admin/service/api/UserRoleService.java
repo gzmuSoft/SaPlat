@@ -29,6 +29,14 @@ public interface UserRoleService  {
      */
     public UserRole findById(Object id);
 
+    /**
+     * 根据用户id查询用户权限
+     *
+     * @param userId
+     * @return
+     */
+
+    public UserRole findByUserId(Long userId);
 
     /**
      * 根据ID删除model
@@ -70,7 +78,6 @@ public interface UserRoleService  {
      * @return
      */
     public boolean update(UserRole model);
-
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
