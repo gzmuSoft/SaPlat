@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
@@ -34,11 +35,19 @@ public interface AuthService  {
     public boolean deleteById(Object id);
 
     /**
-     * 更具用户id查询认证信息
-     * @param userId 用户id
+     * 根据用户查询认证信息
+     * @param user 用户
      * @return 认证信息
      */
-    public Auth findByUserId(Long userId);
+    public Auth findByUser(User user);
+
+    /**
+     * 更护用户和权限查询认证
+     * @param user 用户
+     * @param role 权限
+     * @return 认证信息
+     */
+    public Auth findByUserAndRole(User user,long role);
 
     /**
      * 更具用户id和认证状态查询认证信息以获得认证角色

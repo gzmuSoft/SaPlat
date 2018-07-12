@@ -25,11 +25,12 @@
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/person/expertGroupVerify',
+                url: '#(ctxPath)/app/person/affectedGroupVerify',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
                     layer.msg('上传成功，请耐心等待审核！');
+                    window.location.reload();
                 },
                 error: function (data) {
                     console.log(data);
@@ -38,7 +39,21 @@
             return false;
 
         });
+        $(function(){
+            var test = "#(expertGroup.nation)";
+            if (test.length > 0){
+                $("input").prop("disabled","disabled").addClass("layui-disabled");
+                $("textarea").prop("disabled","disabled").addClass("layui-disabled");
+                $("select").prop("disabled","disabled").addClass("layui-disabled");
+                $(".layui-select-title").unbind();
+                $("option").prop("disabled","disabled").addClass("layui-disabled");
+                $("#sub").hide();
+            }
+        });
 
+        $('#back').click(function () {
+            history.back(-1);
+        })
     });
 
 
@@ -76,10 +91,10 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.name">专业团体名称</label>
+            <label class="layui-form-label" for="expertGroup.name">专家团体名称</label>
             <div class="layui-input-inline">
                 <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required" value="#(expertGroup.name)"
-                       placeholder="请输入专业团体名称" autocomplete="off" class="layui-input">
+                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -101,7 +116,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.nationality">国籍</label>
             <div class="layui-input-inline">
-                <input type="text" name="expertGroup.nationality" id="expertGroup.nationality" lay-verify="required" value="#(expertGroup.nationalit)"
+                <input type="text" name="expertGroup.nationality" id="expertGroup.nationality" lay-verify="required" value="#(expertGroup.nationality)"
                        placeholder="请输入国籍" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -258,6 +273,9 @@
         <div class="layui-form-item">
             <button class="layui-btn" lay-filter="sub" lay-submit id="sub">
                 保存
+            </button>
+            <button class="layui-btn" id="back">
+                返回
             </button>
         </div>
     </form>

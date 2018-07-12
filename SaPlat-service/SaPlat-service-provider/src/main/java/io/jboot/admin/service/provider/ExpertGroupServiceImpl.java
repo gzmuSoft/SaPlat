@@ -43,7 +43,7 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     }
 
     @Override
-    public boolean saveOrUpdateExpertGroupAndAuth(ExpertGroup model, Auth auth) {
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth) {
         return Db.tx(() -> saveOrUpdate(model) && authService.saveOrUpdate(auth));
     }
 
