@@ -24,4 +24,8 @@ public class UserRoleServiceImpl extends JbootServiceBase<UserRole> implements U
     public int[] batchSave(List<UserRole> list) {
         return Db.batchSave(list, list.size());
     }
+    @Override
+    public List<UserRole> findByUserId(Long userId){
+        return DAO.findListByColumn("user_id",userId);
+    }
 }

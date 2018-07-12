@@ -2,133 +2,95 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.UserRole;
+import io.jboot.admin.service.entity.model.Auth;
 
 import java.util.List;
 
-public interface UserRoleService  {
+public interface AuthService  {
 
     /**
-     * 根据userId删除model
-     * @param userId
-     */
-    public int deleteByUserId(Long userId);
-
-    /**
-     * 批量保存 model
-     * @param list
-     * @return
-     */
-    public int[] batchSave(List<UserRole> list);
-
-    /**
-     * 根据ID查找model
+     * find model by primary key
      *
      * @param id
      * @return
      */
-    public UserRole findById(Object id);
+    public Auth findById(Object id);
 
 
     /**
-     * 根据ID删除model
+     * find all model
+     *
+     * @return all <Auth
+     */
+    public List<Auth> findAll();
+
+
+    /**
+     * delete model by primary key
      *
      * @param id
-     * @return
+     * @return success
      */
     public boolean deleteById(Object id);
 
+
     /**
-     * 删除
+     * delete model
      *
      * @param model
      * @return
      */
-    public boolean delete(UserRole model);
+    public boolean delete(Auth model);
 
 
     /**
-     * 保存到数据库
+     * save model to database
      *
      * @param model
      * @return
      */
-    public boolean save(UserRole model);
+    public boolean save(Auth model);
+
 
     /**
-     * 保存或更新
+     * save or update model
+     *
+     * @param model
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(Auth model);
+
+
+    /**
+     * update data model
      *
      * @param model
      * @return
      */
-    public boolean saveOrUpdate(UserRole model);
+    public boolean update(Auth model);
+
 
     /**
-     * 更新 model
-     *
-     * @param model
-     * @return
+     * 分页查询审核信息
+     * @param auth pageNumber pageSize 审核
+     * @return 页
      */
-    public boolean update(UserRole model);
+    public Page<Auth> findPage(Auth auth, int pageNumber, int pageSize);
 
-    /**
-     * @param userId
-     * @return role_list
-     */
-
-    public List<UserRole> findByUserId(Long userId);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-
     public void join(List<? extends Model> models, String joinOnField);
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
     public void join(List<? extends Model> models, String joinOnField, String joinName);
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    /**
-     * 添加关联数据到某个model中去，避免关联查询，提高性能。
-     *
-     * @param model       要添加到的model
-     * @param joinOnField model对于的关联字段
-     */
     public void join(Model model, String joinOnField);
-
-    /**
-     * 添加关联数据到某个model中去，避免关联查询，提高性能。
-     *
-     * @param model
-     * @param joinOnField
-     * @param attrs
-     */
     public void join(Model model, String joinOnField, String[] attrs);
-
-
-    /**
-     * 添加关联数据到某个model中去，避免关联查询，提高性能。
-     *
-     * @param model
-     * @param joinOnField
-     * @param joinName
-     */
     public void join(Model model, String joinOnField, String joinName);
-
-
-    /**
-     * 添加关联数据到某个model中去，避免关联查询，提高性能。
-     *
-     * @param model
-     * @param joinOnField
-     * @param joinName
-     * @param attrs
-     */
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
-
     public void keep(Model model, String... attrs);
-
     public void keep(List<? extends Model> models, String... attrs);
 }
