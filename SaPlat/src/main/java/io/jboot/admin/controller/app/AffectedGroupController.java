@@ -153,24 +153,5 @@ public class AffectedGroupController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
-    /**
-     * 影响群体认证,信息填写页面
-     */
-    public void verify(){
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
-        if (affectedGroup == null){
-            affectedGroup = new AffectedGroup();
-        } else {
-            if (affectedGroup.getIsEnable() == 0){
-                affectedGroup = new AffectedGroup();
-            }
-        }
-        setAttr("affectedGroup",affectedGroup)
-                .setAttr("person",person)
-                .setAttr("user",user)
-                .render("verify.html");
 
-    }
 }

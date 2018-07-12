@@ -9,12 +9,12 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseAuth<M extends BaseAuth<M>> extends JbootModel<M> implements IBean {
 
-	public void setId(java.math.BigInteger id) {
+	public void setId(java.lang.Long id) {
 		set("id", id);
 	}
 	
-	public java.math.BigInteger getId() {
-		return get("id");
+	public java.lang.Long getId() {
+		return getLong("id");
 	}
 
 	public void setUserId(java.lang.Long userId) {
@@ -49,20 +49,20 @@ public abstract class BaseAuth<M extends BaseAuth<M>> extends JbootModel<M> impl
 		return get("lastUpdTime");
 	}
 
-	public void setStatus(java.lang.Integer status) {
+	public void setStatus(java.lang.String status) {
 		set("status", status);
 	}
 	
-	public java.lang.Integer getStatus() {
-		return getInt("status");
+	public java.lang.String getStatus() {
+		return getStr("status");
 	}
 
-	public void setIsEnable(java.lang.Integer isEnable) {
-		set("isEnable", isEnable);
+	public void setType(java.lang.String type) {
+		set("type", type);
 	}
 	
-	public java.lang.Integer getIsEnable() {
-		return getInt("isEnable");
+	public java.lang.String getType() {
+		return getStr("type");
 	}
 
 }
