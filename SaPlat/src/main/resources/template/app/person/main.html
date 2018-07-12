@@ -9,23 +9,24 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
+    layui.use(['form', 'layer', 'element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
-            , form = layui.form;
+            , form = layui.form
+            , element = layui.element;
 
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/person/update',
+                url: '#(ctxPath)/app/person/postUpdate',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
                     layer.msg('编辑成功');
                     $(".layui-btn").addClass("layui-hide");
                     $("#edit").removeClass("layui-hide");
-                    $(":input").addClass("layui-disabled").prop("disabled","disabled");
+                    $(":input").addClass("layui-disabled").prop("disabled", "disabled");
                     setTimeout(function () {
                         return true;
                     }, 3000);
@@ -37,12 +38,18 @@
             return false;
         });
 
-        $('#edit').click(function () {
+
+        $('#reset').click(function () {
+            history.back(-1);
+        });
+
+        $('#perfect').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
             return false;
         });
+
     });
 
 
@@ -58,64 +65,203 @@
 
     <form id="person" class="layui-form x-center" action="">
         <div class="layui-form-pane">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">个人资料</li>
+                    <li>联系方式</li>
+                    <li>家庭信息</li>
+                    <li>工作资料</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">账号(名称)</label>
-                <div class="layui-input-inline">
-                    <p>#(user.name)</p>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户姓名</label>
-                <div class="layui-input-inline">
-                    <p>#(person.name)</p>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-inline">
-                    <p>#(person.sex)</p>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="person.age">年龄</label>
-                <div class="layui-input-inline">
-                    <input type="number" id="person.age" name="person.age" value="#(person.age)"
-                           class="layui-input layui-disabled" disabled="disabled" required
-                    />
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="person.phone">电话号码</label>
-                <div class="layui-input-inline">
-                    <input type="tel" id="person.phone" name="person.phone" value="#(person.phone)"
-                           class="layui-input layui-disabled" disabled="disabled" required
-                    />
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">账号(名称)</label>
+                            <div class="layui-input-inline">
+                                <p>#(user.name)</p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户姓名</label>
+                            <div class="layui-input-inline">
+                                <p>#(person.name)</p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.othername">曾用名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.othername" name="affectedGroup.othername"
+                                       value="#(affectedGroup.othername)" class="layui-input layui-disabled"
+                                       disabled="disabled"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline">
+                                <p>#(person.sex)</p>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" for="affectedGroup.birthday"><em
+                                    class="require-mark">*</em>出生日期</label>
+                            <div class="layui-input-inline">
+                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday"
+                                       lay-verify="date"
+                                       placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input layui-disabled"
+                                       disabled="disabled" required/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="person.age">年龄</label>
+                            <div class="layui-input-inline">
+                                <input type="number" id="person.age" name="person.age" value="#(person.age)"
+                                       class="layui-input layui-disabled" disabled="disabled" required
+                                />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.politics"><em
+                                    class="require-mark">*</em>政治面貌</label>
+                            <div class="layui-input-block">
+                                <select id="affectedGroup.politics" name="affectedGroup.politics" lay-verify="required">
+                                    <option value=""></option>
+                                    <option value="0" selected>群众</option>
+                                    <option value="1">共青团员</option>
+                                    <option value="2">党员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.nation"><em
+                                    class="require-mark">*</em>民族</label>
+                            <div class="layui-input-block">
+                                <select id="affectedGroup.nation" name="affectedGroup.nation" lay-verify="required">
+                                    <option value=""></option>
+                                    <option value="汉族" selected>汉族</option>
+                                    <option value="苗族">苗族</option>
+                                    <option value="布依族">布依族</option>
+                                    <option value="仡佬族">仡佬族</option>
+                                    <option value="回族">回族</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.education"><em
+                                    class="require-mark">*</em>学历</label>
+                            <div class="layui-input-block">
+                                <select id="affectedGroup.education" name="affectedGroup.education" lay-verify="required">
+                                    <option value=""></option>
+                                    <option value="小学">小学</option>
+                                    <option value="中学">中学</option>
+                                    <option value="本科" selected>本科</option>
+                                    <option value="硕士">硕士</option>
+                                    <option value="博士">博士</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.nationality"><em
+                                    class="require-mark">*</em>国籍</label>
+                            <div class="layui-input-block">
+                                <select id="affectedGroup.nationality" name="affectedGroup.nationality"
+                                        lay-verify="required">
+                                    <option value=""></option>
+                                    <option value="中国" selected>中国</option>
+                                    <option value="美国">美国</option>
+                                    <option value="英国">英国</option>
+                                    <option value="日本">日本</option>
+                                    <option value="韩国">韩国</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><em
+                                    class="require-mark">*</em>电话号码</label>
+                            <div class="layui-input-inline">
+                                <p>#(user.phone)</p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <p>#(user.email)</p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.residence"><em
+                                    class="require-mark">*</em>长期居住地址</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.residence"
+                                       name="affectedGroup.residence"
+                                       value="#(person.addr)"
+                                       class="layui-input layui-disabled"
+                                       disabled="disabled" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.duty">职务</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.duty" name="affectedGroup.duty"
+                                       value="#(affectedGroup.duty)" class="layui-input layui-disabled"
+                                       disabled="disabled"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" for="affectedGroup.resume">工作简历</label>
+                            <div class="layui-input-block">
+                        <textarea id="affectedGroup.resume" name="affectedGroup.resume"
+                                  placeholder="请输入内容"
+                                  class="layui-textarea" disabled="disabled"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.occupation" name="affectedGroup.occupation"
+                                       value="#(affectedGroup.occupation)" class="layui-input layui-disabled"
+                                       disabled="disabled"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.children">子女情况</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.children" name="affectedGroup.children"
+                                       value="#(affectedGroup.children)" class="layui-input layui-disabled"
+                                       disabled="disabled"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.maritalstatus">婚姻状况</label>
+                            <div class="layui-input-block" id="affectedGroup.maritalstatus">
+                                <input type="radio" name="affectedGroup.maritalstatus" value="已婚" title="已婚">
+                                <input type="radio" name="affectedGroup.maritalstatus" value="未婚" title="未婚" checked>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="affectedGroup.census">户籍</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="affectedGroup.census" name="affectedGroup.census"
+                                       value="#(affectedGroup.census)" class="layui-input layui-disabled"
+                                       disabled="disabled"/>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="user.email">邮箱</label>
-                <div class="layui-input-inline">
-                    <input type="email" id="user.email" name="user.email" value="#(user.email)"
-                           class="layui-input layui-disabled" disabled="disabled" required
-                    />
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="person.addr">地址</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="person.addr" name="person.addr" value="#(person.addr)"
-                           class="layui-input layui-disabled" disabled="disabled" required
-                    />
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-hide" lay-submit lay-filter="sub">立即提交</button>
                     <button class="layui-btn layui-btn-warm layui-hide" id="reset">取消</button>
-                    <button class="layui-btn layui-btn-normal" id="edit">编辑</button>
+                    <button class="layui-btn layui-btn-normal" id="perfect">完善资料</button>
                 </div>
             </div>
         </div>
