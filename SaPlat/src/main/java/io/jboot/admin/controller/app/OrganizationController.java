@@ -145,7 +145,7 @@ public class OrganizationController extends BaseController {
      */
     public void prove() {
         User loginUser = AuthUtils.getLoginUser();
-        Auth auth = authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING);
+        Auth auth = authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING);
         List<Auth> auth1 = authService.findByUserIdAndStatusToList(loginUser.getId(), AuthStatus.IS_VERIFY);
         List<String> list = new ArrayList<>();
         if (auth == null) {
@@ -177,7 +177,7 @@ public class OrganizationController extends BaseController {
             management = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING) == null) {
+        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
             setAttr("organization", organization).setAttr("management", management)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -209,7 +209,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setType("1");
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (managementService.saveOrUpdate(management, auth)) {
             renderJson(RestResult.buildSuccess("提交审核成功"));
         } else {
@@ -247,7 +247,7 @@ public class OrganizationController extends BaseController {
             enterprise = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING) == null) {
+        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
             setAttr("organization", organization).setAttr("enterprise", enterprise)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -279,7 +279,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setType("1");
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (enterpriseService.saveOrUpdate(enterprise, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -317,7 +317,7 @@ public class OrganizationController extends BaseController {
             facAgency = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING) == null) {
+        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
             setAttr("organization", organization).setAttr("fac_agency", facAgency)
                     .setAttr("flag", 0).render("fac_agency.html");
         } else {
@@ -349,7 +349,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setType("1");
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (facAgencyService.saveOrUpdate(fac_agency, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -388,7 +388,7 @@ public class OrganizationController extends BaseController {
             profGroup = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING) == null) {
+        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
             setAttr("organization", organization).setAttr("prof_group", profGroup)
                     .setAttr("flag", 0).render("prof_group.html");
         } else {
@@ -420,7 +420,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setType("1");
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (profGroupService.saveOrUpdate(prof_group, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -458,7 +458,7 @@ public class OrganizationController extends BaseController {
             reviewGroup = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFIING) == null) {
+        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
             setAttr("organization", organization).setAttr("review_group", reviewGroup)
                     .setAttr("flag", 0).render("review_group.html");
         } else {
@@ -490,7 +490,7 @@ public class OrganizationController extends BaseController {
         auth.setRoleId(roleService.findByName("审查团体").getId());
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         auth.setType("1");
         if (reviewGroupService.saveOrUpdate(review_group, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
