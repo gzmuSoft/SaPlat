@@ -30,6 +30,17 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     }
 
     @Override
+    public boolean saveOrganization(Organization model, User user, Long[] roles) {
+        return Db.tx(() -> {
+            if (!save(model)){
+                return false;
+            }
+            user.setUserID(findByName(model.getName()).getId());
+            return userService.saveUser(user,roles);
+        });
+    }
+
+    @Override
     public boolean hasUser(String name) {
         return findByName(name) != null;
     }

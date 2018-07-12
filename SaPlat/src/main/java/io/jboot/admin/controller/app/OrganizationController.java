@@ -81,12 +81,8 @@ public class OrganizationController extends BaseController{
         user.setPhone(organization.getContact());
         user.setOnlineStatus("0");
         user.setUserSource(1);
-        if(!organizationService.save(organization)){
-            renderJson(RestResult.buildError("用户保存失败"));
-            throw new BusinessException("用户保存失败");
-        }
-        user.setUserID(organizationService.findByName(organization.getName()).getId());
-        if(!userService.saveUser(user,roles)){
+
+        if (!organizationService.saveOrganization(organization,user,roles)){
             renderJson(RestResult.buildError("用户保存失败"));
             throw new BusinessException("用户保存失败");
         }

@@ -88,7 +88,7 @@ public interface ExpertGroupService  {
      * @param auth 认证
      * @return 结果
      */
-    public boolean saveOrUpdateExpertGroupAndAuth(ExpertGroup model, Auth auth);
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth);
 
     /**
      * save or update model

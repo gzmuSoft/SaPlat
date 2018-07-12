@@ -88,7 +88,7 @@ public class AffectedGroupController extends BaseController{
         //if (affectedGroupService.hasAffectedGroup(model.getName())){
         //    throw new BusinessException("所指定的影响群体名称已存在");
         //}
-        model.setIsEnable(true);
+        model.setIsEnable(1);
         if (!affectedGroupService.save(model)){
             throw new BusinessException("保存失败");
         }
@@ -154,19 +154,23 @@ public class AffectedGroupController extends BaseController{
     }
 
     /**
-     * 专家群体认证,信息填写页面
+     * 影响群体认证,信息填写页面
      */
-   /* public void verify(){
+    public void verify(){
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
-        AffectedGroup expertGroup = affectedGroupService.findByPersonId(person.getId());
-        if (expertGroup == null){
-            expertGroup = new AffectedGroup();
+        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
+        if (affectedGroup == null){
+            affectedGroup = new AffectedGroup();
+        } else {
+            if (affectedGroup.getIsEnable() == 0){
+                affectedGroup = new AffectedGroup();
+            }
         }
-        setAttr("expertGroup",expertGroup)
+        setAttr("affectedGroup",affectedGroup)
                 .setAttr("person",person)
                 .setAttr("user",user)
                 .render("verify.html");
 
-    }*/
+    }
 }

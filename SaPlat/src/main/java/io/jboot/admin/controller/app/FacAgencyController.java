@@ -6,14 +6,13 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.FacAgencyService;
 import io.jboot.admin.service.api.ProjectStepService;
-import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.admin.service.entity.model.FacAgency;
 import io.jboot.admin.service.entity.model.ProjectStep;
 import io.jboot.admin.service.entity.status.system.DataStatus;
-import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-import org.joda.time.DateTime;
 
 import java.util.Date;
 
@@ -25,11 +24,11 @@ import java.util.Date;
  * -----------------------------
  * @date 10:05 2018/7/2
  */
-@RequestMapping("/app/project_step")
-public class ProjectStepController extends BaseController{
+@RequestMapping("/app/fac_agency")
+public class FacAgencyController extends BaseController{
 
     @JbootrpcService
-    private ProjectStepService projectStepService;
+    private FacAgencyService facAgencyService;
 
     /**
      * index
@@ -44,12 +43,12 @@ public class ProjectStepController extends BaseController{
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
 
-        ProjectStep model = new ProjectStep();
+        FacAgency model = new FacAgency();
         model.setName(getPara("name"));
 
-        Page<ProjectStep> page = projectStepService.findPage(model, pageNumber, pageSize);
+        Page<FacAgency> page = facAgencyService.findPage(model, pageNumber, pageSize);
 
-        renderJson(new DataTable<ProjectStep>(page));
+        renderJson(new DataTable<FacAgency>(page));
     }
 
     /**
@@ -57,7 +56,7 @@ public class ProjectStepController extends BaseController{
      */
     public void delete(){
         Long id = getParaToLong("id");
-        if (!projectStepService.deleteById(id)){
+        if (!facAgencyService.deleteById(id)){
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -66,7 +65,7 @@ public class ProjectStepController extends BaseController{
     @NotNullPara({"id"})
     public void update(){
         Long id = getParaToLong("id");
-        ProjectStep model = projectStepService.findById(id);
+        FacAgency model = facAgencyService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
@@ -75,27 +74,24 @@ public class ProjectStepController extends BaseController{
     }
 
     public void postAdd(){
-        ProjectStep model = getBean(ProjectStep.class, "model");
-        if (projectStepService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+        FacAgency model = getBean(FacAgency.class, "model");
+        if (facAgencyService.isExisted(model.getName())){
+            throw new BusinessException("所指定的服务机构名称已存在");
         }
-        model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
-        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        model.setIsEnable(true);
-        if (!projectStepService.save(model)){
+        model.setIsEnable(1);
+        if (!facAgencyService.save(model)){
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     public void postUpdate(){
-        ProjectStep model = getBean(ProjectStep.class, "model");
-        ProjectStep byId = projectStepService.findById(model.getId());
+        FacAgency model = getBean(FacAgency.class, "model");
+        FacAgency byId = facAgencyService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的服务机构名称不存在");
         }
-        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!projectStepService.update(model)){
+        if (!facAgencyService.update(model)){
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -107,7 +103,7 @@ public class ProjectStepController extends BaseController{
     public void use() {
         Long id = getParaToLong("id");
 
-        ProjectStep model = projectStepService.findById(id);
+        FacAgency model = facAgencyService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -116,7 +112,7 @@ public class ProjectStepController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("启用对象");
 
-        if (!projectStepService.update(model)) {
+        if (!facAgencyService.update(model)) {
             throw new BusinessException("启用失败");
         }
 
@@ -130,7 +126,7 @@ public class ProjectStepController extends BaseController{
     public void unuse() {
         Long id = getParaToLong("id");
 
-        ProjectStep model = projectStepService.findById(id);
+        FacAgency model = facAgencyService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -139,7 +135,7 @@ public class ProjectStepController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("禁用对象");
 
-        if (!projectStepService.update(model)) {
+        if (!facAgencyService.update(model)) {
             throw new BusinessException("禁用失败");
         }
 
