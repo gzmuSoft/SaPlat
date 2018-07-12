@@ -1,0 +1,67 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function(data){
+
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/system/auth/postupdate',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success : function(data){
+                    pop_close();
+                }
+            });
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="auth.id" value="#(auth.id)">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>回复信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="auth.reply" placeholder="回复信息" class="layui-input" value="#(auth.reply)" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
+            <div class="layui-input-block">
+                <select id='status' name="auth.status" lay-verify="required">
+                    <option></option>
+                    #statusOption(io.jboot.admin.service.entity.status.system.AuthStatus::me(), auth.status)
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button  class="layui-btn" lay-filter="sub" lay-submit>
+                确定
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end
