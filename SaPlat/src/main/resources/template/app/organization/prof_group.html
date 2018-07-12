@@ -59,7 +59,7 @@
                 <label class="layui-form-label" for="prof_group.scope">服务范围</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.scope" name="prof_group.scope"
-                           value="#(prof_group.scope)" class="layui-input">
+                           value="#(prof_group.scope)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                 <label class="layui-form-label" for="prof_group.comprehend">服务理解</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.comprehend" name="prof_group.comprehend"
-                           value="#(prof_group.comprehend)" class="layui-input"/>
+                           value="#(prof_group.comprehend)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@
                 <label class="layui-form-label" for="prof_group.performance">服务业绩</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.performance" name="prof_group.performance"
-                           value="#(prof_group.performance)" class="layui-input"/>
+                           value="#(prof_group.performance)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                 <label class="layui-form-label" for="prof_group.framework">人员架构</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.framework" name="prof_group.framework"
-                           value="#(prof_group.framework)" class="layui-input"/>
+                           value="#(prof_group.framework)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
                 <label class="layui-form-label" for="prof_group.resume">人员简历</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.resume" name="prof_group.resume"
-                           value="#(prof_group.resume)" class="layui-input">
+                           value="#(prof_group.resume)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
                 <label class="layui-form-label" for="prof_group.content">专业内容</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.content" name="prof_group.content"
-                           value="#(prof_group.content)" class="layui-input">
+                           value="#(prof_group.content)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -107,15 +107,15 @@
                 <label class="layui-form-label" for="prof_group.capital">注册资金</label>
                 <div class="layui-input-inline">
                     <input type="number" id="prof_group.capital" name="prof_group.capital"
-                           value="#(prof_group.capital)" class="layui-input"/>
+                           value="#(prof_group.capital)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">有无犯罪记录</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="prof_group.record" value="0" title="有" >
-                    <input type="radio" name="prof_group.record" value="1" title="无">
+                    <input type="radio" name="prof_group.record" value="0" title="有" disabled="disabled" required/>
+                    <input type="radio" name="prof_group.record" value="1" title="无" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -123,7 +123,7 @@
                 <label class="layui-form-label" for="prof_group.administrator">管理员姓名</label>
                 <div class="layui-input-inline">
                     <input type="text" id="prof_group.administrator" name="prof_group.administrator"
-                           value="#(prof_group.administrator)" class="layui-input"/>
+                           value="#(prof_group.administrator)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
                 <label class="layui-form-label" for="prof_group.contact">管理员联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="prof_group.contact" name="prof_group.contact"
-                           value="#(prof_group.contact)" class="layui-input"/>
+                           value="#(prof_group.contact)" class="layui-input" disabled="disabled" required/>
                 </div>
             </div>
 
@@ -149,6 +149,10 @@
                     </div>
                 </div>
             </div>
+
+            <!--隐藏flag作为界面是否禁用的方法-->
+            <input type="text" id="flag" name="flag"
+                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
@@ -204,5 +208,10 @@
             return false;
         });
     });
+
+    if ($('#flag').val() == 1) {
+        $(".layui-btn").addClass("layui-hide");
+        $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+    }
 </script>
 #end
