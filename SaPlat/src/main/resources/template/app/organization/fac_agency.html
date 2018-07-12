@@ -241,7 +241,8 @@
 
     if ($('#flag').val() == 1) {
         $(".layui-btn").addClass("layui-hide");
-        $(":input").addClass("layui-disabled").disabled = true;
+        $(":input").addClass("layui-disabled");
+        $(":input").attr("disabled", "disabled");
     }
 </script>
 #end
