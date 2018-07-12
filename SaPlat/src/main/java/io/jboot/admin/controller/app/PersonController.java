@@ -2,12 +2,12 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import io.jboot.admin.base.common.AuthStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -156,7 +156,7 @@ public class PersonController extends BaseController {
         auth.setUserId(user.getId());
         auth.setRoleId(roleService.findByName("专家团体").getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
             renderJson(RestResult.buildError("专家团体认证上传失败"));
             throw new BusinessException("专家团体认证上传失败");
@@ -224,7 +224,7 @@ public class PersonController extends BaseController {
         auth.setUserId(user.getId());
         auth.setRoleId(roleService.findByName("影响群体").getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (!affectedGroupService.saveOrUpdate(affectedGroup, auth)) {
             renderJson(RestResult.buildError("影响群体认证上传失败"));
             throw new BusinessException("影响群体认证上传失败");

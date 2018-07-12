@@ -59,7 +59,7 @@
                 <label class="layui-form-label" for="review_group.scope">服务范围</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.scope" name="review_group.scope"
-                           value="#(review_group.scope)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.scope)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                 <label class="layui-form-label" for="review_group.comprehend">服务理解</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.comprehend" name="review_group.comprehend"
-                           value="#(review_group.comprehend)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.comprehend)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@
                 <label class="layui-form-label" for="review_group.performance">服务业绩</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.performance" name="review_group.performance"
-                           value="#(review_group.performance)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.performance)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                 <label class="layui-form-label" for="review_group.framework">人员架构</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.framework" name="review_group.framework"
-                           value="#(review_group.framework)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.framework)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
                 <label class="layui-form-label" for="review_group.resume">人员简历</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.resume" name="review_group.resume"
-                           value="#(review_group.resume)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.resume)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -99,15 +99,20 @@
                 <label class="layui-form-label" for="review_group.content">专业内容</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.content" name="review_group.content"
-                           value="#(review_group.content)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.content)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">有无犯罪记录</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="review_group.record" value="0" title="有" disabled="disabled" required/>
-                    <input type="radio" name="review_group.record" value="1" title="无" disabled="disabled" required/>
+                    #if(review_group.record == 0)
+                    <input type="radio" name="review_group.record" value="0" title="有" checked="checked" required/>
+                    <input type="radio" name="review_group.record" value="1" title="无" required/>
+                    #else
+                    <input type="radio" name="review_group.record" value="0" title="有" required/>
+                    <input type="radio" name="review_group.record" value="1" title="无" checked="checked" required/>
+                    #end
                 </div>
             </div>
 
@@ -115,7 +120,7 @@
                 <label class="layui-form-label" for="review_group.administrator">管理员姓名</label>
                 <div class="layui-input-inline">
                     <input type="text" id="review_group.administrator" name="review_group.administrator"
-                           value="#(review_group.administrator)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.administrator)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -123,7 +128,7 @@
                 <label class="layui-form-label" for="review_group.contact">管理员联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="review_group.contact" name="review_group.contact"
-                           value="#(review_group.contact)" class="layui-input" disabled="disabled" required/>
+                           value="#(review_group.contact)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -187,7 +192,7 @@
 
     if ($('#flag').val() == 1) {
         $(".layui-btn").addClass("layui-hide");
-        $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+        $(":input").addClass("layui-disabled").disabled = true;
     }
 </script>
 #end

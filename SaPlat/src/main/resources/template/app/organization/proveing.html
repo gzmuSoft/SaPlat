@@ -24,8 +24,9 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="sub" value="#(Method)">查看</button>
-                    <button class="layui-btn layui-btn-warm" lay-submit lay-filter="reset">取消</button>
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="#(Method)">查看认证资料</button>
+                    <button class="layui-btn layui-btn-warm" lay-submit lay-filter="reset" value="#(Method)">取消认证
+                    </button>
                 </div>
             </div>
         </div>
@@ -46,6 +47,28 @@
             window.location.href = '#(ctxPath)/app/organization/' + method;
             return false;
         });
+
+        form.on('submit(reset)', function (data) {
+            var method = data.elem.value;
+            console.log('#(ctxPath)/app/organization/' + method + 'Cancel');
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/organization/' + method + 'Cancel',
+                data: null,
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('取消认证成功！');
+                    window.location.reload();
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
     });
+
+
 </script>
 #end
