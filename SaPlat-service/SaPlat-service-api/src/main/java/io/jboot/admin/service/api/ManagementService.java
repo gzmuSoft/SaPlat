@@ -16,6 +16,13 @@ public interface ManagementService  {
      */
     public Management findById(Object id);
 
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public Management findByOrgID(Long orgID);
 
     /**
      * find all model
@@ -85,4 +92,6 @@ public interface ManagementService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
+
 }

@@ -68,6 +68,14 @@ public interface PersonService  {
      */
     public Person findByUser(User user);
 
+
+    /**
+     * 查询
+     * @param name 名字
+     * @return 用户
+     */
+    public Person findByName(String name);
+
     /**
      * 更新资料
      * @param person 个人群体

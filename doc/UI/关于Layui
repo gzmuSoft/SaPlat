@@ -1,0 +1,97 @@
+----------------
+    ----------------
+        ----------------
+            ----------------
+            ----------------
+         ----------------
+     ----------------
+----------------
+Css = include("/template/common/include/_css.html"
+所有CSS文件都在/SaPlat/src/main/resources/static/css 下
+LAYUI CSS在   /SaPlat/src/main/resources/static/js/layui/css/layui.css
+
+-----------------------------------------------------------------------
+2018-07-11
+今天发现一个容易犯的问题
+最后引用JS的时候 不能用引用JS的内容框住你后面JS的代码
+
+    错误示范
+<script src = "layui.js">
+     layui.use(['jquery','form', 'layer', 'upload','element'], function () {
+        // 操作对象
+        var form = layui.form
+			, element = layui.element
+            , layer = layui.layer
+            , $ = layui.jquery
+            , upload = layui.upload;
+             form.render('radio')
+
+		form.on('radio(nan)', function(layer){
+				layer.msg("nan");
+				});
+        // 提交监听
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/person/postRegister',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('注册成功，正在跳转！');
+                    setTimeout(function () {
+                        window.location.href = "#(ctxPath)/";
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+		</script>
+
+    正确示范
+<script src = "layui.js"></script>
+
+<script>
+
+			    layui.use(['jquery','form', 'layer', 'upload','element'], function () {
+        // 操作对象
+        var form = layui.form
+			, element = layui.element
+            , layer = layui.layer
+            , $ = layui.jquery
+            , upload = layui.upload;
+             form.render('radio')
+
+
+		form.on('radio(nan)', function(layer){
+				layer.msg("nan");
+				});
+        // 提交监听
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/person/postRegister',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg('注册成功，正在跳转！');
+                    setTimeout(function () {
+                        window.location.href = "#(ctxPath)/";
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+
+        });
+
+
+
+    })
+
+		</script>
+-------------------------------此文档将持续更新------------------------------

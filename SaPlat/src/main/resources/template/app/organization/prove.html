@@ -1,0 +1,81 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+    .layui-form-item {
+        margin-right: 100px;
+    }
+
+    .layui-btn {
+        width: 100px;
+        height: 100px;
+        margin-top: 15px;
+        margin-right: 70px;
+        border-radius: 100PX;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        form.on('submit(sub)', function (data) {
+            console.log(data);
+            var v = data.elem.value;
+            console.log(v);
+            window.location.href = '#(ctxPath)/app/organization/' + v;
+            return false;
+        });
+
+    });
+
+    //    function gray() {
+    //        var a = document.getElementsByClassName("layui-btn");
+    //        var b = document.getElementById("button");
+    //        console.log(b);
+    //        for(var i=0;i<a.length;i++){
+    //            if(a[i].name==b){
+    //                a[i].style.background="gray";
+    //                a[i].display="disabled";
+    //            }
+    //        }
+    //    }
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>组织机构认证</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="management" name="管理机构">管理机构</button>
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="enterprise" name="企业机构">企业机构</button>
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="facAgency" name="服务机构">服务机构</button>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block" STYLE="margin-left: 110PX;">
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="profGroup" name="专业团体">专业团体</button>
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="reviewGroup" name="审查团体">审查团体</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <hr>
+</div>
+
+#end

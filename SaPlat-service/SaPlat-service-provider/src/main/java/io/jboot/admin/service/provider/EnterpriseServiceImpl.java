@@ -2,9 +2,9 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.EnterpriseService;
 import io.jboot.admin.service.entity.model.Enterprise;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
@@ -33,6 +33,11 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
     @Override
     public Enterprise findByName(String name) {
         return DAO.findFirstByColumn("name", name);
+    }
+
+    @Override
+    public Enterprise findByOrgID(Long orgID) {
+        return DAO.findFirstByColumn("orgID", orgID);
     }
 
 }

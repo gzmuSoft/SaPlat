@@ -14,12 +14,12 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Date;
 
 @Bean
 @Singleton
 @JbootrpcService
 public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService {
-
     @Inject
     private UserService userService;
 
@@ -39,7 +39,38 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     }
 
     @Override
-    public boolean saveOrganization(Organization model, User user, Long[] roles) {
-        return Db.tx(() -> userService.saveUser(user, roles) && save(model));
+    public boolean save(Organization organization) {
+        organization.setCreateTime(new Date());
+        organization.setLastAccessTime(new Date());
+        organization.setIsEnable(1);
+        organization.setCertificate("#/");
+        return Db.tx(() -> organization.save());
     }
+
+    @Override
+    public boolean saveOrganization(Organization model, User user, Long[] roles) {
+        return Db.tx(() -> {
+            if (!save(model)){
+                return false;
+            }
+            user.setUserID(findByName(model.getName()).getId());
+            return userService.saveUser(user,roles);
+        });
+    }
+
+    @Override
+    public boolean hasUser(String name) {
+        return findByName(name) != null;
+    }
+
+    @Override
+    public Organization findByName(String name) {
+        return DAO.findFirstByColumn("name",name);
+    }
+
+    @Override
+    public boolean update(Organization organization, User user) {
+        return Db.tx(() -> organization.update() && user.update());
+    }
+
 }

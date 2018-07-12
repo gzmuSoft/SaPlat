@@ -16,6 +16,14 @@ public interface ReviewGroupService  {
      */
     public ReviewGroup findById(Object id);
 
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public ReviewGroup findByOrgID(Long orgID);
+
 
     /**
      * find all model
