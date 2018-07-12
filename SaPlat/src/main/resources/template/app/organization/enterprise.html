@@ -57,7 +57,7 @@
                 <label class="layui-form-label" for="enterprise.address">公司地址</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.address" name="enterprise.address"
-                           value="#(enterprise.address)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.address)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                 <label class="layui-form-label" for="enterprise.resume">公司简介</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.resume" name="enterprise.resume"
-                           value="#(enterprise.resume)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.resume)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
                 <label class="layui-form-label" for="enterprise.principal">公司负责人</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.principal" name="enterprise.principal"
-                           value="#(enterprise.principal)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.principal)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
                 <label class="layui-form-label" for="enterprise.phone">公司负责人联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="enterprise.phone" name="enterprise.contact"
-                           value="#(enterprise.contact)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.contact)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -89,7 +89,7 @@
                 <label class="layui-form-label" for="enterprise.type">主体类型</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.type" name="enterprise.type"
-                           value="#(enterprise.type)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.type)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@
                 <label class="layui-form-label" for="enterprise.credit">统一社会信用代码</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.credit" name="enterprise.credit"
-                           value="#(enterprise.credit)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.credit)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -105,7 +105,7 @@
                 <label class="layui-form-label" for="enterprise.scope">业务范围</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.scope" name="enterprise.scope"
-                           value="#(enterprise.scope)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.scope)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -113,7 +113,7 @@
                 <label class="layui-form-label" for="enterprise.start">创办日期</label>
                 <div class="layui-input-inline">
                     <input type="date" id="enterprise.start" name="enterprise.start"
-                           value="#(enterprise.start)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.start)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -121,7 +121,7 @@
                 <label class="layui-form-label" for="enterprise.person">企业法人</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.person" name="enterprise.person"
-                           value="#(enterprise.person)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.person)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -129,7 +129,7 @@
                 <label class="layui-form-label" for="enterprise.capital">注册资本</label>
                 <div class="layui-input-inline">
                     <input type="number" id="enterprise.capital" name="enterprise.capital"
-                           value="#(enterprise.capital)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.capital)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -152,7 +152,7 @@
                 <label class="layui-form-label" for="enterprise.website">企业网站</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.website" name="enterprise.website"
-                           value="#(enterprise.website)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.website)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -160,7 +160,7 @@
                 <label class="layui-form-label" for="enterprise.coordinate">地址坐标</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.coordinate" name="enterprise.coordinate"
-                           value="#(enterprise.coordinate)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.coordinate)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -168,7 +168,7 @@
                 <label class="layui-form-label" for="enterprise.landLine">座机电话</label>
                 <div class="layui-input-inline">
                     <input type="text" id="enterprise.landLine" name="enterprise.landline"
-                           value="#(enterprise.landLine)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.landLine)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -176,7 +176,7 @@
                 <label class="layui-form-label" for="enterprise.scale">企业人数</label>
                 <div class="layui-input-inline">
                     <input type="number" id="enterprise.scale" name="enterprise.scale"
-                           value="#(enterprise.scale)" class="layui-input" disabled="disabled" required/>
+                           value="#(enterprise.scale)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -238,7 +238,7 @@
 
     if ($('#flag').val() == 1) {
         $(".layui-btn").addClass("layui-hide");
-        $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+        $(":input").addClass("layui-disabled").disabled = true;
     }
 
 

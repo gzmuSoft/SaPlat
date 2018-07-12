@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.EnterpriseService;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -38,6 +40,11 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
     @Override
     public Enterprise findByOrgID(Long orgID) {
         return DAO.findFirstByColumn("orgID", orgID);
+    }
+
+    @Override
+    public boolean saveOrUpdate(Enterprise model, Auth auth) {
+        return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate());
     }
 
 }

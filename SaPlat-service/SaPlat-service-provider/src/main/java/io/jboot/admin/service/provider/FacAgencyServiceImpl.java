@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.FacAgencyService;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.FacAgency;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -37,5 +39,10 @@ public class FacAgencyServiceImpl extends JbootServiceBase<FacAgency> implements
     @Override
     public FacAgency findByName(String name) {
         return DAO.findFirstByColumn("name", name);
+    }
+
+    @Override
+    public boolean saveOrUpdate(FacAgency model, Auth auth) {
+        return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate());
     }
 }

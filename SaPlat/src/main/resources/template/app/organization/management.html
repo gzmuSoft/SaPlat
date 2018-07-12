@@ -59,7 +59,7 @@
                 <label class="layui-form-label" for="management.responsibility">部门职责</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.responsibility" name="management.responsibility"
-                           value="#(management.responsibility)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.responsibility)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                 <label class="layui-form-label" for="management.superior">上级部门</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.superior" name="management.superior"
-                           value="#(management.superior)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.superior)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@
                 <label class="layui-form-label" for="management.principal">上级负责人</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.principal" name="management.principal"
-                           value="#(management.principal)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.principal)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                 <label class="layui-form-label" for="management.principalcon">负责人联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="management.principalcon" name="management.principalcon"
-                           value="#(management.principalcon)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.principalcon)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
                 <label class="layui-form-label" for="management.party">党政信息</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.party" name="management.party"
-                           value="#(management.party)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.party)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
                 <label class="layui-form-label" for="management.manager">部门主管姓名</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.manager" name="management.manager"
-                           value="#(management.manager)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.manager)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -107,7 +107,7 @@
                 <label class="layui-form-label" for="management.managercon">主管联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="management.managercon" name="management.managercon"
-                           value="#(management.managercon)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.managercon)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -115,7 +115,7 @@
                 <label class="layui-form-label" for="management.detailedaddr">部门详细地址</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.detailedaddr" name="management.detailedaddr"
-                           value="#(management.detailedaddr)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.detailedaddr)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -123,7 +123,7 @@
                 <label class="layui-form-label" for="management.num">部门人数</label>
                 <div class="layui-input-inline">
                     <input type="number" id="management.num" name="management.num"
-                           value="#(management.num)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.num)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
                 <label class="layui-form-label" for="management.lower">下级部门</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.lower" name="management.lower"
-                           value="#(management.lower)" class="layui-input" disabled="disabled" required/>
+                           value="#(management.lower)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -196,7 +196,7 @@
 
     if ($('#flag').val() == 1) {
         $(".layui-btn").addClass("layui-hide");
-        $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+        $(":input").addClass("layui-disabled").disabled = true;
     }
 
 </script>

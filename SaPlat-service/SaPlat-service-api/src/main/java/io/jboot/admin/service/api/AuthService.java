@@ -56,7 +56,7 @@ public interface AuthService  {
      * @param status
      * @return 认证信息
      */
-    public Auth findByUserIdAndStatus(Long userId, int status);
+    public Auth findByUserIdAndStatus(Long userId, String status);
 
     /**
      * 更具用户id和认证状态查询认证信息以列表形式存储
@@ -65,7 +65,7 @@ public interface AuthService  {
      * @param status
      * @return 认证信息
      */
-    public List<Auth> findByUserIdAndStatusToList(Long userId, int status);
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status);
 
 
     /**

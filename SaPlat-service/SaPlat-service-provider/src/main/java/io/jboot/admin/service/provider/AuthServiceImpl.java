@@ -28,7 +28,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
     @Override
-    public Auth findByUserIdAndStatus(Long userId, int status) {
+    public Auth findByUserIdAndStatus(Long userId, String status) {
         Columns columns = new Columns();
         columns.eq("userId", userId);
         columns.eq("status", status);
@@ -36,7 +36,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
     @Override
-    public List<Auth> findByUserIdAndStatusToList(Long userId, int status) {
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
         Columns columns = new Columns();
         columns.eq("userId", userId);
         columns.eq("status", status);
