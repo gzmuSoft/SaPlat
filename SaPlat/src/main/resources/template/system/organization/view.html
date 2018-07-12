@@ -1,0 +1,33 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+    });
+    layui.use('flow', function(){
+        var flow = layui.flow;
+        //懒加载
+        flow.lazyimg();
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <label>文件路径#(certificate)</label>
+    <div id="img">
+        <img lay-src=="#(certificate)" alt="相关证书文件" />
+    </div>
+</div>
+#end
