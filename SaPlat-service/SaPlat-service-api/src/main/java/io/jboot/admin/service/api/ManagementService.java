@@ -3,7 +3,6 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Management;
-import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
 
@@ -17,6 +16,13 @@ public interface ManagementService  {
      */
     public Management findById(Object id);
 
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public Management findByOrgID(Long orgID);
 
     /**
      * find all model
@@ -69,10 +75,6 @@ public interface ManagementService  {
      * @return
      */
     public boolean update(Management model);
-
-    public Management findByUser(User user);
-
-    public boolean update(Management management, User user);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

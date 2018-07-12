@@ -16,6 +16,14 @@ public interface ProfGroupService  {
      */
     public ProfGroup findById(Object id);
 
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public ProfGroup findByOrgID(Long orgID);
+
 
     /**
      * find all model

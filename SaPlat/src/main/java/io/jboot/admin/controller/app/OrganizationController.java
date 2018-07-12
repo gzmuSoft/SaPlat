@@ -15,7 +15,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @RequestMapping("/app/organization")
 public class OrganizationController extends BaseController{
+
     @JbootrpcService
     private UserService userService;
 
@@ -51,6 +52,13 @@ public class OrganizationController extends BaseController{
 
     @JbootrpcService
     private ReviewGroupService reviewGroupService;
+
+    @JbootrpcService
+    private UserRoleService userRoleService;
+
+    @JbootrpcService
+    private AuthService authService;
+
 
 
     public void register(){
@@ -118,13 +126,41 @@ public class OrganizationController extends BaseController{
 
 
     public void prove(){
-        render("prove.html");
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = authService.findByUserIdAndStatus(loginUser.getId(), 2);
+        List<Auth> auth1 = authService.findByUserIdAndStatusToList(loginUser.getId(), 1);
+        List<String> list = new ArrayList<>();
+        if (auth == null) {
+            if (auth1 != null) {
+                for (int i = 0; i < auth1.size(); i++) {
+                    list.add(roleService.findById(auth1.get(i).getRoleId()).getName());
+                }
+                setSessionAttr("nameList", list).render("prove.html");
+            } else {
+                render("prove.html");
+            }
+        } else {
+            setAttr("name", roleService.findById(auth.getRoleId()).getName())
+                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdAcct())
+                    .render("proveing.html");
+        }
     }
 
     public void management() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization",organization).render("management.html");
+        Management management = managementService.findByOrgID(organization.getId());
+        if (management == null) {
+            management = new Management();
+        }
+        //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
+        if (authService.findByUserIdAndStatus(loginUser.getId(), 2) == null) {
+            setAttr("organization", organization).setAttr("management", management)
+                    .setAttr("flag", 0).render("management.html");
+        } else {
+            setAttr("organization", organization).setAttr("management", management)
+                    .setAttr("flag", 1).render("management.html");
+        }
     }
 
     @Before(POST.class)
@@ -132,8 +168,14 @@ public class OrganizationController extends BaseController{
         Management management = getBean(Management.class,"management");
         management.setCreateTime(new Date());
         management.setLastAccessTime(new Date());
-        if (managementService.save(management)) {
-            renderJson(RestResult.buildSuccess("认证成功"));
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = new Auth();
+        auth.setRoleId(roleService.findByName("管理机构").getId());
+        auth.setUserId(loginUser.getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus("2");
+        if (managementService.save(management) && authService.save(auth)) {
+            renderJson(RestResult.buildSuccess("提交审核成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");
@@ -143,7 +185,17 @@ public class OrganizationController extends BaseController{
     public void enterprise() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization",organization).render("enterprise.html");
+        Enterprise enterprise = enterpriseService.findByOrgID(organization.getId());
+        if (enterprise == null) {
+            enterprise = new Enterprise();
+        }
+        if (authService.findByUserIdAndStatus(loginUser.getId(), 2) == null) {
+            setAttr("organization", organization).setAttr("enterprise", enterprise)
+                    .setAttr("flag", 0).render("enterprise.html");
+        } else {
+            setAttr("organization", organization).setAttr("enterprise", enterprise)
+                    .setAttr("flag", 1).render("enterprise.html");
+        }
     }
 
     @Before(POST.class)
@@ -151,7 +203,13 @@ public class OrganizationController extends BaseController{
         Enterprise enterprise = getBean(Enterprise.class,"enterprise");
         enterprise.setCreateTime(new Date());
         enterprise.setLastAccessTime(new Date());
-        if (enterpriseService.save(enterprise)) {
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = new Auth();
+        auth.setRoleId(roleService.findByName("企业机构").getId());
+        auth.setUserId(loginUser.getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus("2");
+        if (enterpriseService.save(enterprise) && authService.save(auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
@@ -162,7 +220,17 @@ public class OrganizationController extends BaseController{
     public void facAgency() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization",organization).render("fac_agency.html");
+        FacAgency facAgency = facAgencyService.findByOrgID(organization.getId());
+        if (facAgency == null) {
+            facAgency = new FacAgency();
+        }
+        if (authService.findByUserIdAndStatus(loginUser.getId(), 2) == null) {
+            setAttr("organization", organization).setAttr("fac_agency", facAgency)
+                    .setAttr("flag", 0).render("fac_agency.html");
+        } else {
+            setAttr("organization", organization).setAttr("fac_agency", facAgency)
+                    .setAttr("flag", 1).render("fac_agency.html");
+        }
     }
 
     @Before(POST.class)
@@ -170,7 +238,13 @@ public class OrganizationController extends BaseController{
         FacAgency fac_agency = getBean(FacAgency.class,"fac_agency");
         fac_agency.setCreateTime(new Date());
         fac_agency.setLastAccessTime(new Date());
-        if (facAgencyService.save(fac_agency)) {
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = new Auth();
+        auth.setRoleId(roleService.findByName("服务机构").getId());
+        auth.setUserId(loginUser.getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus("2");
+        if (facAgencyService.save(fac_agency) && authService.save(auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
@@ -181,7 +255,17 @@ public class OrganizationController extends BaseController{
     public void profGroup() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization",organization).render("prof_group.html");
+        ProfGroup profGroup = profGroupService.findByOrgID(organization.getId());
+        if (profGroup == null) {
+            profGroup = new ProfGroup();
+        }
+        if (authService.findByUserIdAndStatus(loginUser.getId(), 2) == null) {
+            setAttr("organization", organization).setAttr("prof_group", profGroup)
+                    .setAttr("flag", 0).render("prof_group.html");
+        } else {
+            setAttr("organization", organization).setAttr("prof_group", profGroup)
+                    .setAttr("flag", 1).render("prof_group.html");
+        }
     }
 
     @Before(POST.class)
@@ -189,7 +273,13 @@ public class OrganizationController extends BaseController{
         ProfGroup prof_group = getBean(ProfGroup.class,"prof_group");
         prof_group.setCreateTime(new Date());
         prof_group.setLastAccessTime(new Date());
-        if (profGroupService.save(prof_group)) {
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = new Auth();
+        auth.setRoleId(roleService.findByName("专业团体").getId());
+        auth.setUserId(loginUser.getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus("2");
+        if (profGroupService.save(prof_group) && authService.save(auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
@@ -200,7 +290,17 @@ public class OrganizationController extends BaseController{
     public void reviewGroup() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization",organization). render("review_group.html");
+        ReviewGroup reviewGroup = reviewGroupService.findByOrgID(organization.getId());
+        if (reviewGroup == null) {
+            reviewGroup = new ReviewGroup();
+        }
+        if (authService.findByUserIdAndStatus(loginUser.getId(), 2) == null) {
+            setAttr("organization", organization).setAttr("review_group", reviewGroup)
+                    .setAttr("flag", 0).render("review_group.html");
+        } else {
+            setAttr("organization", organization).setAttr("review_group", reviewGroup)
+                    .setAttr("flag", 1).render("review_group.html");
+        }
     }
 
     @Before(POST.class)
@@ -208,7 +308,13 @@ public class OrganizationController extends BaseController{
         ReviewGroup review_group = getBean(ReviewGroup.class,"review_group");
         review_group.setCreateTime(new Date());
         review_group.setLastAccessTime(new Date());
-        if (reviewGroupService.save(review_group)) {
+        User loginUser = AuthUtils.getLoginUser();
+        Auth auth = new Auth();
+        auth.setRoleId(roleService.findByName("审查团体").getId());
+        auth.setUserId(loginUser.getId());
+        auth.setLastUpdTime(new Date());
+        auth.setStatus("2");
+        if (reviewGroupService.save(review_group) && authService.save(auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
