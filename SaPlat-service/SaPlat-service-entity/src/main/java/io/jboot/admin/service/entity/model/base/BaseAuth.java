@@ -49,6 +49,14 @@ public abstract class BaseAuth<M extends BaseAuth<M>> extends JbootModel<M> impl
 		return get("lastUpdTime");
 	}
 
+	public void setLastUpdUser(java.lang.String lastUpdUser) {
+		set("lastUpdUser", lastUpdUser);
+	}
+	
+	public java.lang.String getLastUpdUser() {
+		return getStr("lastUpdUser");
+	}
+
 	public void setStatus(java.lang.String status) {
 		set("status", status);
 	}

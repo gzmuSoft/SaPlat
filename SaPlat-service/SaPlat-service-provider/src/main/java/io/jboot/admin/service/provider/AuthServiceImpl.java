@@ -3,6 +3,7 @@ package io.jboot.admin.service.provider;
 import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -25,6 +26,14 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     @Override
     public Auth findByUserAndRole(User user, long role) {
         return DAO.findFirstByColumns(Columns.create("userId", user.getId()).eq("roleId", role));
+    }
+
+    @Override
+    public List<Auth> findByUserAndType(User user, String typeStatus) {
+        Columns columns = Columns.create();
+        columns.eq("userId",user.getId());
+        columns.eq("type",typeStatus);
+        return DAO.findListByColumns(columns);
     }
 
     @Override
