@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.TypeStatus;
 
 import java.util.List;
 
@@ -48,6 +49,14 @@ public interface AuthService  {
      * @return 认证信息
      */
     public Auth findByUserAndRole(User user,long role);
+
+    /**
+     * 通过用户和类型查找权限
+     * @param user 用户
+     * @param typeStatus 类型
+     * @return 结果
+     */
+    public List<Auth> findByUserAndType(User user, String typeStatus);
 
     /**
      * 根据用户id和认证状态查询认证信息以获得认证角色

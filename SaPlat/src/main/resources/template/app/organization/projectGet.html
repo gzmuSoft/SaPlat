@@ -1,0 +1,76 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        //按钮点击事件
+        form.on('submit(sub)', function (data) {
+            var id = data.elem.name;
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/organization/postProjectGet',
+                data: {"id": id},
+                loadFlag: true,
+                success: function (data) {
+                    layer.msg("申请成功！请等待审核！");
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+    });
+
+
+</script>
+#end
+
+#define content()
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>您已获得的立项权限：</legend>
+        <div>
+            <!--#for(role : exist)-->
+            <button class="layui-btn layui-btn-normal layui-disabled" disabled>VERIFYING</button>
+            <!--#end-->
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>正在等待审核的立项权限：</legend>
+        <div>
+            <!--#for(role : verifying)-->
+            <button class="layui-btn layui-btn-normal layui-disabled" disabled>VERIFYING</button>
+            <!--#end-->
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>未通过审核的立项权限：</legend>
+        <div>
+            <!--#for(role : notVerify)-->
+            <button class="layui-btn layui-btn-normal" name="VERIFYING" lay-submit lay-filter="sub">VERIFYING</button>
+            <!--<h1>原因：#(verifyAuth).get(role)</h1>-->
+            <!--#end-->
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>您尚未获得的立项权限：</legend>
+        <div>
+            <!--#for(role : roles)-->
+            <button class="layui-btn layui-btn-warm" name="VERIFYING" lay-submit lay-filter="sub">VERIFYING</button>
+            <!--#end-->
+        </div>
+    </fieldset>
+#end
