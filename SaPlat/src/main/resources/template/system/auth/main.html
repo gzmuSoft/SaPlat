@@ -26,8 +26,10 @@
                 {checkbox: false, sort: true, fixed: true, space: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'userId', title: '申请人ID', width: 100}
+                , {field: 'name', title: '申请人', width: 100}
                 , {field: 'roleId', title: '申请角色', width: 100,templet: '#statusTpl(roleStatus, "roleId")'}
-                , {field: 'type', title: '申请类型', width: 100,templet:'#statusTpl(typeStatus, "type")'}
+                , {field: 'type', title: '申请类型', width: 100,templet:'#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'}
+                , {field: 'lastUpdUser', title: '审核管理员', width: 100}
                 , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
                 , {field: 'reply', title: '回复信息', width: 200}
                 ,{field: 'status', title: '状态', width: 100 ,templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'}
@@ -69,12 +71,12 @@
             } else
                 if(obj.event === 'edit'){
                     pop_show('审核结果','#(ctxPath)/system/auth/update?id=' + data.id,'','', function(){
-                    reloadTable($('#userId').val(), $('#roleId').val());
+                    reloadTable(null,null, null,null);
                 });
             } else
                 if(obj.event === 'view'){
                     pop_show('认证信息','#(ctxPath)/system/auth/view?id=' + data.id,'','', function(){
-                        reloadTable($('#userId').val(), $('#roleId').val());
+                        reloadTable(null,null, null,null);
                     });
                 }
 
@@ -89,16 +91,17 @@
 
 
         $("#person").click(function(){
-            reloadTable("0",null,null);
+            reloadTable(null,"0",null,null);
         });
 
         $("#organization").click(function(){
-            reloadTable("1",null,null);
+            reloadTable(null,"1",null,null);
         });
-        reloadTable = function (_type,_userId,_status) {
+        reloadTable = function (_name,_type,_userId,_status) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/auth/tableData'
-                ,where: {type: _type,
+                ,where: {name:_name,
+                        type: _type,
                         userId:_userId,
                         status:_status} //设定异步数据接口的额外参数
             });
@@ -107,7 +110,7 @@
 
 
         form.on('submit(search)', function(data){
-            reloadTable(data.field.type,data.field.userId, data.field.status);
+            reloadTable(data.field.name,data.field.type,data.field.userId, data.field.status);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -140,9 +143,14 @@
 
 
 
-                    <label class="layui-form-label">申请人</label>
+                    <label class="layui-form-label">申请人ID</label>
                     <div class="layui-input-block">
                         <input type="text" id="userId" name="userId" placeholder="申请人ID" class="layui-input"/>
+                    </div>
+
+                    <label class="layui-form-label">申请人</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="name" name="name" placeholder="申请人" class="layui-input"/>
                     </div>
                     <div class="layui-input-inline" style="width : 80px">
                         <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
@@ -169,18 +177,9 @@
 
 
 
-    #[[
-    {{#  if(d.status == '2'){ }}
-    ]]#
+
     #shiroHasPermission('/system/auth/update')
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">审核</a>
     #end
-    <!--#[[-->
-    <!--{{# } else { }}-->
-    <!--]]#-->
-    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
-    #[[
-    {{# } }}
-    ]]#
 </script>
 #end

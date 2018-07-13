@@ -1,0 +1,117 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>专家团体</legend>
+    </fieldset>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="objectData.name">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="objectType.name" id="objectType.name" value="#(objectType.name)" required
+                       disabled="disabled" class="layui-input layui-disabled"
+                       lay-verify="required" placeholder="请输入姓名" autocomplete="off" disabled="disabled">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="objectData.name">专家团体名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="objectData.name" id="objectData.name" required lay-verify="required" value="#(objectData.name)"
+                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input" disabled="disabled">
+            </div>
+        </div>
+
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="objectData.workstate">在职状态</label>
+            <div class="layui-input-inline">
+                <select name="objectData.workstate" id="objectData.workstate" disabled="disabled">
+                    <option value="">请选择</option>
+                    #if(objectData.wokstate == 0)
+                        <option value="在职">在职</option>
+                        <option value="离职" selected="">离职</option>
+                    #else
+                        <option value="在职" selected="">在职</option>
+                        <option value="离职">离职</option>
+                    #end
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="objectData.worktime">工作时间</label>
+                <div class="layui-input-block">
+                    <input type="date" name="objectData.worktime" id="objectData.worktime" autocomplete="off"
+                           value="#(objectData.worktime)" class="layui-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" for="objectData.department">部门名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="objectData.department" id="objectData.department" autocomplete="off"
+                           value="#(objectData.department)" class="layui-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="objectData.workpictrue">工作证件照片</label>
+            <div class="layui-upload-drag" name="objectData.workpictrue" id="objectData.workpictrue">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="objectData.profess">专业资格内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="objectData.profess" id="objectData.profess"
+                          class="layui-textarea" disabled="disabled">#(objectData.profess)</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="objectData.certificate">专业资格证书</label>
+            <div class="layui-upload-drag" name="objectData.certificate" id="objectData.certificate">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" for="objectData.project">参与项目经历</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="objectData.project" id="objectData.project"
+                          class="layui-textarea" disabled="disabled">#(objectData.project)</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" id="back">
+                返回
+            </button>
+        </div>
+    </form>
+    <hr>
+</div>
+
+#end

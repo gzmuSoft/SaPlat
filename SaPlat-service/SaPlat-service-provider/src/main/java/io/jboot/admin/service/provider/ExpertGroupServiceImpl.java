@@ -2,9 +2,9 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.ExpertGroupService;
 import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
@@ -19,8 +19,8 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     @Override
     public Page<ExpertGroup> findPage(ExpertGroup model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -33,5 +33,10 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     @Override
     public ExpertGroup findByName(String name) {
         return DAO.findFirstByColumn("name", name);
+    }
+
+    @Override
+    public ExpertGroup findByOrgId(Long orgId) {
+        return DAO.findFirstByColumn("orgID", orgId);
     }
 }

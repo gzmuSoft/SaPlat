@@ -24,7 +24,7 @@ public interface ProfGroupService  {
      */
     public List<ProfGroup> findAll();
 
-
+    public ProfGroup findByOrgId(Long orgId);
     /**
      * delete model by primary key
      *

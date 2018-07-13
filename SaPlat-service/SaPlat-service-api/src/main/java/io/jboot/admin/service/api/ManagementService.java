@@ -16,7 +16,7 @@ public interface ManagementService  {
      */
     public Management findById(Object id);
 
-
+    public Management findByOrgId(Long orgId);
     /**
      * find all model
      *
