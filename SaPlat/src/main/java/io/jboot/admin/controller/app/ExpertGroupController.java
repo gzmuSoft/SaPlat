@@ -153,24 +153,5 @@ public class ExpertGroupController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
-    /**
-     * 专家群体认证,信息填写页面
-     */
-    public void verify(){
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        if (expertGroup == null){
-            expertGroup = new ExpertGroup();
-        } else {
-            if (expertGroup.getIsEnable() == 0){
-                expertGroup = new ExpertGroup();
-            }
-        }
-        setAttr("expertGroup",expertGroup)
-                .setAttr("person",person)
-                .setAttr("user",user)
-                .render("verify.html");
 
-    }
 }

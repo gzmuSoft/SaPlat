@@ -1,7 +1,9 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Db;
+import io.jboot.admin.service.api.AffectedGroupService;
 import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.AffectedGroup;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.PersonService;
@@ -20,6 +22,9 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private AffectedGroupService affectedGroupService;
 
     @Override
     public boolean savePerson(Person model, User user, Long[] roles) {
@@ -44,8 +49,14 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     }
 
     @Override
-    public boolean update(Person person, User user) {
-        return Db.tx(() -> person.update() && user.update());
+    public boolean update(Person person, User user,AffectedGroup affectedGroup) {
+        return Db.tx(() -> {
+            AffectedGroup group = affectedGroupService.findByPersonId(person.getId());
+            if (group != null){
+                affectedGroup.setId(group.getId());
+            }
+            return update(person) && userService.update(user) && affectedGroupService.saveOrUpdate(affectedGroup);
+        });
     }
 
 }
