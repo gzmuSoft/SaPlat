@@ -16,7 +16,11 @@
 #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        #if(auth.Status=="3")
         <legend>#(name)认证正在审核中</legend>
+        #else
+        <legend>#(name)认证审核未通过</legend>
+        #end
     </fieldset>
 
     <form id="person" class="layui-form x-center" action="">
@@ -24,9 +28,16 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
+                    #if(auth.Status=="3")
                     <button class="layui-btn" lay-submit lay-filter="sub" value="#(Method)">查看认证资料</button>
                     <button class="layui-btn layui-btn-warm" lay-submit lay-filter="reset" value="#(Method)">取消认证
                     </button>
+                    #else
+                    <p>认证未通过原因： #(auth.reply)</p>
+                    <button class="layui-btn" lay-submit lay-filter="sub" value="#(Method)">重新填写提交认证</button>
+                    <button class="layui-btn layui-btn-warm" lay-submit lay-filter="reset" value="#(Method)">取消本次认证
+                    </button>
+                    #end
                 </div>
             </div>
         </div>

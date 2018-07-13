@@ -177,7 +177,7 @@
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/organization/ManagementProve',
+                url: '#(ctxPath)/app/organization/managementProve',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {

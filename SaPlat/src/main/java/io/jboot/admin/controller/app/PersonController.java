@@ -136,8 +136,6 @@ public class PersonController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
         expertGroup.setName(person.getName());
-        expertGroup.setPhone(person.getPhone());
-        expertGroup.setMail(user.getEmail());
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
