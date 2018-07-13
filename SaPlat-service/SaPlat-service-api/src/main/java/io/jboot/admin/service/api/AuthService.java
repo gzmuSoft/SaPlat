@@ -42,7 +42,7 @@ public interface AuthService  {
     public Auth findByUser(User user);
 
     /**
-     * 更护用户和权限查询认证
+     * 根据用户和权限查询认证
      * @param user 用户
      * @param role 权限
      * @return 认证信息
@@ -50,7 +50,7 @@ public interface AuthService  {
     public Auth findByUserAndRole(User user,long role);
 
     /**
-     * 更具用户id和认证状态查询认证信息以获得认证角色
+     * 根据用户id和认证状态查询认证信息以获得认证角色
      *
      * @param userId 用户id
      * @param status
@@ -59,7 +59,7 @@ public interface AuthService  {
     public Auth findByUserIdAndStatus(Long userId, String status);
 
     /**
-     * 更具用户id和认证状态查询认证信息以列表形式存储
+     * 根据用户id和认证状态查询认证信息以列表形式存储
      *
      * @param userId 用户id
      * @param status
