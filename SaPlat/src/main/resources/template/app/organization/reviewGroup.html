@@ -38,97 +38,97 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.name">审查团体名称</label>
+                <label class="layui-form-label" for="reviewGroup.name">审查团体名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.name" name="review_group.name" value="#(organization.name)"
-                           class="layui-input layui-disabled layui-hide"  required/>
+                    <input type="text" id="reviewGroup.name" name="reviewGroup.name" value="#(organization.name)"
+                           class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.orgID">组织机构编号</label>
+                <label class="layui-form-label" for="reviewGroup.orgID">组织机构编号</label>
                 <div class="layui-input-inline">
-                    <input type="number" id="review_group.orgID" name="review_group.orgID" value="#(organization.id)"
-                           class="layui-input layui-disabled layui-hide"  required/>
+                    <input type="number" id="reviewGroup.orgID" name="reviewGroup.orgID" value="#(organization.id)"
+                           class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.id)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.scope">服务范围</label>
+                <label class="layui-form-label" for="reviewGroup.scope">服务范围</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.scope" name="review_group.scope"
-                           value="#(review_group.scope)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.scope" name="reviewGroup.scope"
+                           value="#(reviewGroup.scope)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.comprehend">服务理解</label>
+                <label class="layui-form-label" for="reviewGroup.comprehend">服务理解</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.comprehend" name="review_group.comprehend"
-                           value="#(review_group.comprehend)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.comprehend" name="reviewGroup.comprehend"
+                           value="#(reviewGroup.comprehend)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.performance">服务业绩</label>
+                <label class="layui-form-label" for="reviewGroup.performance">服务业绩</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.performance" name="review_group.performance"
-                           value="#(review_group.performance)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.performance" name="reviewGroup.performance"
+                           value="#(reviewGroup.performance)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.framework">人员架构</label>
+                <label class="layui-form-label" for="reviewGroup.framework">人员架构</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.framework" name="review_group.framework"
-                           value="#(review_group.framework)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.framework" name="reviewGroup.framework"
+                           value="#(reviewGroup.framework)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.resume">人员简历</label>
+                <label class="layui-form-label" for="reviewGroup.resume">人员简历</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.resume" name="review_group.resume"
-                           value="#(review_group.resume)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.resume" name="reviewGroup.resume"
+                           value="#(reviewGroup.resume)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.content">专业内容</label>
+                <label class="layui-form-label" for="reviewGroup.content">专业内容</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.content" name="review_group.content"
-                           value="#(review_group.content)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.content" name="reviewGroup.content"
+                           value="#(reviewGroup.content)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">有无犯罪记录</label>
                 <div class="layui-input-block">
-                    #if(review_group.record == 0)
-                    <input type="radio" name="review_group.record" value="0" title="有" checked="checked" required/>
-                    <input type="radio" name="review_group.record" value="1" title="无" required/>
+                    #if(reviewGroup.record == 0)
+                    <input type="radio" name="reviewGroup.record" value="0" title="有" checked="checked" required/>
+                    <input type="radio" name="reviewGroup.record" value="1" title="无" required/>
                     #else
-                    <input type="radio" name="review_group.record" value="0" title="有" required/>
-                    <input type="radio" name="review_group.record" value="1" title="无" checked="checked" required/>
+                    <input type="radio" name="reviewGroup.record" value="0" title="有" required/>
+                    <input type="radio" name="reviewGroup.record" value="1" title="无" checked="checked" required/>
                     #end
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.administrator">管理员姓名</label>
+                <label class="layui-form-label" for="reviewGroup.administrator">管理员姓名</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="review_group.administrator" name="review_group.administrator"
-                           value="#(review_group.administrator)" class="layui-input" required/>
+                    <input type="text" id="reviewGroup.administrator" name="reviewGroup.administrator"
+                           value="#(reviewGroup.administrator)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="review_group.contact">管理员联系方式</label>
+                <label class="layui-form-label" for="reviewGroup.contact">管理员联系方式</label>
                 <div class="layui-input-inline">
-                    <input type="tel" id="review_group.contact" name="review_group.contact"
-                           value="#(review_group.contact)" class="layui-input" required/>
+                    <input type="tel" id="reviewGroup.contact" name="reviewGroup.contact"
+                           value="#(reviewGroup.contact)" class="layui-input" required/>
                 </div>
             </div>
 

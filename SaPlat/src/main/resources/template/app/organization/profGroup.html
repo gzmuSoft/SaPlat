@@ -38,105 +38,105 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.name">专业团体名称</label>
+                <label class="layui-form-label" for="profGroup.name">专业团体名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.name" name="prof_group.name" value="#(organization.name)"
+                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
                            class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.orgID">组织机构编号</label>
+                <label class="layui-form-label" for="profGroup.orgID">组织机构编号</label>
                 <div class="layui-input-inline">
-                    <input type="number" id="prof_group.orgID" name="prof_group.orgID" value="#(organization.id)"
+                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.id)"
                            class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.id)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.scope">服务范围</label>
+                <label class="layui-form-label" for="profGroup.scope">服务范围</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.scope" name="prof_group.scope"
-                           value="#(prof_group.scope)" class="layui-input" required/>
+                    <input type="text" id="profGroup.scope" name="profGroup.scope"
+                           value="#(profGroup.scope)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.comprehend">服务理解</label>
+                <label class="layui-form-label" for="profGroup.comprehend">服务理解</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.comprehend" name="prof_group.comprehend"
-                           value="#(prof_group.comprehend)" class="layui-input" required/>
+                    <input type="text" id="profGroup.comprehend" name="profGroup.comprehend"
+                           value="#(profGroup.comprehend)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.performance">服务业绩</label>
+                <label class="layui-form-label" for="profGroup.performance">服务业绩</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.performance" name="prof_group.performance"
-                           value="#(prof_group.performance)" class="layui-input" required/>
+                    <input type="text" id="profGroup.performance" name="profGroup.performance"
+                           value="#(profGroup.performance)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.framework">人员架构</label>
+                <label class="layui-form-label" for="profGroup.framework">人员架构</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.framework" name="prof_group.framework"
-                           value="#(prof_group.framework)" class="layui-input" required/>
+                    <input type="text" id="profGroup.framework" name="profGroup.framework"
+                           value="#(profGroup.framework)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.resume">人员简历</label>
+                <label class="layui-form-label" for="profGroup.resume">人员简历</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.resume" name="prof_group.resume"
-                           value="#(prof_group.resume)" class="layui-input" required/>
+                    <input type="text" id="profGroup.resume" name="profGroup.resume"
+                           value="#(profGroup.resume)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.content">专业内容</label>
+                <label class="layui-form-label" for="profGroup.content">专业内容</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.content" name="prof_group.content"
-                           value="#(prof_group.content)" class="layui-input" required/>
+                    <input type="text" id="profGroup.content" name="profGroup.content"
+                           value="#(profGroup.content)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.capital">注册资金</label>
+                <label class="layui-form-label" for="profGroup.capital">注册资金</label>
                 <div class="layui-input-inline">
-                    <input type="number" id="prof_group.capital" name="prof_group.capital"
-                           value="#(prof_group.capital)" class="layui-input" required/>
+                    <input type="number" id="profGroup.capital" name="profGroup.capital"
+                           value="#(profGroup.capital)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">有无犯罪记录</label>
                 <div class="layui-input-block">
-                    #if(prof_group.record == 0)
-                    <input type="radio" name="prof_group.record" value="0" title="有" checked="checked" required/>
-                    <input type="radio" name="prof_group.record" value="1" title="无" required/>
+                    #if(profGroup.record == 0)
+                    <input type="radio" name="profGroup.record" value="0" title="有" checked="checked" required/>
+                    <input type="radio" name="profGroup.record" value="1" title="无" required/>
                     #else
-                    <input type="radio" name="prof_group.record" value="0" title="有" required/>
-                    <input type="radio" name="prof_group.record" value="1" title="无" checked="checked" required/>
+                    <input type="radio" name="profGroup.record" value="0" title="有" required/>
+                    <input type="radio" name="profGroup.record" value="1" title="无" checked="checked" required/>
                     #end
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.administrator">管理员姓名</label>
+                <label class="layui-form-label" for="profGroup.administrator">管理员姓名</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="prof_group.administrator" name="prof_group.administrator"
-                           value="#(prof_group.administrator)" class="layui-input" required/>
+                    <input type="text" id="profGroup.administrator" name="profGroup.administrator"
+                           value="#(profGroup.administrator)" class="layui-input" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="prof_group.contact">管理员联系方式</label>
+                <label class="layui-form-label" for="profGroup.contact">管理员联系方式</label>
                 <div class="layui-input-inline">
-                    <input type="tel" id="prof_group.contact" name="prof_group.contact"
-                           value="#(prof_group.contact)" class="layui-input" required/>
+                    <input type="tel" id="profGroup.contact" name="profGroup.contact"
+                           value="#(profGroup.contact)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -147,9 +147,10 @@
                         <div class="layui-upload1">
                             <button type="button" class="layui-btn" name="upload1" id="upload1"><i class="layui-icon"></i>上传文件
                             </button>
-                            <label class="layui-hide" for="prof_group.identity"></label><input type="text" class="layui-hide"
-                                                                                               name="prof_group.identity"
-                                                                                               id="prof_group.identity">
+                            <label class="layui-hide" for="profGroup.identity"></label><input type="text"
+                                                                                              class="layui-hide"
+                                                                                              name="profGroup.identity"
+                                                                                              id="profGroup.identity">
                         </div>
                     </div>
                 </div>
@@ -171,7 +172,6 @@
 
 #end
 
-
 #define js()
 <script type="text/javascript">
     layui.use(['form', 'layer', 'upload'], function () {
@@ -187,9 +187,6 @@
             , accept: 'file' //普通文件
             , exts: 'doc|docx|pdf' //只允许上传压缩文件
             , done: function (res) {
-//                $("#organization.certificate").text(res.path);
-//                $("#organization.certificate").val(res.path);
-//                $("#organization.certificate").html(res.path);
             }
         });
 
