@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.AffectedGroup;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.model.User;
 
@@ -68,13 +69,22 @@ public interface PersonService  {
      */
     public Person findByUser(User user);
 
+
+    /**
+     * 查询
+     * @param name 名字
+     * @return 用户
+     */
+    public Person findByName(String name);
+
     /**
      * 更新资料
      * @param person 个人群体
      * @param user 用户
-     * @return
+     * @param affectedGroup 影响群体
+     * @return 结果
      */
-    public boolean update(Person person,User user);
+    public boolean update(Person person, User user, AffectedGroup affectedGroup);
 
     /**
      * save or update model
