@@ -6,6 +6,8 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.aop.annotation.Bean;
@@ -19,6 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+
 @Bean
 @Singleton
 @JbootrpcService
@@ -89,5 +93,27 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 return true;
             }
         });
+    @Override
+    public List<Auth> findByUserAndType(User user, String typeStatus) {
+        Columns columns = Columns.create();
+        columns.eq("userId",user.getId());
+        columns.eq("type",typeStatus);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public Auth findByUserIdAndStatus(Long userId, String status) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        return DAO.findListByColumns(columns);
     }
 }
