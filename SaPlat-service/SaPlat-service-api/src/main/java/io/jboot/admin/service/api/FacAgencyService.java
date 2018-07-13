@@ -16,7 +16,7 @@ public interface FacAgencyService  {
      */
     public FacAgency findById(Object id);
 
-
+    public FacAgency findByOrgId(Long orgId);
     /**
      * find all model
      *

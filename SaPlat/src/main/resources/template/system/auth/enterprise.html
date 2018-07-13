@@ -1,0 +1,203 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>企业机构认证</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="upload"><em class="require-mark">*</em>营业执照或相关文件</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" name="upload" id="upload"><i class="layui-icon"></i>上传文件
+                            </button>
+                            <label class="layui-hide" for="objectType.certificate"></label><input type="text" class="layui-hide"
+                                                                                                    name="objectType.certificate"
+                                                                                                    id="objectType.certificate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.name">企业机构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.name" name="objectData.name" value="#(objectType.name)"
+                           class="layui-input layui-disabled layui-hide"  required/>
+                    <p>#(objectType.name)</p>                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.orgID">企业机构代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.orgID" name="objectData.orgID" value="#(objectType.id)"
+                           class="layui-input layui-disabled layui-hide"  required/>
+                    <p>#(objectType.id)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.address">公司地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.address" name="objectData.address"
+                           value="#(objectData.address)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.resume">公司简介</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.resume" name="objectData.resume"
+                           value="#(objectData.resume)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.principal">公司负责人</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.principal" name="objectData.principal"
+                           value="#(objectData.principal)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.phone">公司负责人联系方式</label>
+                <div class="layui-input-inline">
+                    <input type="tel" id="objectData.phone" name="objectData.contact"
+                           value="#(objectData.contact)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.type">主体类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.type" name="objectData.type"
+                           value="#(objectData.type)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.credit">统一社会信用代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.credit" name="objectData.credit"
+                           value="#(objectData.credit)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.scope">业务范围</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.scope" name="objectData.scope"
+                           value="#(objectData.scope)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.start">创办日期</label>
+                <div class="layui-input-inline">
+                    <input type="date" id="objectData.start" name="objectData.start"
+                           value="#(objectData.start)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.person">企业法人</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.person" name="objectData.person"
+                           value="#(objectData.person)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.capital">注册资本</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="objectData.capital" name="objectData.capital"
+                           value="#(objectData.capital)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="upload1"><em class="require-mark">*</em>法人身份证照片</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload1">
+                        <div class="layui-upload1">
+                            <button type="button" class="layui-btn" name="upload1" id="upload1"><i class="layui-icon"></i>上传文件
+                            </button>
+                            <label class="layui-hide" for="objectData.pictrue"></label><input type="text" class="layui-hide"
+                                                                                              name="objectData.pictrue"
+                                                                                              id="objectData.pictrue">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.website">企业网站</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.website" name="objectData.website"
+                           value="#(objectData.website)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.coordinate">地址坐标</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.coordinate" name="objectData.coordinate"
+                           value="#(objectData.coordinate)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.landLine">座机电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="objectData.landLine" name="objectData.landline"
+                           value="#(objectData.landLine)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="objectData.scale">企业人数</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="objectData.scale" name="objectData.scale"
+                           value="#(objectData.scale)" class="layui-input" required/>
+                </div>
+            </div>
+
+            <!--隐藏flag作为界面是否禁用的方法-->
+            <input type="text" id="flag" name="flag"
+                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
+                    <button class="layui-btn layui-btn-warm" id="reset">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+#end
+
+#define js()
+<script type="text/javascript">
+
+</script>
+#end

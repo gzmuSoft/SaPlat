@@ -1,5 +1,8 @@
 package io.jboot.admin.controller.system;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -8,8 +11,13 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
-import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.Role;
+import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
+import io.jboot.admin.service.entity.status.system.TypeStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -20,7 +28,7 @@ import java.util.List;
  */
 
 @RequestMapping("/system/auth")
-public class AuthController extends BaseController{
+public class AuthController extends BaseController {
     @JbootrpcService
     private AuthService authService;
 
@@ -30,83 +38,159 @@ public class AuthController extends BaseController{
     @JbootrpcService
     private RoleService roleService;
 
+
+    //团队
     @JbootrpcService
     private OrganizationService organizationService;
+
+
+    //个人
+    @JbootrpcService
+    private PersonService personService;
+
+    @JbootrpcService
+    private ExpertGroupService expertGroupService;
+
+    @JbootrpcService
+    private ManagementService managementService;
+
+    @JbootrpcService
+    private EnterpriseService enterpriseService;
+
+    @JbootrpcService
+    private FacAgencyService facAgencyService;
 
     @JbootrpcService
     private ProfGroupService profGroupService;
 
+    @JbootrpcService
+    private ReviewGroupService reviewGroupService;
+
+
 //    @JbootrpcService
 //    private ExpertGroupService expertGroupService;
 
-
-    public void index(){
-        List<Role>  roleList =roleService.findByStatusUsed();
+    @Before(GET.class)
+    public void index() {
+        List<Role> roleList = roleService.findByStatusUsed();
         BaseStatus roleStatus = new RoleStatus();
         for (Role role : roleList) {
-            roleStatus.add(role.getId().toString(),role.getName());
+            roleStatus.add(role.getId().toString(), role.getName());
         }
-        BaseStatus typeStatus = new RoleStatus();
-        typeStatus.add("0","个人审核");
-        typeStatus.add("1","团体审核");
-        setAttr("typeStatus",typeStatus).setAttr("roleStatus",roleStatus).render("main.html");
-    }
-//    public void add(){
-//        render("add.html");
-//    }
+        BaseStatus typeStatus = new BaseStatus() {
+        };
+        typeStatus.add("0", "个人审核");
+        typeStatus.add("1", "团体审核");
 
-    public void delete(){
-        Long id = getParaToLong("id");
-        if (!authService.deleteById(id)){
-            throw new BusinessException("删除失败");
-        }
-        renderJson(RestResult.buildSuccess());
+        setAttr("typeStatus", typeStatus).setAttr("roleStatus", roleStatus).render("main.html");
     }
 
+    @Before(GET.class)
     @NotNullPara("id")
-    public void view(){
-        Long id =getParaToLong("id");
-        Auth auth=authService.findById(id);
-        User user=userService.findById(auth.getUserId());
-        Organization organization = organizationService.findById(user.getUserID());
-        ProfGroup profGroup=profGroupService.findById(organization.getId());
-        setAttr("organization",organization).setAttr("prof_group",profGroup).render("prof_group.html");
-    }
-
-    @NotNullPara({"id"})
-    public void update(){
+    public void view() {
         Long id = getParaToLong("id");
         Auth auth = authService.findById(id);
-        setAttr("auth",auth).render("update.html");
-    }
-
-
-
-    public void postupdate(){
-        Auth auth=getBean(Auth.class, "auth");
-        Auth authid=authService.findById(auth.getId());
-        if(authid== null){
+        if (auth == null) {
             throw new BusinessException("没有这个审核");
         }
-        if(!authService.update(auth)){
-            throw new BusinessException("审核失败");
+        User user = userService.findById(auth.getUserId());
+        Object objectData;
+        Object objectType;
+        String html;
+        if (auth.getType().equals(TypeStatus.ORGANIZATION)) {
+            objectType = organizationService.findById(user.getUserID());
+        } else if (auth.getType().equals(TypeStatus.PERSON)) {
+            objectType = personService.findById(user.getUserID());
+        } else {
+            throw new BusinessException("请求参数非法");
         }
-        renderJson(RestResult.buildSuccess());
-    }
 
+        Role role=roleService.findById(auth.getRoleId());
+        if ("expertGroup".equals(role.getNote())) {
+            objectData=enterpriseService.findByOrgId(user.getUserID());
+            html = "expertGroup.html";
+        }
+        else if("fac_agency".equals(role.getNote())){
+            objectData=facAgencyService.findByOrgId(user.getUserID());
+            html="fac_agency.html";
+        }
+        else if("management".equals(role.getNote())){
+            objectData=managementService.findByOrgId(user.getUserID());
+            html="management.html";
+        }
+        else if("enterprise".equals(role.getNote())){
+            objectData=enterpriseService.findByOrgId(user.getUserID());
+            html="enterprise.html";
+        }
+        else if("review_group".equals(role.getNote())){
+            objectData=reviewGroupService.findByOrgId(user.getUserID());
+            html="review_group.html";
+        }
+        else if("prof_group".equals(role.getNote())){
+            objectData=profGroupService.findByOrgId(user.getUserID());
+            html="prof_group.html";
+        }
+        else{
+            throw new BusinessException("请求参数非法");
+        }
+            setAttr("objectType", objectType).setAttr("objectData", objectData).render(html);
+        }
 
-    @NotNullPara({"pageNumber","pageSize"})
-    public void tableData(){
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-        Auth auth = new Auth();
-        auth.setUserId(getParaToLong("userId"));
-        auth.setStatus(getPara("status"));
-        auth.setType(getPara("type"));
-        Page<Auth> page=authService.findPage(auth,pageNumber,pageSize);
-        renderJson(new DataTable<Auth>(page));
+        @Before(GET.class)
+        @NotNullPara({"id"})
+        public void update () {
+            Long id = getParaToLong("id");
+            Auth auth = authService.findById(id);
+            if (auth == null) {
+                throw new BusinessException("没有这个审核");
+            }
+            BaseStatus authStatus = new BaseStatus() {
+            };
+            authStatus.add("2", "审核成功");
+            authStatus.add("1", "审核失败");
+            setAttr("authStatus", authStatus).setAttr("auth", auth).render("update.html");
+        }
+
+        @Before(POST.class)
+        public void postupdate () {
+            Auth auth = getBean(Auth.class, "auth");
+            Auth model = authService.findById(auth.getId());
+            if (model == null) {
+                throw new BusinessException("没有这个审核");
+            }
+            if (!(auth.getStatus().equals(AuthStatus.IS_VERIFY) || auth.getStatus().equals(AuthStatus.NOT_VERIFY))) {
+                throw new BusinessException("请求参数非法");
+            }
+            User user = AuthUtils.getLoginUser();
+            model.setLastUpdUser(user.getName());
+            model.setReply(auth.getReply());
+            model.setStatus(auth.getStatus());
+            if (!authService.update(model)) {
+                throw new BusinessException("审核失败");
+            }
+            renderJson(RestResult.buildSuccess());
+        }
+
+        @Before(GET.class)
+        @NotNullPara({"pageNumber", "pageSize"})
+        public void tableData () {
+            int pageNumber = getParaToInt("pageNumber", 1);
+            int pageSize = getParaToInt("pageSize", 30);
+            Auth auth = new Auth();
+            auth.setUserId(getParaToLong("userId"));
+            if (!"".equals(getPara("status"))) {
+                auth.setStatus(getPara("status"));
+            }
+            if(!"".equals(getPara("type"))) {
+                auth.setType(getPara("type"));
+            }
+            if(!"".equals(getPara("name"))) {
+                auth.setName(getPara("name"));
+            }
+            Page<Auth> page = authService.findPage(auth, pageNumber, pageSize);
+            renderJson(new DataTable<Auth>(page));
+        }
     }
-}
 
 
 

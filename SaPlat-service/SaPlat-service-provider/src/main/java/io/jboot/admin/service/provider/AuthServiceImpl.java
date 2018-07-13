@@ -19,7 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 @Bean
 @Singleton
 @JbootrpcService
@@ -33,17 +32,22 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     @Override
     public Page<Auth> findPage(Auth auth, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if(auth.getStatus()!=null){
-            columns.like("status", "%"+auth.getStatus()+"%");
+        if (auth.getStatus() != null) {
+            columns.like("status", "%" + auth.getStatus() + "%");
         }
-        if(auth.getUserId()!=null){
-            columns.like("userId", "%"+auth.getUserId()+"%");
+        if (auth.getUserId() != null) {
+            columns.like("userId", "%" + auth.getUserId() + "%");
         }
-        if(auth.getType()!=null){
-            columns.like("type", "%"+auth.getType()+"%");
+        if(auth.getName()!=null){
+            columns.like("name", "%" + auth.getName() + "%");
+        }
+        if (auth.getType() != null) {
+            columns.like("type", "%" + auth.getType() + "%");
+        } else {
+            columns.lt("type", "2");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(),"-status");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-status");
     }
 
 
@@ -52,28 +56,27 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     现在，只有上天知道
     */
     @Override
-    public boolean update(Auth model){
+    public boolean update(Auth model) {
 
 
         return Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
-                String status=model.getStatus();
                 model.setLastUpdTime(new Date());
                 if (!model.update()) {
                     return false;
                 }
-                if(status.equals(AuthStatus.VERIFIING)){
-                    return true;
-                }
                 List<UserRole> userRoleList = userRoleService.findByUserId(model.getUserId());
                 for (UserRole role : userRoleList) {
-                    if(model.getUserId().equals(role.getUserId())&&model.getRoleId().equals(role.getRoleId())){
+                    if (model.getUserId().equals(role.getUserId()) && model.getRoleId().equals(role.getRoleId())) {
+                        if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+                            userRoleService.delete(role);
+                        }
                         return true;
                     }
                 }
-                userRoleList= new ArrayList<UserRole>();
-                UserRole userRole=new UserRole();
+                userRoleList = new ArrayList<UserRole>();
+                UserRole userRole = new UserRole();
                 userRole.setRoleId(model.getRoleId());
                 userRole.setUserId(model.getUserId());
                 userRoleList.add(userRole);
