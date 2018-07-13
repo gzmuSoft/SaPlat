@@ -9,18 +9,6 @@ import io.jboot.admin.service.entity.model.base.BaseExpertGroup;
  */
 @Table(tableName = "expert_group", primaryKey = "id")
 public class ExpertGroup extends BaseExpertGroup<ExpertGroup> {
-    public void setStatus(java.lang.String status) {
-        if (status == DataStatus.USED) {
-            setIsEnable(1);
-        } else {
-            setIsEnable(0);
-        }
-    }
 
-    public java.lang.String getStatus() {
-        if(this.getIsEnable() == 1)
-            return DataStatus.USED;
-        else
-            return DataStatus.UNUSED;
-    }
+
 }

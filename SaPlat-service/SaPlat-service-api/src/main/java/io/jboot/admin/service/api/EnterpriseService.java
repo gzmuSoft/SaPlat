@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Enterprise;
 
 import java.util.List;
@@ -17,6 +18,14 @@ public interface EnterpriseService {
     public Enterprise findById(Object id);
 
     public Enterprise findByOrgId(Long orgId);
+
+    /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    public Enterprise findByOrgID(Long orgID);
 
     /**
      * find all model
@@ -85,6 +94,14 @@ public interface EnterpriseService {
      */
     public boolean saveOrUpdate(Enterprise model);
 
+    /**
+     * save Or Update model and auth
+     *
+     * @param model
+     * @param auth
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(Enterprise model, Auth auth);
 
     /**
      * update data model

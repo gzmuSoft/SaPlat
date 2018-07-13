@@ -17,9 +17,9 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>组织机构名称（账号）</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>登录账号</label>
             <div class="layui-input-block">
-                <input type="text" name="organization.name" placeholder="组织机构名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="user.name" placeholder="登录账号" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
@@ -34,6 +34,13 @@
             <label class="layui-form-label"><em class="require-mark">*</em>确认密码</label>
             <div class="layui-input-block">
                 <input type="password" name="rePwd" id="rePwd" placeholder="确认密码" class="layui-input" value="" required  lay-verify="repass" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>组织机构名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="organization.name" placeholder="组织机构名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
@@ -81,7 +88,7 @@
         </div>
     </form>
 </div>
- 
+
 #include("/template/common/include/_js.html")
 <script type="text/javascript">
     layui.use(['form', 'layer'], function () {

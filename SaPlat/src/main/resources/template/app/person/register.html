@@ -16,13 +16,20 @@
             <h3>#(APP.name)</h3>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>账号(名称)</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>账号</label>
             <div class="layui-input-block">
-                <input type="text" name="person.name" placeholder="账号(名称)" class="layui-input" value="" required
+                <input type="text" name="user.name" placeholder="请输入账号" class="layui-input" value="" required
                        lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="person.name" placeholder="请输入姓名" class="layui-input" value="" required
+                       lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">

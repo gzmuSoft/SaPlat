@@ -1,0 +1,174 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function(data){
+
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/fac_agency/postAdd',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success : function(data){
+                    pop_close();
+                }
+            });
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>维稳办备案文件照片</label>
+            <div class="layui-input-block">
+                <input id="regDocsFilePath" type="text" name="model.regDocsFilePath" placeholder="维稳办备案文件照片" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>公司地址</label>
+            <div class="layui-input-block">
+                <input id="address" type="text" name="model.address" placeholder="公司地址" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>公司简历</label>
+            <div class="layui-input-block">
+                <input id="resume" type="text" name="model.resume" placeholder="公司简历" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>负责人</label>
+            <div class="layui-input-block">
+                <input id="principal" type="text" name="model.principal" placeholder="负责人" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>主体类型</label>
+            <div class="layui-input-block">
+                <input id="type" type="text" name="model.type" placeholder="主体类型" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>统一社会信用代码</label>
+            <div class="layui-input-block">
+                <input id="credit" type="text" name="model.credit" placeholder="统一社会信用代码" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>业务范围</label>
+            <div class="layui-input-block">
+                <input id="scope" type="text" name="model.scope" placeholder="业务范围" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>联系方式</label>
+            <div class="layui-input-block">
+                <input id="phone" type="text" name="model.phone" placeholder="联系方式" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>创办日期</label>
+            <div class="layui-input-block">
+                <input id="start" type="text" name="model.start" placeholder="创办日期" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>企业法人</label>
+            <div class="layui-input-block">
+                <input id="person" type="text" name="model.person" placeholder="企业法人" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>注册资本</label>
+            <div class="layui-input-block">
+                <input id="capital" type="text" name="model.capital" placeholder="注册资本" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>法人身份证照片</label>
+            <div class="layui-input-block">
+                <input id="pictrue" type="text" name="model.pictrue" placeholder="法人身份证照片" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>企业网站</label>
+            <div class="layui-input-block">
+                <input id="website" type="text" name="model.website" placeholder="企业网站" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>地址坐标</label>
+            <div class="layui-input-block">
+                <input id="coordinate" type="text" name="model.coordinate" placeholder="地址坐标" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>座机电话</label>
+            <div class="layui-input-block">
+                <input id="landline" type="text" name="model.landline" placeholder="座机电话" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>企业规模</label>
+            <div class="layui-input-block">
+                <input id="scale" type="text" name="model.scale" placeholder="企业规模" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>备注</label>
+            <div class="layui-input-block">
+                <input id="remark" type="text" name="model.remark" placeholder="备注" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button  class="layui-btn" lay-filter="sub" lay-submit>
+                保存
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end
