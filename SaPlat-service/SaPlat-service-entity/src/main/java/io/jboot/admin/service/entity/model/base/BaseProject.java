@@ -33,6 +33,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("spell");
 	}
 
+	public void setRoleName(java.lang.String roleName) {
+		set("roleName", roleName);
+	}
+	
+	public java.lang.String getRoleName() {
+		return getStr("roleName");
+	}
+
 	public void setAmount(java.lang.Double amount) {
 		set("amount", amount);
 	}
