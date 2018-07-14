@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.AffectedGroupService;
 import io.jboot.admin.service.api.UserService;
@@ -10,9 +11,9 @@ import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.service.JbootServiceBase;
-
+import com.jfinal.plugin.activerecord.Page;
 import javax.inject.Inject;
-
+import io.jboot.db.model.Columns;
 import javax.inject.Singleton;
 
 @Bean
@@ -25,6 +26,24 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     @Inject
     private AffectedGroupService affectedGroupService;
+
+    /*
+     *其中的if是用来做查询的
+     * 不满足即不查询
+     * 返回全部数据
+     */
+    @Override
+    public Page<Person> findPage(Person person, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+
+        if (StrKit.notBlank(person.getName())){
+            columns.like("name", "%"+person.getName()+"%");
+        }
+        if (StrKit.notBlank(person.getPhone())){
+            columns.like("phone", "%"+person.getPhone()+"%");
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
 
     @Override
     public boolean savePerson(Person model, User user, Long[] roles) {
