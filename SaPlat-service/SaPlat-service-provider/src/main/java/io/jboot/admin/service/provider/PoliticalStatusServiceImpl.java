@@ -5,7 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.PoliticalStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.PoliticalStatusService;
-import io.jboot.admin.service.entity.model.PoliticalStatus;
+import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 @Bean
 @Singleton
+@JbootrpcService
 public class PoliticalStatusServiceImpl extends JbootServiceBase<PoliticalStatus> implements PoliticalStatusService {
     @Override
     public Page<PoliticalStatus> findPage(PoliticalStatus model, int pageNumber, int pageSize) {
