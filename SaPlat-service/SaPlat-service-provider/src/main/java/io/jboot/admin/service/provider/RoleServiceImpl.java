@@ -7,6 +7,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.RoleResService;
 import io.jboot.admin.service.entity.model.RoleRes;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.RoleService;
@@ -91,4 +92,6 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
     public Role findByName(String name) {
         return DAO.findFirstByColumn("name", name);
     }
+
+
 }

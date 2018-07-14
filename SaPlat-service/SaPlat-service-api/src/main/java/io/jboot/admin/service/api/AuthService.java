@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.status.system.TypeStatus;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public interface AuthService  {
     public Auth findByUser(User user);
 
     /**
-     * 更护用户和权限查询认证
+     * 根据用户和权限查询认证
      * @param user 用户
      * @param role 权限
      * @return 认证信息
@@ -50,22 +51,30 @@ public interface AuthService  {
     public Auth findByUserAndRole(User user,long role);
 
     /**
-     * 更具用户id和认证状态查询认证信息以获得认证角色
-     *
-     * @param userId 用户id
-     * @param status
-     * @return 认证信息
+     * 通过用户和类型查找权限
+     * @param user 用户
+     * @param typeStatus 类型
+     * @return 结果
      */
-    public Auth findByUserIdAndStatus(Long userId, int status);
+    public List<Auth> findByUserAndType(User user, String typeStatus);
 
     /**
-     * 更具用户id和认证状态查询认证信息以列表形式存储
+     * 根据用户id和认证状态查询认证信息以获得认证角色
      *
      * @param userId 用户id
      * @param status
      * @return 认证信息
      */
-    public List<Auth> findByUserIdAndStatusToList(Long userId, int status);
+    public Auth findByUserIdAndStatus(Long userId, String status);
+
+    /**
+     * 根据用户id和认证状态查询认证信息以列表形式存储
+     *
+     * @param userId 用户id
+     * @param status
+     * @return 认证信息
+     */
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status);
 
 
     /**

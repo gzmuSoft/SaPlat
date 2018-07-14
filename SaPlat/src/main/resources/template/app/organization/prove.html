@@ -3,7 +3,6 @@
 
 #define css()
 <style>
-
     .layui-form-item {
         margin-right: 100px;
     }
@@ -21,10 +20,22 @@
 #define js()
 <script type="text/javascript">
     layui.use(['form', 'layer'], function () {
-        var layer = layui.layer
-            , $ = layui.jquery
-            , form = layui.form;
+        var layer = layui.layer, $ = layui.jquery, form = layui.form;
 
+        //已认证按钮变灰且不可点击
+        var a = $(".nameList");
+        var b = $(".layui-btn");
+        for (var i = 0; i < a.length; i++) {
+            for (var j = 0; j < b.length; j++) {
+                if (a[i].name == b[j].name) {
+                    b[j].style.background = "gray";
+                    b[j].innerHTML = b[j].name + "<p>(已认证)</p>"
+                    b[j].disabled = true;
+                }
+            }
+        }
+
+        //按钮点击事件
         form.on('submit(sub)', function (data) {
             console.log(data);
             var v = data.elem.value;
@@ -32,21 +43,7 @@
             window.location.href = '#(ctxPath)/app/organization/' + v;
             return false;
         });
-
     });
-
-    //    function gray() {
-    //        var a = document.getElementsByClassName("layui-btn");
-    //        var b = document.getElementById("button");
-    //        console.log(b);
-    //        for(var i=0;i<a.length;i++){
-    //            if(a[i].name==b){
-    //                a[i].style.background="gray";
-    //                a[i].display="disabled";
-    //            }
-    //        }
-    //    }
-
 </script>
 #end
 
@@ -70,12 +67,13 @@
                 <div class="layui-input-block" STYLE="margin-left: 110PX;">
                     <button class="layui-btn" lay-submit lay-filter="sub" value="profGroup" name="专业团体">专业团体</button>
                     <button class="layui-btn" lay-submit lay-filter="sub" value="reviewGroup" name="审查团体">审查团体</button>
+                    #for(list : nameList)
+                    <button class="nameList layui-hide" name="#(list)">对比按钮(隐藏)</button>
+                    #end
                 </div>
             </div>
-
         </div>
     </form>
     <hr>
 </div>
-
 #end

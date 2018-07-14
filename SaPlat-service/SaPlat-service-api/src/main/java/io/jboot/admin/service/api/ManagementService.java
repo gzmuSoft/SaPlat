@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Management;
 
 import java.util.List;
@@ -31,6 +32,22 @@ public interface ManagementService  {
      */
     public List<Management> findAll();
 
+    /**
+     * 根据名称查询 管理机构 信息
+     *
+     * @param name
+     * @return
+     */
+    public Management findByName(String name);
+
+
+    /**
+     * 管理机构 是否存在
+     *
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
 
     /**
      * delete model by primary key
@@ -67,6 +84,14 @@ public interface ManagementService  {
      */
     public boolean saveOrUpdate(Management model);
 
+    /**
+     * save Or Update model and auth
+     *
+     * @param model
+     * @param auth
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(Management model, Auth auth);
 
     /**
      * update data model
