@@ -33,6 +33,14 @@ public abstract class BaseExpertGroup<M extends BaseExpertGroup<M>> extends Jboo
 		return getStr("spell");
 	}
 
+	public void setAffectedGroupID(java.lang.Long affectedGroupID) {
+		set("affectedGroupID", affectedGroupID);
+	}
+	
+	public java.lang.Long getAffectedGroupID() {
+		return getLong("affectedGroupID");
+	}
+
 	public void setPersonID(java.lang.Long personID) {
 		set("personID", personID);
 	}
@@ -95,126 +103,6 @@ public abstract class BaseExpertGroup<M extends BaseExpertGroup<M>> extends Jboo
 	
 	public java.lang.String getProject() {
 		return getStr("project");
-	}
-
-	public void setBirthday(java.util.Date birthday) {
-		set("birthday", birthday);
-	}
-	
-	public java.util.Date getBirthday() {
-		return get("birthday");
-	}
-
-	public void setPhone(java.lang.String phone) {
-		set("phone", phone);
-	}
-	
-	public java.lang.String getPhone() {
-		return getStr("phone");
-	}
-
-	public void setPolitics(java.lang.String politics) {
-		set("politics", politics);
-	}
-	
-	public java.lang.String getPolitics() {
-		return getStr("politics");
-	}
-
-	public void setNation(java.lang.String nation) {
-		set("nation", nation);
-	}
-	
-	public java.lang.String getNation() {
-		return getStr("nation");
-	}
-
-	public void setNationality(java.lang.String nationality) {
-		set("nationality", nationality);
-	}
-	
-	public java.lang.String getNationality() {
-		return getStr("nationality");
-	}
-
-	public void setEducation(java.lang.String education) {
-		set("education", education);
-	}
-	
-	public java.lang.String getEducation() {
-		return getStr("education");
-	}
-
-	public void setOthername(java.lang.String othername) {
-		set("othername", othername);
-	}
-	
-	public java.lang.String getOthername() {
-		return getStr("othername");
-	}
-
-	public void setDuty(java.lang.String duty) {
-		set("duty", duty);
-	}
-	
-	public java.lang.String getDuty() {
-		return getStr("duty");
-	}
-
-	public void setResidence(java.lang.String residence) {
-		set("residence", residence);
-	}
-	
-	public java.lang.String getResidence() {
-		return getStr("residence");
-	}
-
-	public void setMail(java.lang.String mail) {
-		set("mail", mail);
-	}
-	
-	public java.lang.String getMail() {
-		return getStr("mail");
-	}
-
-	public void setResume(java.lang.String resume) {
-		set("resume", resume);
-	}
-	
-	public java.lang.String getResume() {
-		return getStr("resume");
-	}
-
-	public void setChildren(java.lang.String children) {
-		set("children", children);
-	}
-	
-	public java.lang.String getChildren() {
-		return getStr("children");
-	}
-
-	public void setMaritalstatus(java.lang.String maritalstatus) {
-		set("maritalstatus", maritalstatus);
-	}
-	
-	public java.lang.String getMaritalstatus() {
-		return getStr("maritalstatus");
-	}
-
-	public void setCensus(java.lang.String census) {
-		set("census", census);
-	}
-	
-	public java.lang.String getCensus() {
-		return getStr("census");
-	}
-
-	public void setOccupation(java.lang.String occupation) {
-		set("occupation", occupation);
-	}
-	
-	public java.lang.String getOccupation() {
-		return getStr("occupation");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {

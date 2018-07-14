@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.FacAgency;
 
 import java.util.List;
@@ -87,6 +88,15 @@ public interface FacAgencyService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(FacAgency model);
+
+    /**
+     * save Or Update model and auth
+     *
+     * @param model
+     * @param auth
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(FacAgency model, Auth auth);
 
 
     /**
