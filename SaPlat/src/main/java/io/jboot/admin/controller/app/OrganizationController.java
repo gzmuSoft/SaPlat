@@ -3,6 +3,7 @@ package io.jboot.admin.controller.app;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
@@ -10,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
+import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.OrganizationValidator;
@@ -531,8 +533,37 @@ public class OrganizationController extends BaseController {
         if (authList == null) {
             authList = Collections.synchronizedList(new ArrayList<Auth>());
         }
+        List<Auth> noVerify = Collections.synchronizedList(new ArrayList<Auth>());
+        List<Auth> verify = Collections.synchronizedList(new ArrayList<Auth>());
+        List<Auth> verifying = Collections.synchronizedList(new ArrayList<Auth>());
+        authList.forEach(auth -> {
+            for (int i = 0; i < roleList.size(); i++) {
+                Role role = roleList.get(i);
+                if (role.getId().equals(auth.getRoleId())) {
+                    auth.setRemark(role.getName());
+                    roleList.remove(i);
+                }
+            }
+            switch (auth.getStatus()) {
+                case AuthStatus.IS_VERIFY:
+                    verify.add(auth);
+                    break;
+                case AuthStatus.NOT_VERIFY:
+                    noVerify.add(auth);
+                    break;
+                case AuthStatus.VERIFYING:
+                    verifying.add(auth);
+                    break;
+                default:
+                    break;
+            }
+        });
 
-        render("projectGet.html");
+        setAttr("noVerify", noVerify)
+                .setAttr("verify", verify)
+                .setAttr("verifying", verifying)
+                .setAttr("roleList", roleList)
+                .render("projectGet.html");
     }
 
 
@@ -550,7 +581,7 @@ public class OrganizationController extends BaseController {
         }
         auth.setLastUpdTime(new Date());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (!authService.saveOrUpdate(auth)){
+        if (!authService.saveOrUpdate(auth)) {
             renderJson(RestResult.buildError("申请失败"));
             throw new BusinessException("申请失败");
         }

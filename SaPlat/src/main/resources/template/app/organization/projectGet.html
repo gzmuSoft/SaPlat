@@ -40,37 +40,39 @@
 #end
 
 #define content()
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend>您已获得的立项权限：</legend>
-        <div>
-            <!--#for(role : exist)-->
-            <button class="layui-btn layui-btn-normal layui-disabled" disabled>VERIFYING</button>
-            <!--#end-->
-        </div>
-    </fieldset>
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend>正在等待审核的立项权限：</legend>
-        <div>
-            <!--#for(role : verifying)-->
-            <button class="layui-btn layui-btn-normal layui-disabled" disabled>VERIFYING</button>
-            <!--#end-->
-        </div>
-    </fieldset>
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend>未通过审核的立项权限：</legend>
-        <div>
-            <!--#for(role : notVerify)-->
-            <button class="layui-btn layui-btn-normal" name="VERIFYING" lay-submit lay-filter="sub">VERIFYING</button>
-            <!--<h1>原因：#(verifyAuth).get(role)</h1>-->
-            <!--#end-->
-        </div>
-    </fieldset>
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend>您尚未获得的立项权限：</legend>
-        <div>
-            <!--#for(role : roles)-->
-            <button class="layui-btn layui-btn-warm" name="VERIFYING" lay-submit lay-filter="sub">VERIFYING</button>
-            <!--#end-->
-        </div>
-    </fieldset>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>未通过审核的立项权限：</legend>
+    <div>
+        #for(auth : noVerify)
+        <button class="layui-btn layui-btn-danger" name="#(auth.roleId)" lay-submit lay-filter="sub">#(auth.remark)</button>
+        <h3>原因：#(auth.reply)</h3>
+        #end
+    </div>
+</fieldset>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>您已获得的立项权限：</legend>
+    <div>
+        #for(auth : verify)
+        <button class="layui-btn layui-btn-primary layui-disabled" disabled>#(auth.remark)</button>
+        #end
+    </div>
+</fieldset>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>正在等待审核的立项权限：</legend>
+    <div>
+        #for(auth : verifying)
+        <button class="layui-btn layui-btn-normal layui-disabled" disabled>#(auth.remark)</button>
+        #end
+    </div>
+</fieldset>
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <legend>您尚未获得的立项权限：</legend>
+    <div>
+        #for(role : roleList)
+        <button class="layui-btn layui-btn-warm" name="#(role.id)" lay-submit lay-filter="sub">#(role.name)</button>
+        #end
+    </div>
+</fieldset>
+
+
 #end
