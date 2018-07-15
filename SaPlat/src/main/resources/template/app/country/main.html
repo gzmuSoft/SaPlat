@@ -64,7 +64,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑国家','#(ctxPath)/app/country/update?id=' + data.id,'435','210', function(){
+                pop_show('编辑国家','#(ctxPath)/app/country/update?id=' + data.id,'445','262', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -97,7 +97,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加国家','#(ctxPath)/app/country/add','435','210', function(){
+            pop_show('添加国家','#(ctxPath)/app/country/add','445','262', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
