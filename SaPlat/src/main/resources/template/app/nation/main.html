@@ -64,7 +64,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑民族','#(ctxPath)/app/nation/update?id=' + data.id,'530','210', function(){
+                pop_show('编辑民族','#(ctxPath)/app/nation/update?id=' + data.id,'450','265', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -97,7 +97,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加民族','#(ctxPath)/app/nation/add','530','210', function(){
+            pop_show('添加民族','#(ctxPath)/app/nation/add','450','265', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
