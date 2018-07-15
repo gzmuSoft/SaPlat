@@ -31,8 +31,6 @@
                 , {field: 'remark', title: '备注', width: 200}
                 , {field: 'isEnable', title: '是否可用', width: 200,templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-                , {field: 'isEnable', title: '是否可用', sort: true}
-                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/occupation/tableData'
             , method: 'get'
