@@ -64,7 +64,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑学历','#(ctxPath)/app/educational/update?id=' + data.id,'530','210', function(){
+                pop_show('编辑学历','#(ctxPath)/app/educational/update?id=' + data.id,'460','262', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -97,7 +97,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加学历','#(ctxPath)/app/educational/add','530','210', function(){
+            pop_show('添加学历','#(ctxPath)/app/educational/add','460','262', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
