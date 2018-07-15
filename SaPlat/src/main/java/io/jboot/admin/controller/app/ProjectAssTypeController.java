@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.ProjectAssTypeValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.admin.service.entity.model.ProjectAssType;
@@ -73,6 +76,7 @@ public class ProjectAssTypeController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, ProjectAssTypeValidator.class})
     public void postAdd(){
         ProjectAssType model = getBean(ProjectAssType.class, "model");
         if (projectAssTypeService.isExisted(model.getName())){
@@ -87,6 +91,7 @@ public class ProjectAssTypeController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, ProjectAssTypeValidator.class})
     public void postUpdate(){
         ProjectAssType model = getBean(ProjectAssType.class, "model");
         ProjectAssType byId = projectAssTypeService.findById(model.getId());

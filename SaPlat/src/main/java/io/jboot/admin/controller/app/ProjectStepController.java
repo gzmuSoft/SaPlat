@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -11,6 +13,7 @@ import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.ProjectStep;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.ProjectStepValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.joda.time.DateTime;
@@ -74,6 +77,7 @@ public class ProjectStepController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, ProjectStepValidator.class})
     public void postAdd(){
         ProjectStep model = getBean(ProjectStep.class, "model");
         if (projectStepService.isExisted(model.getName())){
@@ -88,6 +92,7 @@ public class ProjectStepController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, ProjectStepValidator.class})
     public void postUpdate(){
         ProjectStep model = getBean(ProjectStep.class, "model");
         ProjectStep byId = projectStepService.findById(model.getId());
