@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -10,6 +12,7 @@ import io.jboot.admin.service.api.PoliticalStatusService;
 import io.jboot.admin.service.entity.model.PoliticalStatus;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.PoliticalStatusValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -72,6 +75,7 @@ public class PoliticalStatusController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, PoliticalStatusValidator.class})
     public void postAdd(){
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         if (projectStepService.isExisted(model.getName())){
@@ -86,6 +90,7 @@ public class PoliticalStatusController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, PoliticalStatusValidator.class})
     public void postUpdate(){
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         PoliticalStatus byId = projectStepService.findById(model.getId());
