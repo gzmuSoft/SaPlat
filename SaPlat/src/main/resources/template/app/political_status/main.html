@@ -64,7 +64,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑政治面貌','#(ctxPath)/app/political_status/update?id=' + data.id,'530','210', function(){
+                pop_show('编辑政治面貌','#(ctxPath)/app/political_status/update?id=' + data.id,'466','262', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -97,7 +97,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加政治面貌','#(ctxPath)/app/political_status/add','530','210', function(){
+            pop_show('添加政治面貌','#(ctxPath)/app/political_status/add','466','262', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
