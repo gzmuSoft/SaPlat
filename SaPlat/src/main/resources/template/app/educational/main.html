@@ -22,7 +22,15 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
+            ,cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
+               {type:'numbers'}
+                , {field: 'id', title: 'ID', width:80, unresize: true, sort: true}
+                , {field: 'name', title: '名称', sort: true}
+                , {field: 'sort', title: '排序', sort: true}
+                , {field: 'remark', title: '备注'}
+                , {field: 'isEnable', title: '是否可用', sort: true}
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
                 {checkbox: false, sort: true, fixed: true, space: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'name', title: '名称', width: 100}
