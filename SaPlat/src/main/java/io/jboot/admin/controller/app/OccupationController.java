@@ -77,7 +77,7 @@ public class OccupationController extends BaseController{
     public void postAdd(){
         Occupation model = getBean(Occupation.class, "model");
         if (occupationService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的职业名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
@@ -92,7 +92,7 @@ public class OccupationController extends BaseController{
         Occupation model = getBean(Occupation.class, "model");
         Occupation byId = occupationService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的职业名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!occupationService.update(model)){

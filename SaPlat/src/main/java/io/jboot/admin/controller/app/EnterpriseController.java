@@ -75,7 +75,7 @@ public class EnterpriseController extends BaseController{
     public void postAdd(){
         Enterprise model = getBean(Enterprise.class, "model");
         if (enterpriseService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的企业机构名称已存在");
         }
         model.setIsEnable(1);
         if (!enterpriseService.save(model)){
@@ -88,7 +88,7 @@ public class EnterpriseController extends BaseController{
         Enterprise model = getBean(Enterprise.class, "model");
         Enterprise byId = enterpriseService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的企业机构名称不存在");
         }
         if (!enterpriseService.update(model)){
             throw new BusinessException("修改失败");
