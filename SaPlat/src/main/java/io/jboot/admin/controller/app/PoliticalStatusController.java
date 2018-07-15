@@ -75,7 +75,7 @@ public class PoliticalStatusController extends BaseController{
     public void postAdd(){
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         if (projectStepService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的政治面貌名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
@@ -90,7 +90,7 @@ public class PoliticalStatusController extends BaseController{
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         PoliticalStatus byId = projectStepService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的政治面貌名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!projectStepService.update(model)){
