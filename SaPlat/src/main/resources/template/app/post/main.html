@@ -24,7 +24,7 @@
             , height: 'full-150'    //容器高度
             ,cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
-                {type:'numbers'}
+                {type:'numbers', fixed: true}
                 , {field: 'id', title: 'ID', width: 80, unresize: true, sort: true}
                 , {field: 'name', title: '名称', sort: true}
                 , {field: 'sort', title: '排序', sort: true}
@@ -65,7 +65,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑职务','#(ctxPath)/app/post/update?id=' + data.id,'463','262', function(){
+                pop_show('编辑职务','#(ctxPath)/app/post/update?id=' + data.id,'463','315', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -98,7 +98,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加职务','#(ctxPath)/app/post/add','463','262', function(){
+            pop_show('添加职务','#(ctxPath)/app/post/add','463','315', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });

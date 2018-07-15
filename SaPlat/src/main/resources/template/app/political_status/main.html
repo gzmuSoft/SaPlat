@@ -26,7 +26,7 @@
             , cols: [[                  //标题栏
 
                /* {checkbox: false, sort: true, fixed: true, space: true}*/
-                {type:'numbers'}
+                {type:'numbers', fixed: true}
                 , {field: 'id', title: 'ID', width: 80, unresize: true, sort: true}
                 , {field: 'name', title: '名称', sort: true}
                 , {field: 'sort', title: '排序', sort: true}
@@ -67,7 +67,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑政治面貌','#(ctxPath)/app/political_status/update?id=' + data.id,'466','262', function(){
+                pop_show('编辑政治面貌','#(ctxPath)/app/political_status/update?id=' + data.id,'466','315', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -100,7 +100,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加政治面貌','#(ctxPath)/app/political_status/add','466','262', function(){
+            pop_show('添加政治面貌','#(ctxPath)/app/political_status/add','466','315', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });

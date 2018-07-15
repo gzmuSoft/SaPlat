@@ -26,7 +26,7 @@
             , cols: [[                  //标题栏
 
                 /*{checkbox: false, sort: true, fixed: true, space: true}*/
-                {type:'numbers'}
+                {type:'numbers', fixed: true}
                 , {field: 'id', title: 'ID', width: 80, unresize: true, sort: true}
                 , {field: 'name', title: '名称', sort: true}
                 , {field: 'code', title: '编码', sort: true}
@@ -68,7 +68,7 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑项目评估类型','#(ctxPath)/app/project_ass_type/update?id=' + data.id,'453','300', function(){
+                pop_show('编辑项目评估类型','#(ctxPath)/app/project_ass_type/update?id=' + data.id,'453','370', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
@@ -101,7 +101,7 @@
         });
 
         $("#add").click(function(){
-            pop_show('添加项目评估类型','#(ctxPath)/app/project_ass_type/add','453','300', function(){
+            pop_show('添加项目评估类型','#(ctxPath)/app/project_ass_type/add','453','370', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
