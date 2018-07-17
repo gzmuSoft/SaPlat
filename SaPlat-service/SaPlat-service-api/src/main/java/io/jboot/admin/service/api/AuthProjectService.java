@@ -3,11 +3,13 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.AuthProject;
-import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;
 
-public interface ProjectService  {
+/**
+ * @author ASUS
+ */
+public interface AuthProjectService {
 
     /**
      * find model by primary key
@@ -15,23 +17,23 @@ public interface ProjectService  {
      * @param id
      * @return
      */
-    public Project findById(Object id);
+    public AuthProject findById(Object id);
 
+    /**
+     * find model by primary key
+     *
+     * @param projectId
+     * @return
+     */
+    public AuthProject findByProjectId(Object projectId);
 
     /**
      * find all model
-     * @return all <Project
-     */
-    public List<Project> findAll();
-
-    /**
-     * find model by user and role and isEnable
      *
-     * @param pageNumber
-     * @param pageSize
-     * @return Project
+     * @return all <AuthProject
      */
-    public Page<Project> findPage(Project project, int pageNumber, int pageSize);
+    public List<AuthProject> findAll();
+
 
     /**
      * delete model by primary key
@@ -48,7 +50,7 @@ public interface ProjectService  {
      * @param model
      * @return
      */
-    public boolean delete(Project model);
+    public boolean delete(AuthProject model);
 
 
     /**
@@ -57,7 +59,7 @@ public interface ProjectService  {
      * @param model
      * @return
      */
-    public boolean save(Project model);
+    public boolean save(AuthProject model);
 
 
     /**
@@ -66,15 +68,8 @@ public interface ProjectService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Project model);
+    public boolean saveOrUpdate(AuthProject model);
 
-    /**
-     * save or update model and auth
-     *
-     * @param model
-     * @return if save or update success
-     */
-    public boolean saveOrUpdate(Project model, AuthProject authProject);
 
     /**
      * update data model
@@ -82,22 +77,34 @@ public interface ProjectService  {
      * @param model
      * @return
      */
-    public boolean update(Project model);
+    public boolean update(AuthProject model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
+
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField);
+
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
+
     public void join(Model model, String joinOnField);
+
     public void join(Model model, String joinOnField, String[] attrs);
+
     public void join(Model model, String joinOnField, String joinName);
+
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
     public void keep(Model model, String... attrs);
+
     public void keep(List<? extends Model> models, String... attrs);
 }
