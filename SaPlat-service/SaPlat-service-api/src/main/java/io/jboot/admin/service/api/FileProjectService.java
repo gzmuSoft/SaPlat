@@ -2,13 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.FileProject;
 
 import java.util.List;
 
-public interface ExpertGroupService  {
+public interface FileProjectService  {
 
     /**
      * find model by primary key
@@ -16,45 +14,15 @@ public interface ExpertGroupService  {
      * @param id
      * @return
      */
-    public ExpertGroup findById(Object id);
-
-    /**
-     * 分页查询系统 专家团体 信息
-     * @param expert_group 专家团体
-     * @return 页
-     */
-    public Page<ExpertGroup> findPage(ExpertGroup expert_group, int pageNumber, int pageSize);
-
-    /**
-     * 根据书名查询 专家团体 信息
-     * @param name
-     * @return
-     */
-    public ExpertGroup findByName(String name);
-
-
-    /**
-     * 专家团体 是否存在
-     * @param name
-     * @return 存在返回-true，否则返回false
-     */
-    public boolean hasExpertGroup(String name);
-
-
-    /**
-     * 通过 person id 查询
-     * @param id 专家团体
-     * @return 查询到的专家
-     */
-    public ExpertGroup findByPersonId(Long id);
+    public FileProject findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <ExpertGroup
+     * @return all <FileProject
      */
-    public List<ExpertGroup> findAll();
+    public List<FileProject> findAll();
 
 
     /**
@@ -72,7 +40,7 @@ public interface ExpertGroupService  {
      * @param model
      * @return
      */
-    public boolean delete(ExpertGroup model);
+    public boolean delete(FileProject model);
 
 
     /**
@@ -81,16 +49,8 @@ public interface ExpertGroupService  {
      * @param model
      * @return
      */
-    public boolean save(ExpertGroup model);
+    public boolean save(FileProject model);
 
-    /**
-     * 保存专家群体以及认证记录
-     * @param model 专家群体
-     * @param auth 认证
-     * @param files 文件
-     * @return 结果
-     */
-    public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files);
 
     /**
      * save or update model
@@ -98,7 +58,7 @@ public interface ExpertGroupService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(ExpertGroup model);
+    public boolean saveOrUpdate(FileProject model);
 
 
     /**
@@ -107,7 +67,7 @@ public interface ExpertGroupService  {
      * @param model
      * @return
      */
-    public boolean update(ExpertGroup model);
+    public boolean update(FileProject model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
