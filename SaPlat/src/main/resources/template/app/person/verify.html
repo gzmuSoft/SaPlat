@@ -93,7 +93,9 @@
             //,multiple: true
             ,exts: 'doc|docx|pdf'
             ,data:{
-                'description' : "工作证件照片"
+                description : function () {
+                    return "工作证件照片";
+                }
             }
             ,done: function(res){
                 console.log(res);
@@ -114,8 +116,10 @@
             ,accept: 'file'
             //,multiple: true
             ,exts: 'doc|docx|pdf'
-            ,data:{
-                'description' : "专业证书"
+            ,data: {
+                description : function () {
+                    return "工作证件照片";
+                }
             }
             ,done: function(res){
                 if (res.code == 0){
