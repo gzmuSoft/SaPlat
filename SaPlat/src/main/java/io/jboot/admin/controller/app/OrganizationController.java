@@ -3,7 +3,6 @@ package io.jboot.admin.controller.app;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
-import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
@@ -11,7 +10,6 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.OrganizationValidator;
@@ -19,7 +17,9 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author LiuChuanjin
  * @version 2.0
- * -----------------------------
+ *          -----------------------------
  * @date 23:44 2018/7/6
  */
 @RequestMapping("/app/organization")
@@ -145,11 +145,11 @@ public class OrganizationController extends BaseController {
      */
     public void prove() {
         User loginUser = AuthUtils.getLoginUser();
-        Auth auth = authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING);
-        List<Auth> auth1 = authService.findByUserIdAndStatusToList(loginUser.getId(), AuthStatus.IS_VERIFY);
+        Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION);
+        List<Auth> auth1 = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
         List<String> list = new ArrayList<>();
         if (auth == null) {
-            auth = authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.NOT_VERIFY);
+            auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
             if (auth != null) {
                 setAttr("name", roleService.findById(auth.getRoleId()).getName())
                         .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdAcct())
@@ -184,7 +184,7 @@ public class OrganizationController extends BaseController {
             model = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -216,7 +216,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (managementService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("提交审核成功"));
         } else {
@@ -254,7 +254,7 @@ public class OrganizationController extends BaseController {
             model = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -286,7 +286,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (enterpriseService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -324,7 +324,7 @@ public class OrganizationController extends BaseController {
             model = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
                     .setAttr("flag", 0).render("facAgency.html");
         } else {
@@ -356,7 +356,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (facAgencyService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -395,7 +395,7 @@ public class OrganizationController extends BaseController {
             model = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
                     .setAttr("flag", 0).render("profGroup.html");
         } else {
@@ -427,7 +427,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         if (profGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -465,7 +465,7 @@ public class OrganizationController extends BaseController {
             model = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatus(loginUser.getId(), AuthStatus.VERIFYING) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)
                     .setAttr("flag", 0).render("reviewGroup.html");
         } else {
@@ -497,7 +497,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         auth.setType("1");
         if (reviewGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
@@ -523,68 +523,4 @@ public class OrganizationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    /**
-     * 立项资格申请
-     */
-    public void projectGet() {
-        User user = AuthUtils.getLoginUser();
-        List<Role> roleList = roleService.findByNames("服务机构立项", "管理机构立项", "企业机构立项", "审查团体立项", "专业团体立项");
-        List<Auth> authList = authService.findByUserAndType(user, TypeStatus.PROJECT_VERIFY);
-        if (authList == null) {
-            authList = Collections.synchronizedList(new ArrayList<Auth>());
-        }
-        List<Auth> noVerify = Collections.synchronizedList(new ArrayList<Auth>());
-        List<Auth> verify = Collections.synchronizedList(new ArrayList<Auth>());
-        List<Auth> verifying = Collections.synchronizedList(new ArrayList<Auth>());
-        authList.forEach(auth -> {
-            for (int i = 0; i < roleList.size(); i++) {
-                Role role = roleList.get(i);
-                if (role.getId().equals(auth.getRoleId())) {
-                    auth.setRemark(role.getName());
-                    roleList.remove(i);
-                }
-            }
-            switch (auth.getStatus()) {
-                case AuthStatus.IS_VERIFY:
-                    verify.add(auth);
-                    break;
-                case AuthStatus.NOT_VERIFY:
-                    noVerify.add(auth);
-                    break;
-                case AuthStatus.VERIFYING:
-                    verifying.add(auth);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        setAttr("noVerify", noVerify)
-                .setAttr("verify", verify)
-                .setAttr("verifying", verifying)
-                .setAttr("roleList", roleList)
-                .render("projectGet.html");
-    }
-
-
-    @Before(POST.class)
-    public void postProjectGet() {
-        Long id = Long.parseLong(getPara("id"));
-        User user = AuthUtils.getLoginUser();
-        Auth auth = authService.findByUserAndRole(user, id);
-        if (auth == null) {
-            auth = new Auth();
-            auth.setName(user.getName());
-            auth.setType(TypeStatus.PROJECT_VERIFY);
-            auth.setRoleId(id);
-            auth.setUserId(user.getId());
-        }
-        auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFYING);
-        if (!authService.saveOrUpdate(auth)) {
-            renderJson(RestResult.buildError("申请失败"));
-            throw new BusinessException("申请失败");
-        }
-        renderJson(RestResult.buildSuccess());
-    }
 }

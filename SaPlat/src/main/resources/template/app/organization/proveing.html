@@ -48,7 +48,7 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'upload'], function () {
+    layui.use(['form', 'layer'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form;
@@ -61,7 +61,6 @@
 
         form.on('submit(reset)', function (data) {
             var method = data.elem.value;
-            console.log('#(ctxPath)/app/organization/' + method + 'Cancel');
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/organization/' + method + 'Cancel',

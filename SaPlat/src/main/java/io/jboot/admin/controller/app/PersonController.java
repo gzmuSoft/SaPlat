@@ -8,7 +8,6 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -119,9 +118,6 @@ public class PersonController extends BaseController {
         if (affectedGroup.getResidence() == null){
             affectedGroup.setResidence(person.getAddr());
         }
-        if (affectedGroup.getPhone() == null){
-            affectedGroup.setPhone(loginUser.getPhone());
-        }
         if (!personService.update(person, loginUser,affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
@@ -136,7 +132,7 @@ public class PersonController extends BaseController {
         User user = AuthUtils.getLoginUser();
         ExpertGroup expertGroup = expertGroupService.findByPersonId(user.getUserID());
         Auth auth = new Auth();
-        auth.setStatus("100");
+        auth.setStatus("5");
         if (expertGroup != null) {
             auth = authService.findByUserAndRole(user,roleService.findByName("专家团体").getId());
         }
@@ -146,27 +142,8 @@ public class PersonController extends BaseController {
     }
 
     /**
-     * 认证页面
-     */
-    public void verify(){
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        if (expertGroup == null){
-            expertGroup = new ExpertGroup();
-        }
-        setAttr("user",user)
-                .setAttr("person",person)
-                .setAttr("expertGroup",expertGroup)
-                .render("verify.html");
-    }
-
-
-
-    /**
      * 专家团体认证
      */
-    @Before(POST.class)
     public void expertGroupVerify() {
         ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
         User user = AuthUtils.getLoginUser();
@@ -192,11 +169,10 @@ public class PersonController extends BaseController {
 
         Auth auth = new Auth();
         auth.setUserId(user.getId());
-        auth.setName(user.getName());
         auth.setRoleId(roleService.findByName("专家团体").getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFYING);
-        auth.setType(TypeStatus.PERSON);
+        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setType("0");
         Auth userAndRole = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         if (userAndRole != null){
             auth.setId(userAndRole.getId());
@@ -211,12 +187,11 @@ public class PersonController extends BaseController {
     /**
      * 专家团体取消认证
      */
-    @Before(POST.class)
     public void cancelExpertGroupAuth() {
         User user = AuthUtils.getLoginUser();
         ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        auth.setStatus(AuthStatus.NOT_VERIFY);
         expertGroup.setIsEnable(0);
         if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
             renderJson(RestResult.buildError("修改认证状态失败"));
@@ -224,7 +199,5 @@ public class PersonController extends BaseController {
         }
         renderJson(RestResult.buildSuccess());
     }
-
-
 
 }

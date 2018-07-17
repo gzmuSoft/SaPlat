@@ -1,0 +1,162 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>项目相关资料</legend>
+    </fieldset>
+    <form id="person" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.name">项目名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="project.name" name="project.name" value="#(model.name)"
+                           class="layui-input " required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.roleName">角色名称</label>
+                <div class="layui-input-inline">
+                    <select id="project.roleName" name="project.roleName" value="#(model.roleName)"
+                            class="layui-input " required>
+                        #for(list : roleNameList)
+                        <option>#(list)</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.amount">预计金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="project.amount" name="project.amount" value="#(model.amount)"
+                           class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.typeID">项目类型</label>
+                <div class="layui-input-inline">
+                    <select id="project.typeID" name="project.typeID"
+                            class="layui-input " required>
+                        #for(List : typeList)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.site">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="project.site" name="project.site" value="#(model.site)"
+                           class="layui-input " required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.brief">简介</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="project.brief" name="project.brief" value="#(model.brief)"
+                           class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.approval">相关批文</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="project.approval" name="project.approval" value="#(model.approval)"
+                           class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="project.proposal">建议书</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="project.proposal" name="project.proposal" value="#(model.proposal)"
+                           class="layui-input " required/>
+                </div>
+            </div>
+
+            <div class="layui-upload" style="margin-left: 0px;margin-right: 30px;">
+                <div style="margin-top: 171px;float: left;"><label class="layui-form-label">相关图纸</label></div>
+                <div class="layui-upload-list" style="float: left;">
+                    <img class="layui-upload-img" id="demo1" style="width: 200px;height: 200px;margin: 0 10px 10px 0;">
+                    <p id="demoText"></p>
+                    <input type="hidden" name="pic" id="pic" value="${store.pic }">
+                </div>
+                <div style="float: left;margin-top: 171px;">
+                    <button type="button" class="layui-btn" id="file">上传图片</button>
+                </div>
+            </div>
+
+            <!--隐藏flag作为界面是否禁用的方法-->
+            <input type="text" id="flag" name="flag"
+                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
+                    <button class="layui-btn layui-btn-warm" id="reset">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+#end
+
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'upload'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form
+            , upload = layui.upload;
+
+        /**
+         * 提交
+         */
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/project/projectProve',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    window.location.href = '#(ctxPath)/app/project/toVerfiing';
+                    window.location.reload();
+                    setTimeout(function () {
+                        return true;
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+    });
+
+    if ($('#flag').val() == 1) {
+        $(".layui-btn").addClass("layui-hide");
+        $(":input").addClass("layui-disabled");
+        $(":input").attr("disabled", "disabled");
+        $("#project.typeID").attr("disabled", "disabled").css("background-color", "#EEEEEE;");
+    }
+</script>
+#end
