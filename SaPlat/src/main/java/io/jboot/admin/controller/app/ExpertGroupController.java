@@ -88,7 +88,7 @@ public class ExpertGroupController extends BaseController{
         if (expertGroupService.hasExpertGroup(model.getName())){
             throw new BusinessException("所指定的专家团体名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!expertGroupService.save(model)){
             throw new BusinessException("保存失败");
         }
