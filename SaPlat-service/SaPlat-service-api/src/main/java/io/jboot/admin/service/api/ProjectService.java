@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.AuthProject;
 import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;
@@ -16,6 +17,22 @@ public interface ProjectService  {
      */
     public Project findById(Object id);
 
+    /**
+     *
+     * @param model
+     * @param authProject
+     * @return
+     */
+    public boolean saveOrUpdate(Project model, AuthProject authProject);
+
+    /**
+     *
+     * @param project
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Project> findPage(Project project, int pageNumber, int pageSize);
 
     /**
      * find all model

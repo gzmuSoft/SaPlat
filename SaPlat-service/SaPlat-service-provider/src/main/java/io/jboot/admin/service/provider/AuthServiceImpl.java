@@ -3,7 +3,6 @@ package io.jboot.admin.service.provider;
 import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -45,10 +44,24 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
     @Override
+    public List<Auth> findListByUserIdAndStatusAndType(Long userId, String status, String type) {
+        return null;
+    }
+
+    @Override
     public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
         Columns columns = new Columns();
         columns.eq("userId", userId);
         columns.eq("status", status);
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public Auth findByUserIdAndStatusAndType(Long userId, String status, String type) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        columns.eq("type", type);
+        return DAO.findFirstByColumns(columns);
     }
 }

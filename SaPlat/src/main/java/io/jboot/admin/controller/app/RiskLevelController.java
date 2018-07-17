@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.RiskLevelService;
 import io.jboot.admin.service.entity.model.RiskLevel;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.validator.app.RiskLevelValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -71,6 +74,7 @@ public class RiskLevelController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, RiskLevelValidator.class})
     public void postAdd(){
         RiskLevel model = getBean(RiskLevel.class, "model");
         if (projectStepService.isExisted(model.getName())){
@@ -83,6 +87,7 @@ public class RiskLevelController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, RiskLevelValidator.class})
     public void postUpdate(){
         RiskLevel model = getBean(RiskLevel.class, "model");
         RiskLevel byId = projectStepService.findById(model.getId());

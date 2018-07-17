@@ -216,7 +216,7 @@ public class PersonController extends BaseController {
         if (expertGroup == null) {
             expertGroup = new ExpertGroup();
         } else if (StringUtils.isNotBlank(expertGroup.getWorkpictrue())
-                        && StringUtils.isNotBlank(expertGroup.getCertificate())){
+                && StringUtils.isNotBlank(expertGroup.getCertificate())){
             Files file1 = filesService.findById(Integer.parseInt(expertGroup.getWorkpictrue()));
             Files file2 = filesService.findById(Integer.parseInt(expertGroup.getCertificate()));
             file1.setIsEnable(false);
