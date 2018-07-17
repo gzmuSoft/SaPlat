@@ -233,7 +233,7 @@ public class OrganizationController extends BaseController {
         Management model = managementService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("管理机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!managementService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -303,7 +303,7 @@ public class OrganizationController extends BaseController {
         Enterprise model = enterpriseService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("企业机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!enterpriseService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -373,7 +373,7 @@ public class OrganizationController extends BaseController {
         FacAgency model = facAgencyService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("服务机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!facAgencyService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -444,7 +444,7 @@ public class OrganizationController extends BaseController {
         ProfGroup model = profGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专业团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!profGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -482,7 +482,7 @@ public class OrganizationController extends BaseController {
         ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         User loginUser = AuthUtils.getLoginUser();
         //若曾经取消认证则下次认证时获取id进行更新
         ReviewGroup name = reviewGroupService.findByName(model.getName());
@@ -515,7 +515,7 @@ public class OrganizationController extends BaseController {
         ReviewGroup model = reviewGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("审查团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!reviewGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");

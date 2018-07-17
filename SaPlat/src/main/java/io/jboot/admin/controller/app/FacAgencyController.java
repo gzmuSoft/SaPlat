@@ -78,7 +78,7 @@ public class FacAgencyController extends BaseController{
         if (facAgencyService.isExisted(model.getName())){
             throw new BusinessException("所指定的服务机构名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!facAgencyService.save(model)){
             throw new BusinessException("保存失败");
         }

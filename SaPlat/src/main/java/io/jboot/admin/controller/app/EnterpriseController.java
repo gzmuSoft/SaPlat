@@ -81,7 +81,7 @@ public class EnterpriseController extends BaseController{
         if (enterpriseService.isExisted(model.getName())){
             throw new BusinessException("所指定的企业机构名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!enterpriseService.save(model)){
             throw new BusinessException("保存失败");
         }
