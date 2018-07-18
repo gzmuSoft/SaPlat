@@ -7,7 +7,6 @@ import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.aop.annotation.Bean;
@@ -15,7 +14,6 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,9 +26,42 @@ import java.util.List;
 @JbootrpcService
 public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthService {
 
-
-    @Inject
+    @JbootrpcService
     private UserRoleService userRoleService;
+
+    @Override
+    public Auth findByUser(User user) {
+        return DAO.findFirstByColumn("userId", user.getId());
+    }
+
+    @Override
+    public Auth findByUserAndRole(User user, long role) {
+        return DAO.findFirstByColumns(Columns.create("userId", user.getId()).eq("roleId", role));
+    }
+
+    @Override
+    public List<Auth> findByUserAndType(User user, String typeStatus) {
+        Columns columns = Columns.create();
+        columns.eq("userId", user.getId());
+        columns.eq("type", typeStatus);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public Auth findByUserIdAndStatus(Long userId, String status) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        return DAO.findListByColumns(columns);
+    }
 
 
     @Override
@@ -40,9 +71,9 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             columns.like("status", "%" + auth.getStatus() + "%");
         }
         if (auth.getUserId() != null) {
-            columns.like("userId", "%" + auth.getUserId() + "%");
+            columns.eq("userId", auth.getUserId());
         }
-        if(auth.getName()!=null){
+        if (auth.getName() != null) {
             columns.like("name", "%" + auth.getName() + "%");
         }
         if (auth.getType() != null) {
@@ -55,14 +86,8 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
 
-    /*
-    写这段代码的时候，只有上天和我知道它是干嘛的
-    现在，只有上天知道
-    */
     @Override
     public boolean update(Auth model) {
-
-
         return Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
@@ -93,27 +118,5 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 return true;
             }
         });
-    @Override
-    public List<Auth> findByUserAndType(User user, String typeStatus) {
-        Columns columns = Columns.create();
-        columns.eq("userId",user.getId());
-        columns.eq("type",typeStatus);
-        return DAO.findListByColumns(columns);
-    }
-
-    @Override
-    public Auth findByUserIdAndStatus(Long userId, String status) {
-        Columns columns = new Columns();
-        columns.eq("userId", userId);
-        columns.eq("status", status);
-        return DAO.findFirstByColumns(columns);
-    }
-
-    @Override
-    public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
-        Columns columns = new Columns();
-        columns.eq("userId", userId);
-        columns.eq("status", status);
-        return DAO.findListByColumns(columns);
     }
 }

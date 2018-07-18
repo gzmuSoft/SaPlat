@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
-import io.jboot.aop.annotation.Bean;
+import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.ProfGroupService;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ProfGroup;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.service.JbootServiceBase;
 
@@ -16,5 +18,21 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
     @Override
     public ProfGroup findByOrgId(Long orgId) {
         return DAO.findFirstByColumn("orgID", orgId);
+    }
+
+
+    @Override
+    public boolean saveOrUpdate(ProfGroup model, Auth auth) {
+        return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate());
+    }
+
+    @Override
+    public boolean isExisted(String name) {
+        return findByName(name) != null;
+    }
+
+    @Override
+    public ProfGroup findByName(String name) {
+        return DAO.findFirstByColumn("name", name);
     }
 }

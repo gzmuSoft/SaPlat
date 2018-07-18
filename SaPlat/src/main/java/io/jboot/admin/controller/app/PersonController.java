@@ -82,7 +82,7 @@ public class PersonController extends BaseController {
         }
         person.setCreateTime(new Date());
         person.setLastAccessTime(new Date());
-        person.setIsEnable(1);
+        person.setIsEnable(true);
         Long[] roles = new Long[]{roleService.findByName("个人群体").getId()};
         if (!personService.savePerson(person, user, roles)) {
             renderJson(RestResult.buildError("用户保存失败"));
@@ -179,10 +179,10 @@ public class PersonController extends BaseController {
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
-        expertGroup.setIsEnable(1);
+        expertGroup.setIsEnable(true);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
         if ( name != null ) {
-            if (name.getIsEnable() == 1){
+            if (name.getIsEnable()){
                 renderJson(RestResult.buildError("专家团体已存在"));
                 throw new BusinessException("专家团体已存在");
             }
@@ -195,7 +195,7 @@ public class PersonController extends BaseController {
         auth.setName(user.getName());
         auth.setRoleId(roleService.findByName("专家团体").getId());
         auth.setLastUpdTime(new Date());
-        auth.setStatus(AuthStatus.VERIFYING);
+        auth.setStatus(AuthStatus.VERIFIING);
         auth.setType(TypeStatus.PERSON);
         Auth userAndRole = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         if (userAndRole != null){
@@ -217,7 +217,7 @@ public class PersonController extends BaseController {
         ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        expertGroup.setIsEnable(0);
+        expertGroup.setIsEnable(false);
         if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
             renderJson(RestResult.buildError("修改认证状态失败"));
             throw new BusinessException("修改认证状态失败");

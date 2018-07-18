@@ -17,7 +17,7 @@ public interface EnterpriseService {
      */
     public Enterprise findById(Object id);
 
-    public Enterprise findByOrgId(Long orgId);
+
 
     /**
      * 关联组织和管理机构

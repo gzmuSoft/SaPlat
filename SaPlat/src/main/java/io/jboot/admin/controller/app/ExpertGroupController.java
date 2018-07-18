@@ -10,10 +10,7 @@ import io.jboot.admin.service.api.ExpertGroupService;
 import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.Person;
-import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.DataStatus;
-import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -88,7 +85,7 @@ public class ExpertGroupController extends BaseController{
         if (expertGroupService.hasExpertGroup(model.getName())){
             throw new BusinessException("所指定的专家团体名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!expertGroupService.save(model)){
             throw new BusinessException("保存失败");
         }

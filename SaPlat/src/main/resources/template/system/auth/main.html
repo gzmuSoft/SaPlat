@@ -68,17 +68,22 @@
                         }
                     })
                 });
-            } else
-                if(obj.event === 'edit'){
+            } else if(obj.event === 'edit'){
                     pop_show('审核结果','#(ctxPath)/system/auth/update?id=' + data.id,'','', function(){
                     reloadTable(null,null, null,null);
                 });
-            } else
-                if(obj.event === 'view'){
+            } else if(obj.event === 'view'){
                     pop_show('认证信息','#(ctxPath)/system/auth/view?id=' + data.id,'','', function(){
                         reloadTable(null,null, null,null);
                     });
-                }
+                }  else if (obj.event === 'warning') {
+                layer.confirm('该认证已审核，确定要重新审核', function(index) {
+                    pop_show('审核结果', '#(ctxPath)/system/auth/update?id=' + data.id, '', '', function () {
+                        reloadTable(null, null, null, null);
+                        layer.close(index);
+                    });
+                });
+            }
 
 
         });
@@ -110,7 +115,7 @@
 
 
         form.on('submit(search)', function(data){
-            reloadTable(data.field.name,data.field.type,data.field.userId, data.field.status);
+            reloadTable(data.field.name,data.field.type,null, data.field.status);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -125,7 +130,7 @@
             <div class="layui-form-pane">
                 <div class="layui-form-item">
                     <label class="layui-form-label">类型</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <select id='type' name="type">
                             <option></option>
                             #statusOption(typeStatus)
@@ -133,23 +138,15 @@
                     </div>
 
                     <label class="layui-form-label">状态</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <select id='status' name="status">
                             <option></option>
                             #statusOption(io.jboot.admin.service.entity.status.system.AuthStatus::me())
                         </select>
                     </div>
 
-
-
-
-                    <label class="layui-form-label">申请人ID</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="userId" name="userId" placeholder="申请人ID" class="layui-input"/>
-                    </div>
-
                     <label class="layui-form-label">申请人</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <input type="text" id="name" name="name" placeholder="申请人" class="layui-input"/>
                     </div>
                     <div class="layui-input-inline" style="width : 80px">
@@ -177,9 +174,20 @@
 
 
 
-
     #shiroHasPermission('/system/auth/update')
+    #[[
+    {{#  if(d.status == '3'){ }}
+    ]]#
+
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">审核</a>
+
+    #[[
+    {{# } else if(d.status!= '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="warning">复审</a>
+    #[[
+    {{#  } }}
+    ]]#
     #end
 </script>
 #end
