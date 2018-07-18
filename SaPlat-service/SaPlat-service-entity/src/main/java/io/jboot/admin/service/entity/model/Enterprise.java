@@ -11,16 +11,17 @@ import io.jboot.admin.service.entity.model.base.BaseEnterprise;
 public class Enterprise extends BaseEnterprise<Enterprise> {
     public void setStatus(java.lang.String status) {
         if (status == DataStatus.USED) {
-            setIsEnable(1);
+            setIsEnable(true);
         } else {
-            setIsEnable(0);
+            setIsEnable(false);
         }
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == 1)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 }
