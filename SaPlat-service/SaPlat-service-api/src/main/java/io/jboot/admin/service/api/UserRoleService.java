@@ -30,6 +30,14 @@ public interface UserRoleService  {
     public UserRole findById(Object id);
 
     /**
+     * 通过用户id和权限id查询
+     * @param userId 用户id
+     * @param roleId 权限id
+     * @return 用户权限
+     */
+    public UserRole findByUserIdAndRoleId(Long userId,Long roleId);
+
+    /**
      * 根据用户id查询用户权限
      *
      * @param userId

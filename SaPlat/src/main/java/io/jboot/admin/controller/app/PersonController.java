@@ -141,25 +141,6 @@ public class PersonController extends BaseController {
     }
 
 
-    @Before({POST.class})
-    public void datePost() {
-        ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
-        System.out.println(expertGroup.toJson());
-        String file1 = getPara("file1");
-        String file2 = getPara("file2");
-        System.out.println(file1);
-        System.out.println(file2);
-        File file = new File(file1 + "tmp");
-        if (file.exists()) {
-            System.out.println("success----------------------------------!");
-        }
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-        map.put("group", expertGroup.toJson());
-        map.put("file1", file1);
-        map.put("file2", file2);
-        renderJson(map);
-    }
-
     /**
      * 更新用户资料
      */
