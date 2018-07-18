@@ -18,7 +18,7 @@ public class Enterprise extends BaseEnterprise<Enterprise> {
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
         } else {
             return DataStatus.UNUSED;

@@ -18,6 +18,7 @@ import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -569,8 +570,13 @@ public class OrganizationController extends BaseController {
 
     @Before(POST.class)
     public void postProjectGet() {
-        Long id = Long.parseLong(getPara("id"));
+        Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
+        UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(),id-5 );
+        if (userRole == null){
+            renderJson(RestResult.buildError("亲，请先去认证成为当前组织再来申请哦~~~"));
+            throw new BusinessException("亲，请先去认证成为当前组织再来申请哦~~~");
+        }
         Auth auth = authService.findByUserAndRole(user, id);
         if (auth == null) {
             auth = new Auth();
