@@ -26,14 +26,14 @@ public class AuthStatus extends BaseStatus {
     /**
      * 认证中
      */
-    public final static String VERIFIING = "3";
+    public final static String VERIFYING = "3";
 
 
     public AuthStatus() {
         add(CANCEL_VERIFY, "取消审核");
         add(NOT_VERIFY, "审核失败");
         add(IS_VERIFY, "审核成功");
-        add(VERIFIING, "审核中");
+        add(VERIFYING, "审核中");
     }
 
     private static AuthStatus me;

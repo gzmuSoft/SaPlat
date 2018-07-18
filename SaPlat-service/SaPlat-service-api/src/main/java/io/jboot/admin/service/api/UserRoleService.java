@@ -44,7 +44,7 @@ public interface UserRoleService  {
      * @return
      */
 
-    public UserRole findByUserId(Long userId);
+    public List<UserRole> findListByUserId(Long userId);
 
     /**
      * 根据ID删除model
@@ -87,12 +87,6 @@ public interface UserRoleService  {
      */
     public boolean update(UserRole model);
 
-    /**
-     * @param userId
-     * @return role_list
-     */
-
-    public List<UserRole> findByUserId(Long userId);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

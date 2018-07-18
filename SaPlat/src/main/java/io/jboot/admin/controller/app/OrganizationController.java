@@ -180,7 +180,7 @@ public class OrganizationController extends BaseController {
     public void management() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        Management model = managementService.findByOrgID(organization.getId());
+        Management model = managementService.findByOrgId(organization.getId());
         if (model == null) {
             model = new Management();
         }
@@ -231,7 +231,7 @@ public class OrganizationController extends BaseController {
      */
     public void managementCancel() {
         User user = AuthUtils.getLoginUser();
-        Management model = managementService.findByOrgID(organizationService.findById(user.getUserID()).getId());
+        Management model = managementService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("管理机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
@@ -250,7 +250,7 @@ public class OrganizationController extends BaseController {
     public void enterprise() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        Enterprise model = enterpriseService.findByOrgID(organization.getId());
+        Enterprise model = enterpriseService.findByOrgId(organization.getId());
         if (model == null) {
             model = new Enterprise();
         }
@@ -301,7 +301,7 @@ public class OrganizationController extends BaseController {
      */
     public void enterpriseCancel() {
         User user = AuthUtils.getLoginUser();
-        Enterprise model = enterpriseService.findByOrgID(organizationService.findById(user.getUserID()).getId());
+        Enterprise model = enterpriseService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("企业机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
@@ -320,7 +320,7 @@ public class OrganizationController extends BaseController {
     public void facAgency() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        FacAgency model = facAgencyService.findByOrgID(organization.getId());
+        FacAgency model = facAgencyService.findByOrgId(organization.getId());
         if (model == null) {
             model = new FacAgency();
         }
@@ -371,7 +371,7 @@ public class OrganizationController extends BaseController {
      */
     public void facAgencyCancel() {
         User user = AuthUtils.getLoginUser();
-        FacAgency model = facAgencyService.findByOrgID(organizationService.findById(user.getUserID()).getId());
+        FacAgency model = facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("服务机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
@@ -391,7 +391,7 @@ public class OrganizationController extends BaseController {
     public void profGroup() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        ProfGroup model = profGroupService.findByOrgID(organization.getId());
+        ProfGroup model = profGroupService.findByOrgId(organization.getId());
         if (model == null) {
             model = new ProfGroup();
         }
@@ -442,7 +442,7 @@ public class OrganizationController extends BaseController {
      */
     public void profGroupCancel() {
         User user = AuthUtils.getLoginUser();
-        ProfGroup model = profGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
+        ProfGroup model = profGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专业团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
@@ -461,7 +461,7 @@ public class OrganizationController extends BaseController {
     public void reviewGroup() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        ReviewGroup model = reviewGroupService.findByOrgID(organization.getId());
+        ReviewGroup model = reviewGroupService.findByOrgId(organization.getId());
         if (model == null) {
             model = new ReviewGroup();
         }
@@ -513,7 +513,7 @@ public class OrganizationController extends BaseController {
      */
     public void reviewGroupCancel() {
         User user = AuthUtils.getLoginUser();
-        ReviewGroup model = reviewGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
+        ReviewGroup model = reviewGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("审查团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);

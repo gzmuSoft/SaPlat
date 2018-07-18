@@ -109,7 +109,7 @@ public class AuthController extends BaseController {
             Management management = managementService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("management", management).render("management.html");
         } else if ("enterprise".equals(role.getNote())) {
-            Enterprise enterprise = enterpriseService.findByOrgID(organization.getId());
+            Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterprise.html");
         } else if ("review_group".equals(role.getNote())) {
             ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());

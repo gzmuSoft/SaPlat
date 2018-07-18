@@ -39,7 +39,7 @@ public class UserRoleServiceImpl extends JbootServiceBase<UserRole> implements U
     }
 
     @Override
-    public List<UserRole> findByUserId(Long userId){
+    public List<UserRole> findListByUserId(Long userId){
         return DAO.findListByColumn("user_id",userId);
     }
 }

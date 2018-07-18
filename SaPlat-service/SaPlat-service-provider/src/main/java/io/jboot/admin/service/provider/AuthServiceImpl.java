@@ -104,7 +104,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 if (!model.update()) {
                     return false;
                 }
-                List<UserRole> userRoleList = userRoleService.findByUserId(model.getUserId());
+                List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
                 for (UserRole role : userRoleList) {
                     if (model.getUserId().equals(role.getUserId()) && model.getRoleId().equals(role.getRoleId())) {
                         if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
