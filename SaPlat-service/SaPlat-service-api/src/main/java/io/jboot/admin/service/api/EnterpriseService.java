@@ -25,7 +25,7 @@ public interface EnterpriseService {
      * @param orgID
      * @return
      */
-    public Enterprise findByOrgID(Long orgID);
+    public Enterprise findByOrgId(Long orgID);
 
     /**
      * find all model

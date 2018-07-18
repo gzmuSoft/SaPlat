@@ -45,16 +45,17 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
     }
 
     @Override
-    public boolean update(AuthProject model){
+    public boolean update(AuthProject model) {
         return Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
                 model.setLastUpdTime(new Date());
-                Project project=projectService.findById(model.getProjectId());
+                Project project = projectService.findById(model.getProjectId());
                 project.setStatus(model.getStatus());
-                return model.update()&&project.update();
+                return model.update() && project.update();
             }
         });
+    }
     @Override
     public AuthProject findByProjectId(Object projectId) {
         return DAO.findFirstByColumn("projectId", projectId);

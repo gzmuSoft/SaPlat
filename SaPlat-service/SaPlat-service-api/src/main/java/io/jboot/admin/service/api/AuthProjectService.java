@@ -81,7 +81,6 @@ public interface AuthProjectService {
      */
     public boolean update(AuthProject model);
 
-
     public Page<AuthProject> findPage(AuthProject authProject, int pageNumber, int pageSize);
 
     public void join(Page<? extends Model> page, String joinOnField);
