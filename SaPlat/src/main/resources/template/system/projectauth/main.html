@@ -1,0 +1,46 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    .layui-form-item {
+        margin-top: 10%;
+    }
+
+    .layui-btn {
+        width: 200px;
+        height: 200px;
+        margin-top: 15px;
+        margin-right: 70px;
+        border-radius: 100PX;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+
+    $("#verify").click(function () {
+        window.location.href='#(ctxPath)/system/projectauth/verifyIndex';
+    });
+    $("#data").click(function () {
+        window.location.href='#(ctxPath)/system/projectauth/dataIndex';
+    });
+//
+    //    $("#data").click(function () {
+    //        reloadTable(null, "3", null, null);
+    //    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-form-item">
+    <div class="layui-layer-btn-c">
+        <button class="layui-btn layui-btn-lg " id="verify">立项资格审核</button>
+        <button class="layui-btn layui-btn-lg" id="data">立项资料审核</button>
+    </div>
+
+</div>
+#end

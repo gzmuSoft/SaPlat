@@ -8,7 +8,6 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.EnterpriseService;
 import io.jboot.admin.service.entity.model.Enterprise;
-import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -77,7 +76,7 @@ public class EnterpriseController extends BaseController{
         if (enterpriseService.isExisted(model.getName())){
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!enterpriseService.save(model)){
             throw new BusinessException("保存失败");
         }

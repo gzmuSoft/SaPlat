@@ -113,6 +113,14 @@ public interface AuthService  {
     public boolean update(Auth model);
 
 
+    /**
+     * 分页查询角色审核信息
+     * @param auth pageNumber pageSize 审核
+     * @return 页
+     */
+    public Page<Auth> findPage(Auth auth, int pageNumber, int pageSize);
+
+
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);

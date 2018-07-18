@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.FacAgency;
 
 import java.util.List;
@@ -18,12 +19,39 @@ public interface FacAgencyService  {
 
     public FacAgency findByOrgId(Long orgId);
     /**
+     * 关联组织和管理机构
+     *
+     * @param orgID
+     * @return
+     */
+    /**
      * find all model
      *
      * @return all <FacAgency
      */
     public List<FacAgency> findAll();
 
+    /**
+     * 分页查询 项目阶段 信息
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<FacAgency> findPage(FacAgency model, int pageNumber, int pageSize);
+
+    /**
+     * 根据名称查询 项目阶段 信息
+     * @param name
+     * @return
+     */
+    public FacAgency findByName(String name);
+
+
+    /**
+     * 项目阶段 是否存在
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
 
     /**
      * delete model by primary key
@@ -59,6 +87,15 @@ public interface FacAgencyService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(FacAgency model);
+
+    /**
+     * save Or Update model and auth
+     *
+     * @param model
+     * @param auth
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(FacAgency model, Auth auth);
 
 
     /**
