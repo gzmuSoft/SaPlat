@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author LiuChuanjin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 23:44 2018/7/6
  */
 @RequestMapping("/app/organization")
@@ -145,7 +145,7 @@ public class OrganizationController extends BaseController {
      */
     public void prove() {
         User loginUser = AuthUtils.getLoginUser();
-        Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION);
+        Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION);
         List<Auth> auth1 = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
         List<String> list = new ArrayList<>();
         if (auth == null) {
@@ -184,7 +184,7 @@ public class OrganizationController extends BaseController {
             model = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -216,7 +216,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (managementService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("提交审核成功"));
         } else {
@@ -233,7 +233,7 @@ public class OrganizationController extends BaseController {
         Management model = managementService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("管理机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!managementService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -254,7 +254,7 @@ public class OrganizationController extends BaseController {
             model = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -286,7 +286,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (enterpriseService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -303,7 +303,7 @@ public class OrganizationController extends BaseController {
         Enterprise model = enterpriseService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("企业机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!enterpriseService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -324,7 +324,7 @@ public class OrganizationController extends BaseController {
             model = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
                     .setAttr("flag", 0).render("facAgency.html");
         } else {
@@ -356,7 +356,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (facAgencyService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -373,7 +373,7 @@ public class OrganizationController extends BaseController {
         FacAgency model = facAgencyService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("服务机构").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!facAgencyService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -395,7 +395,7 @@ public class OrganizationController extends BaseController {
             model = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
                     .setAttr("flag", 0).render("profGroup.html");
         } else {
@@ -427,7 +427,7 @@ public class OrganizationController extends BaseController {
         auth.setLastUpdTime(new Date());
         auth.setType("1");
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         if (profGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
@@ -444,7 +444,7 @@ public class OrganizationController extends BaseController {
         ProfGroup model = profGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专业团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!profGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
@@ -465,7 +465,7 @@ public class OrganizationController extends BaseController {
             model = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFIING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)
                     .setAttr("flag", 0).render("reviewGroup.html");
         } else {
@@ -482,7 +482,7 @@ public class OrganizationController extends BaseController {
         ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         User loginUser = AuthUtils.getLoginUser();
         //若曾经取消认证则下次认证时获取id进行更新
         ReviewGroup name = reviewGroupService.findByName(model.getName());
@@ -497,7 +497,7 @@ public class OrganizationController extends BaseController {
         auth.setUserId(loginUser.getId());
         auth.setLastUpdTime(new Date());
         auth.setName(loginUser.getName());
-        auth.setStatus(AuthStatus.VERIFIING);
+        auth.setStatus(AuthStatus.VERIFYING);
         auth.setType("1");
         if (reviewGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
@@ -515,12 +515,11 @@ public class OrganizationController extends BaseController {
         ReviewGroup model = reviewGroupService.findByOrgID(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("审查团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        model.setIsEnable(0);
+        model.setIsEnable(false);
         if (!reviewGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
         }
         renderJson(RestResult.buildSuccess());
     }
-
 }

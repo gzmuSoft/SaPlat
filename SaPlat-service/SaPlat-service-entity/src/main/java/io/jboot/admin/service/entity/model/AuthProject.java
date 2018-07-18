@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseAuthProject;
  */
 @Table(tableName = "sys_auth_project", primaryKey = "id")
 public class AuthProject extends BaseAuthProject<AuthProject> {
-
+	
 }
