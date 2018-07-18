@@ -24,6 +24,12 @@ public interface FilesService  {
      */
     public List<Files> findAll();
 
+    /**
+     * 通过一个或者多个path查询
+     * @param path path
+     * @return 集合
+     */
+    public List<Files> findByPath(String ...path);
 
     /**
      * delete model by primary key

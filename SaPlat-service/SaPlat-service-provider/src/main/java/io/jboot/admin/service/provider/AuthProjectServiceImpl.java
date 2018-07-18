@@ -55,5 +55,8 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
                 return model.update()&&project.update();
             }
         });
+    @Override
+    public AuthProject findByProjectId(Object projectId) {
+        return DAO.findFirstByColumn("projectId", projectId);
     }
 }

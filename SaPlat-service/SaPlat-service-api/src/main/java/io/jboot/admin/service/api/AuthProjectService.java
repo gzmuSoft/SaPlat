@@ -6,7 +6,11 @@ import io.jboot.admin.service.entity.model.AuthProject;
 
 import java.util.List;
 
-public interface AuthProjectService  {
+
+/**
+ * @author ASUS
+ */
+public interface AuthProjectService {
 
     /**
      * find model by primary key
@@ -16,6 +20,14 @@ public interface AuthProjectService  {
      */
     public AuthProject findById(Object id);
 
+
+    /**
+     * find model by primary key
+     *
+     * @param projectId
+     * @return
+     */
+    public AuthProject findByProjectId(Object projectId);
 
     /**
      * find all model
@@ -84,7 +96,6 @@ public interface AuthProjectService  {
     public void join(Model model, String joinOnField, String[] attrs);
     public void join(Model model, String joinOnField, String joinName);
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
 }
