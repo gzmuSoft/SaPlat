@@ -88,7 +88,7 @@ public class AffectedGroupController extends BaseController{
         //if (affectedGroupService.hasAffectedGroup(model.getName())){
         //    throw new BusinessException("所指定的影响群体名称已存在");
         //}
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!affectedGroupService.save(model)){
             throw new BusinessException("保存失败");
         }

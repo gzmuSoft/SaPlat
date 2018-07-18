@@ -13,11 +13,11 @@ import io.jboot.admin.base.common.BaseStatus;
 public class ProjectStatus extends BaseStatus {
 
     /**
-     * 审核失败
+     * 取消审核请求
      */
     public final static String CANCEL_VERIFY = "0";
     /**
-     * 取消审核请求
+     * 审核失败
      */
     public final static String NOT_VERIFY = "1";
     /**

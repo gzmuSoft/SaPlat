@@ -69,6 +69,11 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     }
 
     @Override
+    public boolean update(Person person, User user) {
+        return true;
+    }
+
+    @Override
     public boolean update(Person person, User user,AffectedGroup affectedGroup) {
         return Db.tx(() -> {
             AffectedGroup group = affectedGroupService.findByPersonId(person.getId());

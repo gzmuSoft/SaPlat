@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.AuthProject;
+import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -17,7 +18,6 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
-
     @Override
     public boolean saveOrUpdate(Project model, AuthProject authProject) {
         return Db.tx(() -> {
@@ -39,10 +39,22 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getUserId() != 0 && StrKit.notBlank(project.getStatus())) {
             columns.like("status", "%" + project.getStatus() + "%");
             columns.like("userId", "%" + project.getUserId() + "%");
-            columns.like("isEnable", "%" + project.getIsEnable() + "%");
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "lastAccessTime desc");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 
-
+    @Override
+    public boolean saveOrUpdate(Project model, AuthProject authProject, LeaderGroup leaderGroup) {
+        return Db.tx(() -> {
+            if (!model.saveOrUpdate()) {
+                return false;
+            }
+            Columns columns = new Columns();
+            columns.eq("name", model.getName());
+            columns.eq("brief", model.getBrief());
+            leaderGroup.setProjectID(DAO.findFirstByColumns(columns).getId());
+            authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
+            return Db.tx(() -> authProject.save() && leaderGroup.save());
+        });
+    }
 }

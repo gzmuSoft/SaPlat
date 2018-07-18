@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
@@ -44,41 +45,88 @@ public class ProjectController extends BaseController {
      * 项目立项基本资料初始化至信息管理界面
      */
     public void index() {
-        User user = AuthUtils.getLoginUser();
-        List<Auth> authList = authService.findListByUserIdAndStatusAndType(user.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
+        User loginUser = AuthUtils.getLoginUser();
+        List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
         List<ProjectType> typeList = projectTypeService.findAll();
         List<String> roleNameList = new ArrayList<>();
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        Project model = new Project();
-        setAttr("roleNameList", roleNameList).setAttr("typeList", typeList).setAttr("model", model)
-                .render("projectInformation.html");
-
+        setAttr("roleNameList", roleNameList).setAttr("typeNameList", typeList).render("projectInformation.html");
     }
 
     /**
-     * 提交立项资料并进入待审核状态
+     * 自评提交立项资料并进入已审核状态
      */
-    @Before(POST.class)
-    public void projectProve() {
-        User user = AuthUtils.getLoginUser();
+    @Before(GET.class)
+    public void selfAssessment() {
+        User loginUser = AuthUtils.getLoginUser();
         Project project = getBean(Project.class, "project");
-        project.setUserId(user.getId());
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
         project.setDrawings("#/");
-        project.setStatus(ProjectStatus.VERIFIING);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
+        project.setStatus(ProjectStatus.IS_VERIFY);
+        project.setUserId(loginUser.getId());
+        project.setCreateUserID(loginUser.getId());
+        project.setLastUpdateUserID(loginUser.getId());
+
+        LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
+        leaderGroup.setCreateTime(new Date());
+        leaderGroup.setLastAccessTime(new Date());
+        leaderGroup.setCreateUserID(loginUser.getId());
+        leaderGroup.setLastUpdateUserID(loginUser.getId());
+
         AuthProject authProject = new AuthProject();
         authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
-        authProject.setUserId(user.getId());
+        authProject.setUserId(loginUser.getId());
         authProject.setLastUpdTime(new Date());
-        authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
-        authProject.setStatus(AuthStatus.VERIFIING);
-        authProject.setName(user.getName());
-        if (projectService.saveOrUpdate(project, authProject)) {
+        authProject.setType(TypeStatus.PROJECT_VERIFY);
+        authProject.setStatus(AuthStatus.IS_VERIFY);
+        authProject.setName(loginUser.getName());
+        authProject.setLastUpdUser(loginUser.getName());
+        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
+            renderJson(RestResult.buildSuccess("立项成功"));
+            render("verfed.html");
+        } else {
+            renderJson(RestResult.buildError("立项失败"));
+            throw new BusinessException("立项失败");
+        }
+    }
+
+    /**
+     * 委评提交立项资料并进入待审核状态
+     */
+    @Before(GET.class)
+    public void othersAssessment() {
+        User loginUser = AuthUtils.getLoginUser();
+        Project project = getBean(Project.class, "project");
+        project.setCreateTime(new Date());
+        project.setLastAccessTime(new Date());
+        project.setDrawings("#/");
+        project.setIsEnable(true);
+        project.setStatus(ProjectStatus.VERIFIING);
+        project.setUserId(loginUser.getId());
+        project.setCreateUserID(loginUser.getId());
+        project.setLastUpdateUserID(loginUser.getId());
+
+        LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
+        leaderGroup.setCreateTime(new Date());
+        leaderGroup.setLastAccessTime(new Date());
+        leaderGroup.setCreateUserID(loginUser.getId());
+        leaderGroup.setLastUpdateUserID(loginUser.getId());
+
+        AuthProject authProject = new AuthProject();
+        authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
+        authProject.setUserId(loginUser.getId());
+        authProject.setLastUpdTime(new Date());
+        authProject.setType(TypeStatus.PROJECT_VERIFY);
+        authProject.setStatus(AuthStatus.VERIFYING);
+        authProject.setName(loginUser.getName());
+        authProject.setLastUpdUser(loginUser.getName());
+        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
             renderJson(RestResult.buildSuccess("提交立项资料成功，请等待审核"));
+            render("verfiing.html");
         } else {
             renderJson(RestResult.buildError("立项失败"));
             throw new BusinessException("立项失败");
@@ -95,7 +143,6 @@ public class ProjectController extends BaseController {
         Project model = projectService.findById(id);
         model.setTypeName(projectTypeService.findById(model.getTypeID()).getName());
         setAttr("model", model).render("update.html");
-
     }
 
     /**
@@ -132,7 +179,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.VERIFIING);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -154,7 +201,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.IS_VERIFY);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -169,9 +216,10 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.NOT_VERIFY);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
+            System.out.println(page.getList().get(i).getName());
             page.getList().get(i).setReply(authProjectService.findByProjectId(page.getList().get(i).getId()).getReply());
         }
         renderJson(new DataTable<Project>(page));
@@ -194,7 +242,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEW);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -204,7 +252,6 @@ public class ProjectController extends BaseController {
      */
     public void toAssed() {
         render("assed.html");
-
     }
 
     /**
@@ -217,9 +264,8 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEWED);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
-
 }

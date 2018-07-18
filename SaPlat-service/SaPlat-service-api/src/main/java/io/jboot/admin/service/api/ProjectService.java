@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.AuthProject;
+import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface ProjectService  {
      * @return all <Project
      */
     public List<Project> findAll();
+
+    boolean saveOrUpdate(Project model, AuthProject authProject);
 
     /**
      * find model by user and role and isEnable
@@ -74,7 +77,7 @@ public interface ProjectService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Project model, AuthProject authProject);
+    public boolean saveOrUpdate(Project model, AuthProject authProject , LeaderGroup leaderGroup);
 
     /**
      * update data model
