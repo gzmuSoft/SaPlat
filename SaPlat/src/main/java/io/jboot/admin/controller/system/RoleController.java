@@ -120,7 +120,7 @@ public class RoleController extends BaseController {
     @NotNullPara({"id"})
     public void auth() {
         Role sysRole = roleService.findById(getParaToLong("id"));
-        setAttr("role", sysRole).render("auth.html");
+        setAttr("role", sysRole).render("verifyIndex.html");
     }
 
     /**

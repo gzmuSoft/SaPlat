@@ -33,6 +33,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("spell");
 	}
 
+	public void setUserId(java.lang.Long userId) {
+		set("userId", userId);
+	}
+	
+	public java.lang.Long getUserId() {
+		return getLong("userId");
+	}
+
 	public void setRoleName(java.lang.String roleName) {
 		set("roleName", roleName);
 	}
@@ -97,6 +105,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("proposal");
 	}
 
+	public void setAssessmentMode(java.lang.String assessmentMode) {
+		set("assessmentMode", assessmentMode);
+	}
+	
+	public java.lang.String getAssessmentMode() {
+		return getStr("assessmentMode");
+	}
+
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
 	}
@@ -137,6 +153,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getInt("sort");
 	}
 
+	public void setStatus(java.lang.String status) {
+		set("status", status);
+	}
+	
+	public java.lang.String getStatus() {
+		return getStr("status");
+	}
+
 	public void setRemark(java.lang.String remark) {
 		set("remark", remark);
 	}
@@ -145,12 +169,12 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Integer isEnable) {
+	public void setIsEnable(java.lang.Boolean isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Integer getIsEnable() {
-		return getInt("isEnable");
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }

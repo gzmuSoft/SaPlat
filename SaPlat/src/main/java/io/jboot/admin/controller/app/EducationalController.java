@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,8 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.EducationalService;
 import io.jboot.admin.service.entity.model.Educational;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.validator.app.CountryValidator;
+import io.jboot.admin.validator.app.EducationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -71,6 +75,7 @@ public class EducationalController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, EducationValidator.class})
     public void postAdd(){
         Educational model = getBean(Educational.class, "model");
         if (educationalService.isExisted(model.getName())){
@@ -83,6 +88,7 @@ public class EducationalController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, EducationValidator.class})
     public void postUpdate(){
         Educational model = getBean(Educational.class, "model");
         Educational byId = educationalService.findById(model.getId());

@@ -15,9 +15,9 @@ public class Organization extends BaseOrganization<Organization> {
      */
     public void setStatus(java.lang.String status) {
         if (status == DataStatus.USED) {
-            setIsEnable(1);
+            setIsEnable(true);
         } else {
-            setIsEnable(0);
+            setIsEnable(false);
         }
     }
 
@@ -26,10 +26,11 @@ public class Organization extends BaseOrganization<Organization> {
      * @return
      */
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == 1)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 
 }

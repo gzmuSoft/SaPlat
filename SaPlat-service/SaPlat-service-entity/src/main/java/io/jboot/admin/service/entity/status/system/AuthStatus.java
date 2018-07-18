@@ -23,7 +23,6 @@ public class AuthStatus extends BaseStatus {
      * 已认证
      */
     public final static String IS_VERIFY = "2";
-
     /**
      * 认证中
      */
@@ -31,7 +30,7 @@ public class AuthStatus extends BaseStatus {
 
 
     public AuthStatus() {
-        add(CANCEL_VERIFY,"取消审核");
+        add(CANCEL_VERIFY, "取消审核");
         add(NOT_VERIFY, "审核失败");
         add(IS_VERIFY, "审核成功");
         add(VERIFYING, "审核中");

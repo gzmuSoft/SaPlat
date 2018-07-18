@@ -5,8 +5,8 @@ import io.jboot.admin.base.common.BaseStatus;
 
 /**
  * 系统资源状态类
- * @author Rlax
  *
+ * @author Rlax
  */
 public class PersonStatus extends BaseStatus {
 

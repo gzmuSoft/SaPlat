@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -11,6 +13,7 @@ import io.jboot.admin.service.api.PostService;
 import io.jboot.admin.service.entity.model.Post;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.PostValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -73,6 +76,7 @@ public class PostController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, PostValidator.class})
     public void postAdd(){
         Post model = getBean(Post.class, "model");
         if (postService.isExisted(model.getName())){
@@ -87,6 +91,7 @@ public class PostController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, PostValidator.class})
     public void postUpdate(){
         Post model = getBean(Post.class, "model");
         Post byId = postService.findById(model.getId());

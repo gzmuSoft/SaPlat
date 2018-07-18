@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -12,6 +14,7 @@ import io.jboot.admin.service.entity.model.Occupation;
 import io.jboot.admin.service.entity.model.Occupation;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.OccupationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -74,10 +77,11 @@ public class OccupationController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, OccupationValidator.class})
     public void postAdd(){
         Occupation model = getBean(Occupation.class, "model");
         if (occupationService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的职业名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
@@ -88,11 +92,12 @@ public class OccupationController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, OccupationValidator.class})
     public void postUpdate(){
         Occupation model = getBean(Occupation.class, "model");
         Occupation byId = occupationService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的职业名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!occupationService.update(model)){
