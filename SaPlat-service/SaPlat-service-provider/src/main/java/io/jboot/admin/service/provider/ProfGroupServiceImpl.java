@@ -14,10 +14,12 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements ProfGroupService {
+
     @Override
-    public ProfGroup findByOrgID(Long orgID) {
-        return DAO.findFirstByColumn("orgID", orgID);
+    public ProfGroup findByOrgId(Long orgId) {
+        return DAO.findFirstByColumn("orgID", orgId);
     }
+
 
     @Override
     public boolean saveOrUpdate(ProfGroup model, Auth auth) {
@@ -33,5 +35,4 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
     public ProfGroup findByName(String name) {
         return DAO.findFirstByColumn("name", name);
     }
-
 }

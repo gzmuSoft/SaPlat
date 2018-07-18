@@ -1,0 +1,160 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat);
+
+/*basic reset*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+/*背景图片*/
+
+body {
+    font-family: "楷体";
+}
+/*身体全局*/
+
+#xieyin {
+    font-size: 40px;
+    color: #656765;
+
+}
+/*大字标题*/
+/*form styles*/
+
+#msform {
+    width: 1000px;
+    margin: 10px auto;
+    text-align: center;
+    position: relative;
+    background: rgba(1, 1, 1, 0);
+    font-size: 20px;
+}
+/*除大字标题全部*/
+
+#msform fieldset {
+    background: rgba(1, 1, 1, 0);
+    padding: 20px 30px;
+    box-sizing: border-box;
+    width: 35%;
+    margin: 0 32%;
+    /*stacking fieldsets above each other*/
+    position: absolute;
+}
+/*文本框全局*/
+/*Hide all except first fieldset*/
+
+#msform fieldset:not(:first-of-type) {
+    display: none;
+}
+/*inputs*/
+
+#msform input, #msform textarea ,#msform select{
+    padding: 5px;
+    border: 2px solid #8c8c8c;
+    margin-bottom: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", montserrat;
+    color: rgb(32, 13, 41);
+    font-size: 15px;
+}
+/*文本框*/
+/*buttons*/
+
+#msform .action-button {
+    width: 100px;
+    background: #66BAB7;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 50px;
+    cursor: pointer;
+    padding: 5px 5px;
+    margin: 10px 10px;
+}
+/*按钮*/
+
+#msform .action-button:hover, #msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+/*按钮边框*/
+/*headings*/
+
+.fs-title {
+    font-size: 25px;
+    text-transform: uppercase;
+    color: #376B6D;
+    margin-bottom: 15px;
+}
+/*提示语*/
+
+.fs-subtitle {
+    font-weight: normal;
+    font-size: 13px;
+    color: #376B6D;
+    margin-bottom: 15px;
+}
+/*二级提示语*/
+/*progressbar*/
+
+#progressbar {
+    margin-bottom: 10px;
+    overflow: hidden;
+    /*CSS counters to number the steps*/
+    counter-reset: step;
+}
+/*提示语上方空白*/
+
+#progressbar li {
+    list-style-type: none;
+    color: #0089A5;
+    text-transform: uppercase;
+    font-size: 15px;
+    width: 25%;
+    float: left;
+    position: relative;
+}
+/*变动条下方文字*/
+
+#progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 100px;
+    line-height: 20px;
+    display: block;
+    font-size: 15px;
+    color: #333;
+    background: #BDC0BA;
+    border-radius: 10px;
+    margin: 0 auto 5px auto;
+}
+/*变动条*/
+/*progressbar connectors*/
+
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: #BDC0BA;
+    position: absolute;
+    left: -50%;
+    top: 10px;
+    z-index: -1; /*put it behind the numbers*/
+}
+/*变动线*/
+
+#progressbar li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none;
+}
+
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar li.active:before, #progressbar li.active:after {
+    background: #66BAB7;
+    color: white;
+}
+/*变动条内文字及其颜色*/

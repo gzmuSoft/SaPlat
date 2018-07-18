@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -8,8 +10,8 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.EnterpriseService;
 import io.jboot.admin.service.entity.model.Enterprise;
-import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.validator.app.EnterpriseValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -72,23 +74,25 @@ public class EnterpriseController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, EnterpriseValidator.class})
     public void postAdd(){
         Enterprise model = getBean(Enterprise.class, "model");
         if (enterpriseService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的企业机构名称已存在");
         }
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!enterpriseService.save(model)){
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, EnterpriseValidator.class})
     public void postUpdate(){
         Enterprise model = getBean(Enterprise.class, "model");
         Enterprise byId = enterpriseService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的企业机构名称不存在");
         }
         if (!enterpriseService.update(model)){
             throw new BusinessException("修改失败");

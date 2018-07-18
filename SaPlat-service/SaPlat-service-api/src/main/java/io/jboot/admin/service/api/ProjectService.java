@@ -2,6 +2,8 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.AuthProject;
+import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;
@@ -19,11 +21,20 @@ public interface ProjectService  {
 
     /**
      * find all model
-     *
      * @return all <Project
      */
     public List<Project> findAll();
 
+    boolean saveOrUpdate(Project model, AuthProject authProject);
+
+    /**
+     * find model by user and role and isEnable
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return Project
+     */
+    public Page<Project> findPage(Project project, int pageNumber, int pageSize);
 
     /**
      * delete model by primary key
@@ -60,6 +71,13 @@ public interface ProjectService  {
      */
     public boolean saveOrUpdate(Project model);
 
+    /**
+     * save or update model and auth
+     *
+     * @param model
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(Project model, AuthProject authProject , LeaderGroup leaderGroup);
 
     /**
      * update data model

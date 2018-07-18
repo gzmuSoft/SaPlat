@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -10,6 +12,7 @@ import io.jboot.admin.service.api.PoliticalStatusService;
 import io.jboot.admin.service.entity.model.PoliticalStatus;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.PoliticalStatusValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -72,10 +75,11 @@ public class PoliticalStatusController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, PoliticalStatusValidator.class})
     public void postAdd(){
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         if (projectStepService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的政治面貌名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
@@ -86,11 +90,12 @@ public class PoliticalStatusController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, PoliticalStatusValidator.class})
     public void postUpdate(){
         PoliticalStatus model = getBean(PoliticalStatus.class, "model");
         PoliticalStatus byId = projectStepService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的政治面貌名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!projectStepService.update(model)){

@@ -10,10 +10,7 @@ import io.jboot.admin.service.api.AffectedGroupService;
 import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.AffectedGroup;
-import io.jboot.admin.service.entity.model.Person;
-import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.DataStatus;
-import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -88,7 +85,7 @@ public class AffectedGroupController extends BaseController{
         //if (affectedGroupService.hasAffectedGroup(model.getName())){
         //    throw new BusinessException("所指定的影响群体名称已存在");
         //}
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!affectedGroupService.save(model)){
             throw new BusinessException("保存失败");
         }

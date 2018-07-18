@@ -60,6 +60,13 @@ public interface PersonService  {
     public boolean save(Person model);
 
 
+    /*
+    *其中的if是用来做查询的
+    * 不满足即不查询
+    * 返回全部数据
+    */
+    Page<Person> findPage(Person person, int pageNumber, int pageSize);
+
     /**
      * 保存个人群体并创建用户
      * @param model 个人
@@ -87,11 +94,9 @@ public interface PersonService  {
     /**
      * 更新资料
      * @param person 个人群体
-     * @param user 用户
-     * @param affectedGroup 影响群体
-     * @return 结果
+     * @return
      */
-    public boolean update(Person person, User user, AffectedGroup affectedGroup);
+    public boolean update(Person person);
 
     /**
      * save or update model
@@ -102,13 +107,17 @@ public interface PersonService  {
     public boolean saveOrUpdate(Person model);
 
 
+    boolean update(Person person, User user);
+
     /**
      * update data model
      *
      * @param model
+     * @param loginUser
+     * @param affectedGroup
      * @return
      */
-    public boolean update(Person model);
+    public boolean update(Person model, User loginUser, AffectedGroup affectedGroup);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

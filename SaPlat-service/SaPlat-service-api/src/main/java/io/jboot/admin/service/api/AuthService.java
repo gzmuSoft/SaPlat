@@ -4,7 +4,6 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.User;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
 
 import java.util.List;
 
@@ -58,6 +57,7 @@ public interface AuthService  {
      */
     public List<Auth> findByUserAndType(User user, String typeStatus);
 
+
     /**
      * 根据用户id和认证状态查询认证信息以获得认证角色
      *
@@ -68,6 +68,26 @@ public interface AuthService  {
     public Auth findByUserIdAndStatus(Long userId, String status);
 
     /**
+     * 根据用户id和认证状态以及认证类型查询认证信息以列表形式存储
+     *
+     * @param userId 用户id
+     * @param status
+     * @param type
+     * @return 认证信息
+     */
+    public List<Auth> findListByUserIdAndStatusAndType(Long userId, String status, String type);
+
+    /**
+     * 根据用户id和认证状态以及认证类型查询认证信息
+     *
+     * @param userId 用户id
+     * @param status
+     * @param type
+     * @return 认证信息
+     */
+    public Auth findByUserIdAndStatusAndType(Long userId, String status, String type);
+
+    /**
      * 根据用户id和认证状态查询认证信息以列表形式存储
      *
      * @param userId 用户id
@@ -75,7 +95,6 @@ public interface AuthService  {
      * @return 认证信息
      */
     public List<Auth> findByUserIdAndStatusToList(Long userId, String status);
-
 
     /**
      * delete model
@@ -111,6 +130,14 @@ public interface AuthService  {
      * @return
      */
     public boolean update(Auth model);
+
+
+    /**
+     * 分页查询角色审核信息
+     * @param auth pageNumber pageSize 审核
+     * @return 页
+     */
+    public Page<Auth> findPage(Auth auth, int pageNumber, int pageSize);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

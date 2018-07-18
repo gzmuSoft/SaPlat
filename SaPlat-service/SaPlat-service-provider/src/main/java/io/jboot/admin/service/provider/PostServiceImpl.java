@@ -6,6 +6,7 @@ import io.jboot.admin.service.entity.model.ProjectStep;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.PostService;
 import io.jboot.admin.service.entity.model.Post;
+import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 
 @Bean
 @Singleton
+@JbootrpcService
 public class PostServiceImpl extends JbootServiceBase<Post> implements PostService {
     @Override
     public Page<Post> findPage(Post model, int pageNumber, int pageSize) {

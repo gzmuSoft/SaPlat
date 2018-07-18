@@ -2,46 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../static/css/login/layui.css" media="all">
     <title>登录</title>
+    <style>
+        /*body {*/
+        /*background-image: url(images/background.jpg);*/
+        /*background-size: 100%;*/
+        /*background-widows:;*/
+        /*background-repeat: no-repeat;*/
+        /*background-attachment: fixed;*/
+        /*}*/
+
+        .clear {
+            clear: both
+        }
+
+        .login-ic {
+            background: rgba(255, 255, 255, 0.32);
+            margin-bottom: 1.5em;
+            padding: 8px;
+        }
+
+        .login-ic i {
+            background: url(../static/img/login/m.png) no-repeat 6px 6px;
+            width: 38px;
+            height: 38px;
+            float: left;
+            display: inline-block;
+        }
+
+        .login-ic i.icon {
+            background: url(../static/img/login/l.png) no-repeat 6px 6px;
+        }
+
+        .login-ic input[type="text"], .login-ic input[type="password"] {
+            float: left;
+            background: none;
+            outline: none;
+            font-size: 15px;
+            color: #ffffff;
+            padding: 10px 16px;
+            border: none;
+            border-left: 1px solid #fff;
+            display: inline-block;
+            /*margin-left: 7px;*/
+        }
+
+        i.passcode {
+            background: url(../static/img/login/passcode.jpg) no-repeat 0px 6px;
+            float: left;
+        }
+    </style>
     #include("/template/common/include/_css.html")
+
 </head>
-<body class="login-body body">
-
-<div class="login-box">
-    <form class="layui-form layui-form-pane" method="get" action="">
-        <div class="layui-form-item">
-            <h3>#(APP.name)</h3>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">账号：</label>
-            <div class="layui-input-inline">
-                <input type="text" name="loginName" class="layui-input" required lay-verify="required" placeholder="账号" autocomplete="on" maxlength="16" minlength="4"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">密码：</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password" class="layui-input" required lay-verify="required" placeholder="密码" maxlength="16" minlength="6"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">验证码：</label>
-
-            <div class="layui-input-inline">
-                <input type="text" name="capval" class="layui-input" required lay-verify="required" placeholder="验证码" maxlength="4" minlength="4"/>
-                <img id="captchaImg" alt="验证码" src="#(ctxPath)/captcha" onclick = "this.src='#(ctxPath)/captcha?'+Math.random()">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <button type="button" class="layui-btn layui-btn-normal" id="reg"->注册</button>
-            <button type="button" class="layui-btn btn-submit" lay-submit lay-filter="sub">立即登录</button>
-        </div>
-    </form>
+<body>
+<div class="bg" style="position:absolute;width: 100%;height: 100%;z-index: -1">
+    <img src="../static/img/login/background.jpg" height="100%" width="100%"/>
 </div>
-
+<div class="layui-col-xs6 layui-col-md12" style="margin: 15% 20%;">
+    <div class="layui-col-md7" style="background:rgba(26,184,224,0.5);">
+        <div class="layui-row grid-demo grid-demo-bg1">
+            <div class="layui-col-md12" style="border-bottom: 1px solid #fff9ec">
+                <div class="grid-demo" style="color: #fff;margin: 0 50px"><br>
+                    <h3>Logo:#(APP.name)</h3><br></div>
+            </div>
+            <div class="layui-col-xs6 layui-hide-xs" style="border-right: 1px solid #fff9ec">
+                <div class="grid-demo grid-demo-bg2" style="margin: 10px 50px"><br>
+                    <ul class="layui-timeline">
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2018年，测试资讯。</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2017年，测试资讯</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2016年，测试资讯</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">2015年，项目孵化</div>
+                            </div>
+                        </li>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
+                            <div class="layui-timeline-content layui-text">
+                                <div class="layui-timeline-title">更久前，测试资讯</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <br></div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="grid-demo grid-demo-bg3" style="margin: 0 10%;"><br>
+                    <form  method="post" action="" id="form">
+                        <div class="login-ic " style="width: 300px;">
+                            <i></i>
+                            <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
+                                   maxlength="16" minlength="4"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="login-ic" style="width:300px">
+                            <i class="icon"></i>
+                            <input type="password" id="password" name="password" placeholder="请输入密码" required="required"
+                                   maxlength="16" minlength="6"/>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="login-ic" style="width:300px;position: relative">
+                            <i class="icon"></i>
+                            <input type="text" name="capval" lay-verify="required" placeholder="验证码" maxlength="4"
+                                   minlength="4" required="required" style="width: 120px"/>
+                            <img id="captchaImg" alt="验证码" src="#(ctxPath)/captcha"
+                                 onclick="this.src='#(ctxPath)/captcha?'+Math.random()">
+                            <div class="clear"></div>
+                        </div>
+                        <div class="log-bwn" style="text-align: center;width: 300px">
+                            <button class="layui-btn layui-btn-normal layui-btn-radius" style="width: 120px" lay-submit
+                                    lay-filter="sub">登&nbsp;&nbsp;&nbsp;录
+                            </button>
+                            <button class="layui-btn layui-btn-danger layui-btn-radius" style="width: 120px" id="reg">注&nbsp;&nbsp;&nbsp;册</button>
+                        </div>
+                    </form>
+                    <br><br></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
 #include("/template/common/include/_js.html")
 <script type="text/javascript">
     layui.use(['form', 'layer'], function () {
@@ -50,27 +147,39 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
+        $.fn.serializeJson = function () {
+            var serializeObj = {};
+            $(this.serializeArray()).each(function () {
+                serializeObj[this.name] = this.value;
+            });
+            return serializeObj;
+        };
+
         // 提交监听
         form.on('submit(sub)', function (data) {
-            util.sendAjax ({
+            var all = $('#form').serializeJson();
+            console.log(all);
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/postLogin',
-                data: $.param(data.field),
+                data: all,
                 loadFlag: true,
-                success : function(data) {
+                success: function (data) {
                     window.location.href = "/";
                 },
-                complete : function() {
+                complete: function () {
                     // 刷新验证码
-                    $("#captchaImg").attr('src', '#(ctxPath)/captcha?'+Math.random());
+                    $("#captchaImg").attr('src', '#(ctxPath)/captcha?' + Math.random());
                 }
             });
 
             return false;
         });
-        $(document).on('click','#reg',function(){
+        $(document).on('click', '#reg', function () {
             window.location.href = "/register";
         });
+
+
     })
 
 </script>

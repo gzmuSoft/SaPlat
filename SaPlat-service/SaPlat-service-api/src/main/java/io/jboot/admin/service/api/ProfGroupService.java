@@ -17,14 +17,6 @@ public interface ProfGroupService  {
      */
     public ProfGroup findById(Object id);
 
-    /**
-     * 关联组织和管理机构
-     *
-     * @param orgID
-     * @return
-     */
-    public ProfGroup findByOrgID(Long orgID);
-
 
     /**
      * find all model
@@ -33,23 +25,7 @@ public interface ProfGroupService  {
      */
     public List<ProfGroup> findAll();
 
-    /**
-     * 根据名称查询 专业团体 信息
-     *
-     * @param name
-     * @return
-     */
-    public ProfGroup findByName(String name);
-
-
-    /**
-     * 专业团体 是否存在
-     *
-     * @param name
-     * @return 存在返回-true，否则返回false
-     */
-    public boolean isExisted(String name);
-
+    public ProfGroup findByOrgId(Long orgId);
     /**
      * delete model by primary key
      *
@@ -85,14 +61,6 @@ public interface ProfGroupService  {
      */
     public boolean saveOrUpdate(ProfGroup model);
 
-    /**
-     * save Or Update model and auth
-     *
-     * @param model
-     * @param auth
-     * @return if save or update success
-     */
-    public boolean saveOrUpdate(ProfGroup model, Auth auth);
 
     /**
      * update data model
@@ -102,6 +70,34 @@ public interface ProfGroupService  {
      */
     public boolean update(ProfGroup model);
 
+
+
+    /**
+     * 根据名称查询 专业团体 信息
+     *
+     * @param name
+     * @return
+     */
+    public ProfGroup findByName(String name);
+
+
+    /**
+     * 专业团体 是否存在
+     *
+     * @param name
+     * @return 存在返回-true，否则返回false
+     */
+    public boolean isExisted(String name);
+
+
+    /**
+     * save Or Update model and auth
+     *
+     * @param model
+     * @param auth
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(ProfGroup model, Auth auth);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
