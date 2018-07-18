@@ -87,7 +87,7 @@ public class PersonController extends BaseController {
         //设置最后登录时间
         person.setLastAccessTime(new Date());
         //设置是否可用
-        person.setIsEnable(Integer.parseInt(PersonStatus.USED));
+        person.setIsEnable(true);
         if (!personService.update(person)) {
             throw new BusinessException("启用失败");
         }
@@ -105,7 +105,7 @@ public class PersonController extends BaseController {
         if (person == null) {
             throw new BusinessException("编号为" + id + "的个人不存在");
         }
-        person.setIsEnable(Integer.parseInt(PersonStatus.UNUSED));
+        person.setIsEnable(false);
         person.setLastAccessTime(new Date());
 
         if (!personService.update(person)) {

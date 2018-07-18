@@ -69,7 +69,7 @@ public class ProjectController extends BaseController {
         project.setLastAccessTime(new Date());
         project.setDrawings("#/");
         project.setStatus(ProjectStatus.VERIFIING);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         AuthProject authProject = new AuthProject();
         authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
         authProject.setUserId(user.getId());
@@ -132,7 +132,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.VERIFIING);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -154,7 +154,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.IS_VERIFY);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -169,7 +169,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.NOT_VERIFY);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setReply(authProjectService.findByProjectId(page.getList().get(i).getId()).getReply());
@@ -194,7 +194,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEW);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -217,7 +217,7 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEWED);
-        project.setIsEnable(1);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }

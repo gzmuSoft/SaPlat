@@ -42,7 +42,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     public boolean save(Organization organization) {
         organization.setCreateTime(new Date());
         organization.setLastAccessTime(new Date());
-        organization.setIsEnable(1);
+        organization.setIsEnable(true);
         organization.setCertificate("#/");
         return Db.tx(() -> organization.save());
     }

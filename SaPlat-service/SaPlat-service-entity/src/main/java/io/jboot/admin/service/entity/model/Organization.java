@@ -11,25 +11,28 @@ import io.jboot.admin.service.entity.model.base.BaseOrganization;
 public class Organization extends BaseOrganization<Organization> {
     /**
      * 设置状态 启用 或 禁用
+     *
      * @param status
      */
     public void setStatus(java.lang.String status) {
         if (status == DataStatus.USED) {
-            setIsEnable(1);
+            setIsEnable(true);
         } else {
-            setIsEnable(0);
+            setIsEnable(false);
         }
     }
 
     /**
      * 获取状态 启用或者禁用
+     *
      * @return
      */
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == 1)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 
 }
