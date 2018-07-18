@@ -56,6 +56,15 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
     @Override
+    public List<Auth> findListByUserIdAndStatusAndType(Long userId, String status, String type) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        columns.eq("type", type);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
     public List<Auth> findByUserIdAndStatusToList(Long userId, String status) {
         Columns columns = new Columns();
         columns.eq("userId", userId);
@@ -118,5 +127,14 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 return true;
             }
         });
+    }
+
+    @Override
+    public Auth findByUserIdAndStatusAndType(Long userId, String status, String type) {
+        Columns columns = new Columns();
+        columns.eq("userId", userId);
+        columns.eq("status", status);
+        columns.eq("type", type);
+        return DAO.findFirstByColumns(columns);
     }
 }

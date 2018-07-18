@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.CountryService;
 import io.jboot.admin.service.entity.model.Country;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.validator.app.CountryValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -71,10 +74,11 @@ public class CountryController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, CountryValidator.class})
     public void postAdd(){
         Country model = getBean(Country.class, "model");
         if (countryService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的国家名称已存在");
         }
         model.setIsEnable(true);
         if (!countryService.save(model)){
@@ -83,11 +87,12 @@ public class CountryController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, CountryValidator.class})
     public void postUpdate(){
         Country model = getBean(Country.class, "model");
         Country byId = countryService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的国家名称不存在");
         }
         if (!countryService.update(model)){
             throw new BusinessException("修改失败");

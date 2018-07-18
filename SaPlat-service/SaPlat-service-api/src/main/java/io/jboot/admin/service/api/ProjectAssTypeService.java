@@ -85,4 +85,10 @@ public interface ProjectAssTypeService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
+    Page<ProjectAssType> findPage(ProjectAssType model, int pageNumber, int pageSize);
+
+    boolean isExisted(String name);
+
+    ProjectAssType findByName(String name);
 }

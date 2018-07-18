@@ -68,6 +68,26 @@ public interface AuthService  {
     public Auth findByUserIdAndStatus(Long userId, String status);
 
     /**
+     * 根据用户id和认证状态以及认证类型查询认证信息以列表形式存储
+     *
+     * @param userId 用户id
+     * @param status
+     * @param type
+     * @return 认证信息
+     */
+    public List<Auth> findListByUserIdAndStatusAndType(Long userId, String status, String type);
+
+    /**
+     * 根据用户id和认证状态以及认证类型查询认证信息
+     *
+     * @param userId 用户id
+     * @param status
+     * @param type
+     * @return 认证信息
+     */
+    public Auth findByUserIdAndStatusAndType(Long userId, String status, String type);
+
+    /**
      * 根据用户id和认证状态查询认证信息以列表形式存储
      *
      * @param userId 用户id
@@ -75,7 +95,6 @@ public interface AuthService  {
      * @return 认证信息
      */
     public List<Auth> findByUserIdAndStatusToList(Long userId, String status);
-
 
     /**
      * delete model

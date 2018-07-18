@@ -1,5 +1,6 @@
 package io.jboot.admin.service.entity.model;
 
+import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.db.annotation.Table;
 import io.jboot.admin.service.entity.model.base.BaseOrganization;
 
@@ -8,5 +9,28 @@ import io.jboot.admin.service.entity.model.base.BaseOrganization;
  */
 @Table(tableName = "organization", primaryKey = "id")
 public class Organization extends BaseOrganization<Organization> {
-	
+    /**
+     * 设置状态 启用 或 禁用
+     * @param status
+     */
+    public void setStatus(java.lang.String status) {
+        if (status == DataStatus.USED) {
+            setIsEnable(true);
+        } else {
+            setIsEnable(false);
+        }
+    }
+
+    /**
+     * 获取状态 启用或者禁用
+     * @return
+     */
+    public java.lang.String getStatus() {
+        if (this.getIsEnable()) {
+            return DataStatus.USED;
+        } else {
+            return DataStatus.UNUSED;
+        }
+    }
+
 }

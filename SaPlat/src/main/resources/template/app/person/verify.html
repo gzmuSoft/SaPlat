@@ -9,11 +9,12 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'laydate'], function () {
+    layui.use(['form', 'layer', 'laydate', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , laydate = layui.laydate;
+            , laydate = layui.laydate
+            , upload = layui.upload ;
         laydate.render({
             elem: '#expertGroup.worktime'
         });
@@ -21,39 +22,119 @@
             elem: '#expertGroup.birthday'
         });
 
-
+        var file1  = "";
+        var file2  = "";
         form.on('submit(sub)', function (data) {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/app/person/expertGroupVerify',
-                data: $.param(data.field),
-                loadFlag: true,
-                success: function (data) {
-                    layer.msg('上传成功，请耐心等待审核！');
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.log(data);
-                }
+            $('#uploadBtn1').click();
+            if (file1 == ""){
+                layer.msg("工作证件照片上传失败，请重新选择上传！");
+                return;
+            }
+            if (file2 == ""){
+                layer.msg("专业资格证书上传失败，请重新选择上传！");
+                return;
+            }
+            data.field.file1 = file1;
+            data.field.file2 = file2;
+            console.log(data.field);
+            $.post("#(ctxPath)/app/person/expertGroupVerify",$.param(data.field),function (res) {
+                layer.msg("成功！");
+                console.log(res);
             });
+            // console.log(data);
+            // console.log(data.field);
+
+            // util.sendAjax({
+            //     type: 'POST',
+            //     // url: '#(ctxPath)/app/person/expertGroupVerify',
+            //     url: '#(ctxPath)/app/person/datePost',
+            //     data: $.param(data.field),
+            //     loadFlag: true,
+            //     success: function (data) {
+            //         layer.msg('上传成功，请耐心等待审核！');
+            //         // window.location.reload();
+            //     },
+            //     error: function (data) {
+            //         console.log(data);
+            //     }
+            // });
             return false;
 
         });
-        $(function(){
+        $(function () {
             var test = "#(expertGroup.nation)";
-            if (test.length > 0){
-                $("input").prop("disabled","disabled").addClass("layui-disabled");
-                $("textarea").prop("disabled","disabled").addClass("layui-disabled");
-                $("select").prop("disabled","disabled").addClass("layui-disabled");
+            if (test.length > 0) {
+                $("input").prop("disabled", "disabled").addClass("layui-disabled");
+                $("textarea").prop("disabled", "disabled").addClass("layui-disabled");
+                $("select").prop("disabled", "disabled").addClass("layui-disabled");
                 $(".layui-select-title").unbind();
-                $("option").prop("disabled","disabled").addClass("layui-disabled");
+                $("option").prop("disabled", "disabled").addClass("layui-disabled");
                 $("#sub").hide();
             }
+            $.fn.serializeJson = function () {
+                var serializeObj = {};
+                $(this.serializeArray()).each(function () {
+                    serializeObj[this.name] = this.value;
+                });
+                return serializeObj;
+            };
         });
 
         $('#back').click(function () {
             window.location.href = "#(ctxPath)/app/person/expertGroup"
-        })
+        });
+
+
+
+        upload.render({
+            elem: '#upload1'
+            ,url: '#(ctxPath)/app/person/upload'
+            ,accept: 'file'
+            //,multiple: true
+            ,exts: 'doc|docx|pdf'
+            ,data:{
+                description : function () {
+                    return "工作证件照片";
+                }
+            }
+            ,done: function(res){
+                console.log(res);
+                if (res.code == 0){
+                    file1 = res.file;
+                }else if (res.code == 1){
+                    layer.msg("文件上传失败，请重新选择上传！");
+                }
+            }
+            ,error: function(index, upload){
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
+
+        upload.render({
+            elem: '#upload2'
+            ,url: '#(ctxPath)/app/person/upload'
+            ,accept: 'file'
+            //,multiple: true
+            ,exts: 'doc|docx|pdf'
+            ,data: {
+                description : function () {
+                    return "工作证件照片";
+                }
+            }
+            ,done: function(res){
+                if (res.code == 0){
+                    file2 = res.file;
+                    console.log(res);
+                } else if (res.code == 1){
+                    layer.msg("文件上传失败，请重新选择上传！");
+                }
+            }
+            ,error: function(index, upload){
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
+
+
     });
 
 
@@ -65,7 +146,7 @@
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
         <legend>专家团体</legend>
     </fieldset>
-    <form class="layui-form layui-form-pane" action="">
+    <form class="layui-form layui-form-pane" action="" id="content" method="post">
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.name">姓名</label>
             <div class="layui-input-inline">
@@ -79,11 +160,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.name">专家团体名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required" value="#(expertGroup.name)"
+                <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required"
+                       value="#(expertGroup.name)"
                        placeholder="请输入专家团体名称" autocomplete="off" class="layui-input">
             </div>
         </div>
-
 
 
         <div class="layui-form-item">
@@ -92,11 +173,11 @@
                 <select name="expertGroup.workstate" id="expertGroup.workstate">
                     <option value="">请选择</option>
                     #if(expertGroup.wokstate == 0)
-                        <option value="在职">在职</option>
-                        <option value="离职" selected="">离职</option>
+                    <option value="在职">在职</option>
+                    <option value="离职" selected="">离职</option>
                     #else
-                        <option value="在职" selected="">在职</option>
-                        <option value="离职">离职</option>
+                    <option value="在职" selected="">在职</option>
+                    <option value="离职">离职</option>
                     #end
                 </select>
             </div>
@@ -121,27 +202,45 @@
             </div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.workpictrue">工作证件照片</label>
-            <div class="layui-upload-drag" name="expertGroup.workpictrue" id="expertGroup.workpictrue">
-                <i class="layui-icon"></i>
-                <p>点击上传，或将文件拖拽到此处</p>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="upload1"><em class="require-mark">*</em>工作证件照片</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" name="upload1" id="upload1">
+                            <i class="layui-icon"></i>上传文件
+                        </button>
+                        <button type="button" class="layui-hide" id="uploadBtn1"></button>
+                    </div>
+                </div>
             </div>
         </div>
+
+
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label" for="expertGroup.profess">专业资格内容</label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
-                          class="layui-textarea" >#(expertGroup.profess)</textarea>
+                          class="layui-textarea">#(expertGroup.profess)</textarea>
             </div>
         </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.certificate">专业资格证书</label>
-            <div class="layui-upload-drag" name="expertGroup.certificate" id="expertGroup.certificate">
-                <i class="layui-icon"></i>
-                <p>点击上传，或将文件拖拽到此处</p>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="upload2"><em class="require-mark">*</em>专业资格证书</label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" name="upload2" id="upload2">
+                            <i class="layui-icon"></i>上传文件
+                        </button>
+                        <button type="button" class="layui-hide" id="uploadBtn2"></button>
+                    </div>
+                </div>
             </div>
         </div>
+
+
 
 
         <div class="layui-form-item layui-form-text">

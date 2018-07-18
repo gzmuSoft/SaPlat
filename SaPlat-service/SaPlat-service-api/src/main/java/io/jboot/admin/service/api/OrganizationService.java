@@ -34,6 +34,12 @@ public interface OrganizationService {
      */
     public boolean deleteById(Object id);
 
+    /**
+     * 分页查询系统 组织
+     * @param organization 组织
+     * @return 页
+     */
+    public Page<Organization> findPage(Organization organization, int pageNumber, int pageSize);
 
     /**
      * delete model

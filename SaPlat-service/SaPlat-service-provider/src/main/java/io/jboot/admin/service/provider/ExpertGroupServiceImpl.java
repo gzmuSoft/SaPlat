@@ -4,6 +4,10 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.AuthService;
+import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.Files;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.ExpertGroupService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
@@ -14,6 +18,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -22,6 +27,9 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
 
     @Inject
     private AuthService authService;
+
+    @Inject
+    private FilesService filesService;
 
     @Override
     public Page<ExpertGroup> findPage(ExpertGroup model, int pageNumber, int pageSize) {
@@ -43,8 +51,21 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     }
 
     @Override
-    public boolean saveOrUpdate(ExpertGroup model, Auth auth) {
-        return Db.tx(() -> saveOrUpdate(model) && authService.saveOrUpdate(auth));
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files) {
+        return Db.tx(() -> {
+            if (!saveOrUpdate(model) || !authService.saveOrUpdate(auth)){
+                return false;
+            }
+            if (files == null){
+                return true;
+            }
+            for (Files file : files) {
+                if (!filesService.update(file)){
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 
     @Override
