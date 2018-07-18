@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author LiuChuanjin
  * @version 2.0
- * -----------------------------
+ *          -----------------------------
  * @date 23:44 2018/7/6
  */
 @RequestMapping("/app/organization")
@@ -519,6 +519,71 @@ public class OrganizationController extends BaseController {
         if (!reviewGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildError("修改认证状态"));
             throw new BusinessException("修改认证状态");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 立项资格申请
+     */
+    public void projectGet() {
+        User user = AuthUtils.getLoginUser();
+        List<Role> roleList = roleService.findByNames("服务机构立项", "管理机构立项", "企业机构立项", "审查团体立项", "专业团体立项");
+        List<Auth> authList = authService.findByUserAndType(user, TypeStatus.PROJECT_VERIFY);
+        if (authList == null) {
+            authList = Collections.synchronizedList(new ArrayList<Auth>());
+        }
+        List<Auth> noVerify = Collections.synchronizedList(new ArrayList<Auth>());
+        List<Auth> verify = Collections.synchronizedList(new ArrayList<Auth>());
+        List<Auth> verifying = Collections.synchronizedList(new ArrayList<Auth>());
+        authList.forEach(auth -> {
+            for (int i = 0; i < roleList.size(); i++) {
+                Role role = roleList.get(i);
+                if (role.getId().equals(auth.getRoleId())) {
+                    auth.setRemark(role.getName());
+                    roleList.remove(i);
+                }
+            }
+            switch (auth.getStatus()) {
+                case AuthStatus.IS_VERIFY:
+                    verify.add(auth);
+                    break;
+                case AuthStatus.NOT_VERIFY:
+                    noVerify.add(auth);
+                    break;
+                case AuthStatus.VERIFYING:
+                    verifying.add(auth);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        setAttr("noVerify", noVerify)
+                .setAttr("verify", verify)
+                .setAttr("verifying", verifying)
+                .setAttr("roleList", roleList)
+                .render("projectGet.html");
+    }
+
+
+    @Before(POST.class)
+    public void postProjectGet() {
+        Long id = Long.parseLong(getPara("id"));
+        User user = AuthUtils.getLoginUser();
+        Auth auth = authService.findByUserAndRole(user, id);
+        if (auth == null) {
+            auth = new Auth();
+            auth.setName(user.getName());
+            auth.setType(TypeStatus.PROJECT_VERIFY);
+            auth.setRoleId(id);
+            auth.setUserId(user.getId());
+        }
+        auth.setLastUpdTime(new Date());
+        auth.setStatus(AuthStatus.VERIFYING);
+        if (!authService.saveOrUpdate(auth)) {
+            renderJson(RestResult.buildError("申请失败"));
+            throw new BusinessException("申请失败");
         }
         renderJson(RestResult.buildSuccess());
     }

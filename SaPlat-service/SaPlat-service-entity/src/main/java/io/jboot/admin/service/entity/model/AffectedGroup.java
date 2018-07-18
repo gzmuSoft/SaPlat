@@ -18,9 +18,10 @@ public class AffectedGroup extends BaseAffectedGroup<AffectedGroup> {
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 }

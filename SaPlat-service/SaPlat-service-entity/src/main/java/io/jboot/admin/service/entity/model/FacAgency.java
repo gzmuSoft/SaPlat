@@ -18,7 +18,7 @@ public class FacAgency extends BaseFacAgency<FacAgency> {
     }
 
     public java.lang.String getStatus() {
-        if (this.getIsEnable() == true) {
+        if (this.getIsEnable()) {
             return DataStatus.USED;
         } else {
             return DataStatus.UNUSED;
