@@ -26,10 +26,11 @@ public class Organization extends BaseOrganization<Organization> {
      * @return
      */
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if (this.getIsEnable()) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 
 }

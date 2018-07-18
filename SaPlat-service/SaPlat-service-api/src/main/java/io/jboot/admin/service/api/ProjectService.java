@@ -3,7 +3,6 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.AuthProject;
-import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;

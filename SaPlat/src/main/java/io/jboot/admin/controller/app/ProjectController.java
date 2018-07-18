@@ -143,6 +143,7 @@ public class ProjectController extends BaseController {
         Project model = projectService.findById(id);
         model.setTypeName(projectTypeService.findById(model.getTypeID()).getName());
         setAttr("model", model).render("update.html");
+
     }
 
     /**
@@ -219,7 +220,6 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
-            System.out.println(page.getList().get(i).getName());
             page.getList().get(i).setReply(authProjectService.findByProjectId(page.getList().get(i).getId()).getReply());
         }
         renderJson(new DataTable<Project>(page));
@@ -252,6 +252,7 @@ public class ProjectController extends BaseController {
      */
     public void toAssed() {
         render("assed.html");
+
     }
 
     /**
@@ -268,4 +269,5 @@ public class ProjectController extends BaseController {
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
+
 }

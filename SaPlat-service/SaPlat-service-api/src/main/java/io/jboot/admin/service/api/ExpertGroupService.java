@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.admin.service.entity.model.Files;
 
 import java.util.List;
 
@@ -86,9 +87,10 @@ public interface ExpertGroupService  {
      * 保存专家群体以及认证记录
      * @param model 专家群体
      * @param auth 认证
+     * @param files 文件
      * @return 结果
      */
-    public boolean saveOrUpdate(ExpertGroup model, Auth auth);
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files);
 
     /**
      * save or update model

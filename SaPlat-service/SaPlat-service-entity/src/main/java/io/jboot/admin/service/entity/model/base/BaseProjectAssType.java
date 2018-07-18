@@ -33,13 +33,13 @@ public abstract class BaseProjectAssType<M extends BaseProjectAssType<M>> extend
 		return getStr("spell");
 	}
 
-    public void setCode(java.lang.String code) {
-        set("code", code);
-    }
-
-    public java.lang.String getCode() {
-        return getStr("code");
-    }
+	public void setCode(java.lang.String code) {
+		set("code", code);
+	}
+	
+	public java.lang.String getCode() {
+		return getStr("code");
+	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
