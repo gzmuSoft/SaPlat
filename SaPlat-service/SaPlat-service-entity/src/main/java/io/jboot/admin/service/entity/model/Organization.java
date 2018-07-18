@@ -11,7 +11,6 @@ import io.jboot.admin.service.entity.model.base.BaseOrganization;
 public class Organization extends BaseOrganization<Organization> {
     /**
      * 设置状态 启用 或 禁用
-     *
      * @param status
      */
     public void setStatus(java.lang.String status) {
@@ -24,7 +23,6 @@ public class Organization extends BaseOrganization<Organization> {
 
     /**
      * 获取状态 启用或者禁用
-     *
      * @return
      */
     public java.lang.String getStatus() {
