@@ -249,10 +249,10 @@ public class PersonController extends BaseController {
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
-        expertGroup.setIsEnable(true);
+        expertGroup.setIsEnable(1);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
         if (name != null) {
-            if (name.getIsEnable()) {
+            if (name.getIsEnable() == 1) {
                 renderJson(RestResult.buildError("专家团体已存在"));
                 throw new BusinessException("专家团体已存在");
             }
@@ -299,7 +299,7 @@ public class PersonController extends BaseController {
         files.add(filesService.findById(cer));
         files.add(filesService.findById(wpic));
         files.forEach(file -> file.setIsEnable(false));
-        expertGroup.setIsEnable(false);
+        expertGroup.setIsEnable(0);
         if (!expertGroupService.saveOrUpdate(expertGroup, auth, files)) {
             renderJson(RestResult.buildError("修改认证状态失败"));
             throw new BusinessException("修改认证状态失败");
