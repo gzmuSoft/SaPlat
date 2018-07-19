@@ -2,7 +2,6 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
-import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -13,7 +12,6 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
-import io.jboot.admin.service.entity.status.system.ProjectTypeStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -269,5 +267,4 @@ public class ProjectController extends BaseController {
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
-
 }

@@ -37,6 +37,16 @@ public interface ProjectService  {
     public Page<Project> findPage(Project project, int pageNumber, int pageSize);
 
     /**
+     * find model by user and role and isEnable
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return Project
+     */
+    public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize);
+
+
+    /**
      * delete model by primary key
      *
      * @param id
@@ -86,6 +96,8 @@ public interface ProjectService  {
      * @return
      */
     public boolean update(Project model);
+
+    public List<Project> findByIsPublic(boolean isPublic);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
