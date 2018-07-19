@@ -13,6 +13,7 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -44,6 +45,15 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
+    public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        if (project.getIsPublic()) {
+            columns.eq("isPublic",project.getIsPublic());
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+    @Override
     public boolean saveOrUpdate(Project model, AuthProject authProject, LeaderGroup leaderGroup) {
         return Db.tx(() -> {
             if (!model.saveOrUpdate()) {
@@ -56,5 +66,10 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
             return Db.tx(() -> authProject.save() && leaderGroup.save());
         });
+    }
+
+    @Override
+    public List<Project> findByIsPublic(boolean isPublic) {
+        return DAO.findListByColumn("isPublic", isPublic);
     }
 }
