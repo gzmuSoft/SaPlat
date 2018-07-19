@@ -25,6 +25,16 @@ public interface ProjectUndertakeService  {
      */
     public List<ProjectUndertake> findAll();
 
+
+    /**
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return Project
+     */
+    public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize);
+
+
     /**
      * 通过项目编号和服务机构编号查询项目承接
      * @param projectId 项目编号

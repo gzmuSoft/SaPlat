@@ -11,6 +11,7 @@ import io.jboot.admin.service.api.OrganizationService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.ProjectUndertakeService;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -88,6 +89,7 @@ public class ProjectUndertakeController extends BaseController {
             renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
             throw new BusinessException("您已经申请过了，请不要重复申请！");
         }
+        projectUndertake.setName(project.getName());
         projectUndertake.setDeadTime(project.getEndTime());
         projectUndertake.setApplyOrInvite(false);
         projectUndertake.setStatus(0);
@@ -108,7 +110,7 @@ public class ProjectUndertakeController extends BaseController {
         notification.setCreateUserID(user.getId());
         notification.setLastAccessTime(new Date());
         notification.setLastUpdateUserID(user.getId());
-        notification.setStatus(0);
+        notification.setStatus(Integer.valueOf(ProjectUndertakeStatus.WAITING));
         notification.setIsEnable(true);
 
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
@@ -116,5 +118,17 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("申请介入失败，请重新尝试。");
         }
         renderJson(RestResult.buildSuccess());
+    }
+
+    public void projectUndertakeIndex(){
+        render("projectUndertake.html");
+    }
+
+    public void projectUndertakeList(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        renderJson(new DataTable<ProjectUndertake>(page));
     }
 }
