@@ -1,0 +1,101 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+    });
+
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>项目相关资料</legend>
+    </fieldset>
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline">
+                    <p>#(model.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-inline">
+                    <p>#(model.roleName)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计金额</label>
+                <div class="layui-input-inline">
+                    <p>#(model.amount)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目类型</label>
+                <div class="layui-input-inline">
+                    <p>#(model.typeName)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <p>#(model.site)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">简介</label>
+                <div class="layui-input-inline">
+                    <p>#(model.brief)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">相关批文</label>
+                <div class="layui-input-inline">
+                    <p>#(model.approval)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">建议书</label>
+                <div class="layui-input-inline">
+                    <p>#(model.proposal)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">相关图纸</label>
+                <div class="layui-input-inline">
+                    <p>#(model.drawings)</p>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+#end
