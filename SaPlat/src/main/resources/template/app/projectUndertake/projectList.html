@@ -15,12 +15,12 @@
 </div>
 
 <script type="text/html" id="barOption">
-    #shiroHasPermission('/app/projectAndServiceOrg/see')
+    #shiroHasPermission('/app/projectUndertake/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end
 
-    #shiroHasPermission('/app/projectAndServiceOrg/agency')
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="agency">介入</a>
+    #shiroHasPermission('/app/projectUndertake/agency')
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="agency">申请介入</a>
     #end
 </script>
 #end
@@ -29,7 +29,8 @@
 <script type="text/javascript">
 
     layui.use(['table', 'layer'], function () {
-        var table = layui.table;
+        var table = layui.table
+            , $ = layui.jquery;
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -39,16 +40,15 @@
             , height: 'full-150'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {checkbox: false, sort: true, fixed: true, space: true}
-                , {field: 'name', title: '项目名称', width: 100}
+                {field: 'name', title: '项目名称', width: 100, sort: true}
                 , {field: 'roleName', title: '角色名称', width: 100}
-                , {field: 'amount', title: '预计金额', width: 100}
+                , {field: 'amount', title: '预计金额', width: 100, sort: true}
                 , {field: 'site', title: '地址', width: 100}
                 , {field: 'brief', title: '简介', width: 100}
                 , {field: 'remark', title: '备注', width: 100}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/projectAndServiceOrg/projectList' 
+            , url: '#(ctxPath)/app/projectUndertake/projectList'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -66,10 +66,15 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectAndServiceOrg/see?id=' + data.id, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '', '', function () {
                 });
             } else if (obj.event === 'agency') {
-
+                var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
+                $.post("#(ctxPath)/app/projectUndertake/agency", {id: data.id}, function (msg) {
+                    layer.msg(msg.msg);
+                    $(btn).addClass("layui-disabled").removeClass("layui-btn-danger").addClass("layui-btn-normal")
+                        .removeAttr("lay-event").text("已申请");
+                });
             }
         });
     });
