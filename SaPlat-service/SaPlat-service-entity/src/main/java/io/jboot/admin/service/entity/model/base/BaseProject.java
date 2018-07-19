@@ -169,12 +169,36 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("remark");
 	}
 
+	public void setIsPublic(java.lang.Boolean isPublic) {
+		set("isPublic", isPublic);
+	}
+	
+	public java.lang.Boolean getIsPublic() {
+		return get("isPublic");
+	}
+
 	public void setIsEnable(java.lang.Boolean isEnable) {
 		set("isEnable", isEnable);
 	}
 	
 	public java.lang.Boolean getIsEnable() {
 		return get("isEnable");
+	}
+
+	public void setPublicTime(java.util.Date publicTime) {
+		set("publicTime", publicTime);
+	}
+	
+	public java.util.Date getPublicTime() {
+		return get("publicTime");
+	}
+
+	public void setEndTime(java.util.Date endTime) {
+		set("endTime", endTime);
+	}
+	
+	public java.util.Date getEndTime() {
+		return get("endTime");
 	}
 
 }
