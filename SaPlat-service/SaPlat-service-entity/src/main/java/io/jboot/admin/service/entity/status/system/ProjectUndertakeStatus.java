@@ -22,7 +22,7 @@ public class ProjectUndertakeStatus extends BaseStatus{
     /**
      * 同意
      */
-    public final static String ACCEPT = "1";
+    public final static String ACCEPT = "2";
 
     public ProjectUndertakeStatus(){
         add(WAITING, "待确认");

@@ -106,12 +106,12 @@
             });
         });
 
-        reloadTable = function (name, phone) {
+        var reloadTable = function (name, phone) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/user/tableData'
                 ,where: {name: name, phone: phone} //设定异步数据接口的额外参数
             });
-        }
+        };
 
         form.on('submit(search)', function(data){
             reloadTable(data.field.name, data.field.phone);

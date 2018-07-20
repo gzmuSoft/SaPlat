@@ -120,15 +120,86 @@ public class ProjectUndertakeController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    public void projectUndertakeIndex(){
+    /**
+     * 加载承接详情页面
+     */
+    public void projectUndertakeIndex() {
         render("projectUndertake.html");
     }
 
-    public void projectUndertakeList(){
+    /**
+     * 承接详情页面数据加载，
+     * 参数 applyOrInvite ：
+     * true    主动申请
+     * false   被邀请
+     */
+    public void projectUndertakeList() {
+        Boolean applyOrInvite = getParaToBoolean("applyOrInvite");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setApplyOrInvite(applyOrInvite);
+        projectUndertake.setIsEnable(true);
         Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<ProjectUndertake>(page));
+    }
+
+    /**
+     * 处理邀请请求，
+     * 参数 invite：
+     * 1   拒绝
+     * 2   同意
+     * id：承接的 id
+     * reply: 拒绝时回显
+     */
+    public void invite() {
+        Integer invite = getParaToInt("invite");
+        Long id = getParaToLong("id");
+        if (invite == null || id == null|| (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
+                && !invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT)) )) {
+            renderJson(RestResult.buildError("请求参数错误"));
+            throw new BusinessException("请求参数错误");
+        }
+        ProjectUndertake projectUndertake = projectUndertakeService.findById(id);
+        if (projectUndertake == null || !projectUndertake.getIsEnable()) {
+            renderJson(RestResult.buildError("请求参数错误"));
+            throw new BusinessException("请求参数错误");
+        }
+        User user = AuthUtils.getLoginUser();
+        String reply = null;
+        Notification notification = new Notification();
+        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
+            reply = getPara("reply");
+            notification.setName("邀请拒绝通知");
+            notification.setContent(user.getName() + "已拒绝您的邀请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
+        }
+        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
+            notification.setName("邀请接受通知");
+            notification.setContent(user.getName() + "已接受您的邀请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
+        }
+        projectUndertake.setReply(reply);
+        projectUndertake.setLastUpdateUserID(user.getId());
+        projectUndertake.setLastAccessTime(new Date());
+
+        Long projectID = projectUndertake.getProjectID();
+        Long receiverID = projectService.findById(projectID).getUserId();
+        notification.setSource("/app/projectUndertake/invite");
+        //TODO 等待书写接受模块
+        notification.setRecModule("");
+        notification.setReceiverID(Math.toIntExact(receiverID));
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake,notification)){
+            renderJson(RestResult.buildError("请求失败，请重新尝试！"));
+            throw new BusinessException("请求失败，请重新尝试！");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 }
