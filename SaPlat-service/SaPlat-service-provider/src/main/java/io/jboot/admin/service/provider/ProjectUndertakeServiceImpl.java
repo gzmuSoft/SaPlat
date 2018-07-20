@@ -26,8 +26,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     @Override
     public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(project.getName())){
-            columns.like("name", "%" + project.getName()+"%");
+        if (project.getApplyOrInvite() != null) {
+            columns.eq("applyOrInvite", project.getApplyOrInvite());
+        }
+        if (project.getIsEnable() != null) {
+            columns.eq("isEnable", project.getIsEnable());
+        }
+        if (StrKit.notBlank(project.getName())) {
+            columns.like("name", "%" + project.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
 
@@ -36,8 +42,8 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     @Override
     public ProjectUndertake findByProjectIdAndFacAgencyId(Long projectId, Long facAgencyId) {
         Columns columns = Columns.create();
-        columns.eq("projectID",projectId);
-        columns.eq("facAgencyID",facAgencyId);
+        columns.eq("projectID", projectId);
+        columns.eq("facAgencyID", facAgencyId);
         return DAO.findFirstByColumns(columns);
     }
 
