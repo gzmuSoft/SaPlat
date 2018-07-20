@@ -125,9 +125,7 @@
                             <div class="layui-input-block">
                                 <select id="affectedGroup.politics" name="affectedGroup.politics" lay-verify="required">
                                     <option value=""></option>
-                                    <option value="0" selected>群众</option>
-                                    <option value="1">共青团员</option>
-                                    <option value="2">党员</option>
+                                    #statusOption(politicalOpts);
                                 </select>
                             </div>
                         </div>
@@ -137,11 +135,7 @@
                             <div class="layui-input-block">
                                 <select id="affectedGroup.nation" name="affectedGroup.nation" lay-verify="required">
                                     <option value=""></option>
-                                    <option value="汉族" selected>汉族</option>
-                                    <option value="苗族">苗族</option>
-                                    <option value="布依族">布依族</option>
-                                    <option value="仡佬族">仡佬族</option>
-                                    <option value="回族">回族</option>
+                                    #statusOption(nationStatus);
                                 </select>
                             </div>
                         </div>
@@ -151,11 +145,7 @@
                             <div class="layui-input-block">
                                 <select id="affectedGroup.education" name="affectedGroup.education" lay-verify="required">
                                     <option value=""></option>
-                                    <option value="小学">小学</option>
-                                    <option value="中学">中学</option>
-                                    <option value="本科" selected>本科</option>
-                                    <option value="硕士">硕士</option>
-                                    <option value="博士">博士</option>
+                                    #statusOption(educationalStatus);
                                 </select>
                             </div>
                         </div>
@@ -166,11 +156,7 @@
                                 <select id="affectedGroup.nationality" name="affectedGroup.nationality"
                                         lay-verify="required">
                                     <option value=""></option>
-                                    <option value="中国" selected>中国</option>
-                                    <option value="美国">美国</option>
-                                    <option value="英国">英国</option>
-                                    <option value="日本">日本</option>
-                                    <option value="韩国">韩国</option>
+                                    #statusOption(contryStatus);
                                 </select>
                             </div>
                         </div>
