@@ -1,0 +1,79 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+*
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , $ = layui.jquery;
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[                  //标题栏
+                {field: 'name', title: '项目名称', width: 100, sort: true}
+                , {
+                    field: 'status',
+                    title: '状态',
+                    width: 100,
+                    sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                }
+                , {field: 'reply', title: '回复', width: 100}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+            ]]
+            , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+
+
+    table.on('tool(dateTable)', function (obj) {
+        var data = obj.data;
+        console.log(obj);
+        if (obj.event === 'see') {
+            pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
+            });
+        }
+    });
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <div class="layui-row">
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    #end
+
+</script>
+#end
+

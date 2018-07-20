@@ -1,0 +1,193 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {checkbox: false, sort: true, fixed: true, space: true}
+                , {field: 'id', title: 'ID', width: 60}
+                , {field: 'userId', title: '申请人ID', width: 100}
+                , {field: 'name', title: '申请人', width: 100}
+                , {field: 'roleId', title: '申请角色', width: 100,templet: '#statusTpl(roleStatus, "roleId")'}
+                , {field: 'type', title: '申请类型', width: 100,templet:'#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'}
+                , {field: 'lastUpdUser', title: '审核管理员', width: 100}
+                , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
+                , {field: 'reply', title: '回复信息', width: 200}
+                ,{field: 'status', title: '状态', width: 100 ,templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'}
+
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/system/auth/tableData'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+
+        table.on('tool(dateTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定删除此认证?', function(index){
+                    util.sendAjax ({
+                        type: 'POST',
+                        url: '#(ctxPath)/system/auth/delete',
+                        data: {id : data.id},
+                        loadFlag: true,
+                        success : function(data){
+                            layer.close(index);
+                            reloadTable($('#name').val(), $('#des').val());
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            } else if(obj.event === 'edit'){
+                    pop_show('审核结果','#(ctxPath)/system/auth/update?id=' + data.id,'','', function(){
+                    reloadTable(null,null, null,null);
+                });
+            } else if(obj.event === 'view'){
+                    pop_show('认证信息','#(ctxPath)/system/auth/view?id=' + data.id,'','', function(){
+                        reloadTable(null,null, null,null);
+                    });
+                }  else if (obj.event === 'warning') {
+                layer.confirm('该认证已审核，确定要重新审核', function(index) {
+                    pop_show('审核结果', '#(ctxPath)/system/auth/update?id=' + data.id, '', '', function () {
+                        reloadTable(null, null, null, null);
+                        layer.close(index);
+                    });
+                });
+            }
+
+
+        });
+
+//        $("#add").click(function(){
+//            pop_show('添加书籍','#(ctxPath)/system/book/add','','', function(){
+//                reloadTable($('#name').val(), $('#des').val());
+//            });
+//        });
+
+
+        $("#person").click(function(){
+            reloadTable(null,"0",null,null);
+        });
+
+        $("#organization").click(function(){
+            reloadTable(null,"1",null,null);
+        });
+        reloadTable = function (_name,_type,_userId,_status) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/system/auth/tableData'
+                ,where: {name:_name,
+                        type: _type,
+                        userId:_userId,
+                        status:_status} //设定异步数据接口的额外参数
+            });
+        };
+
+
+
+        form.on('submit(search)', function(data){
+            reloadTable(data.field.name,data.field.type,null, data.field.status);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+
+</script>
+#end
+
+#define content()
+    <div class="layui-fluid">
+        <form id="searchForm" class="layui-form x-center" action="" >
+            <div class="layui-form-pane">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select id='type' name="type">
+                            <option></option>
+                            #statusOption(typeStatus)
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select id='status' name="status">
+                            <option></option>
+                            #statusOption(io.jboot.admin.service.entity.status.system.AuthStatus::me())
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label">申请人</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" placeholder="申请人" class="layui-input"/>
+                    </div>
+                    <div class="layui-input-inline" style="width : 80px">
+                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="layui-row">
+            <div class="layui-btn-group">
+                <button id="person" class="layui-btn layui-btn-small">个人审核</button>
+                <button id="organization" class="layui-btn layui-btn-small">团体审核</button>
+            </div>
+            <table id="dateTable" lay-filter="dateTable"></table>
+        </div>
+    </div>
+
+<script type="text/html" id="barOption">
+
+    #shiroHasPermission('/system/auth/view')
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
+    #end
+
+
+
+
+    #shiroHasPermission('/system/auth/update')
+    #[[
+    {{#  if(d.status == '3'){ }}
+    ]]#
+
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">审核</a>
+
+    #[[
+    {{# } else if(d.status!= '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="warning">复审</a>
+    #[[
+    {{#  } }}
+    ]]#
+    #end
+</script>
+#end

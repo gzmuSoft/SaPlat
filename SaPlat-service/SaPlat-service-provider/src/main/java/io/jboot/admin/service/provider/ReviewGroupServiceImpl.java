@@ -2,7 +2,6 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.ReviewGroupService;
-import io.jboot.admin.service.entity.model.AffectedGroup;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ReviewGroup;
 import io.jboot.aop.annotation.Bean;
@@ -16,8 +15,8 @@ import javax.inject.Singleton;
 @JbootrpcService
 public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implements ReviewGroupService {
     @Override
-    public ReviewGroup findByOrgID(Long orgID) {
-        return DAO.findFirstByColumn("orgID", orgID);
+    public ReviewGroup findByOrgId(Long orgId) {
+        return DAO.findFirstByColumn("orgID", orgId);
     }
 
     @Override

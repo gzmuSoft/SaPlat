@@ -18,7 +18,7 @@ import javax.inject.Singleton;
 @JbootrpcService
 public class FacAgencyServiceImpl extends JbootServiceBase<FacAgency> implements FacAgencyService {
     @Override
-    public FacAgency findByOrgID(Long orgID) {
+    public FacAgency findByOrgId(Long orgID) {
         return DAO.findFirstByColumn("orgID", orgID);
     }
 

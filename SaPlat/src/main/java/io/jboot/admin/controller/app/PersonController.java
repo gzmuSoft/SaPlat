@@ -2,7 +2,9 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.RestResult;
+import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
@@ -12,9 +14,14 @@ import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.utils.StringUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.util.Date;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * -----------------------------
@@ -44,6 +51,9 @@ public class PersonController extends BaseController {
     @JbootrpcService
     private AffectedGroupService affectedGroupService;
 
+    @JbootrpcService
+    private FilesService filesService;
+
     /**
      * 初始化
      */
@@ -51,11 +61,11 @@ public class PersonController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Person person = personService.findByUser(loginUser);
         AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
-        if (affectedGroup == null){
+        if (affectedGroup == null) {
             affectedGroup = new AffectedGroup();
         }
         setAttr("person", person)
-                .setAttr("affectedGroup",affectedGroup)
+                .setAttr("affectedGroup", affectedGroup)
                 .setAttr("user", loginUser)
                 .render("main.html");
     }
@@ -82,7 +92,7 @@ public class PersonController extends BaseController {
         }
         person.setCreateTime(new Date());
         person.setLastAccessTime(new Date());
-        person.setIsEnable(1);
+        person.setIsEnable(true);
         Long[] roles = new Long[]{roleService.findByName("个人群体").getId()};
         if (!personService.savePerson(person, user, roles)) {
             renderJson(RestResult.buildError("用户保存失败"));
@@ -91,13 +101,45 @@ public class PersonController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-//    public void upload(){
-//        UploadFile upload = getFile("file",new SimpleDateFormat("YYYY-MM-DD").format(new Date()));
-//        ConcurrentHashMap<String,String> map = new ConcurrentHashMap<>();
-//        map.put("path",upload.getFile().getAbsolutePath());
-//        map.put("code", ResultCode.SUCCESS);
-//        renderJson(map);
-//    }
+    /**
+     * 文件上传
+     */
+    @Before(POST.class)
+    public void upload() {
+        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
+        String description = getPara("description");
+        File file = upload.getFile();
+        String oldName = file.getName();
+        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
+        String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
+        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
+        if (!file.renameTo(newFile)) {
+            if (file.delete()) {
+                renderJson(RestResult.buildError("文件上传失败，请重新尝试！501"));
+                throw new BusinessException("文件上传失败，请重新尝试！501");
+            }
+            renderJson(RestResult.buildError("文件上传失败，请重新尝试！502"));
+            throw new BusinessException("文件上传失败，请重新尝试！502");
+        }
+        Files files = new Files();
+        files.setName(oldName);
+        files.setCreateTime(new Date());
+        files.setDescription(description);
+        files.setCreateUserID(AuthUtils.getLoginUser().getId());
+        files.setIsEnable(false);
+        files.setPath(newFile.getName());
+        files.setSize(file.length());
+        files.setType(type);
+        if (!filesService.save(files)) {
+            renderJson(RestResult.buildError("文件上传失败，请重新尝试！503"));
+            throw new BusinessException("文件上传失败，请重新尝试！503");
+        }
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+        map.put("file", files.getPath());
+        map.put("code", ResultCode.SUCCESS);
+        renderJson(map);
+    }
+
 
     /**
      * 更新用户资料
@@ -116,13 +158,13 @@ public class PersonController extends BaseController {
         affectedGroup.setPersonID(person.getId());
         affectedGroup.setMail(loginUser.getEmail());
         affectedGroup.setLastAccessTime(new Date());
-        if (affectedGroup.getResidence() == null){
+        if (affectedGroup.getResidence() == null) {
             affectedGroup.setResidence(person.getAddr());
         }
-        if (affectedGroup.getPhone() == null){
+        if (affectedGroup.getPhone() == null) {
             affectedGroup.setPhone(loginUser.getPhone());
         }
-        if (!personService.update(person, loginUser,affectedGroup)) {
+        if (!personService.update(person, loginUser, affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
         }
@@ -138,9 +180,9 @@ public class PersonController extends BaseController {
         Auth auth = new Auth();
         auth.setStatus("100");
         if (expertGroup != null) {
-            auth = authService.findByUserAndRole(user,roleService.findByName("专家团体").getId());
+            auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         }
-        setAttr("auth",auth);
+        setAttr("auth", auth);
         setAttr("expertGroup", expertGroup);
         render("expertGroup.html");
     }
@@ -148,30 +190,39 @@ public class PersonController extends BaseController {
     /**
      * 认证页面
      */
-    public void verify(){
+    public void verify() {
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
         ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        if (expertGroup == null){
+        if (expertGroup == null) {
             expertGroup = new ExpertGroup();
+        } else if (StringUtils.isNotBlank(expertGroup.getWorkpictrue())
+                && StringUtils.isNotBlank(expertGroup.getCertificate())){
+            Files file1 = filesService.findById(Integer.parseInt(expertGroup.getWorkpictrue()));
+            Files file2 = filesService.findById(Integer.parseInt(expertGroup.getCertificate()));
+            file1.setIsEnable(false);
+            file2.setIsEnable(false);
+            if (!filesService.update(file1) || !filesService.update(file2)){
+                renderJson(RestResult.buildError("用户资料失败"));
+                throw new BusinessException("用户资料失败");
+            }
         }
-        setAttr("user",user)
-                .setAttr("person",person)
-                .setAttr("expertGroup",expertGroup)
+        setAttr("user", user)
+                .setAttr("person", person)
+                .setAttr("expertGroup", expertGroup)
                 .render("verify.html");
     }
-
 
 
     /**
      * 专家团体认证
      */
     @Before(POST.class)
-    public void expertGroupVerify() {
+    public void expertGroupVerify() throws IOException {
         ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
-        if (affectedGroupService.findByPersonId(person.getId()) == null){
+        if (affectedGroupService.findByPersonId(person.getId()) == null) {
             renderJson(RestResult.buildError("请先在个人资料中完善您的个人信息"));
             throw new BusinessException("请先在个人资料中完善您的个人信息");
         }
@@ -179,17 +230,22 @@ public class PersonController extends BaseController {
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
-        expertGroup.setIsEnable(1);
+        expertGroup.setIsEnable(true);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
-        if ( name != null ) {
-            if (name.getIsEnable() == 1){
+        if (name != null) {
+            if (name.getIsEnable()) {
                 renderJson(RestResult.buildError("专家团体已存在"));
                 throw new BusinessException("专家团体已存在");
             }
             expertGroup.setId(name.getId());
         }
+        String file1Path = getPara("file1");
+        String file2Path = getPara("file2");
 
-
+        List<Files> files = filesService.findByPath(file1Path, file2Path);
+        files.forEach(file -> file.setIsEnable(true));
+        expertGroup.setCertificate(String.valueOf(files.get(0).getId()));
+        expertGroup.setWorkpictrue(String.valueOf(files.get(1).getId()));
         Auth auth = new Auth();
         auth.setUserId(user.getId());
         auth.setName(user.getName());
@@ -198,13 +254,14 @@ public class PersonController extends BaseController {
         auth.setStatus(AuthStatus.VERIFYING);
         auth.setType(TypeStatus.PERSON);
         Auth userAndRole = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
-        if (userAndRole != null){
+        if (userAndRole != null) {
             auth.setId(userAndRole.getId());
         }
-        if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
+        if (!expertGroupService.saveOrUpdate(expertGroup, auth, files)) {
             renderJson(RestResult.buildError("专家团体认证上传失败"));
             throw new BusinessException("专家团体认证上传失败");
         }
+
         renderJson(RestResult.buildSuccess());
     }
 
@@ -217,14 +274,18 @@ public class PersonController extends BaseController {
         ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());
         Auth auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
-        expertGroup.setIsEnable(0);
-        if (!expertGroupService.saveOrUpdate(expertGroup, auth)) {
+        int cer = Integer.parseInt(expertGroup.getCertificate());
+        int wpic = Integer.parseInt(expertGroup.getWorkpictrue());
+        List<Files> files = Collections.synchronizedList(new ArrayList<Files>());
+        files.add(filesService.findById(cer));
+        files.add(filesService.findById(wpic));
+        files.forEach(file -> file.setIsEnable(false));
+        expertGroup.setIsEnable(false);
+        if (!expertGroupService.saveOrUpdate(expertGroup, auth, files)) {
             renderJson(RestResult.buildError("修改认证状态失败"));
             throw new BusinessException("修改认证状态失败");
         }
         renderJson(RestResult.buildSuccess());
     }
-
-
 
 }

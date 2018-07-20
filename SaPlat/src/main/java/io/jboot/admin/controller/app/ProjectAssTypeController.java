@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.ProjectAssTypeValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.admin.service.entity.model.ProjectAssType;
@@ -73,10 +76,11 @@ public class ProjectAssTypeController extends BaseController{
         render("add.html");
     }
 
+    @Before({POST.class, ProjectAssTypeValidator.class})
     public void postAdd(){
         ProjectAssType model = getBean(ProjectAssType.class, "model");
         if (projectAssTypeService.isExisted(model.getName())){
-            throw new BusinessException("所指定的项目阶段名称已存在");
+            throw new BusinessException("所指定的项目评估类型名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
@@ -87,11 +91,12 @@ public class ProjectAssTypeController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before({POST.class, ProjectAssTypeValidator.class})
     public void postUpdate(){
         ProjectAssType model = getBean(ProjectAssType.class, "model");
         ProjectAssType byId = projectAssTypeService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的项目阶段名称不存在");
+            throw new BusinessException("所指定的项目评估类型不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!projectAssTypeService.update(model)){

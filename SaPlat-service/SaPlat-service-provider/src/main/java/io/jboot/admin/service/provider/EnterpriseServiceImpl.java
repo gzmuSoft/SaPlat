@@ -21,8 +21,8 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
     @Override
     public Page<Enterprise> findPage(Enterprise model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -38,8 +38,8 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
     }
 
     @Override
-    public Enterprise findByOrgID(Long orgID) {
-        return DAO.findFirstByColumn("orgID", orgID);
+    public Enterprise findByOrgId(Long orgId) {
+        return DAO.findFirstByColumn("orgID", orgId);
     }
 
     @Override
