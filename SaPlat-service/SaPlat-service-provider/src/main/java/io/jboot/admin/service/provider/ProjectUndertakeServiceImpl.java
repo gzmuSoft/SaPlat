@@ -46,6 +46,9 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         } else {
             return false;
         }
+    }
+
+    @Override
     public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (project.getApplyOrInvite() != null) {
