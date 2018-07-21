@@ -1,5 +1,11 @@
 <!doctype html>
 <html lang="zh">
+
+<style>
+    .buttonChange {
+        background: #66bab7;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -183,8 +189,8 @@
      */
     $('#selfAssessment').click(function () {
         $('#selfAssessment').attr("name", "project.assessmentMode");
-        $('#selfAssessment').attr("value", "自评(选中)");
-        $('#othersAssessment').attr("value", "委评");
+        $('#selfAssessment').addClass("buttonChange");
+        $('#othersAssessment').removeClass("buttonChange");
         $('#othersAssessment').attr("name", null);
     });
 
@@ -193,8 +199,8 @@
      */
     $('#othersAssessment').click(function () {
         $('#othersAssessment').attr("name", "project.assessmentMode");
-        $('#othersAssessment').attr("value", "委评(选中)");
-        $('#selfAssessment').attr("value", "自评");
+        $('#othersAssessment').addClass("buttonChange");
+        $('#selfAssessment').removeClass("buttonChange");
         $('#selfAssessment').attr("name", null);
     });
 
