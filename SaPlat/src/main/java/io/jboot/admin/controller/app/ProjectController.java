@@ -327,7 +327,7 @@ public class ProjectController extends BaseController {
         Notification notification = new Notification();
         notification.setName("项目邀请通知");
         notification.setSource("/app/project/invite");
-        notification.setContent("您好, " + user.getName() + " 邀请您介入项目" + projectService.findById(getParaToLong("projectId")).getName() + "的评估，请及时处理！");
+        notification.setContent("您好, " + user.getName() + " 邀请您介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的评估，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(facAgencyService.findById(getParaToLong("id")).getOrgID(), 1L).getId().intValue());
         notification.setCreateUserID(user.getId());
         notification.setCreateTime(new Date());
