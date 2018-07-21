@@ -14,16 +14,13 @@
 
 #define content()
 <div class="x-body">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>请选择想要邀请的服务机构</legend>
-    </fieldset>
 
     <label class="layui-form-label">服务机构名称</label>
     <div class="layui-input-inline">
         <input type="text" id="name" name="name" placeholder="服务机构名称" class="layui-input"/>
     </div>
     <div class="layui-input-inline" style="width : 80px">
-        <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+        <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
         </button>
     </div>
 
@@ -119,7 +116,7 @@
 
         $('#search').click(function () {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/fac_agency/tableData?name=' + $('#name').value
+                url: '#(ctxPath)/app/fac_agency/tableData?name=' + $('#name').val()
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
