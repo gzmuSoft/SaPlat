@@ -2,12 +2,12 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.FacAgency;
+import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.ProjectUndertake;
 
 import java.util.List;
 
-public interface FacAgencyService  {
+public interface ProjectUndertakeService {
 
     /**
      * find model by primary key
@@ -15,50 +15,29 @@ public interface FacAgencyService  {
      * @param id
      * @return
      */
-    public FacAgency findById(Object id);
+    public ProjectUndertake findById(Object id);
 
-    public FacAgency findByOrgId(Long orgId);
-    /**
-     * 关联组织和管理机构
-     *
-     * @param orgID
-     * @return
-     */
+
     /**
      * find all model
      *
-     * @return all <FacAgency
+     * @return all <ProjectUndertake
      */
-    public List<FacAgency> findAll();
+    public List<ProjectUndertake> findAll();
 
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
-     * @return 页
-     */
-    public Page<FacAgency> findPage(FacAgency model, int pageNumber, int pageSize);
-
-    /**
-     * 分页查询 服务机构 信息
+     * find model by facAgencyID and projectID
      *
-     * @return 页
+     * @return all <ProjectUndertake
      */
-    public Page<FacAgency> findPage(int pageNumber, int pageSize);
+    public boolean findIsInvite(Long facAgencyID, Long projectID);
 
     /**
-     * 根据名称查询 项目阶段 信息
-     * @param name
-     * @return
+     * find model projectID and status to isReceive
+     *
+     * @return all <ProjectUndertake
      */
-    public FacAgency findByName(String name);
-
-
-    /**
-     * 项目阶段 是否存在
-     * @param name
-     * @return 存在返回-true，否则返回false
-     */
-    public boolean isExisted(String name);
+    public boolean findIsReceive(Long projectID);
 
     /**
      * delete model by primary key
@@ -75,7 +54,7 @@ public interface FacAgencyService  {
      * @param model
      * @return
      */
-    public boolean delete(FacAgency model);
+    public boolean delete(ProjectUndertake model);
 
 
     /**
@@ -84,8 +63,17 @@ public interface FacAgencyService  {
      * @param model
      * @return
      */
-    public boolean save(FacAgency model);
+    public boolean save(ProjectUndertake model);
 
+
+    /**
+     * 保存或者更新并发送通知
+     *
+     * @param model        保存的项目承接
+     * @param notification 通知者
+     * @return 结果
+     */
+    public boolean saveOrUpdateAndSend(ProjectUndertake model, Notification notification);
 
     /**
      * save or update model
@@ -93,16 +81,7 @@ public interface FacAgencyService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(FacAgency model);
-
-    /**
-     * save Or Update model and auth
-     *
-     * @param model
-     * @param auth
-     * @return if save or update success
-     */
-    public boolean saveOrUpdate(FacAgency model, Auth auth);
+    public boolean saveOrUpdate(ProjectUndertake model);
 
 
     /**
@@ -111,22 +90,34 @@ public interface FacAgencyService  {
      * @param model
      * @return
      */
-    public boolean update(FacAgency model);
+    public boolean update(ProjectUndertake model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
+
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField);
+
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
+
     public void join(Model model, String joinOnField);
+
     public void join(Model model, String joinOnField, String[] attrs);
+
     public void join(Model model, String joinOnField, String joinName);
+
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
     public void keep(Model model, String... attrs);
+
     public void keep(List<? extends Model> models, String... attrs);
 }

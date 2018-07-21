@@ -64,14 +64,6 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.comprehend">服务理解</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="profGroup.comprehend" name="profGroup.comprehend"
-                           value="#(profGroup.comprehend)" class="layui-input" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.performance">服务业绩</label>
                 <div class="layui-input-inline">
                     <input type="text" id="profGroup.performance" name="profGroup.performance"
@@ -108,19 +100,6 @@
                 <div class="layui-input-inline">
                     <input type="number" id="profGroup.capital" name="profGroup.capital"
                            value="#(profGroup.capital)" class="layui-input" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">有无犯罪记录</label>
-                <div class="layui-input-block">
-                    #if(profGroup.record == 0)
-                    <input type="radio" name="profGroup.record" value="0" title="有" checked="checked" required/>
-                    <input type="radio" name="profGroup.record" value="1" title="无" required/>
-                    #else
-                    <input type="radio" name="profGroup.record" value="0" title="有" required/>
-                    <input type="radio" name="profGroup.record" value="1" title="无" checked="checked" required/>
-                    #end
                 </div>
             </div>
 

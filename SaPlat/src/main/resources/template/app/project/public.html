@@ -1,0 +1,81 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/project/isPublic?id=' + $('#id').val(),
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                    setTimeout(function () {
+                        return true;
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>请填写发布日期</legend>
+    </fieldset>
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+
+            <!--隐藏id-->
+            <input type="text" id="id" name="id"
+                   class="layui-input layui-disabled layui-hide" value="#(id)" required/>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">发起日期</label>
+                <div class="layui-input-inline">
+                    <input type="date" id="publicTime" name="publicTime" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">截止日期</label>
+                <div class="layui-input-inline">
+                    <input type="date" id="endTime" name="endTime" class="layui-input" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub" align="center">提交</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+#end
