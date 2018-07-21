@@ -84,6 +84,15 @@ public interface ProjectUndertakeService {
 
 
     /**
+     * 保存或者更新并发送通知
+     *
+     * @param model        保存的项目承接
+     * @param notification 通知者
+     * @return 结果
+     */
+    public boolean saveOrUpdateAndSend(ProjectUndertake model, Notification notification);
+
+    /**
      * save or update model
      *
      * @param model

@@ -76,11 +76,11 @@
                 , {field: 'name', title: '项目名称', width: 150}
                 , {field: 'roleName', title: '机构类型', width: 100}
                 , {field: 'amount', title: '预计金额', width: 100, sort: true}
-                , {field: 'brief', title: '简介', width: 300}
+                , {field: 'brief', title: '简介', width: 250}
                 , {field: 'assessmentMode', title: '评估方式', width: 100}
                 , {field: 'remark', title: '备注', width: 150}
-                , {fixed: 'right', title: '发布状态', align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '发布状态', width: 170, align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/verfedSuccess'
             , method: 'get'

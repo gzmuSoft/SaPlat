@@ -116,13 +116,14 @@
                 });
             }
         });
+
+        $('#search').click(function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/fac_agency/tableData?name=' + $('#name').value
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
     });
 
-    $('#search').click(function () {
-        table.reload('dateTable', {
-            url: '#(ctxPath)/app/fac_agency/tableData?name=' + $('#name').value
-        });
-        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-    });
 </script>
 #end
