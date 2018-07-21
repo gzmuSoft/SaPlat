@@ -1,0 +1,199 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , $ = layui.jquery;
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[                  //标题栏
+                {field: 'name', title: '项目名称', width: 100, sort: true}
+                , {
+                    field: 'status',
+                    title: '状态',
+                    width: 100,
+                    sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                }
+                , {field: 'reply', title: '回复', width: 100}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+            ]]
+            , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , where: {
+                applyOrInvite: false
+            }
+            , done: function (res, curr, count) {
+            }
+        });
+
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            console.log(obj);
+            if (obj.event === 'see') {
+                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
+                });
+            } else if (obj.event === 'agree') {
+                layer.confirm('确定接受嘛？(此操作不可逆！)', function (index) {
+                    $.post("#(ctxPath)/app/projectUndertake/invite", {
+                        id: data.id,
+                        invite: 2
+                    }, function () {
+                        layer.msg("同意成功！");
+                        setTimeout(function () {
+                            $('#invite').click();
+                        }, 1000);
+                    });
+                });
+            } else if (obj.event === 'refuse') {
+                layer.open({
+                    type: 1
+                    , title: false //不显示标题栏
+                    , closeBtn: false
+                    , area: '300px;'
+                    , shade: 0.8
+                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    , btn: ['残忍拒绝', '我再想想']
+                    , btnAlign: 'c'
+                    , moveType: 1 //拖拽模式，0或者1
+                    , content: '' +
+                    '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
+                    '<label class="layui-form-label">拒绝缘由</label>' +
+                    '<textarea placeholder="请输入内容" class="layui-textarea" name="desc">' +
+                    '</textarea>' +
+                    '</div>'
+                    , success: function (layero) {
+                        var btn = layero.find('.layui-layer-btn');
+                        btn.find('.layui-layer-btn0').on('click', function () {
+                            var textarea = layero.find('textarea')[0];
+                            $.post("#(ctxPath)/app/projectUndertake/invite", {
+                                id: data.id,
+                                reply: textarea.value,
+                                invite: 1
+                            }, function () {
+                                layer.msg("拒绝成功！");
+                                setTimeout(function () {
+                                    $('#invite').click();
+                                }, 1000);
+                            });
+                        });
+                    }
+                });
+
+            }
+        });
+
+
+        $('#apply').on('click', function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
+                , where: {applyOrInvite: false} //设定异步数据接口的额外参数
+                , cols: [[                  //标题栏
+                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    , {
+                        field: 'status',
+                        title: '状态',
+                        width: 100,
+                        sort: true,
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                    }
+                    , {field: 'reply', title: '回复', width: 100}
+                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                ]]
+            });
+        });
+
+        $('#invite').on('click', function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
+                , cols: [[                  //标题栏
+                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    , {
+                        field: 'status',
+                        title: '状态',
+                        width: 100,
+                        sort: true,
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                    }
+                    , {field: 'reply', title: '回复', width: 100}
+                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
+                ]]
+                , where: {applyOrInvite: true} //设定异步数据接口的额外参数
+            });
+        });
+    });
+
+
+</script>
+#end
+
+#define content()
+
+<div class="reloadChoose">
+
+    <button class="layui-btn" id="apply">查看申请委评的项目</button>
+    <button class="layui-btn" id="invite">查看邀请的项目</button>
+
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row">
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <label>
+        <input class="layui-hide project-id" name="id" value="{{ d.id }}">
+    </label>
+    #end
+
+</script>
+<script type="text/html" id="barOptionInvite">
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <label>
+        <input class="layui-hide project-id" name="id" value="{{ d.id }}">
+    </label>
+
+
+    #end
+
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    #shiroHasPermission('/app/projectUndertake/invite')
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#end
+
