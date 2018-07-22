@@ -60,12 +60,6 @@ public interface PersonService  {
     public boolean save(Person model);
 
 
-    /*
-    *其中的if是用来做查询的
-    * 不满足即不查询
-    * 返回全部数据
-    */
-    Page<Person> findPage(Person person, int pageNumber, int pageSize);
 
     /**
      * 保存个人群体并创建用户

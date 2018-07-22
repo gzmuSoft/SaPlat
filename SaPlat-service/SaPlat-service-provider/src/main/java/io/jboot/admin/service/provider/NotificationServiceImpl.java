@@ -34,7 +34,7 @@ public class NotificationServiceImpl extends JbootServiceBase<Notification> impl
         if (notification.getStatus() != null){
             columns.eq("status",notification.getStatus());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "status asc");
     }
 
     @Override

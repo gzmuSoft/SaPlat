@@ -10,7 +10,6 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserService;
-import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
@@ -125,7 +124,13 @@ public class MainController extends BaseController {
         jsonObject.put("code",0);
         renderJson(jsonObject);
     }
-    public void m(){
-        render("welcome.html");
+
+    public void view(){
+        User loginUser = AuthUtils.getLoginUser();
+        if (loginUser.getId() == 3){
+            render("system/notification/main.html");
+        }else{
+            render("app/notification/main.html");
+        }
     }
 }
