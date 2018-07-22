@@ -17,6 +17,7 @@ import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.utils.StringUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,14 +126,14 @@ public class PersonController extends BaseController {
             postStatus.add(post.getId().toString(),post.getName());
         }
 
-        setAttr("politicalOpts", politicalOpts).
-            setAttr("educationalStatus", educationalStatus).
-            setAttr("contryStatus", contryStatus).
-            setAttr("nationStatus", nationStatus).
-            setAttr("occupationOpts", occupationOpts).
-            setAttr("person", person).
-            setAttr("affectedGroup", affectedGroup).
-            setAttr("user", loginUser).
+        setAttr("user", loginUser).
+                setAttr("person", person).
+                setAttr("affectedGroup", affectedGroup).
+                setAttr("politicalOpts", politicalOpts).
+                setAttr("educationalStatus", educationalStatus).
+                setAttr("contryStatus", contryStatus).
+                setAttr("nationStatus", nationStatus).
+                setAttr("occupationOpts", occupationOpts).
                 setAttr("postStatus", postStatus).
             render("main.html");
     }
@@ -217,10 +218,10 @@ public class PersonController extends BaseController {
         loginUser.setEmail(getPara("user.email"));
         Person person = personService.findByUser(loginUser);
         person.setPhone(getPara("person.phone"));
-        person.setAge(Integer.parseInt(getPara("person.age")));
+        person.setAge(DateTime.now().getYear() - DateTime.parse(getPara("affectedGroup.birthday")).getYear());
         person.setAddr(getPara("person.addr"));
         AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
-        System.out.println(affectedGroup.toJson());
+
         affectedGroup.setName(person.getName());
         affectedGroup.setPersonID(person.getId());
         affectedGroup.setMail(loginUser.getEmail());
@@ -230,6 +231,7 @@ public class PersonController extends BaseController {
         }
         if (affectedGroup.getPhone() == null) {
             affectedGroup.setPhone(loginUser.getPhone());
+
         }
         if (!personService.update(person, loginUser, affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));
