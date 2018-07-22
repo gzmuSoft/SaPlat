@@ -197,9 +197,11 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.duty">职务</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="affectedGroup.duty" name="affectedGroup.duty"
-                                       value="#(affectedGroup.duty)" class="layui-input layui-disabled"
-                                       disabled="disabled"/>
+                                <select id="affectedGroup.duty" name="affectedGroup.duty"
+                                        lay-verify="required">
+                                    <option value=""></option>
+                                    #statusOption(postStatus);
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">

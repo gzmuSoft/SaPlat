@@ -1,0 +1,194 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+
+
+#define js()
+<script type="text/javascript">
+
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {checkbox: false, sort: true, fixed: true, space: true}
+                , {field: 'id', title: 'ID', width: 60}
+                , {field: 'name', title: '标题', width: 150}
+                , {field: 'content', title: '内容', width: 200}
+                , {field: 'createTime', title: '发送时间', width: 150}
+                , {field: 'statusName', title: '状态', width: 60 , align: 'center', toolbar: '#barOption1'}
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/notification/tableData'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+
+        // 获取选中行
+        table.on('checkbox(dateTable)', function (obj) {
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                pop_show('查看通知信息', '#(ctxPath)/app/notification/view?id=' + data.id, '', '', function () {
+                    reloadTable(null,null);
+                });
+            }else if (obj.event == 'del') {
+                layer.confirm('真的删除通知信息么', function(index){
+                    util.sendAjax ({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/notification/delete',
+                        data: {id : data.id},
+                        loadFlag: true,
+                        success : function(data){
+                            layer.close(index);
+                            reloadTable(null,null);
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            }
+        });
+
+        $("#haveRead").click(function(){
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/notification/haveRead',
+                loadFlag: true,
+                success: function(){
+                    reloadTable($('#name').val(),$('#content').val());
+                },
+            })
+        });
+
+        $("#all").click(function () {
+            reloadTable(null,null,null);
+        })
+
+        $("#noRead").click(function(){
+            reloadTable(null,null,0);
+        });
+
+        $("#read").click(function () {
+            reloadTable(null,null,1);
+        })
+
+        reloadTable = function (name ,content ,status) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/notification/tableData'
+                , where: {name: name ,content:content ,status:status} //设定异步数据接口的额外参数
+            });
+        }
+
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field.name,data.field.content);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="标题" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">内容</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="content" name="content" placeholder="内容" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr>
+
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            <button id="all" class="layui-btn layui-btn-small">全部</button>
+        </div>
+
+        <div class="layui-btn-group">
+            <button id="read" class="layui-btn layui-btn-small">已读</button>
+        </div>
+        <div class="layui-btn-group">
+            <button id="noRead" class="layui-btn layui-btn-small">未读</button>
+        </div>
+
+        <div class="layui-btn-group">
+            #shiroHasPermission('/app/notification/haveRead')
+            <button id="haveRead" class="layui-btn layui-btn-small">标记全部已读</button>
+            #end
+        </div>
+
+
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/notification/view')
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+    #end
+
+    #shiroHasPermission('/app/notification/delete')
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    #end
+</script>
+<script type="text/html" id="barOption1">
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" readonly="readonly">未读</a>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.status == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-warm layui-btn-xs" readonly="readonly">已读</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#end

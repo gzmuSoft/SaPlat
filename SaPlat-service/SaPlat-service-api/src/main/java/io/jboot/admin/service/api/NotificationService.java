@@ -16,6 +16,12 @@ public interface NotificationService {
      */
     public Notification findById(Object id);
 
+    /**
+     * 分页查询信息
+     * @param notification
+     * @return 页
+     */
+    public Page<Notification> findPage(Notification notification, int pageNumber, int pageSize);
 
     /**
      * find all model
@@ -69,6 +75,20 @@ public interface NotificationService {
      */
     public boolean update(Notification model);
 
+    /**
+     * 根据当前用户ID判断是否有对应用户的未读消息
+     *
+     * @param id
+     * @return
+     */
+    public boolean findMessageByUserID(Object id);
+
+    /**
+     * 当前用户标记全部已读
+     * @param id
+     * @return
+     */
+    public boolean haveReadAll(Object id);
 
     public void join(Page<? extends Model> page, String joinOnField);
 
