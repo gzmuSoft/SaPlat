@@ -15,6 +15,9 @@
             , form = layui.form
             , element = layui.element;
 
+        form.val("formTest", {
+            "affectedGroup.occupation": 1
+        });
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
@@ -50,6 +53,9 @@
             return false;
         });
 
+        /*alert($('#occupationSelected'));
+        $("#affectedGroup.occupation").val($('#occupationSelected').val());//atype是select的id
+        form.render('select');*/
     });
 
 
@@ -63,7 +69,7 @@
     </fieldset>
 
 
-    <form id="person" class="layui-form x-center" action="">
+    <form id="person" class="layui-form x-center" action="" lay-filter="formTest">
         <div class="layui-form-pane">
             <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                 <ul class="layui-tab-title">
@@ -209,6 +215,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
+                                <input type="hidden" id="occupationSelected" value="#(affectedGroup.occupation)" />
                                 <select id="affectedGroup.occupation" name="affectedGroup.occupation"
                                         lay-verify="required">
                                     <option value=""></option>

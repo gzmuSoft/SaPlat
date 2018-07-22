@@ -137,14 +137,6 @@ public abstract class BaseEnterprise<M extends BaseEnterprise<M>> extends JbootM
 		return getStr("website");
 	}
 
-	public void setCoordinate(java.lang.String coordinate) {
-		set("coordinate", coordinate);
-	}
-	
-	public java.lang.String getCoordinate() {
-		return getStr("coordinate");
-	}
-
 	public void setLandline(java.lang.String landline) {
 		set("landline", landline);
 	}

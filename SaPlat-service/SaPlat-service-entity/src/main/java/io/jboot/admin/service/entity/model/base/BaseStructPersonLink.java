@@ -9,84 +9,84 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseStructPersonLink<M extends BaseStructPersonLink<M>> extends JbootModel<M> implements IBean {
 
-    public void setID(java.lang.Long ID) {
-        set("ID", ID);
-    }
+	public void setID(java.lang.Long ID) {
+		set("ID", ID);
+	}
+	
+	public java.lang.Long getID() {
+		return getLong("ID");
+	}
 
-    public java.lang.Long getID() {
-        return getLong("ID");
-    }
+	public void setStructID(java.lang.Long structID) {
+		set("structID", structID);
+	}
+	
+	public java.lang.Long getStructID() {
+		return getLong("structID");
+	}
 
-    public void setStructID(java.lang.Long structID) {
-        set("structID", structID);
-    }
+	public void setPersonID(java.lang.Long personID) {
+		set("personID", personID);
+	}
+	
+	public java.lang.Long getPersonID() {
+		return getLong("personID");
+	}
 
-    public java.lang.Long getStructID() {
-        return getLong("structID");
-    }
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
+	}
 
-    public void setPersonID(java.lang.Long personID) {
-        set("personID", personID);
-    }
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+	
+	public java.util.Date getCreateTime() {
+		return get("createTime");
+	}
 
-    public java.lang.Long getPersonID() {
-        return getLong("personID");
-    }
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
+	}
+	
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
+	}
 
-    public void setCreateUserID(java.lang.Long createUserID) {
-        set("createUserID", createUserID);
-    }
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
+	}
+	
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
+	}
 
-    public java.lang.Long getCreateUserID() {
-        return getLong("createUserID");
-    }
+	public void setSort(java.lang.Integer sort) {
+		set("sort", sort);
+	}
+	
+	public java.lang.Integer getSort() {
+		return getInt("sort");
+	}
 
-    public void setCreateTime(java.util.Date createTime) {
-        set("createTime", createTime);
-    }
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
 
-    public java.util.Date getCreateTime() {
-        return get("createTime");
-    }
-
-    public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
-        set("lastUpdateUserID", lastUpdateUserID);
-    }
-
-    public java.lang.Long getLastUpdateUserID() {
-        return getLong("lastUpdateUserID");
-    }
-
-    public void setLastAccessTime(java.util.Date lastAccessTime) {
-        set("lastAccessTime", lastAccessTime);
-    }
-
-    public java.util.Date getLastAccessTime() {
-        return get("lastAccessTime");
-    }
-
-    public void setSort(java.lang.Integer sort) {
-        set("sort", sort);
-    }
-
-    public java.lang.Integer getSort() {
-        return getInt("sort");
-    }
-
-    public void setRemark(java.lang.String remark) {
-        set("remark", remark);
-    }
-
-    public java.lang.String getRemark() {
-        return getStr("remark");
-    }
-
-    public void setIsEnable(java.lang.Integer isEnable) {
-        set("isEnable", isEnable);
-    }
-
-    public java.lang.Integer getIsEnable() {
-        return getInt("isEnable");
-    }
+	public void setIsEnable(java.lang.Integer isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
+	}
 
 }
