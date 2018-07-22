@@ -8,5 +8,4 @@ import io.jboot.admin.service.entity.model.base.BaseNotification;
  */
 @Table(tableName = "notification", primaryKey = "id")
 public class Notification extends BaseNotification<Notification> {
-	
 }
