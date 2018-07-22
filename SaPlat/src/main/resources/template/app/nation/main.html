@@ -145,7 +145,10 @@
             <table id="dateTable" lay-filter="dateTable"></table>
         </div>
     </div>
-
+    <div class="layui-row">
+        <div id="pdfviewer" class="layui-col-md6">#(pdfURL)</div>
+        <div id="introduction" class="layui-col-md6" style="padding:2em">文档说明</div>
+    </div>
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/nation/update')
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -174,5 +177,22 @@
     #shiroHasPermission('/app/nation/delete')
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     #end
+</script>
+<style>
+    .pdfobject-container {
+        width: 48%;
+        height: 600px;
+        padding: 5em 0;
+    }
+</style>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
+<script>
+    var url=document.getElementById("pdfviewer").innerText;
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed(url,"#pdfviewer",options);
 </script>
 #end

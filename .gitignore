@@ -46,7 +46,6 @@ target/
 # "temporary" build files
 target/
 out/
-build/
  
 # other
 *.iws
