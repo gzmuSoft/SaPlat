@@ -62,6 +62,9 @@ public class PersonController extends BaseController {
     private CountryService countryService;
 
     @JbootrpcService
+    private OccupationService occupationService;
+
+    @JbootrpcService
     private EducationalService educationalService;
 
     @JbootrpcService
@@ -106,14 +109,22 @@ public class PersonController extends BaseController {
             politicalOpts.add(politicalStatus.getId().toString(),politicalStatus.getName());
         }
 
+        //加载职业
+        List<Occupation>  occupationStatuses= occupationService.findAll();
+        BaseStatus occupationOpts = new BaseStatus(){};
+        for(Occupation item : occupationStatuses){
+            occupationOpts.add(item.getId().toString(),item.getName());
+        }
+
         setAttr("politicalOpts", politicalOpts).
-        setAttr("educationalStatus", educationalStatus).
-        setAttr("contryStatus", contryStatus)
-                .setAttr("nationStatus", nationStatus)
-                .setAttr("person", person)
-                .setAttr("affectedGroup", affectedGroup)
-                .setAttr("user", loginUser)
-                .render("main.html");
+            setAttr("educationalStatus", educationalStatus).
+            setAttr("contryStatus", contryStatus).
+            setAttr("nationStatus", nationStatus).
+            setAttr("occupationOpts", occupationOpts).
+            setAttr("person", person).
+            setAttr("affectedGroup", affectedGroup).
+            setAttr("user", loginUser).
+            render("main.html");
     }
 
     /**
