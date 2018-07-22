@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.system;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -10,6 +12,8 @@ import io.jboot.admin.service.api.OrganizationService;
 import io.jboot.admin.service.entity.model.Data;
 import io.jboot.admin.service.entity.model.Organization;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.validator.system.OrganizationValidator;
+import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -63,6 +67,7 @@ public class OrganizationController extends BaseController {
      * 提交更新数据
      *
      */
+    @Before({POST.class, OrganizationValidator.class})
     public void postUpdate(){
         Organization organization = getBean(Organization.class,"organization");
         Organization oid = organizationService.findById(organization.getId());
