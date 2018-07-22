@@ -105,7 +105,7 @@
                             <label class="layui-form-label" for="affectedGroup.birthday"><em
                                     class="require-mark">*</em>出生日期</label>
                             <div class="layui-input-inline">
-                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday"
+                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday" value="#(affectedGroup.birthday)"
                                        lay-verify="date"
                                        placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input layui-disabled"
                                        disabled="disabled" required/>
@@ -209,9 +209,11 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="affectedGroup.occupation" name="affectedGroup.occupation"
-                                       value="#(affectedGroup.occupation)" class="layui-input layui-disabled"
-                                       disabled="disabled"/>
+                                <select id="affectedGroup.occupation" name="affectedGroup.occupation"
+                                        lay-verify="required">
+                                    <option value=""></option>
+                                    #statusOption(occupationOpts);
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
