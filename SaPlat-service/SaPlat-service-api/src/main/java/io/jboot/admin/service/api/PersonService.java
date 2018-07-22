@@ -45,6 +45,13 @@ public interface PersonService  {
 
 
     /**
+     * 分页查询系统个人群体信息
+     * @param person 个人
+     * @return 页
+     */
+    public Page<Person> findPage(Person person, int pageNumber, int pageSize);
+
+    /**
      * save model to database
      *
      * @param model

@@ -34,12 +34,18 @@
         <ul class="layui-nav my-header-user-nav" lay-filter="side-top-right">
 
             <li class="layui-nav-item" lay-unselect="">
-                <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
-                    <i class="layui-icon layui-icon-notice"></i>
-                    <!-- 如果有新消息，则显示小圆点 -->
-                    <!--<span class="layui-badge-dot"></span>-->
+
+                <!--href="javascript:;" href-url="/system/notification/index"-->
+                <a  href="javascript:" href-url="/system/notification/index" class="layui-btn" layadmin-event="message" lay-text="消息中心">
+                <i class="layui-icon layui-icon-notice"></i><span id="dot" class=""></span>
                 </a>
+                <div id="login" style="z-index:1000;position:absolute;left:10%;top:10%"></div>
+                <!--<span id="dot" class="layui-badge-dot"></span>-->
+
+                <!-- 如果有新消息，则显示小圆点 -->
+
             </li>
+
 
             <li class="layui-nav-item">
                 <a class="name" href="javascript:;"><i class="layui-icon">&#xe629;</i>主题</a>
@@ -124,7 +130,7 @@
         // 操作对象
         var layer       = layui.layer
             ,vipNav     = layui.vip_nav
-            ,$          = layui.jquery;
+            ,$          = layui.jquery
 
         // 顶部左侧菜单生成 [请求地址,过滤ID,是否展开,携带参数]
         vipNav.top_left('#(ctxPath)/system/res/menuTop','side-top-left',false);
@@ -132,6 +138,20 @@
         // you code ...
 
 
+        var intervalId = setInterval(function () {
+            $.post("#(ctxPath)/message",function (res) {
+                if (res['sta']){
+                    if (!$("#dot").hasClass("layui-badge-dot")){
+                        $("#dot").addClass("layui-badge-dot");
+                    }
+                }else{
+                    if ($("#dot").hasClass("layui-badge-dot")){
+                        $("#dot").removeClass("layui-badge-dot");
+                        console.log(res);
+                    }
+                }
+            });
+        }, 1500);
     });
 </script>
 </body>
