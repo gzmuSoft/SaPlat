@@ -81,6 +81,8 @@ public class ProjectAuthController extends BaseController {
         for (Role role : roleList) {
             roleStatus.add(role.getId().toString(), role.getName());
         }
+
+        
         setAttr("roleStatus", roleStatus).render("verifyIndex.html");
     }
 

@@ -55,6 +55,21 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label" for="upload1"><em class="require-mark">*</em>维稳办备案文件照片</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload1">
+                        <div class="layui-upload1">
+                            <button type="button" class="layui-btn" name="upload1" id="upload1"><i
+                                    class="layui-icon"></i>上传文件
+                            </button>
+                            <label class="layui-hide" for="facAgency.regDocsFilePath"></label>
+                            <input type="text" class="layui-hide" name="facAgency.regDocsFilePath" id="facAgency.regDocsFilePath"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label" for="facAgency.address">公司地址</label>
                 <div class="layui-input-inline">
                     <input type="text" id="facAgency.address" name="facAgency.address"
@@ -129,9 +144,9 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="upload1"><em class="require-mark">*</em>法人身份证照片</label>
                 <div class="layui-input-block">
-                    <div class="layui-upload1">
-                        <div class="layui-upload1">
-                            <button type="button" class="layui-btn" name="upload1" id="upload1"><i
+                    <div class="layui-upload2">
+                        <div class="layui-upload2">
+                            <button type="button" class="layui-btn" name="upload2" id="upload2"><i
                                     class="layui-icon"></i>上传文件
                             </button>
                             <label class="layui-hide" for="facAgency.pictrue"></label>
@@ -154,14 +169,6 @@
                 <div class="layui-input-inline">
                     <input type="text" id="facAgency.website" name="facAgency.website"
                            value="#(facAgency.website)" class="layui-input" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.coordinate">地址坐标</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="facAgency.coordinate" name="facAgency.coordinate"
-                           value="#(facAgency.coordinate)" class="layui-input" required/>
                 </div>
             </div>
 

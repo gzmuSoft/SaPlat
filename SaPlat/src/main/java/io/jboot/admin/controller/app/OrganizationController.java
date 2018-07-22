@@ -199,10 +199,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void managementProve() {
+        User loginUser = AuthUtils.getLoginUser();
         Management model = getBean(Management.class, "management");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Management name = managementService.findByName(model.getName());
         Auth auth;
@@ -269,10 +271,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void enterpriseProve() {
+        User loginUser = AuthUtils.getLoginUser();
         Enterprise model = getBean(Enterprise.class, "enterprise");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Enterprise name = enterpriseService.findByName(model.getName());
         Auth auth;
@@ -339,10 +343,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void facAgencyProve() {
+        User loginUser = AuthUtils.getLoginUser();
         FacAgency model = getBean(FacAgency.class, "facAgency");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         FacAgency name = facAgencyService.findByName(model.getName());
         Auth auth;
@@ -410,10 +416,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void profGroupProve() {
+        User loginUser = AuthUtils.getLoginUser();
         ProfGroup model = getBean(ProfGroup.class, "profGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         ProfGroup name = profGroupService.findByName(model.getName());
         Auth auth;
@@ -480,11 +488,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void reviewGroupProve() {
+        User loginUser = AuthUtils.getLoginUser();
         ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        model.setIsEnable(true);
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         ReviewGroup name = reviewGroupService.findByName(model.getName());
         Auth auth;

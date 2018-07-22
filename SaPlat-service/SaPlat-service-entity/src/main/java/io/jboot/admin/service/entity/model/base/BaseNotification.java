@@ -9,124 +9,124 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseNotification<M extends BaseNotification<M>> extends JbootModel<M> implements IBean {
 
-	public void setId(java.lang.Long id) {
-		set("id", id);
-	}
-	
-	public java.lang.Long getId() {
-		return getLong("id");
-	}
+    public void setId(java.lang.Long id) {
+        set("id", id);
+    }
 
-	public void setName(java.lang.String name) {
-		set("name", name);
-	}
-	
-	public java.lang.String getName() {
-		return getStr("name");
-	}
+    public java.lang.Long getId() {
+        return getLong("id");
+    }
 
-	public void setSpell(java.lang.String spell) {
-		set("spell", spell);
-	}
-	
-	public java.lang.String getSpell() {
-		return getStr("spell");
-	}
+    public void setName(java.lang.String name) {
+        set("name", name);
+    }
 
-	public void setSource(java.lang.String source) {
-		set("source", source);
-	}
-	
-	public java.lang.String getSource() {
-		return getStr("source");
-	}
+    public java.lang.String getName() {
+        return getStr("name");
+    }
 
-	public void setContent(java.lang.String content) {
-		set("content", content);
-	}
-	
-	public java.lang.String getContent() {
-		return getStr("content");
-	}
+    public void setSpell(java.lang.String spell) {
+        set("spell", spell);
+    }
 
-	public void setRecModule(java.lang.String recModule) {
-		set("recModule", recModule);
-	}
-	
-	public java.lang.String getRecModule() {
-		return getStr("recModule");
-	}
+    public java.lang.String getSpell() {
+        return getStr("spell");
+    }
 
-	public void setReceiverID(java.lang.Integer receiverID) {
-		set("receiverID", receiverID);
-	}
-	
-	public java.lang.Integer getReceiverID() {
-		return getInt("receiverID");
-	}
+    public void setSource(java.lang.String source) {
+        set("source", source);
+    }
 
-	public void setCreateUserID(java.lang.Long createUserID) {
-		set("createUserID", createUserID);
-	}
-	
-	public java.lang.Long getCreateUserID() {
-		return getLong("createUserID");
-	}
+    public java.lang.String getSource() {
+        return getStr("source");
+    }
 
-	public void setCreateTime(java.util.Date createTime) {
-		set("createTime", createTime);
-	}
-	
-	public java.util.Date getCreateTime() {
-		return get("createTime");
-	}
+    public void setContent(java.lang.String content) {
+        set("content", content);
+    }
 
-	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
-		set("lastUpdateUserID", lastUpdateUserID);
-	}
-	
-	public java.lang.Long getLastUpdateUserID() {
-		return getLong("lastUpdateUserID");
-	}
+    public java.lang.String getContent() {
+        return getStr("content");
+    }
 
-	public void setLastAccessTime(java.util.Date lastAccessTime) {
-		set("lastAccessTime", lastAccessTime);
-	}
-	
-	public java.util.Date getLastAccessTime() {
-		return get("lastAccessTime");
-	}
+    public void setRecModule(java.lang.String recModule) {
+        set("recModule", recModule);
+    }
 
-	public void setSort(java.lang.Integer sort) {
-		set("sort", sort);
-	}
-	
-	public java.lang.Integer getSort() {
-		return getInt("sort");
-	}
+    public java.lang.String getRecModule() {
+        return getStr("recModule");
+    }
 
-	public void setRemark(java.lang.String remark) {
-		set("remark", remark);
-	}
-	
-	public java.lang.String getRemark() {
-		return getStr("remark");
-	}
+    public void setReceiverID(java.lang.Integer receiverID) {
+        set("receiverID", receiverID);
+    }
 
-	public void setIsEnable(java.lang.Boolean isEnable) {
-		set("isEnable", isEnable);
-	}
-	
-	public java.lang.Boolean getIsEnable() {
-		return get("isEnable");
-	}
+    public java.lang.Integer getReceiverID() {
+        return getInt("receiverID");
+    }
 
-	public void setStatus(java.lang.Integer status) {
-		set("status", status);
-	}
-	
-	public java.lang.Integer getStatus() {
-		return getInt("status");
-	}
+    public void setCreateUserID(java.lang.Long createUserID) {
+        set("createUserID", createUserID);
+    }
+
+    public java.lang.Long getCreateUserID() {
+        return getLong("createUserID");
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        set("createTime", createTime);
+    }
+
+    public java.util.Date getCreateTime() {
+        return get("createTime");
+    }
+
+    public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+        set("lastUpdateUserID", lastUpdateUserID);
+    }
+
+    public java.lang.Long getLastUpdateUserID() {
+        return getLong("lastUpdateUserID");
+    }
+
+    public void setLastAccessTime(java.util.Date lastAccessTime) {
+        set("lastAccessTime", lastAccessTime);
+    }
+
+    public java.util.Date getLastAccessTime() {
+        return get("lastAccessTime");
+    }
+
+    public void setSort(java.lang.Integer sort) {
+        set("sort", sort);
+    }
+
+    public java.lang.Integer getSort() {
+        return getInt("sort");
+    }
+
+    public void setRemark(java.lang.String remark) {
+        set("remark", remark);
+    }
+
+    public java.lang.String getRemark() {
+        return getStr("remark");
+    }
+
+    public void setIsEnable(java.lang.Boolean isEnable) {
+        set("isEnable", isEnable);
+    }
+
+    public java.lang.Boolean getIsEnable() {
+        return get("isEnable");
+    }
+
+    public void setStatus(java.lang.Integer status) {
+        set("status", status);
+    }
+
+    public java.lang.Integer getStatus() {
+        return getInt("status");
+    }
 
 }

@@ -39,6 +39,16 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private AuthProjectService authProjectService;
 
+    @JbootrpcService
+    private FacAgencyService facAgencyService;
+
+    @JbootrpcService
+    private ProjectUndertakeService projectUndertakeService;
+
+    @JbootrpcService
+    private UserService userService;
+
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -107,6 +117,7 @@ public class ProjectController extends BaseController {
         project.setUserId(loginUser.getId());
         project.setCreateUserID(loginUser.getId());
         project.setLastUpdateUserID(loginUser.getId());
+        project.setIsPublic(false);
 
         LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
         leaderGroup.setCreateTime(new Date());
@@ -184,10 +195,10 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 通往项目管理界面-已审核
+     * 通往项目管理界面-已审核-成功
      */
-    public void toVerfed() {
-        render("verfed.html");
+    public void toVerfedSuccess() {
+        render("verfedSuccess.html");
     }
 
     /**
@@ -202,7 +213,17 @@ public class ProjectController extends BaseController {
         project.setStatus(ProjectStatus.IS_VERIFY);
         project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            page.getList().get(i).setIsReceive(projectUndertakeService.findIsReceive(page.getList().get(i).getId()));
+        }
         renderJson(new DataTable<Project>(page));
+    }
+
+    /**
+     * 通往项目管理界面-已审核-成功
+     */
+    public void toVerfedDefeat() {
+        render("verfedDefeat.html");
     }
 
     /**
@@ -267,4 +288,105 @@ public class ProjectController extends BaseController {
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
+
+    /**
+     * 项目公开-填写日期
+     */
+    @NotNullPara({"id"})
+    public void isPublicMessage() {
+        Long id = getParaToLong("id");
+        setAttr("id", id).render("public.html");
+    }
+
+    /**
+     * 项目公开
+     */
+    @NotNullPara({"id"})
+    public void isPublic() {
+        Long id = getParaToLong("id");
+        Project model = projectService.findById(id);
+        if (model != null) {
+            model.setPublicTime(getParaToDate("publicTime"));
+            model.setEndTime(getParaToDate("endTime"));
+            model.setIsPublic(true);
+        }
+        if (projectService.update(model)) {
+            renderJson(RestResult.buildSuccess("项目公开成功"));
+        } else {
+            renderJson(RestResult.buildError("项目公开失败"));
+            throw new BusinessException("项目公开失败");
+        }
+    }
+
+    /**
+     * 邀请介入
+     */
+    @NotNullPara({"id", "projectId"})
+    public void invite() {
+        User user = AuthUtils.getLoginUser();
+        Notification notification = new Notification();
+        notification.setName("项目邀请通知");
+        notification.setSource("/app/project/invite");
+        notification.setContent("您好, " + user.getName() + " 邀请您介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的评估，请及时处理！");
+        notification.setReceiverID(userService.findByUserIdAndUserSource(facAgencyService.findById(getParaToLong("id")).getOrgID(), 1L).getId().intValue());
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(userService.findByUserIdAndUserSource(facAgencyService.findById(getParaToLong("id")).getOrgID(), 1L).getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());
+        projectUndertake.setCreateUserID(user.getId());
+        projectUndertake.setProjectID(getParaToLong("projectId"));
+        projectUndertake.setFacAgencyID(getParaToLong("id"));
+        projectUndertake.setApplyOrInvite(true);
+        projectUndertake.setStatus(0);
+        projectUndertake.setCreateTime(new Date());
+        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndTime());
+        projectUndertake.setLastAccessTime(new Date());
+        projectUndertake.setLastUpdateUserID(user.getId());
+        projectUndertake.setIsEnable(true);
+        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
+            renderJson(RestResult.buildError("邀请失败"));
+            throw new BusinessException("邀请失败");
+        }
+
+
+    }
+
+    /**
+     * 选择邀请的服务机构
+     */
+    @NotNullPara({"id"})
+    public void inviteChoose() {
+        Long id = getParaToLong("id");
+        setAttr("id", id).render("invite.html");
+    }
+
+    /**
+     * 查看服务机构详细信息
+     */
+    @NotNullPara({"id"})
+    public void seeFacAgency() {
+        FacAgency facAgency = facAgencyService.findById(getParaToLong("id"));
+        setAttr("facAgency", facAgency).render("facAgency.html");
+    }
+
+    /**
+     * 渲染服务机构表格数据
+     */
+    @NotNullPara({"id"})
+    public void facAgencyTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Page<FacAgency> page = facAgencyService.findPage(pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            page.getList().get(i).setIsInvite(projectUndertakeService.findIsInvite(page.getList().get(i).getId(), getParaToLong("id")));
+        }
+        renderJson(new DataTable<FacAgency>(page));
+    }
+
+
 }
