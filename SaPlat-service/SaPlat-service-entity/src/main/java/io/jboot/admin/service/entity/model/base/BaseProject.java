@@ -20,10 +20,10 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 	public void setName(java.lang.String name) {
 		set("name", name);
 	}
-
-    public java.lang.String getName() {
-        return getStr("name");
-    }
+	
+	public java.lang.String getName() {
+		return getStr("name");
+	}
 
 	public void setSpell(java.lang.String spell) {
 		set("spell", spell);

@@ -18,9 +18,6 @@ public class PersonRegisterValidator extends JsonValidator {
         if (!c.getPara("user.pwd").equals(c.getPara("rePwd"))){
             addError("两次密码输入不一致");
         }
-        if (Integer.parseInt(c.getPara("person.age")) <= 0){
-            addError("年龄不能小于等于0");
-        }
         validateMobile("person.phone","电话号码格式不正确");
         validateEmail("user.email","邮箱格式不正确");
     }
