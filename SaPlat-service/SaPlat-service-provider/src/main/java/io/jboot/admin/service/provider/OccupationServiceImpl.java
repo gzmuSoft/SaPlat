@@ -11,11 +11,30 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
 @JbootrpcService
 public class OccupationServiceImpl extends JbootServiceBase<Occupation> implements OccupationService {
+
+    /**
+     * find all model
+     * @param model 职业
+     * @return all <Occupation>
+     */
+    public List<Occupation> findAll(Occupation model)
+    {
+        Columns columns = Columns.create();
+        if (StrKit.notBlank(model.getName())){
+            columns.like("name", "%" + model.getName()+"%");
+        }
+        if (StrKit.notNull(model.getIsEnable())){
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        return DAO.findListByColumns(columns);
+    }
+
     @Override
     public Page<Occupation> findPage(Occupation model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();

@@ -25,14 +25,21 @@ public interface OccupationService  {
     public List<Occupation> findAll();
 
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
+     * find all model
+     * @param model 职业
+     * @return all <Occupation>
+     */
+    public List<Occupation> findAll(Occupation model);
+
+    /**
+     * 分页查询 职业 信息
+     * @param model 职业
      * @return 页
      */
     public Page<Occupation> findPage(Occupation model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 项目阶段 信息
+     * 根据名称查询 职业 信息
      * @param name
      * @return
      */
