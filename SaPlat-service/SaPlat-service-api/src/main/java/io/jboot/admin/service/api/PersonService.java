@@ -45,7 +45,7 @@ public interface PersonService  {
 
 
     /**
-     * 分页查询系统个人群体信息
+     * 分页查询系统个人群体信息：其中的if是用来做查询的，不满足即不查询，返回全部数据
      * @param person 个人
      * @return 页
      */
@@ -58,14 +58,6 @@ public interface PersonService  {
      * @return
      */
     public boolean save(Person model);
-
-
-    /*
-    *其中的if是用来做查询的
-    * 不满足即不查询
-    * 返回全部数据
-    */
-    Page<Person> findPage(Person person, int pageNumber, int pageSize);
 
     /**
      * 保存个人群体并创建用户

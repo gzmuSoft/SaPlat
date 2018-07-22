@@ -10,4 +10,6 @@ public class RegexKey {
     public final static String MOBILE = "^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\\d{8})$";
 
     public final static String EMAIL = "\\w+@(\\w+.)+[a-z]{2,3}";
+
+    public final static String OgCode="^(([0-9]{8})-[0-9]{1})$";
 }

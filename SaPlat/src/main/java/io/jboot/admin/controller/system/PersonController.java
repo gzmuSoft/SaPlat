@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.system;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -9,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.status.system.PersonStatus;
+import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -59,6 +62,7 @@ public class PersonController extends BaseController {
     /**
      * 修改提交
      */
+    @Before({POST.class, PersonValidator.class})
     public void postUpdate() {
         Person person = getBean(Person.class, "person");
         Person byId = personService.findById(person.getId());
