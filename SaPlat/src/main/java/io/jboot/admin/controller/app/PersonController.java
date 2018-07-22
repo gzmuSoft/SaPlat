@@ -3,6 +3,7 @@ package io.jboot.admin.controller.app;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
@@ -54,6 +55,23 @@ public class PersonController extends BaseController {
     @JbootrpcService
     private FilesService filesService;
 
+    @JbootrpcService
+    private NationService nationService;
+
+    @JbootrpcService
+    private CountryService countryService;
+
+    @JbootrpcService
+    private OccupationService occupationService;
+
+    @JbootrpcService
+    private EducationalService educationalService;
+
+    @JbootrpcService
+    private PoliticalStatusService politicalStatusService;
+
+    @JbootrpcService
+    private PostService postService;
     /**
      * 初始化
      */
@@ -64,10 +82,59 @@ public class PersonController extends BaseController {
         if (affectedGroup == null) {
             affectedGroup = new AffectedGroup();
         }
-        setAttr("person", person)
-                .setAttr("affectedGroup", affectedGroup)
-                .setAttr("user", loginUser)
-                .render("main.html");
+
+        //加载民族
+        List<Nation> nations = nationService.findAll();
+        BaseStatus nationStatus = new BaseStatus(){};
+        for(Nation nation : nations){
+            nationStatus.add(nation.getId().toString(),nation.getName());
+        }
+
+        //加载国籍
+        List<Country>  contries= countryService.findAll();
+        BaseStatus contryStatus = new BaseStatus(){};
+        for(Country contry : contries){
+            contryStatus.add(contry.getId().toString(),contry.getName());
+        }
+
+        //加载学历
+        List<Educational>  educationals= educationalService.findAll();
+        BaseStatus educationalStatus = new BaseStatus(){};
+        for(Educational educational : educationals){
+            educationalStatus.add(educational.getId().toString(),educational.getName());
+        }
+
+        //加载政治面貌
+        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll();
+        BaseStatus politicalOpts = new BaseStatus(){};
+        for(PoliticalStatus politicalStatus : politicalStatuses){
+            politicalOpts.add(politicalStatus.getId().toString(),politicalStatus.getName());
+        }
+
+        //加载职业
+        List<Occupation>  occupationStatuses= occupationService.findAll();
+        BaseStatus occupationOpts = new BaseStatus(){};
+        for(Occupation item : occupationStatuses){
+            occupationOpts.add(item.getId().toString(),item.getName());
+        }
+
+        //加载职务
+        List<Post> posts = postService.findAll();
+        BaseStatus postStatus = new BaseStatus(){};
+        for(Post post : posts){
+            postStatus.add(post.getId().toString(),post.getName());
+        }
+
+        setAttr("politicalOpts", politicalOpts).
+            setAttr("educationalStatus", educationalStatus).
+            setAttr("contryStatus", contryStatus).
+            setAttr("nationStatus", nationStatus).
+            setAttr("occupationOpts", occupationOpts).
+            setAttr("person", person).
+            setAttr("affectedGroup", affectedGroup).
+            setAttr("user", loginUser).
+                setAttr("postStatus", postStatus).
+            render("main.html");
     }
 
     /**

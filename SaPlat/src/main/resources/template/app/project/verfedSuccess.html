@@ -1,0 +1,126 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define content()
+<div class="layui-row">
+    <div class="layui-btn-group">
+
+        #shiroHasPermission('/app/project/verfedSuccess')
+        <button id="success" class="layui-btn layui-btn-small">审核通过的项目</button>
+        #end
+
+        #shiroHasPermission('/app/project/verfedDefeat')
+        <button id="defeat" class="layui-btn layui-btn-small">审核未通过的项目</button>
+        #end
+    </div>
+    <table id="dateTable" lay-filter="dateTable"></table>
+</div>
+
+<script type="text/html" id="barOption-publicStatus">
+    #shiroHasPermission('/app/project/verfedSuccess')
+    #[[
+    {{#  if(!d.isPublic && d.assessmentMode == '委评'&&!d.isReceive){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="public">发布</a>
+
+    #[[
+    {{# } else if(d.isPublic && d.assessmentMode == '委评'&&!d.isReceive){ }}
+    ]]#
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">已发布</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="invite">邀请介入</a>
+
+    #[[
+    {{# } else if(d.assessmentMode == '自评'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">无需发布</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="invite">邀请介入</a>
+    #[[
+    {{# } else if((d.isPublic && d.assessmentMode == '委评'&&d.isReceive)||(d.assessmentMode == '自评'&&d.isReceive)){ }}
+    ]]#
+    <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">已委托成功</a>
+    #[[
+    {{#  } }}
+    ]]#
+    #end
+</script>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/project/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    #end
+</script>
+#end
+
+#define js()
+<script type="text/javascript">
+
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table;
+
+        // 审核通过的表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'name', title: '项目名称', width: 150}
+                , {field: 'roleName', title: '机构类型', width: 100}
+                , {field: 'amount', title: '预计金额', width: 100, sort: true}
+                , {field: 'brief', title: '简介', width: 250}
+                , {field: 'assessmentMode', title: '评估方式', width: 100}
+                , {field: 'remark', title: '备注', width: 150}
+                , {fixed: 'right', title: '发布状态', width: 170, align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/project/verfedSuccess'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+
+        $("#success").click(function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/project/verfedSuccess'
+            });
+        });
+
+        $("#defeat").click(function () {
+            window.location.href = '#(ctxPath)/app/project/toVerfedDefeat';
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'see') {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+                });
+            } else if (obj.event === 'public') {
+                pop_show('公开项目', '#(ctxPath)/app/project/isPublicMessage?id=' + data.id, '', '', function () {
+                    window.location.reload();
+                });
+            } else if (obj.event === 'invite') {
+                pop_show('邀请介入', '#(ctxPath)/app/project/inviteChoose?id=' + data.id, '', '', function () {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+</script>
+#end
