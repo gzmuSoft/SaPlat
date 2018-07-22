@@ -70,6 +70,8 @@ public class PersonController extends BaseController {
     @JbootrpcService
     private PoliticalStatusService politicalStatusService;
 
+    @JbootrpcService
+    private PostService postService;
     /**
      * 初始化
      */
@@ -116,6 +118,13 @@ public class PersonController extends BaseController {
             occupationOpts.add(item.getId().toString(),item.getName());
         }
 
+        //加载职务
+        List<Post> posts = postService.findAll();
+        BaseStatus postStatus = new BaseStatus(){};
+        for(Post post : posts){
+            postStatus.add(post.getId().toString(),post.getName());
+        }
+
         setAttr("politicalOpts", politicalOpts).
             setAttr("educationalStatus", educationalStatus).
             setAttr("contryStatus", contryStatus).
@@ -124,6 +133,7 @@ public class PersonController extends BaseController {
             setAttr("person", person).
             setAttr("affectedGroup", affectedGroup).
             setAttr("user", loginUser).
+                setAttr("postStatus", postStatus).
             render("main.html");
     }
 
