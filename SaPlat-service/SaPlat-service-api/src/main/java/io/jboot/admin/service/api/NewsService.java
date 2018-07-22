@@ -17,6 +17,8 @@ public interface NewsService  {
     public News findById(Object id);
 
 
+
+    public Page<News> findPage(News model, int pageNumber, int pageSize);
     /**
      * find all model
      *
@@ -85,4 +87,5 @@ public interface NewsService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }
