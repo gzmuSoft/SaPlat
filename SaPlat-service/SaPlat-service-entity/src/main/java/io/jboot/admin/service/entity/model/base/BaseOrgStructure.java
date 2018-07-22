@@ -9,108 +9,108 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseOrgStructure<M extends BaseOrgStructure<M>> extends JbootModel<M> implements IBean {
 
-    public void setId(java.lang.Long id) {
-        set("id", id);
-    }
+	public void setId(java.lang.Long id) {
+		set("id", id);
+	}
+	
+	public java.lang.Long getId() {
+		return getLong("id");
+	}
 
-    public java.lang.Long getId() {
-        return getLong("id");
-    }
+	public void setName(java.lang.String name) {
+		set("name", name);
+	}
+	
+	public java.lang.String getName() {
+		return getStr("name");
+	}
 
-    public void setName(java.lang.String name) {
-        set("name", name);
-    }
+	public void setSpell(java.lang.String spell) {
+		set("spell", spell);
+	}
+	
+	public java.lang.String getSpell() {
+		return getStr("spell");
+	}
 
-    public java.lang.String getName() {
-        return getStr("name");
-    }
+	public void setOrgType(java.lang.Integer orgType) {
+		set("orgType", orgType);
+	}
+	
+	public java.lang.Integer getOrgType() {
+		return getInt("orgType");
+	}
 
-    public void setSpell(java.lang.String spell) {
-        set("spell", spell);
-    }
+	public void setOrgID(java.lang.Long orgID) {
+		set("orgID", orgID);
+	}
+	
+	public java.lang.Long getOrgID() {
+		return getLong("orgID");
+	}
 
-    public java.lang.String getSpell() {
-        return getStr("spell");
-    }
+	public void setParentID(java.lang.Long parentID) {
+		set("parentID", parentID);
+	}
+	
+	public java.lang.Long getParentID() {
+		return getLong("parentID");
+	}
 
-    public void setOrgType(java.lang.Integer orgType) {
-        set("orgType", orgType);
-    }
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
+	}
 
-    public java.lang.Integer getOrgType() {
-        return getInt("orgType");
-    }
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+	
+	public java.util.Date getCreateTime() {
+		return get("createTime");
+	}
 
-    public void setOrgID(java.lang.Long orgID) {
-        set("orgID", orgID);
-    }
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
+	}
+	
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
+	}
 
-    public java.lang.Long getOrgID() {
-        return getLong("orgID");
-    }
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
+	}
+	
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
+	}
 
-    public void setParentID(java.lang.Long parentID) {
-        set("parentID", parentID);
-    }
+	public void setSort(java.lang.Integer sort) {
+		set("sort", sort);
+	}
+	
+	public java.lang.Integer getSort() {
+		return getInt("sort");
+	}
 
-    public java.lang.Long getParentID() {
-        return getLong("parentID");
-    }
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
 
-    public void setCreateUserID(java.lang.Long createUserID) {
-        set("createUserID", createUserID);
-    }
-
-    public java.lang.Long getCreateUserID() {
-        return getLong("createUserID");
-    }
-
-    public void setCreateTime(java.util.Date createTime) {
-        set("createTime", createTime);
-    }
-
-    public java.util.Date getCreateTime() {
-        return get("createTime");
-    }
-
-    public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
-        set("lastUpdateUserID", lastUpdateUserID);
-    }
-
-    public java.lang.Long getLastUpdateUserID() {
-        return getLong("lastUpdateUserID");
-    }
-
-    public void setLastAccessTime(java.util.Date lastAccessTime) {
-        set("lastAccessTime", lastAccessTime);
-    }
-
-    public java.util.Date getLastAccessTime() {
-        return get("lastAccessTime");
-    }
-
-    public void setSort(java.lang.Integer sort) {
-        set("sort", sort);
-    }
-
-    public java.lang.Integer getSort() {
-        return getInt("sort");
-    }
-
-    public void setRemark(java.lang.String remark) {
-        set("remark", remark);
-    }
-
-    public java.lang.String getRemark() {
-        return getStr("remark");
-    }
-
-    public void setIsEnable(java.lang.Integer isEnable) {
-        set("isEnable", isEnable);
-    }
-
-    public java.lang.Integer getIsEnable() {
-        return getInt("isEnable");
-    }
+	public void setIsEnable(java.lang.Integer isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
+	}
 
 }
