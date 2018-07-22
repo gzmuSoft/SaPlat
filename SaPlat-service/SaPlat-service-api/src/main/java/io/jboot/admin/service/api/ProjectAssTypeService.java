@@ -24,6 +24,13 @@ public interface ProjectAssTypeService  {
      */
     public List<ProjectAssType> findAll();
 
+    /**
+     * find all model
+     * @param model 项目评估类型
+     * @return all <ProjectAssType>
+     */
+    public List<ProjectAssType> findAll(ProjectAssType model);
+
 
     /**
      * delete model by primary key
