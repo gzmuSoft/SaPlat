@@ -90,7 +90,7 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("您已经申请过了，请不要重复申请！");
         }
         projectUndertake.setName(project.getName());
-        projectUndertake.setDeadTime(project.getEndTime());
+        projectUndertake.setDeadTime(project.getEndPublicTime());
         projectUndertake.setApplyOrInvite(false);
         projectUndertake.setStatus(0);
         projectUndertake.setReply(null);
