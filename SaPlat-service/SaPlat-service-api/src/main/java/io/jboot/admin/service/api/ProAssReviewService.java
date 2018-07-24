@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Post;
+import io.jboot.admin.service.entity.model.ProAssReview;
 
 import java.util.List;
 
-public interface PostService  {
+public interface ProAssReviewService  {
 
     /**
      * find model by primary key
@@ -14,43 +14,46 @@ public interface PostService  {
      * @param id
      * @return
      */
-    public Post findById(Object id);
+    public ProAssReview findById(Object id);
+
 
     /**
      * find all model
      *
-     * @return all <Post
+     * @return all <ProAssReview
      */
-    public List<Post> findAll();
+    public List<ProAssReview> findAll();
+
 
     /**
      * find all model
-     * @param model 职务
-     * @return all <Post>
+     * @param model 项目审查
+     * @return all <ProAssReview>
      */
-    public List<Post> findAll(Post model);
+    public List<ProAssReview> findAll(ProAssReview model);
 
     /**
-     * 分页查询 职务 信息
-     * @param model 职务
+     * 分页查询 项目审查 信息
+     * @param model 项目审查
      * @return 页
      */
-    public Page<Post> findPage(Post model, int pageNumber, int pageSize);
+    public Page<ProAssReview> findPage(ProAssReview model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 职务 信息
+     * 根据名称查询 项目审查 信息
      * @param name
      * @return
      */
-    public Post findByName(String name);
+    public ProAssReview findByName(String name);
 
 
     /**
-     * 项目阶段 是否存在
+     * 项目审查 是否存在
      * @param name
      * @return 存在返回-true，否则返回false
      */
     public boolean isExisted(String name);
+
 
     /**
      * delete model by primary key
@@ -67,7 +70,7 @@ public interface PostService  {
      * @param model
      * @return
      */
-    public boolean delete(Post model);
+    public boolean delete(ProAssReview model);
 
 
     /**
@@ -76,7 +79,7 @@ public interface PostService  {
      * @param model
      * @return
      */
-    public boolean save(Post model);
+    public boolean save(ProAssReview model);
 
 
     /**
@@ -85,7 +88,7 @@ public interface PostService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Post model);
+    public boolean saveOrUpdate(ProAssReview model);
 
 
     /**
@@ -94,7 +97,7 @@ public interface PostService  {
      * @param model
      * @return
      */
-    public boolean update(Post model);
+    public boolean update(ProAssReview model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

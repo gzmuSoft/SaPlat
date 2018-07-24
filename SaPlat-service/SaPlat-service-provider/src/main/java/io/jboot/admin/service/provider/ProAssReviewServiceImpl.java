@@ -2,10 +2,9 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.PoliticalStatus;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.admin.service.api.PoliticalStatusService;
-import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.admin.service.api.ProAssReviewService;
+import io.jboot.admin.service.entity.model.ProAssReview;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
@@ -14,15 +13,13 @@ import java.util.List;
 
 @Bean
 @Singleton
-@JbootrpcService
-public class PoliticalStatusServiceImpl extends JbootServiceBase<PoliticalStatus> implements PoliticalStatusService {
-
+public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> implements ProAssReviewService {
     /**
      * find all model
-     * @param model 政治面貌
-     * @return all <PoliticalStatus>
+     * @param model 项目阶段
+     * @return all <ProAssReview>
      */
-    public List<PoliticalStatus> findAll(PoliticalStatus model)
+    public List<ProAssReview> findAll(ProAssReview model)
     {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())){
@@ -35,7 +32,7 @@ public class PoliticalStatusServiceImpl extends JbootServiceBase<PoliticalStatus
     }
 
     @Override
-    public Page<PoliticalStatus> findPage(PoliticalStatus model, int pageNumber, int pageSize) {
+    public Page<ProAssReview> findPage(ProAssReview model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())){
             columns.like("name", "%" + model.getName()+"%");
@@ -49,7 +46,7 @@ public class PoliticalStatusServiceImpl extends JbootServiceBase<PoliticalStatus
     }
 
     @Override
-    public PoliticalStatus findByName(String name) {
+    public ProAssReview findByName(String name) {
         return DAO.findFirstByColumn("name", name);
     }
 }

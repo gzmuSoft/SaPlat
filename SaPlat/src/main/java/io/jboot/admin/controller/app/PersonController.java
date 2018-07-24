@@ -2,6 +2,7 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -85,42 +86,54 @@ public class PersonController extends BaseController {
         }
 
         //加载民族
-        List<Nation> nations = nationService.findAll();
+        Nation nmodel = new Nation();
+        nmodel.setIsEnable(true);
+        List<Nation> nations = nationService.findAll(nmodel);
         BaseStatus nationStatus = new BaseStatus(){};
         for(Nation nation : nations){
             nationStatus.add(nation.getId().toString(),nation.getName());
         }
 
         //加载国籍
-        List<Country>  contries= countryService.findAll();
+        Country cmodel = new Country();
+        cmodel.setIsEnable(true);
+        List<Country>  contries= countryService.findAll(cmodel);
         BaseStatus contryStatus = new BaseStatus(){};
         for(Country contry : contries){
             contryStatus.add(contry.getId().toString(),contry.getName());
         }
 
         //加载学历
-        List<Educational>  educationals= educationalService.findAll();
+        Educational emodel = new Educational();
+        emodel.setIsEnable(true);
+        List<Educational>  educationals= educationalService.findAll(emodel);
         BaseStatus educationalStatus = new BaseStatus(){};
         for(Educational educational : educationals){
             educationalStatus.add(educational.getId().toString(),educational.getName());
         }
 
         //加载政治面貌
-        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll();
+        PoliticalStatus psmodel = new PoliticalStatus();
+        psmodel.setIsEnable(true);
+        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll(psmodel);
         BaseStatus politicalOpts = new BaseStatus(){};
         for(PoliticalStatus politicalStatus : politicalStatuses){
             politicalOpts.add(politicalStatus.getId().toString(),politicalStatus.getName());
         }
 
         //加载职业
-        List<Occupation>  occupationStatuses= occupationService.findAll();
+        Occupation omodel = new Occupation();
+        omodel.setIsEnable(true);
+        List<Occupation>  occupationStatuses= occupationService.findAll(omodel);
         BaseStatus occupationOpts = new BaseStatus(){};
         for(Occupation item : occupationStatuses){
             occupationOpts.add(item.getId().toString(),item.getName());
         }
 
         //加载职务
-        List<Post> posts = postService.findAll();
+        Post pmodel = new Post();
+        pmodel.setIsEnable(true);
+        List<Post> posts = postService.findAll(pmodel);
         BaseStatus postStatus = new BaseStatus(){};
         for(Post post : posts){
             postStatus.add(post.getId().toString(),post.getName());
