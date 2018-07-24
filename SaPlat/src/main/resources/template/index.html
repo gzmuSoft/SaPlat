@@ -133,28 +133,29 @@
 
         $("#msg").click(function () {
             pop_show('查看通知信息', '#(ctxPath)/view', '1000', '600', function () {
-
+                window.parent.location.reload();
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index)
             });
         });
-
-        var intervalId = setInterval(function () {
+        $(function () {
             $.post("#(ctxPath)/message",function (res) {
-                if (res != null){
-                    if (res['sta']){
-                        if (!$("#dot").hasClass("layui-badge-dot")){
+                if (res != null) {
+                    if (res['sta']) {
+                        if (!$("#dot").hasClass("layui-badge-dot")) {
                             $("#dot").addClass("layui-badge-dot");
                         }
-                    }else{
-                        if ($("#dot").hasClass("layui-badge-dot")){
+                    } else {
+                        if ($("#dot").hasClass("layui-badge-dot")) {
                             $("#dot").removeClass("layui-badge-dot");
                             console.log(res);
                         }
                     }
-                }else {
+                } else {
                     layer.msg("数据异常");
                 }
-            });
-        }, 1500);
+            })
+        });
     });
 </script>
 </body>
