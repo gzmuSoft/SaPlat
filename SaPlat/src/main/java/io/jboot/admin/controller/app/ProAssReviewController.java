@@ -8,11 +8,11 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.NationService;
-import io.jboot.admin.service.entity.model.Nation;
+import io.jboot.admin.service.api.ProAssReviewService;
+import io.jboot.admin.service.entity.model.ProAssReview;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.NationValidator;
+import io.jboot.admin.validator.app.ProAssReviewValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -26,18 +26,17 @@ import java.util.Date;
  * -----------------------------
  * @date 10:05 2018/7/2
  */
-@RequestMapping("/app/nation")
-public class NationController extends BaseController{
+@RequestMapping("/app/ass_review")
+public class ProAssReviewController extends BaseController{
 
     @JbootrpcService
-    private NationService nationService;
+    private ProAssReviewService proAssReviewService;
 
     /**
      * index
      */
     public void index() {
-        String pdfURL = "/upload/test.pdf";
-        setAttr("pdfURL",pdfURL).render("main.html");
+        render("main.html");
     }
     /**
      * res表格数据
@@ -46,12 +45,12 @@ public class NationController extends BaseController{
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
 
-        Nation model = new Nation();
+        ProAssReview model = new ProAssReview();
         model.setName(getPara("name"));
 
-        Page<Nation> page = nationService.findPage(model, pageNumber, pageSize);
+        Page<ProAssReview> page = proAssReviewService.findPage(model, pageNumber, pageSize);
 
-        renderJson(new DataTable<Nation>(page));
+        renderJson(new DataTable<ProAssReview>(page));
     }
 
     /**
@@ -59,7 +58,7 @@ public class NationController extends BaseController{
      */
     public void delete(){
         Long id = getParaToLong("id");
-        if (!nationService.deleteById(id)){
+        if (!proAssReviewService.deleteById(id)){
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -68,7 +67,7 @@ public class NationController extends BaseController{
     @NotNullPara({"id"})
     public void update(){
         Long id = getParaToLong("id");
-        Nation model = nationService.findById(id);
+        ProAssReview model = proAssReviewService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
@@ -76,42 +75,42 @@ public class NationController extends BaseController{
         render("add.html");
     }
 
-    @Before({POST.class, NationValidator.class})
+    @Before({POST.class, ProAssReviewValidator.class})
     public void postAdd(){
-        Nation model = getBean(Nation.class, "model");
-        if (nationService.isExisted(model.getName())){
-            throw new BusinessException("所指定的民族名称已存在");
+        ProAssReview model = getBean(ProAssReview.class, "model");
+        if (proAssReviewService.isExisted(model.getName())){
+            throw new BusinessException("所指定的项目阶段名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!nationService.save(model)){
+        if (!proAssReviewService.save(model)){
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
-    @Before({POST.class, NationValidator.class})
+    @Before({POST.class, ProAssReviewValidator.class})
     public void postUpdate(){
-        Nation model = getBean(Nation.class, "model");
-        Nation byId = nationService.findById(model.getId());
+        ProAssReview model = getBean(ProAssReview.class, "model");
+        ProAssReview byId = proAssReviewService.findById(model.getId());
         if (byId == null){
-            throw new BusinessException("所指定的民族名称不存在");
+            throw new BusinessException("所指定的项目阶段名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!nationService.update(model)){
+        if (!proAssReviewService.update(model)){
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
     /**
-     * 启用民族
+     * 启用项目阶段
      */
     @NotNullPara({"id"})
     public void use() {
         Long id = getParaToLong("id");
 
-        Nation model = nationService.findById(id);
+        ProAssReview model = proAssReviewService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -120,7 +119,7 @@ public class NationController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("启用对象");
 
-        if (!nationService.update(model)) {
+        if (!proAssReviewService.update(model)) {
             throw new BusinessException("启用失败");
         }
 
@@ -128,13 +127,13 @@ public class NationController extends BaseController{
     }
 
     /**
-     * 禁用民族
+     * 禁用项目阶段
      */
     @NotNullPara({"id"})
     public void unuse() {
         Long id = getParaToLong("id");
 
-        Nation model = nationService.findById(id);
+        ProAssReview model = proAssReviewService.findById(id);
         if (model == null) {
             throw new BusinessException("对象不存在");
         }
@@ -143,7 +142,7 @@ public class NationController extends BaseController{
         model.setLastAccessTime(new Date());
         model.setRemark("禁用对象");
 
-        if (!nationService.update(model)) {
+        if (!proAssReviewService.update(model)) {
             throw new BusinessException("禁用失败");
         }
 
