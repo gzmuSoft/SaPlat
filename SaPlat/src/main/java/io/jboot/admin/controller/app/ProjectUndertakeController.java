@@ -1,15 +1,16 @@
 package io.jboot.admin.controller.app;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.FacAgencyService;
-import io.jboot.admin.service.api.OrganizationService;
-import io.jboot.admin.service.api.ProjectService;
-import io.jboot.admin.service.api.ProjectUndertakeService;
+import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
@@ -18,7 +19,9 @@ import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @RequestMapping("/app/projectUndertake")
@@ -35,6 +38,18 @@ public class ProjectUndertakeController extends BaseController {
 
     @JbootrpcService
     private OrganizationService organizationService;
+
+    @JbootrpcService
+    private StructPersonLinkService structPersonLinkService;
+
+    @JbootrpcService
+    private PersonService personService;
+
+    @JbootrpcService
+    private OrgStructureService orgStructureService;
+
+    @JbootrpcService
+    private ImpTeamService impTeamService;
 
     /**
      * 跳转榜单页面
@@ -90,7 +105,7 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("您已经申请过了，请不要重复申请！");
         }
         projectUndertake.setName(project.getName());
-        projectUndertake.setDeadTime(project.getEndTime());
+        projectUndertake.setDeadTime(project.getEndPublicTime());
         projectUndertake.setApplyOrInvite(false);
         projectUndertake.setStatus(0);
         projectUndertake.setReply(null);
@@ -155,8 +170,8 @@ public class ProjectUndertakeController extends BaseController {
     public void invite() {
         Integer invite = getParaToInt("invite");
         Long id = getParaToLong("id");
-        if (invite == null || id == null|| (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
-                && !invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT)) )) {
+        if (invite == null || id == null || (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
+                && !invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT)))) {
             renderJson(RestResult.buildError("请求参数错误"));
             throw new BusinessException("请求参数错误");
         }
@@ -196,10 +211,112 @@ public class ProjectUndertakeController extends BaseController {
         notification.setIsEnable(true);
         notification.setStatus(0);
 
-        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake,notification)){
+        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
             renderJson(RestResult.buildError("请求失败，请重新尝试！"));
             throw new BusinessException("请求失败，请重新尝试！");
         }
         renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 去重
+     */
+    static String sub(String str) {
+        List list = new ArrayList();
+        StringBuffer sb = new StringBuffer(str);
+        int j = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (list.contains(str.charAt(i))) {
+                sb.deleteCharAt(i - j);
+                j++;
+            } else {
+                list.add(str.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 实施小组建立初始页面(自评)
+     */
+    public void toSelfProjectImpTeam() {
+        String string = "";
+        User user = AuthUtils.getLoginUser();
+        List<Project> projects = projectService.findAll();
+        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
+        List<Project> selfProjects = new ArrayList<>();
+        List<OrgStructure> orgStructures = new ArrayList<>();
+        //自评的所有项目
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i).getUserId() == user.getId() && projects.get(i).getAssessmentMode().equals("自评")) {
+                selfProjects.add(projects.get(i));
+            }
+        }
+        for (int i = 0; i < structPersonLinks.size(); i++) {
+            string += structPersonLinks.get(i).getStructID();
+        }
+        for (int i = 0; i < sub(string).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        }
+        setAttr("selfProjects", selfProjects).setAttr("orgStructures", orgStructures).render("selfProjectImpTeam.html");
+    }
+
+    /**
+     * 下拉框二级联动
+     */
+    @Before(GET.class)
+    public void persons() {
+        List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
+        List<Person> persons = new ArrayList<>();
+        for (int i = 0; i < structPersonLinks.size(); i++) {
+            persons.add(personService.findById(structPersonLinks.get(i).getPersonID()));
+        }
+        JSONObject json = new JSONObject();
+        json.put("persons", persons);
+        renderJson(json);
+    }
+
+
+    /**
+     * 实施小组建立初始页面(委评)
+     */
+    public void toOtherProjectImpTeam() {
+        String string = "";
+        List<ProjectUndertake> projectUndertakes = projectUndertakeService.findAll();
+        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
+        List<ProjectUndertake> otherProjects = new ArrayList<>();
+        List<OrgStructure> orgStructures = new ArrayList<>();
+        //委评且同意介入或同意邀请的项目
+        for (int i = 0; i < projectUndertakes.size(); i++) {
+            if (projectUndertakes.get(i).getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
+                otherProjects.add(projectUndertakes.get(i));
+            }
+        }
+        for (int i = 0; i < structPersonLinks.size(); i++) {
+            string += structPersonLinks.get(i).getStructID();
+        }
+        for (int i = 0; i < sub(string).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        }
+        setAttr("otherProjects", otherProjects).setAttr("orgStructures", orgStructures).render("otherProjectImpTeam.html");
+    }
+
+    /**
+     * 实施小组提交资料
+     */
+    @Before(POST.class)
+    public void ImpTeam() {
+        User loginUser = AuthUtils.getLoginUser();
+        ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
+        impTeam.setCreateTime(new Date());
+        impTeam.setLastAccessTime(new Date());
+        impTeam.setCreateUserID(loginUser.getId());
+        impTeam.setLastUpdateUserID(loginUser.getId());
+        if (impTeamService.saveOrUpdate(impTeam)) {
+            renderJson(RestResult.buildSuccess("立项成功"));
+        } else {
+            renderJson(RestResult.buildError("立项失败"));
+            throw new BusinessException("立项失败");
+        }
     }
 }
