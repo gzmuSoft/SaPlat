@@ -9,6 +9,7 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProAssReviewService;
+import io.jboot.admin.service.api.ResService;
 import io.jboot.admin.service.entity.model.ProAssReview;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
@@ -38,20 +39,19 @@ public class ProAssReviewController extends BaseController{
     public void index() {
         render("main.html");
     }
+
+
+    //渲染文件目录
+    @JbootrpcService
+    private ResService resService;
     /**
-     * res表格数据
+     * 系统资源资源树
      */
-    public void tableData() {
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-
-        ProAssReview model = new ProAssReview();
-        model.setName(getPara("name"));
-
-        Page<ProAssReview> page = proAssReviewService.findPage(model, pageNumber, pageSize);
-
-        renderJson(new DataTable<ProAssReview>(page));
+    public void resTree() {
+        renderJson(RestResult.buildSuccess(resService.findTreeOnUse()));
     }
+    //渲染文件目录
+
 
     /**
      * delete
