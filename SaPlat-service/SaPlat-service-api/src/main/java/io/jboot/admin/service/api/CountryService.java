@@ -25,6 +25,13 @@ public interface CountryService  {
     public List<Country> findAll();
 
     /**
+     * find all model
+     * @param model 国家
+     * @return all <Country>
+     */
+    public List<Country> findAll(Country model);
+
+    /**
      * 分页查询 项目阶段 信息
      * @param model 项目阶段
      * @return 页

@@ -16,7 +16,6 @@ public interface PostService  {
      */
     public Post findById(Object id);
 
-
     /**
      * find all model
      *
@@ -25,14 +24,21 @@ public interface PostService  {
     public List<Post> findAll();
 
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
+     * find all model
+     * @param model 职务
+     * @return all <Post>
+     */
+    public List<Post> findAll(Post model);
+
+    /**
+     * 分页查询 职务 信息
+     * @param model 职务
      * @return 页
      */
     public Page<Post> findPage(Post model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 项目阶段 信息
+     * 根据名称查询 职务 信息
      * @param name
      * @return
      */

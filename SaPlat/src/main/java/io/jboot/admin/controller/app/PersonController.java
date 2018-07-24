@@ -2,6 +2,7 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -17,6 +18,7 @@ import io.jboot.admin.validator.app.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.utils.StringUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,11 +64,16 @@ public class PersonController extends BaseController {
     private CountryService countryService;
 
     @JbootrpcService
+    private OccupationService occupationService;
+
+    @JbootrpcService
     private EducationalService educationalService;
 
     @JbootrpcService
     private PoliticalStatusService politicalStatusService;
 
+    @JbootrpcService
+    private PostService postService;
     /**
      * 初始化
      */
@@ -79,41 +86,69 @@ public class PersonController extends BaseController {
         }
 
         //加载民族
-        List<Nation> nations = nationService.findAll();
+        Nation nmodel = new Nation();
+        nmodel.setIsEnable(true);
+        List<Nation> nations = nationService.findAll(nmodel);
         BaseStatus nationStatus = new BaseStatus(){};
         for(Nation nation : nations){
             nationStatus.add(nation.getId().toString(),nation.getName());
         }
 
         //加载国籍
-        List<Country>  contries= countryService.findAll();
+        Country cmodel = new Country();
+        cmodel.setIsEnable(true);
+        List<Country>  contries= countryService.findAll(cmodel);
         BaseStatus contryStatus = new BaseStatus(){};
         for(Country contry : contries){
             contryStatus.add(contry.getId().toString(),contry.getName());
         }
 
         //加载学历
-        List<Educational>  educationals= educationalService.findAll();
+        Educational emodel = new Educational();
+        emodel.setIsEnable(true);
+        List<Educational>  educationals= educationalService.findAll(emodel);
         BaseStatus educationalStatus = new BaseStatus(){};
         for(Educational educational : educationals){
             educationalStatus.add(educational.getId().toString(),educational.getName());
         }
 
         //加载政治面貌
-        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll();
+        PoliticalStatus psmodel = new PoliticalStatus();
+        psmodel.setIsEnable(true);
+        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll(psmodel);
         BaseStatus politicalOpts = new BaseStatus(){};
         for(PoliticalStatus politicalStatus : politicalStatuses){
             politicalOpts.add(politicalStatus.getId().toString(),politicalStatus.getName());
         }
 
-        setAttr("politicalOpts", politicalOpts).
-        setAttr("educationalStatus", educationalStatus).
-        setAttr("contryStatus", contryStatus)
-                .setAttr("nationStatus", nationStatus)
-                .setAttr("person", person)
-                .setAttr("affectedGroup", affectedGroup)
-                .setAttr("user", loginUser)
-                .render("main.html");
+        //加载职业
+        Occupation omodel = new Occupation();
+        omodel.setIsEnable(true);
+        List<Occupation>  occupationStatuses= occupationService.findAll(omodel);
+        BaseStatus occupationOpts = new BaseStatus(){};
+        for(Occupation item : occupationStatuses){
+            occupationOpts.add(item.getId().toString(),item.getName());
+        }
+
+        //加载职务
+        Post pmodel = new Post();
+        pmodel.setIsEnable(true);
+        List<Post> posts = postService.findAll(pmodel);
+        BaseStatus postStatus = new BaseStatus(){};
+        for(Post post : posts){
+            postStatus.add(post.getId().toString(),post.getName());
+        }
+
+        setAttr("user", loginUser).
+                setAttr("person", person).
+                setAttr("affectedGroup", affectedGroup).
+                setAttr("politicalOpts", politicalOpts).
+                setAttr("educationalStatus", educationalStatus).
+                setAttr("contryStatus", contryStatus).
+                setAttr("nationStatus", nationStatus).
+                setAttr("occupationOpts", occupationOpts).
+                setAttr("postStatus", postStatus).
+            render("main.html");
     }
 
     /**
@@ -196,10 +231,10 @@ public class PersonController extends BaseController {
         loginUser.setEmail(getPara("user.email"));
         Person person = personService.findByUser(loginUser);
         person.setPhone(getPara("person.phone"));
-        person.setAge(Integer.parseInt(getPara("person.age")));
+        person.setAge(DateTime.now().getYear() - DateTime.parse(getPara("affectedGroup.birthday")).getYear());
         person.setAddr(getPara("person.addr"));
         AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
-        System.out.println(affectedGroup.toJson());
+
         affectedGroup.setName(person.getName());
         affectedGroup.setPersonID(person.getId());
         affectedGroup.setMail(loginUser.getEmail());
@@ -209,6 +244,7 @@ public class PersonController extends BaseController {
         }
         if (affectedGroup.getPhone() == null) {
             affectedGroup.setPhone(loginUser.getPhone());
+
         }
         if (!personService.update(person, loginUser, affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));
