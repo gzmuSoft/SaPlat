@@ -144,4 +144,12 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
             }
         });
     }
+
+    @Override
+    public User findByUserIdAndUserSource(Long userId,Integer userSource){
+        Columns columns = Columns.create();
+        columns.eq("userID",userId);
+        columns.eq("userSource",userSource);
+        return DAO.findFirstByColumns(columns);
+    }
 }

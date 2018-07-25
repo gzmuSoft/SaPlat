@@ -99,6 +99,8 @@ public interface ProfGroupService  {
      */
     public boolean saveOrUpdate(ProfGroup model, Auth auth);
 
+    public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize);
+
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
