@@ -72,7 +72,6 @@ public class ProjectController extends BaseController {
         Project project = getBean(Project.class, "project");
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setDrawings("#/");
         project.setIsEnable(true);
         project.setStatus(ProjectStatus.IS_VERIFY);
         project.setUserId(loginUser.getId());
@@ -111,7 +110,6 @@ public class ProjectController extends BaseController {
         Project project = getBean(Project.class, "project");
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setDrawings("#/");
         project.setIsEnable(true);
         project.setStatus(ProjectStatus.VERIFIING);
         project.setUserId(loginUser.getId());
@@ -150,7 +148,7 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
-        model.setTypeName(projectTypeService.findById(model.getTypeID()).getName());
+        model.setTypeName(projectTypeService.findById(model.getPaTypeID()).getName());
         setAttr("model", model).render("update.html");
 
     }
@@ -307,7 +305,7 @@ public class ProjectController extends BaseController {
         Project model = projectService.findById(id);
         if (model != null) {
             model.setPublicTime(getParaToDate("publicTime"));
-            model.setEndTime(getParaToDate("endTime"));
+            model.setEndPublicTime(getParaToDate("endTime"));
             model.setIsPublic(true);
         }
         if (projectService.update(model)) {
@@ -344,7 +342,7 @@ public class ProjectController extends BaseController {
         projectUndertake.setApplyOrInvite(true);
         projectUndertake.setStatus(0);
         projectUndertake.setCreateTime(new Date());
-        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndTime());
+        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndPublicTime());
         projectUndertake.setLastAccessTime(new Date());
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setIsEnable(true);

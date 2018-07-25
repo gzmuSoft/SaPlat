@@ -19,7 +19,7 @@
         <button id="defeat" class="layui-btn layui-btn-small">审核未通过的项目</button>
         #end
     </div>
-    <table id="dateTable" lay-filter="dateTable"></table>
+    <table style="align-content: center;" id="dateTable" lay-filter="dateTable"></table>
 </div>
 
 <script type="text/html" id="barOption-publicStatus">
@@ -112,11 +112,11 @@
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
                 });
             } else if (obj.event === 'public') {
-                pop_show('公开项目', '#(ctxPath)/app/project/isPublicMessage?id=' + data.id, '', '', function () {
+                pop_show('公开项目', '#(ctxPath)/app/project/isPublicMessage?id=' + data.id, '400', '300', function () {
                     window.location.reload();
                 });
             } else if (obj.event === 'invite') {
-                pop_show('邀请介入', '#(ctxPath)/app/project/inviteChoose?id=' + data.id, '', '', function () {
+                pop_show('邀请介入', '#(ctxPath)/app/project/inviteChoose?id=' + data.id, '900', '', function () {
                     window.location.reload();
                 });
             }

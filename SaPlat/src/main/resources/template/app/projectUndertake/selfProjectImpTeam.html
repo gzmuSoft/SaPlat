@@ -1,0 +1,87 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+
+#define content()
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>自评实施小组建立</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="ImpTeam.name">小组名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ImpTeam.name" name="ImpTeam.name" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="projectID">关联项目</label>
+                <div class="layui-input-inline">
+                    <select id="projectID" name="projectID" lay-search>
+                        #for(List : selfProjects)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="leaderID">组长</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption" id="clickOption" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                    <select id="leaderID" name="leaderID" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('select(clickOption)', function (data) {
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
+                function (data) {
+                    var optionString = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $("#leaderID").html('<option value=""></option>' + optionString);
+                    form.render('select'); //这个很重要
+                }
+            );
+        });
+    });
+</script>
+#end
