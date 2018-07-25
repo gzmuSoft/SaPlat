@@ -147,14 +147,24 @@ public class ProjectUndertakeController extends BaseController {
      * 参数 applyOrInvite ：
      * true    主动申请
      * false   被邀请
+     * 参数 flag ：
+     * true    作为请求发起方
+     * false   作为请求接受方
      */
     public void projectUndertakeList() {
+        User user = AuthUtils.getLoginUser();
         Boolean applyOrInvite = getParaToBoolean("applyOrInvite");
+        Boolean flag = getParaToBoolean("flag");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
         projectUndertake.setApplyOrInvite(applyOrInvite);
         projectUndertake.setIsEnable(true);
+        if (flag) {
+            projectUndertake.setCreateUserID(user.getId());
+        } else {
+            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId()).getId());
+        }
         Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<ProjectUndertake>(page));
     }

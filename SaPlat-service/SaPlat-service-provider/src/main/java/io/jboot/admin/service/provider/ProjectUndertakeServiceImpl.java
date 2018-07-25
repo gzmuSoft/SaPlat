@@ -60,6 +60,12 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         if (StrKit.notBlank(project.getName())) {
             columns.like("name", "%" + project.getName() + "%");
         }
+        if (project.getCreateUserID() != null) {
+            columns.like("createUserID", "%" + project.getCreateUserID() + "%");
+        }
+        if (project.getFacAgencyID() != null) {
+            columns.like("facAgencyID", "%" + project.getFacAgencyID() + "%");
+        }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
 
     }
