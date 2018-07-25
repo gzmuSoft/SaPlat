@@ -17,22 +17,29 @@ public interface RiskLevelService  {
      */
     public RiskLevel findById(Object id);
 
-
     /**
      * find all model
      *
      * @return all <RiskLevel
      */
     public List<RiskLevel> findAll();
+
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
+     * find all model
+     * @param model 风险级别
+     * @return all <RiskLevel>
+     */
+    public List<RiskLevel> findAll(RiskLevel model);
+
+    /**
+     * 分页查询 风险级别 信息
+     * @param model 风险级别
      * @return 页
      */
     public Page<RiskLevel> findPage(RiskLevel model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 项目阶段 信息
+     * 根据名称查询 风险级别 信息
      * @param name
      * @return
      */

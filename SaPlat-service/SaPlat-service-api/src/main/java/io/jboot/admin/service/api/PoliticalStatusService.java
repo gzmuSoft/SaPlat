@@ -25,14 +25,21 @@ public interface PoliticalStatusService  {
     public List<PoliticalStatus> findAll();
 
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
+     * find all model
+     * @param model 政治面貌
+     * @return all <PoliticalStatus>
+     */
+    public List<PoliticalStatus> findAll(PoliticalStatus model);
+
+    /**
+     * 分页查询 政治面貌 信息
+     * @param model 政治面貌
      * @return 页
      */
     public Page<PoliticalStatus> findPage(PoliticalStatus model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 项目阶段 信息
+     * 根据名称查询 政治面貌 信息
      * @param name
      * @return
      */

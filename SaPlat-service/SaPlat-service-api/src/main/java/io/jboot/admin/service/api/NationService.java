@@ -25,6 +25,13 @@ public interface NationService  {
     public List<Nation> findAll();
 
     /**
+     * find all model
+     * @param model 民族
+     * @return all <Nation>
+     */
+    public List<Nation> findAll(Nation model);
+
+    /**
      * 分页查询 民族 信息
      * @param model 民族
      * @return 页

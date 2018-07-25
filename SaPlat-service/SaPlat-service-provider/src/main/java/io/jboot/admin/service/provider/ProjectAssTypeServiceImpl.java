@@ -10,12 +10,29 @@ import io.jboot.service.JbootServiceBase;
 import io.jboot.admin.service.entity.model.ProjectAssType;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
 @JbootrpcService
 public class ProjectAssTypeServiceImpl extends JbootServiceBase<ProjectAssType> implements ProjectAssTypeService {
 
+    /**
+     * find all model
+     * @param model 项目评估类型
+     * @return all <ProjectAssType>
+     */
+    public List<ProjectAssType> findAll(ProjectAssType model)
+    {
+        Columns columns = Columns.create();
+        if (StrKit.notBlank(model.getName())){
+            columns.like("name", "%" + model.getName()+"%");
+        }
+        if (StrKit.notNull(model.getIsEnable())){
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        return DAO.findListByColumns(columns);
+    }
 
     @Override
     public Page<ProjectAssType> findPage(ProjectAssType model, int pageNumber, int pageSize) {

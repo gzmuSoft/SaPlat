@@ -12,9 +12,10 @@
 </style>
 #end
 
-
 #define content()
 <div class="x-body">
+    <button id="self" class="layui-btn layui-btn-small">自评实施小组建立</button>
+    <button id="other" class="layui-btn layui-btn-small">委评实施小组建立</button>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
         <legend>自评实施小组建立</legend>
     </fieldset>
@@ -23,16 +24,15 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="ImpTeam.name">小组名称</label>
+                <label class="layui-form-label" for="impTeam.name">小组名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="ImpTeam.name" name="ImpTeam.name" class="layui-input"/>
+                    <input type="text" id="impTeam.name" name="impTeam.name" class="layui-input"/>
                 </div>
             </div>
-
             <div class="layui-form-item">
-                <label class="layui-form-label" for="projectID">关联项目</label>
+                <label class="layui-form-label" for="impTeam.projectID">关联项目</label>
                 <div class="layui-input-inline">
-                    <select id="projectID" name="projectID" lay-search>
+                    <select id="impTeam.projectID" name="impTeam.projectID" lay-search>
                         #for(List : selfProjects)
                         <option value="#(List.id)">#(List.name)</option>
                         #end
@@ -41,18 +41,103 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="leaderID">组长</label>
+                <label class="layui-form-label" for="impTeam.leaderID">组长</label>
                 <div class="layui-input-inline">
-                    <select lay-filter="clickOption" id="clickOption" lay-search>
+                    <select lay-filter="clickOption1" lay-search>
                         #for(List : orgStructures)
                         <option value="#(List.id)">#(List.name)</option>
                         #end
                     </select>
-                    <select id="leaderID" name="leaderID" lay-search>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption11" id="leaderID" name="leaderID" lay-search>
                         #for(List : persons)
                         <option value="#(List.id)">#(List.name)</option>
                         #end
                     </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID"></p>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.assLeaderIDs">副组长</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption2" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption21" id="assLeaderIDs" name="assLeaderIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.assLeaderIDs"></p>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.expertGroupIDs">专家成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption3" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption31" id="expertGroupIDs" name="expertGroupIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.expertGroupIDs"></p>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.invTeamIDs">现场调查成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption4" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption41" id="invTeamIDs" name="invTeamIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.invTeamIDs"></p>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.repTeamIDs">报告编制成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption5" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption51" id="repTeamIDs" name="repTeamIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.repTeamIDs"></p>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
                 </div>
             </div>
 
@@ -69,7 +154,54 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('select(clickOption)', function (data) {
+        $("#self").click(function () {
+            window.location.href = '#(ctxPath)/app/projectUndertake/toSelfProjectImpTeam';
+        });
+
+        $("#other").click(function () {
+            window.location.href = '#(ctxPath)/app/projectUndertake/toOtherProjectImpTeam';
+        });
+
+        form.on('submit(sub)', function (data) {
+            var string = "?";
+            $("p").each(function () {
+                string += $(this).attr('id') + "=" + $(this).text() + "&";
+            });
+            string += $("#impTeam\\.projectID").attr('name') + "=" + $("#impTeam\\.projectID").val() + "&";
+            string += $("#impTeam\\.name").attr('name') + "=" + $("#impTeam\\.name").val();
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/projectUndertake/ImpTeam' + string,
+                data: $(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    setTimeout(function () {
+                        return true;
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+        form.on('select(clickOption11)', function (data) {
+            $("#impTeam\\.leaderID").text(data.value);
+        });
+        form.on('select(clickOption21)', function (data) {
+            $("#impTeam\\.assLeaderIDs").append(data.value + ",");
+        });
+        form.on('select(clickOption31)', function (data) {
+            $("#impTeam\\.expertGroupIDs").append(data.value + ",");
+        });
+        form.on('select(clickOption41)', function (data) {
+            $("#impTeam\\.invTeamIDs").append(data.value + ",");
+        });
+        form.on('select(clickOption51)', function (data) {
+            $("#impTeam\\.repTeamIDs").append(data.value + ",");
+        });
+        form.on('select(clickOption1)', function (data) {
             $.getJSON(
                 "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
                 function (data) {
@@ -82,6 +214,59 @@
                 }
             );
         });
+        form.on('select(clickOption2)', function (data) {
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
+                function (data) {
+                    var optionString = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $("#assLeaderIDs").html('<option value=""></option>' + optionString);
+                    form.render('select'); //这个很重要
+                }
+            );
+        });
+        form.on('select(clickOption3)', function (data) {
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
+                function (data) {
+                    var optionString = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $("#expertGroupIDs").html('<option value=""></option>' + optionString);
+                    form.render('select'); //这个很重要
+                }
+            );
+        });
+        form.on('select(clickOption4)', function (data) {
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
+                function (data) {
+                    var optionString = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $("#invTeamIDs").html('<option value=""></option>' + optionString);
+                    form.render('select'); //这个很重要
+                }
+            );
+        });
+        form.on('select(clickOption5)', function (data) {
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value,
+                function (data) {
+                    var optionString = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $("#repTeamIDs").html('<option value=""></option>' + optionString);
+                    form.render('select'); //这个很重要
+                }
+            );
+        });
     });
 </script>
+
 #end

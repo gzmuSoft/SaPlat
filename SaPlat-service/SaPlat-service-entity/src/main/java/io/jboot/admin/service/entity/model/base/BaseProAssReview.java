@@ -1,5 +1,6 @@
 package io.jboot.admin.service.entity.model.base;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jboot.db.model.JbootModel;
 import com.jfinal.plugin.activerecord.IBean;
 
@@ -9,140 +10,140 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseProAssReview<M extends BaseProAssReview<M>> extends JbootModel<M> implements IBean {
 
-    public void setId(java.lang.Long id) {
-        set("id", id);
-    }
+	public void setId(Long id) {
+		set("id", id);
+	}
+	
+	public Long getId() {
+		return getLong("id");
+	}
 
-    public java.lang.Long getId() {
-        return getLong("id");
-    }
+	public void setName(String name) {
+		set("name", name);
+	}
+	
+	public String getName() {
+		return getStr("name");
+	}
 
-    public void setName(java.lang.String name) {
-        set("name", name);
-    }
+	public void setSpell(String spell) {
+		set("spell", spell);
+	}
+	
+	public String getSpell() {
+		return getStr("spell");
+	}
 
-    public java.lang.String getName() {
-        return getStr("name");
-    }
+	public void setProjectID(Long projectID) {
+		set("projectID", projectID);
+	}
+	
+	public Long getProjectID() {
+		return getLong("projectID");
+	}
 
-    public void setSpell(java.lang.String spell) {
-        set("spell", spell);
-    }
+	public void setReviewerID(Long reviewerID) {
+		set("reviewerID", reviewerID);
+	}
+	
+	public Long getReviewerID() {
+		return getLong("reviewerID");
+	}
 
-    public java.lang.String getSpell() {
-        return getStr("spell");
-    }
+	public void setRecomment(String recomment) {
+		set("recomment", recomment);
+	}
+	
+	public String getRecomment() {
+		return getStr("recomment");
+	}
 
-    public void setProjectID(java.lang.Long projectID) {
-        set("projectID", projectID);
-    }
+	public void setFeedback(String feedback) {
+		set("feedback", feedback);
+	}
+	
+	public String getFeedback() {
+		return getStr("feedback");
+	}
 
-    public java.lang.Long getProjectID() {
-        return getLong("projectID");
-    }
+	public void setFileID(Long fileID) {
+		set("fileID", fileID);
+	}
+	
+	public Long getFileID() {
+		return getLong("fileID");
+	}
 
-    public void setReviewerID(java.lang.Long reviewerID) {
-        set("reviewerID", reviewerID);
-    }
+	public void setReviewStatus(Integer reviewStatus) {
+		set("reviewStatus", reviewStatus);
+	}
+	
+	public Integer getReviewStatus() {
+		return getInt("reviewStatus");
+	}
 
-    public java.lang.Long getReviewerID() {
-        return getLong("reviewerID");
-    }
+	public void setIsPass(Integer isPass) {
+		set("isPass", isPass);
+	}
+	
+	public Integer getIsPass() {
+		return getInt("isPass");
+	}
 
-    public void setRecomment(java.lang.String recomment) {
-        set("recomment", recomment);
-    }
+	public void setCreateUserID(Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public Long getCreateUserID() {
+		return getLong("createUserID");
+	}
 
-    public java.lang.String getRecomment() {
-        return getStr("recomment");
-    }
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+	
+	public java.util.Date getCreateTime() {
+		return get("createTime");
+	}
 
-    public void setFeedback(java.lang.String feedback) {
-        set("feedback", feedback);
-    }
+	public void setLastUpdateUserID(Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
+	}
+	
+	public Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
+	}
 
-    public java.lang.String getFeedback() {
-        return getStr("feedback");
-    }
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
+	}
+	
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
+	}
 
-    public void setFileID(java.lang.Long fileID) {
-        set("fileID", fileID);
-    }
+	public void setSort(Integer sort) {
+		set("sort", sort);
+	}
+	
+	public Integer getSort() {
+		return getInt("sort");
+	}
 
-    public java.lang.Long getFileID() {
-        return getLong("fileID");
-    }
+	public void setRemark(String remark) {
+		set("remark", remark);
+	}
+	
+	public String getRemark() {
+		return getStr("remark");
+	}
 
-    public void setReviewStatus(java.lang.Integer reviewStatus) {
-        set("reviewStatus", reviewStatus);
-    }
-
-    public java.lang.Integer getReviewStatus() {
-        return getInt("reviewStatus");
-    }
-
-    public void setIsPass(java.lang.Integer isPass) {
-        set("isPass", isPass);
-    }
-
-    public java.lang.Integer getIsPass() {
-        return getInt("isPass");
-    }
-
-    public void setCreateUserID(java.lang.Long createUserID) {
-        set("createUserID", createUserID);
-    }
-
-    public java.lang.Long getCreateUserID() {
-        return getLong("createUserID");
-    }
-
-    public void setCreateTime(java.util.Date createTime) {
-        set("createTime", createTime);
-    }
-
-    public java.util.Date getCreateTime() {
-        return get("createTime");
-    }
-
-    public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
-        set("lastUpdateUserID", lastUpdateUserID);
-    }
-
-    public java.lang.Long getLastUpdateUserID() {
-        return getLong("lastUpdateUserID");
-    }
-
-    public void setLastAccessTime(java.util.Date lastAccessTime) {
-        set("lastAccessTime", lastAccessTime);
-    }
-
-    public java.util.Date getLastAccessTime() {
-        return get("lastAccessTime");
-    }
-
-    public void setSort(java.lang.Integer sort) {
-        set("sort", sort);
-    }
-
-    public java.lang.Integer getSort() {
-        return getInt("sort");
-    }
-
-    public void setRemark(java.lang.String remark) {
-        set("remark", remark);
-    }
-
-    public java.lang.String getRemark() {
-        return getStr("remark");
-    }
-
-    public void setIsEnable(java.lang.Integer isEnable) {
-        set("isEnable", isEnable);
-    }
-
-    public java.lang.Integer getIsEnable() {
-        return getInt("isEnable");
-    }
+	public void setIsEnable(Boolean isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public Boolean getIsEnable() {
+		return getBoolean("isEnable");
+	}
 
 }

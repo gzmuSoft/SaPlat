@@ -34,7 +34,10 @@ public class ProjectController extends BaseController {
     private AuthService authService;
 
     @JbootrpcService
-    private ProjectTypeService projectTypeService;
+    private ProjectAssTypeService projectAssTypeService;
+
+    @JbootrpcService
+    private ProjectStepService projectStepService;
 
     @JbootrpcService
     private AuthProjectService authProjectService;
@@ -55,12 +58,13 @@ public class ProjectController extends BaseController {
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
         List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
-        List<ProjectType> typeList = projectTypeService.findAll();
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
+        List<ProjectStep> projectStepList = projectStepService.findAll();
         List<String> roleNameList = new ArrayList<>();
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        setAttr("roleNameList", roleNameList).setAttr("typeNameList", typeList).render("projectInformation.html");
+        setAttr("roleNameList", roleNameList).setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList).render("projectInformation.html");
     }
 
     /**
@@ -94,9 +98,10 @@ public class ProjectController extends BaseController {
         authProject.setLastUpdUser(loginUser.getName());
         if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
             renderJson(RestResult.buildSuccess("立项成功"));
-            render("verfed.html");
+            render("verfedSuccess.html");
         } else {
             renderJson(RestResult.buildError("立项失败"));
+            render("verfedDefeat.html");
             throw new BusinessException("立项失败");
         }
     }
@@ -148,7 +153,7 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
-        model.setTypeName(projectTypeService.findById(model.getPaTypeID()).getName());
+        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
         setAttr("model", model).render("update.html");
 
     }
