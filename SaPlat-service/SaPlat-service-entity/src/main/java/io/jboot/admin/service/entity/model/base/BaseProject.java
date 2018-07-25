@@ -57,13 +57,21 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getDouble("amount");
 	}
 
-	public void setTypeID(java.lang.Long typeID) {
-		set("typeID", typeID);
-	}
-	
-	public java.lang.Long getTypeID() {
-		return getLong("typeID");
-	}
+    public void setPaTypeID(java.lang.Long paTypeID) {
+        set("paTypeID", paTypeID);
+    }
+
+    public java.lang.Long getPaTypeID() {
+        return getLong("paTypeID");
+    }
+
+    public void setPStepID(java.lang.Long pStepID) {
+        set("pStepID", pStepID);
+    }
+
+    public java.lang.Long getPStepID() {
+        return getLong("pStepID");
+    }
 
 	public void setSite(java.lang.String site) {
 		set("site", site);
@@ -81,30 +89,6 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("brief");
 	}
 
-	public void setApproval(java.lang.String approval) {
-		set("approval", approval);
-	}
-	
-	public java.lang.String getApproval() {
-		return getStr("approval");
-	}
-
-	public void setDrawings(java.lang.String drawings) {
-		set("drawings", drawings);
-	}
-	
-	public java.lang.String getDrawings() {
-		return getStr("drawings");
-	}
-
-	public void setProposal(java.lang.String proposal) {
-		set("proposal", proposal);
-	}
-	
-	public java.lang.String getProposal() {
-		return getStr("proposal");
-	}
-
 	public void setAssessmentMode(java.lang.String assessmentMode) {
 		set("assessmentMode", assessmentMode);
 	}
@@ -112,6 +96,46 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 	public java.lang.String getAssessmentMode() {
 		return getStr("assessmentMode");
 	}
+
+    public void setStatus(java.lang.String status) {
+        set("status", status);
+    }
+
+    public java.lang.String getStatus() {
+        return getStr("status");
+    }
+
+    public void setIsPublic(java.lang.Boolean isPublic) {
+        set("isPublic", isPublic);
+    }
+
+    public java.lang.Boolean getIsPublic() {
+        return get("isPublic");
+    }
+
+    public void setTag(java.lang.String tag) {
+        set("tag", tag);
+    }
+
+    public java.lang.String getTag() {
+        return getStr("tag");
+    }
+
+    public void setPublicTime(java.util.Date publicTime) {
+        set("publicTime", publicTime);
+    }
+
+    public java.util.Date getPublicTime() {
+        return get("publicTime");
+    }
+
+    public void setEndPublicTime(java.util.Date endPublicTime) {
+        set("endPublicTime", endPublicTime);
+    }
+
+    public java.util.Date getEndPublicTime() {
+        return get("endPublicTime");
+    }
 
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
@@ -151,14 +175,6 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 	
 	public java.lang.Integer getSort() {
 		return getInt("sort");
-	}
-
-	public void setStatus(java.lang.String status) {
-		set("status", status);
-	}
-	
-	public java.lang.String getStatus() {
-		return getStr("status");
 	}
 
 	public void setRemark(java.lang.String remark) {

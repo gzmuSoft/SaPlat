@@ -14,6 +14,8 @@ public interface UserService  {
 
     public User findByName(String name);
 
+    public User findByUserIdAndUserSource(Long userID, Long userSource);
+
     public boolean saveUser(User user, Long[] roles);
 
     public boolean updateUser(User user, Long[] roles);

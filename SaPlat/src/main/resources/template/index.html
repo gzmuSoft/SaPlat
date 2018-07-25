@@ -32,6 +32,15 @@
 
         <!-- 顶部右侧添加选项卡监听 -->
         <ul class="layui-nav my-header-user-nav" lay-filter="side-top-right">
+
+            <li class="layui-nav-item" lay-unselect="">
+                <!-- 如果有新消息，则显示小圆点 -->
+                <a  id="msg" class="layui-btn" layadmin-event="message" lay-text="消息中心">
+                <i class="layui-icon layui-icon-notice"></i><span id="dot" class=""></span>
+                </a>
+            </li>
+
+
             <li class="layui-nav-item">
                 <a class="name" href="javascript:;"><i class="layui-icon">&#xe629;</i>主题</a>
                 <dl class="layui-nav-child">
@@ -122,7 +131,31 @@
 
         // you code ...
 
-
+        $("#msg").click(function () {
+            pop_show('查看通知信息', '#(ctxPath)/view', '1000', '600', function () {
+                window.parent.location.reload();
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index)
+            });
+        });
+        $(function () {
+            $.post("#(ctxPath)/message",function (res) {
+                if (res != null) {
+                    if (res['sta']) {
+                        if (!$("#dot").hasClass("layui-badge-dot")) {
+                            $("#dot").addClass("layui-badge-dot");
+                        }
+                    } else {
+                        if ($("#dot").hasClass("layui-badge-dot")) {
+                            $("#dot").removeClass("layui-badge-dot");
+                            console.log(res);
+                        }
+                    }
+                } else {
+                    layer.msg("数据异常");
+                }
+            })
+        });
     });
 </script>
 </body>

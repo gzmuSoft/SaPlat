@@ -1,0 +1,128 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    var index = null;
+    layui.use(['form', 'layer','layedit'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery
+            ,layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '#(ctxPath)/app/news/uploadFile'
+            }
+        });
+        index = layedit.build('demo'); //建立编辑器
+
+        form.on('submit(sub)', function(data){
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/country/postAdd',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success : function(data){
+                    pop_close();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('radio(pub_object)', function (data) {
+            if(data.value == 0){
+                $("#character").hide();
+                $("#individual").hide();
+            }else if(data.value == 1){
+                $("#character").show();
+                $("#individual").hide();
+            }else{
+                $("#character").hide();
+                $("#individual").show();
+            }
+        });
+    });
+
+    $("#character").hide();
+    $("#individual").hide();
+    function getContent() {
+        var arr = [];
+        arr.push("使用getContent()方法可以获得编辑器的内容");
+        arr.push("内容为：");
+        arr.push(layedit.getContent(index));
+        alert(arr.join("\n"));
+    }
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form class="layui-form layui-form-pane" action="" id="addForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" placeholder="请输入标题" class="layui-input" style="width:100%">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻内容</label>
+            <div class="layui-input-block">
+                <textarea id="demo" style="display: none;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻类型</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="newsType">
+                    <option value="0"  selected="">政要文件</option>
+                    <option value="1">跟踪动态</option>
+                    <option value="2">最新政策</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻属性</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="0" title="公开" lay-filter="pub_object"  checked="">
+                <input type="radio" name="sex" value="1" title="角色" lay-filter="pub_object"  >
+                <input type="radio" name="sex" value="2" title="人群" lay-filter="pub_object"  >
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="character">
+            <label class="layui-form-label">角色对象</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="character">
+                    <option value="0"  selected="">企业</option>
+                    <option value="1">部门</option>
+                    <option value="2">人事</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="individual">
+            <label class="layui-form-label">个体对象</label>
+            <div class="layui-input-block">
+                <select name="interest" lay-filter="individual">
+                    <option value="0"  selected="">国家</option>
+                    <option value="1">政府</option>
+                    <option value="2">人民</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button onclick="getContent()" class="layui-btn">存草稿</button>
+            <button class="layui-btn" lay-submit lay-filter="newsFrom">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end

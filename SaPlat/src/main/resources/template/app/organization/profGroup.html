@@ -63,13 +63,6 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.comprehend">服务理解</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="profGroup.comprehend" name="profGroup.comprehend"
-                           value="#(profGroup.comprehend)" class="layui-input" required/>
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.performance">服务业绩</label>
@@ -79,13 +72,6 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.framework">人员架构</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="profGroup.framework" name="profGroup.framework"
-                           value="#(profGroup.framework)" class="layui-input" required/>
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.resume">人员简历</label>
@@ -111,18 +97,6 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">有无犯罪记录</label>
-                <div class="layui-input-block">
-                    #if(profGroup.record == 0)
-                    <input type="radio" name="profGroup.record" value="0" title="有" checked="checked" required/>
-                    <input type="radio" name="profGroup.record" value="1" title="无" required/>
-                    #else
-                    <input type="radio" name="profGroup.record" value="0" title="有" required/>
-                    <input type="radio" name="profGroup.record" value="1" title="无" checked="checked" required/>
-                    #end
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.administrator">管理员姓名</label>

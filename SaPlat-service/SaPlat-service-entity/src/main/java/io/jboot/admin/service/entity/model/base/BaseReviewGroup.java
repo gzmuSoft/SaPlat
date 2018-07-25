@@ -49,28 +49,12 @@ public abstract class BaseReviewGroup<M extends BaseReviewGroup<M>> extends Jboo
 		return getStr("scope");
 	}
 
-	public void setComprehend(java.lang.String comprehend) {
-		set("comprehend", comprehend);
-	}
-	
-	public java.lang.String getComprehend() {
-		return getStr("comprehend");
-	}
-
 	public void setPerformance(java.lang.String performance) {
 		set("performance", performance);
 	}
 	
 	public java.lang.String getPerformance() {
 		return getStr("performance");
-	}
-
-	public void setFramework(java.lang.String framework) {
-		set("framework", framework);
-	}
-	
-	public java.lang.String getFramework() {
-		return getStr("framework");
 	}
 
 	public void setResume(java.lang.String resume) {
@@ -87,14 +71,6 @@ public abstract class BaseReviewGroup<M extends BaseReviewGroup<M>> extends Jboo
 	
 	public java.lang.String getContent() {
 		return getStr("content");
-	}
-
-	public void setRecord(java.lang.Integer record) {
-		set("record", record);
-	}
-	
-	public java.lang.Integer getRecord() {
-		return getInt("record");
 	}
 
 	public void setAdministrator(java.lang.String administrator) {

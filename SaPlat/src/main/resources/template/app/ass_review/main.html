@@ -1,0 +1,73 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+#end
+
+#define js()
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript">
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick: zTreeOnClick
+        }
+    };
+
+    var pid = 0;
+
+    //var reloadTable;
+    function zTreeOnClick(event, treeId, treeNode) {
+        //reloadTable(treeNode.id);
+    }
+
+    function zTreeReload() {
+        util.sendAjax ({
+            url : '#(ctxPath)/app/ass_review/resTree',
+            notice: false,
+            success : function(data){
+                $.fn.zTree.init($("#tree"), setting, data.data);
+            }
+        })
+    }
+
+    $(document).ready(function(){
+        zTreeReload();
+    });
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div id="pdfviewer" class="layui-col-md6">#(pdfURL)</div>
+        <div class="layui-col-md6" style="overflow:auto;">
+            <ul id="tree" class="ztree"></ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pdfobject-container {
+        width: 48%;
+        height: 600px;
+        padding: 5em 0;
+    }
+</style>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
+<script>
+    var url=document.getElementById("pdfviewer").innerText;
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed(url,"#pdfviewer",options);
+</script>
+#end

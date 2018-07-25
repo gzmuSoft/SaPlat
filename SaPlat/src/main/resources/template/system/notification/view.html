@@ -1,0 +1,77 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+//        form.on('submit(sub)', function (data) {
+//
+//            util.sendAjax({
+//                type: 'POST',
+//                url: '#(ctxPath)/system/notification/postUpdate',
+//                data: $('#addForm').serialize(),
+//                loadFlag: true,
+//                success: function (data) {
+//                    pop_close();
+//                }
+//            });
+//
+//            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+//        });
+    });
+    
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="notification.id" value="#(notification.id)">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" placeholder="标题" readonly="readonly"  value="#(notification.name)" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">接收人</label>
+            <div class="layui-input-block">
+                <input type="text" name="receiverUser.name" readonly="readonly" placeholder="接收人" class="layui-input" value="#(receiverUser.name)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="内容" class="layui-textarea" value="" readonly="readonly">#(notification.content)</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">发送时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="notification.createTime" placeholder="发送时间" readonly="readonly" class="layui-input" value="#(notification.createTime)"
+                       autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发送人</label>
+            <div class="layui-input-block">
+                <input type="text" name="createUser.name" readonly="readonly" placeholder="发送人" class="layui-input" value="#(createUser.name)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+    </form>
+</div>
+#end

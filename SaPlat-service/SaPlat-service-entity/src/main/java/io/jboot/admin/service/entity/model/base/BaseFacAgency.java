@@ -145,14 +145,6 @@ public abstract class BaseFacAgency<M extends BaseFacAgency<M>> extends JbootMod
 		return getStr("website");
 	}
 
-	public void setCoordinate(java.lang.String coordinate) {
-		set("coordinate", coordinate);
-	}
-	
-	public java.lang.String getCoordinate() {
-		return getStr("coordinate");
-	}
-
 	public void setLandline(java.lang.String landline) {
 		set("landline", landline);
 	}

@@ -1,0 +1,145 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+
+#define content()
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>服务机构详细信息</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">服务机构名称</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.name)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司地址</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.address)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司简介</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.resume)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司负责人</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.principal)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司负责人联系方式</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.phone)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">主体类型</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.type)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">统一社会信用代码</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.credit)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">业务范围</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.scope)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">创办日期</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.start)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业法人</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.person)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">法人身份证照片</label>
+            <div class="layui-input-block">
+                <p>#(facAgency.pictrue)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">注册资本</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.capital)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业网站</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.website)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">座机电话</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.landline)</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业人数</label>
+            <div class="layui-input-inline">
+                <p>#(facAgency.scale)</p>
+            </div>
+        </div>
+
+        </div>
+    </form>
+</div>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+    });
+
+</script>
+#end
