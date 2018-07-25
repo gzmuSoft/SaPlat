@@ -66,7 +66,8 @@
 <script type="text/javascript">
 
     layui.use(['table', 'layer'], function () {
-        var table = layui.table;
+        var table = layui.table, layer = layui.layer;
+
 
         // 审核通过的表格渲染
         var tableIns = table.render({
@@ -105,10 +106,12 @@
                 pop_show('查看详细资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id, '400', '', function () {
                 });
             } else if (obj.event === 'invite') {
-                pop_show('邀请', '#(ctxPath)/app/project/invite?id=' + data.id + '&projectId=' + $('#id').val(), '', '', function () {
-                    pop_close();
-                    window.location.reload();
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                $.ajax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/project/invite?id=' + data.id + '&projectId=' + $('#id').val(),
+                    success: function () {
+                        window.location.reload();
+                    }
                 });
             }
         });

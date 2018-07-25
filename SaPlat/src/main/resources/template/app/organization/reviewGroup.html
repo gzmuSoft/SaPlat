@@ -126,21 +126,7 @@
     layui.use(['form', 'layer','upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
-            , form = layui.form
-            , upload = layui.upload;
-
-
-        upload.render({ //允许上传的文件后缀
-            elem: '#upload'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#organization.certificate").text(res.path);
-                $("#organization.certificate").val(res.path);
-                $("#organization.certificate").html(res.path);
-            }
-        });
+            , form = layui.form;
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
