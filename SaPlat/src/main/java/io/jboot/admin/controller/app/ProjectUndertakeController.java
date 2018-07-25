@@ -240,23 +240,23 @@ public class ProjectUndertakeController extends BaseController {
      * 实施小组建立初始页面(自评)
      */
     public void toSelfProjectImpTeam() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         User user = AuthUtils.getLoginUser();
         List<Project> projects = projectService.findAll();
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<Project> selfProjects = new ArrayList<>();
         List<OrgStructure> orgStructures = new ArrayList<>();
         //自评的所有项目
-        for (int i = 0; i < projects.size(); i++) {
-            if (projects.get(i).getUserId() == user.getId() && projects.get(i).getAssessmentMode().equals("自评")) {
-                selfProjects.add(projects.get(i));
+        for (Project project : projects) {
+            if (project.getUserId().equals(user.getId()) && project.getAssessmentMode().equals("自评")) {
+                selfProjects.add(project);
             }
         }
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            string += structPersonLinks.get(i).getStructID();
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            string.append(structPersonLink.getStructID());
         }
-        for (int i = 0; i < sub(string).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        for (int i = 0; i < sub(string.toString()).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
         setAttr("selfProjects", selfProjects).setAttr("orgStructures", orgStructures).render("selfProjectImpTeam.html");
     }
@@ -268,8 +268,8 @@ public class ProjectUndertakeController extends BaseController {
     public void persons() {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
         List<Person> persons = new ArrayList<>();
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            persons.add(personService.findById(structPersonLinks.get(i).getPersonID()));
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            persons.add(personService.findById(structPersonLink.getPersonID()));
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
@@ -281,22 +281,22 @@ public class ProjectUndertakeController extends BaseController {
      * 实施小组建立初始页面(委评)
      */
     public void toOtherProjectImpTeam() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         List<ProjectUndertake> projectUndertakes = projectUndertakeService.findAll();
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<ProjectUndertake> otherProjects = new ArrayList<>();
         List<OrgStructure> orgStructures = new ArrayList<>();
         //委评且同意介入或同意邀请的项目
-        for (int i = 0; i < projectUndertakes.size(); i++) {
-            if (projectUndertakes.get(i).getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
-                otherProjects.add(projectUndertakes.get(i));
+        for (ProjectUndertake projectUndertake : projectUndertakes) {
+            if (projectUndertake.getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
+                otherProjects.add(projectUndertake);
             }
         }
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            string += structPersonLinks.get(i).getStructID();
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            string.append(structPersonLink.getStructID());
         }
-        for (int i = 0; i < sub(string).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        for (int i = 0; i < sub(string.toString()).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
         setAttr("otherProjects", otherProjects).setAttr("orgStructures", orgStructures).render("otherProjectImpTeam.html");
     }
