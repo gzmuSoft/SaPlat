@@ -1,6 +1,5 @@
 package io.jboot.admin.service.entity.model.base;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jboot.db.model.JbootModel;
 import com.jfinal.plugin.activerecord.IBean;
 
@@ -10,91 +9,91 @@ import com.jfinal.plugin.activerecord.IBean;
 @SuppressWarnings("serial")
 public abstract class BaseProAssReview<M extends BaseProAssReview<M>> extends JbootModel<M> implements IBean {
 
-	public void setId(Long id) {
+	public void setId(java.lang.Long id) {
 		set("id", id);
 	}
 	
-	public Long getId() {
+	public java.lang.Long getId() {
 		return getLong("id");
 	}
 
-	public void setName(String name) {
+	public void setName(java.lang.String name) {
 		set("name", name);
 	}
 	
-	public String getName() {
+	public java.lang.String getName() {
 		return getStr("name");
 	}
 
-	public void setSpell(String spell) {
+	public void setSpell(java.lang.String spell) {
 		set("spell", spell);
 	}
 	
-	public String getSpell() {
+	public java.lang.String getSpell() {
 		return getStr("spell");
 	}
 
-	public void setProjectID(Long projectID) {
+	public void setProjectID(java.lang.Long projectID) {
 		set("projectID", projectID);
 	}
 	
-	public Long getProjectID() {
+	public java.lang.Long getProjectID() {
 		return getLong("projectID");
 	}
 
-	public void setReviewerID(Long reviewerID) {
+	public void setReviewerID(java.lang.Long reviewerID) {
 		set("reviewerID", reviewerID);
 	}
 	
-	public Long getReviewerID() {
+	public java.lang.Long getReviewerID() {
 		return getLong("reviewerID");
 	}
 
-	public void setRecomment(String recomment) {
+	public void setRecomment(java.lang.String recomment) {
 		set("recomment", recomment);
 	}
 	
-	public String getRecomment() {
+	public java.lang.String getRecomment() {
 		return getStr("recomment");
 	}
 
-	public void setFeedback(String feedback) {
+	public void setFeedback(java.lang.String feedback) {
 		set("feedback", feedback);
 	}
 	
-	public String getFeedback() {
+	public java.lang.String getFeedback() {
 		return getStr("feedback");
 	}
 
-	public void setFileID(Long fileID) {
+	public void setFileID(java.lang.Long fileID) {
 		set("fileID", fileID);
 	}
 	
-	public Long getFileID() {
+	public java.lang.Long getFileID() {
 		return getLong("fileID");
 	}
 
-	public void setReviewStatus(Integer reviewStatus) {
+	public void setReviewStatus(java.lang.Integer reviewStatus) {
 		set("reviewStatus", reviewStatus);
 	}
 	
-	public Integer getReviewStatus() {
+	public java.lang.Integer getReviewStatus() {
 		return getInt("reviewStatus");
 	}
 
-	public void setIsPass(Integer isPass) {
+	public void setIsPass(java.lang.Integer isPass) {
 		set("isPass", isPass);
 	}
 	
-	public Integer getIsPass() {
+	public java.lang.Integer getIsPass() {
 		return getInt("isPass");
 	}
 
-	public void setCreateUserID(Long createUserID) {
+	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
 	}
 	
-	public Long getCreateUserID() {
+	public java.lang.Long getCreateUserID() {
 		return getLong("createUserID");
 	}
 
@@ -106,11 +105,11 @@ public abstract class BaseProAssReview<M extends BaseProAssReview<M>> extends Jb
 		return get("createTime");
 	}
 
-	public void setLastUpdateUserID(Long lastUpdateUserID) {
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
 		set("lastUpdateUserID", lastUpdateUserID);
 	}
 	
-	public Long getLastUpdateUserID() {
+	public java.lang.Long getLastUpdateUserID() {
 		return getLong("lastUpdateUserID");
 	}
 
@@ -122,28 +121,28 @@ public abstract class BaseProAssReview<M extends BaseProAssReview<M>> extends Jb
 		return get("lastAccessTime");
 	}
 
-	public void setSort(Integer sort) {
+	public void setSort(java.lang.Integer sort) {
 		set("sort", sort);
 	}
 	
-	public Integer getSort() {
+	public java.lang.Integer getSort() {
 		return getInt("sort");
 	}
 
-	public void setRemark(String remark) {
+	public void setRemark(java.lang.String remark) {
 		set("remark", remark);
 	}
 	
-	public String getRemark() {
+	public java.lang.String getRemark() {
 		return getStr("remark");
 	}
 
-	public void setIsEnable(Boolean isEnable) {
+	public void setIsEnable(java.lang.Integer isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public Boolean getIsEnable() {
-		return getBoolean("isEnable");
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
 	}
 
 }

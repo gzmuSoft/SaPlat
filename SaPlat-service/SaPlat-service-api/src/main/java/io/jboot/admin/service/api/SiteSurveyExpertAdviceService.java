@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.EvaScheme;
+import io.jboot.admin.service.entity.model.SiteSurveyExpertAdvice;
 
 import java.util.List;
 
-public interface EvaSchemeService  {
+public interface SiteSurveyExpertAdviceService  {
 
     /**
      * find model by primary key
@@ -14,15 +14,15 @@ public interface EvaSchemeService  {
      * @param id
      * @return
      */
-    public EvaScheme findById(Object id);
+    public SiteSurveyExpertAdvice findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <EvaScheme
+     * @return all <SiteSurveyExpertAdvice
      */
-    public List<EvaScheme> findAll();
+    public List<SiteSurveyExpertAdvice> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface EvaSchemeService  {
      * @param model
      * @return
      */
-    public boolean delete(EvaScheme model);
+    public boolean delete(SiteSurveyExpertAdvice model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface EvaSchemeService  {
      * @param model
      * @return
      */
-    public boolean save(EvaScheme model);
+    public boolean save(SiteSurveyExpertAdvice model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface EvaSchemeService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(EvaScheme model);
+    public boolean saveOrUpdate(SiteSurveyExpertAdvice model);
 
 
     /**
@@ -67,7 +67,7 @@ public interface EvaSchemeService  {
      * @param model
      * @return
      */
-    public boolean update(EvaScheme model);
+    public boolean update(SiteSurveyExpertAdvice model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseScheduledPlan;
  */
 @Table(tableName = "scheduled_plan", primaryKey = "id")
 public class ScheduledPlan extends BaseScheduledPlan<ScheduledPlan> {
-
+	
 }

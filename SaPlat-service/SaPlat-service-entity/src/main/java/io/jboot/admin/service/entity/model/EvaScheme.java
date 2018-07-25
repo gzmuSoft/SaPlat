@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseEvaScheme;
  */
 @Table(tableName = "eva_scheme", primaryKey = "id")
 public class EvaScheme extends BaseEvaScheme<EvaScheme> {
-
+	
 }

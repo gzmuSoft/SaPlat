@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseOrgStructure;
  */
 @Table(tableName = "org_structure", primaryKey = "id")
 public class OrgStructure extends BaseOrgStructure<OrgStructure> {
-
+	
 }

@@ -1,8 +1,8 @@
 package io.jboot.admin.service.provider;
 
+import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.entity.model.EvaScheme;
-import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.service.JbootServiceBase;
 

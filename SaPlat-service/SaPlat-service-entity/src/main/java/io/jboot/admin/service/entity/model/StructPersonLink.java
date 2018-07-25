@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseStructPersonLink;
  */
 @Table(tableName = "struct_person_link", primaryKey = "ID")
 public class StructPersonLink extends BaseStructPersonLink<StructPersonLink> {
-
+	
 }
