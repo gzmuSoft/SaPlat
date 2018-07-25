@@ -34,6 +34,7 @@ public interface UserService  {
 
     public boolean update(User model);
 
+    public User findByUserIdAndUserSource(Long userid,Integer usersource);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
