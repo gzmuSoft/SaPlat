@@ -10,17 +10,18 @@ import io.jboot.admin.service.entity.model.base.BaseProAssReview;
 @Table(tableName = "pro_ass_review", primaryKey = "id")
 public class ProAssReview extends BaseProAssReview<ProAssReview> {
     public void setStatus(java.lang.String status) {
-        if (status == DataStatus.USED) {
-            setIsEnable(true);
+        if (status.equals(DataStatus.USED)) {
+            setIsEnable(1);
         } else {
-            setIsEnable(false);
+            setIsEnable(0);
         }
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if (this.getIsEnable() == 1) {
             return DataStatus.USED;
-        else
+        } else {
             return DataStatus.UNUSED;
+        }
     }
 }
