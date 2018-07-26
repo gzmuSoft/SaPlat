@@ -170,17 +170,21 @@ public class ProjectUndertakeController extends BaseController {
     }
 
     /**
-     * 处理邀请请求，
+     * 处理邀请/申请请求，
      * 参数 invite：
      * 1   拒绝
      * 2   同意
+     * 参数 flag：
+     * true    作为请求发起方
+     * false   作为请求接受方
      * id：承接的 id
      * reply: 拒绝时回显
      */
     public void invite() {
         Integer invite = getParaToInt("invite");
+        Boolean flag = getParaToBoolean("flag");
         Long id = getParaToLong("id");
-        if (invite == null || id == null || (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
+        if (flag == null || invite == null || id == null || (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
                 && !invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT)))) {
             renderJson(RestResult.buildError("请求参数错误"));
             throw new BusinessException("请求参数错误");
@@ -193,23 +197,41 @@ public class ProjectUndertakeController extends BaseController {
         User user = AuthUtils.getLoginUser();
         String reply = null;
         Notification notification = new Notification();
-        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
+
+        if (flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
             reply = getPara("reply");
-            notification.setName("邀请拒绝通知");
+            notification.setName("邀请介入拒绝通知");
             notification.setContent(user.getName() + "已拒绝您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
+        } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
+            reply = getPara("reply");
+            notification.setName("申请介入拒绝通知");
+            notification.setContent(user.getName() + "已拒绝您的申请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
         }
-        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
-            notification.setName("邀请接受通知");
+
+        if (flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
+            notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
+        } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
+            notification.setName("申请介入同意通知");
+            notification.setContent(user.getName() + "已接受您的申请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
         }
+
         projectUndertake.setReply(reply);
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setLastAccessTime(new Date());
 
         Long projectID = projectUndertake.getProjectID();
-        Long receiverID = projectService.findById(projectID).getUserId();
+        Long receiverID;
+        if (flag) {
+            receiverID = projectService.findById(projectID).getUserId();
+        } else {
+            receiverID = projectUndertake.getFacAgencyID();
+        }
+
         notification.setSource("/app/projectUndertake/invite");
         //TODO 等待书写接受模块
         notification.setRecModule("");
@@ -224,6 +246,13 @@ public class ProjectUndertakeController extends BaseController {
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
             renderJson(RestResult.buildError("请求失败，请重新尝试！"));
             throw new BusinessException("请求失败，请重新尝试！");
+        }
+        List<ProjectUndertake> list = projectUndertakeService.findListByProjectAndStatus(projectID, ProjectUndertakeStatus.WAITING);
+        for (ProjectUndertake model : list) {
+            model.setStatus(Integer.valueOf(ProjectUndertakeStatus.UNDERTAKE));
+            if (!projectUndertakeService.update(model)) {
+                throw new BusinessException("更新数据库的其他请求变为已承接状态失败！");
+            }
         }
         renderJson(RestResult.buildSuccess());
     }

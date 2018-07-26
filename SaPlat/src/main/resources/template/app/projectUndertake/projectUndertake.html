@@ -11,7 +11,8 @@
 <script type="text/javascript">
     layui.use(['table', 'layer'], function () {
         var table = layui.table
-            , $ = layui.jquery;
+            , $ = layui.jquery
+            , button;
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -58,18 +59,33 @@
                 pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
                 });
             } else if (obj.event === 'agree') {
+                if (button == 1) {
+                    var flag = true;
+                } else if (button == 2) {
+                    var flag = false;
+                }
                 layer.confirm('确定接受嘛？(此操作不可逆！)', function (index) {
                     $.post("#(ctxPath)/app/projectUndertake/invite", {
                         id: data.id,
-                        invite: 2
+                        invite: 2,
+                        flag: flag
                     }, function () {
                         layer.msg("同意成功！");
                         setTimeout(function () {
-                            $('#invite').click();
+                            if (button == 1) {
+                                $('#invite').click();
+                            } else if (button == 2) {
+                                $('#apply').click();
+                            }
                         }, 1000);
                     });
                 });
             } else if (obj.event === 'refuse') {
+                if (button == 1) {
+                    var flag = true;
+                } else if (button == 2) {
+                    var flag = false;
+                }
                 layer.open({
                     type: 1
                     , title: false //不显示标题栏
@@ -93,11 +109,16 @@
                             $.post("#(ctxPath)/app/projectUndertake/invite", {
                                 id: data.id,
                                 reply: textarea.value,
-                                invite: 1
+                                invite: 1,
+                                flag: flag
                             }, function () {
                                 layer.msg("拒绝成功！");
                                 setTimeout(function () {
-                                    $('#invite').click();
+                                    if (button == 1) {
+                                        $('#invite').click();
+                                    } else if (button == 2) {
+                                        $('#apply').click();
+                                    }
                                 }, 1000);
                             });
                         });
@@ -147,6 +168,7 @@
         });
 
         $('#invite').on('click', function () {
+            button = 1;
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , cols: [[                  //标题栏
@@ -166,6 +188,7 @@
         });
 
         $('#apply').on('click', function () {
+            button = 2;
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , cols: [[                  //标题栏
