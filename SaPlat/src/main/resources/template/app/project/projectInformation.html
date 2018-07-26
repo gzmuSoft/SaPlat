@@ -3,7 +3,7 @@
 
 <style>
     .buttonChange {
-        background: #66bab7;
+        background: #009688;
     }
 </style>
 <head>
@@ -50,9 +50,18 @@
             </div>
 
             <div>
-                <label for="project.typeID">项目类型</label>
-                <select id="project.typeID" name="project.typeID">
-                    #for(List : typeNameList)
+                <label for="project.paTypeID">项目评估类型</label>
+                <select id="project.paTypeID" name="project.paTypeID">
+                    #for(List : PaTypeNameList)
+                    <option value="#(List.id)">#(List.name)</option>
+                    #end
+                </select>
+            </div>
+
+            <div>
+                <label for="project.pStepID">项目阶段</label>
+                <select id="project.pStepID" name="project.pStepID">
+                    #for(List : projectStepNameList)
                     <option value="#(List.id)">#(List.name)</option>
                     #end
                 </select>

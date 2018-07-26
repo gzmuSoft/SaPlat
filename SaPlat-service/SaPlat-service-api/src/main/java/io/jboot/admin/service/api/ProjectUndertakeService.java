@@ -27,22 +27,32 @@ public interface ProjectUndertakeService {
 
     /**
      * find model by facAgencyID and projectID
-     *
+     * @param facAgencyID
+     * @param projectID
      * @return all <ProjectUndertake
      */
     public boolean findIsInvite(Long facAgencyID, Long projectID);
 
     /**
-     * find model projectID and status to isReceive
+     * find List<ProjectUndertake> by projectID and status
      *
+     * @param status
+     * @param projectID
+     * @return all List<ProjectUndertake>
+     */
+    public List<ProjectUndertake> findListByProjectAndStatus(Long projectID, String status);
+
+    /**
+     * find model projectID and status to isReceive
+     * @param projectID
      * @return all <ProjectUndertake
      */
     public boolean findIsReceive(Long projectID);
 
     /**
-     *
      * @param pageNumber
      * @param pageSize
+     * @param project
      * @return Project
      */
     public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize);
@@ -99,6 +109,9 @@ public interface ProjectUndertakeService {
      * @return if save or update success
      */
     public boolean saveOrUpdate(ProjectUndertake model);
+
+
+
 
     /**
      * update data model

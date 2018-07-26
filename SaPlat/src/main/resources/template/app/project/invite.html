@@ -66,7 +66,8 @@
 <script type="text/javascript">
 
     layui.use(['table', 'layer'], function () {
-        var table = layui.table;
+        var table = layui.table, layer = layui.layer;
+
 
         // 审核通过的表格渲染
         var tableIns = table.render({
@@ -75,7 +76,6 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
-            , width: '800px'
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
@@ -103,13 +103,15 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看详细资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id, '', '', function () {
+                pop_show('查看详细资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id, '400', '', function () {
                 });
             } else if (obj.event === 'invite') {
-                pop_show('邀请', '#(ctxPath)/app/project/invite?id=' + data.id + '&projectId=' + $('#id').val(), '', '', function () {
-                    pop_close();
-                    window.location.reload();
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                $.ajax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/project/invite?id=' + data.id + '&projectId=' + $('#id').val(),
+                    success: function () {
+                        window.location.reload();
+                    }
                 });
             }
         });

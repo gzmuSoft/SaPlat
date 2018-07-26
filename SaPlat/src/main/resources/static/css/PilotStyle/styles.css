@@ -12,7 +12,7 @@ html {
 /*背景图片*/
 
 body {
-    font-family: "楷体";
+    font-family: "Microsoft Yahei";
 }
 /*身体全局*/
 
@@ -30,7 +30,7 @@ body {
     text-align: center;
     position: relative;
     background: rgba(1, 1, 1, 0);
-    font-size: 20px;
+    font-size: 15px;
 }
 /*除大字标题全部*/
 
@@ -53,7 +53,7 @@ body {
 
 #msform input, #msform textarea ,#msform select{
     padding: 5px;
-    border: 2px solid #8c8c8c;
+    border: 1px solid #bfbfbf;
     margin-bottom: 5px;
     width: 100%;
     box-sizing: border-box;
@@ -66,11 +66,11 @@ body {
 
 #msform .action-button {
     width: 100px;
-    background: #66BAB7;
+    background: #009688;
     font-weight: bold;
     color: white;
     border: 0 none;
-    border-radius: 50px;
+    border-radius: 2px;
     cursor: pointer;
     padding: 5px 5px;
     margin: 10px 10px;
@@ -78,23 +78,23 @@ body {
 /*按钮*/
 
 #msform .action-button:hover, #msform .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #43abae;
 }
 /*按钮边框*/
 /*headings*/
 
 .fs-title {
-    font-size: 25px;
+    font-size: 20px;
     text-transform: uppercase;
-    color: #376B6D;
+    color: #000000;
     margin-bottom: 15px;
 }
 /*提示语*/
 
 .fs-subtitle {
     font-weight: normal;
-    font-size: 13px;
-    color: #376B6D;
+    font-size: 10px;
+    color: #000000;
     margin-bottom: 15px;
 }
 /*二级提示语*/
@@ -110,9 +110,9 @@ body {
 
 #progressbar li {
     list-style-type: none;
-    color: #0089A5;
+    color: #000000;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 10px;
     width: 25%;
     float: left;
     position: relative;
@@ -154,7 +154,7 @@ body {
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
 #progressbar li.active:before, #progressbar li.active:after {
-    background: #66BAB7;
+    background: #00a89a;
     color: white;
 }
 /*变动条内文字及其颜色*/

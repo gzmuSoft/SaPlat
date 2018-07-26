@@ -1,11 +1,13 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ProfGroupService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ProfGroup;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
@@ -34,5 +36,14 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
     @Override
     public ProfGroup findByName(String name) {
         return DAO.findFirstByColumn("name", name);
+    }
+
+    @Override
+    public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize){
+        Columns columns = Columns.create();
+        if(null!=profGroup.getName()){
+            columns.like("name", "%" + profGroup.getName() + "%");
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }
 }

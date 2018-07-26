@@ -34,7 +34,10 @@ public class ProjectController extends BaseController {
     private AuthService authService;
 
     @JbootrpcService
-    private ProjectTypeService projectTypeService;
+    private ProjectAssTypeService projectAssTypeService;
+
+    @JbootrpcService
+    private ProjectStepService projectStepService;
 
     @JbootrpcService
     private AuthProjectService authProjectService;
@@ -55,12 +58,13 @@ public class ProjectController extends BaseController {
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
         List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
-        List<ProjectType> typeList = projectTypeService.findAll();
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
+        List<ProjectStep> projectStepList = projectStepService.findAll();
         List<String> roleNameList = new ArrayList<>();
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        setAttr("roleNameList", roleNameList).setAttr("typeNameList", typeList).render("projectInformation.html");
+        setAttr("roleNameList", roleNameList).setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList).render("projectInformation.html");
     }
 
     /**
@@ -72,7 +76,6 @@ public class ProjectController extends BaseController {
         Project project = getBean(Project.class, "project");
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setDrawings("#/");
         project.setIsEnable(true);
         project.setStatus(ProjectStatus.IS_VERIFY);
         project.setUserId(loginUser.getId());
@@ -95,9 +98,10 @@ public class ProjectController extends BaseController {
         authProject.setLastUpdUser(loginUser.getName());
         if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
             renderJson(RestResult.buildSuccess("立项成功"));
-            render("verfed.html");
+            render("verfedSuccess.html");
         } else {
             renderJson(RestResult.buildError("立项失败"));
+            render("verfedDefeat.html");
             throw new BusinessException("立项失败");
         }
     }
@@ -111,7 +115,6 @@ public class ProjectController extends BaseController {
         Project project = getBean(Project.class, "project");
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setDrawings("#/");
         project.setIsEnable(true);
         project.setStatus(ProjectStatus.VERIFIING);
         project.setUserId(loginUser.getId());
@@ -150,7 +153,7 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
-        model.setTypeName(projectTypeService.findById(model.getTypeID()).getName());
+        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
         setAttr("model", model).render("update.html");
 
     }
@@ -307,7 +310,7 @@ public class ProjectController extends BaseController {
         Project model = projectService.findById(id);
         if (model != null) {
             model.setPublicTime(getParaToDate("publicTime"));
-            model.setEndTime(getParaToDate("endTime"));
+            model.setEndPublicTime(getParaToDate("endTime"));
             model.setIsPublic(true);
         }
         if (projectService.update(model)) {
@@ -344,16 +347,13 @@ public class ProjectController extends BaseController {
         projectUndertake.setApplyOrInvite(true);
         projectUndertake.setStatus(0);
         projectUndertake.setCreateTime(new Date());
-        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndTime());
+        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndPublicTime());
         projectUndertake.setLastAccessTime(new Date());
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setIsEnable(true);
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
-            renderJson(RestResult.buildError("邀请失败"));
             throw new BusinessException("邀请失败");
         }
-
-
     }
 
     /**
