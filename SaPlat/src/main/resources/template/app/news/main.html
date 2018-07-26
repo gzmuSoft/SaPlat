@@ -53,7 +53,7 @@
                 layer.confirm('真的删除行么', function(index){
                     util.sendAjax ({
                         type: 'POST',
-                        url: '#(ctxPath)/app/country/delete',
+                        url: '#(ctxPath)/app/news/delete',
                         data: {id : data.id},
                         loadFlag: true,
                         success : function(data){
@@ -66,13 +66,13 @@
                     })
                 });
             } else if(obj.event === 'edit'){
-                pop_show('编辑国家','#(ctxPath)/app/country/update?id=' + data.id,'445','315', function(){
+                pop_show('编辑新闻资讯','#(ctxPath)/app/news/update?id=' + data.id,'1200','660', function(){
                     reloadTable($('#name').val());
                 });
             } else if(obj.event === 'use'){
                 util.sendAjax ({
                     type: 'POST',
-                    url: '#(ctxPath)/app/country/use',
+                    url: '#(ctxPath)/app/news/use',
                     data: {id : data.id},
                     loadFlag: true,
                     success : function(data){
@@ -80,10 +80,10 @@
                     }
                 });
             } else if(obj.event === 'unuse'){
-                layer.confirm('确定禁用该国家吗', function(index){
+                layer.confirm('确定禁用该新闻资讯吗', function(index){
                     util.sendAjax ({
                         type: 'POST',
-                        url: '#(ctxPath)/app/country/unuse',
+                        url: '#(ctxPath)/app/news/unuse',
                         data: {id : data.id},
                         loadFlag: true,
                         success : function(data){
@@ -99,20 +99,20 @@
         });
 
         $("#add").click(function(){
-            pop_show('新闻编辑','#(ctxPath)/app/news/add','1200','600', function(){
-                reloadTable($('#name').val(), $('#des').val());
+            pop_show('添加新闻','#(ctxPath)/app/news/add','1200','660', function(){
+                reloadTable($('#name').val());
             });
         });
 
-        reloadTable = function (name, des) {
+        reloadTable = function (name) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/new/tableData'
-                ,where: {name: name, des: des} //设定异步数据接口的额外参数
+                url: '#(ctxPath)/app/news/tableData'
+                ,where: {name: name} //设定异步数据接口的额外参数
             });
         };
 
         form.on('submit(search)', function(data){
-            reloadTable(data.field.name, data.field.des);
+            reloadTable(data.field.name);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -126,9 +126,9 @@
         <form id="searchForm" class="layui-form x-center" action="" >
             <div class="layui-form-pane">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
+                    <label class="layui-form-label">标题</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" placeholder="国家名称" class="layui-input"/>
+                        <input type="text" id="name" name="name" placeholder="新闻资讯标题" class="layui-input"/>
                     </div>
                     <div class="layui-input-inline" style="width : 80px">
                         <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
@@ -139,8 +139,8 @@
         <hr>
         <div class="layui-row">
             <div class="layui-btn-group">
-                #shiroHasPermission('/app/country/add')
-                <button id="add" class="layui-btn layui-btn-small">编写新闻</button>
+                #shiroHasPermission('/app/news/add')
+                <button id="add" class="layui-btn layui-btn-small">添加新闻</button>
                 #end
             </div>
             <table id="dateTable" lay-filter="dateTable"></table>

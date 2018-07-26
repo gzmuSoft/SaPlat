@@ -51,27 +51,27 @@ public class NewsController extends BaseController {
     }
 
     @Before(POST.class)
-    public String uploadFile()
+    public void uploadFile()
     {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        String description = getPara("description");
+        String strUploadPath = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        UploadFile upload = getFile("file", strUploadPath);
         File file = upload.getFile();
         String oldName = file.getName();
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        String fileUrl = "/upload/" + UUID.randomUUID() + "." + type;
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
+        String strNewFileName = UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload/" + strUploadPath + "\\" + strNewFileName;
+        File newFile = new File(path + "\\" + strNewFileName);
         file.renameTo(newFile);
         Files files = new Files();
         files.setName(oldName);
         files.setCreateTime(new Date());
-        files.setDescription(description);
         files.setCreateUserID(AuthUtils.getLoginUser().getId());
         files.setIsEnable(false);
-        files.setPath(newFile.getName());
+        files.setPath(fileUrl);
         files.setSize(file.length());
         files.setType(type);
-        //filesService.save(files);
+        filesService.save(files);
         Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map2 = new HashMap<String,Object>();
         map.put("code",0);//0表示成功，1失败
@@ -80,6 +80,6 @@ public class NewsController extends BaseController {
         map2.put("src",fileUrl);//图片url
         String result = new JSONObject(map).toString();
         System.out.println(result);
-        return result;
+        renderJson(map);
     }
 }
