@@ -32,7 +32,7 @@ public class ProjectUndertakeStatus extends BaseStatus{
         add(WAITING, "待确认");
         add(REFUSE, "已拒绝");
         add(ACCEPT, "已同意");
-        add(UNDERTAKE, "已承接");
+        add(UNDERTAKE, "已被承接");
     }
     private static ProjectUndertakeStatus me;
 

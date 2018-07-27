@@ -59,6 +59,7 @@ public interface PersonService  {
      */
     public boolean save(Person model);
 
+
     /**
      * 保存个人群体并创建用户
      * @param model 个人

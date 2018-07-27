@@ -49,12 +49,20 @@ public abstract class BaseFileProject<M extends BaseFileProject<M>> extends Jboo
 		return getLong("fileID");
 	}
 
-	public void setType(java.lang.Integer type) {
-		set("type", type);
+	public void setFileTypeID(java.lang.Long fileTypeID) {
+		set("fileTypeID", fileTypeID);
 	}
 	
-	public java.lang.Integer getType() {
-		return getInt("type");
+	public java.lang.Long getFileTypeID() {
+		return getLong("fileTypeID");
+	}
+
+	public void setStatus(java.lang.Integer status) {
+		set("status", status);
+	}
+	
+	public java.lang.Integer getStatus() {
+		return getInt("status");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
@@ -105,12 +113,12 @@ public abstract class BaseFileProject<M extends BaseFileProject<M>> extends Jboo
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Boolean isEnable) {
+	public void setIsEnable(java.lang.Integer isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Boolean getIsEnable() {
-		return get("isEnable");
+	public java.lang.Integer getIsEnable() {
+		return getInt("isEnable");
 	}
 
 }

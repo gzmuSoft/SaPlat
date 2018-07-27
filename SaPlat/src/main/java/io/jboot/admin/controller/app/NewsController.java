@@ -49,37 +49,4 @@ public class NewsController extends BaseController {
         Page<News> page = newsService.findPage(model, pageNumber, pageSize);
         renderJson(new DataTable<News>(page));
     }
-
-    @Before(POST.class)
-    public String uploadFile()
-    {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        String description = getPara("description");
-        File file = upload.getFile();
-        String oldName = file.getName();
-        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
-        String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        String fileUrl = "/upload/" + UUID.randomUUID() + "." + type;
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
-        file.renameTo(newFile);
-        Files files = new Files();
-        files.setName(oldName);
-        files.setCreateTime(new Date());
-        files.setDescription(description);
-        files.setCreateUserID(AuthUtils.getLoginUser().getId());
-        files.setIsEnable(false);
-        files.setPath(newFile.getName());
-        files.setSize(file.length());
-        files.setType(type);
-        //filesService.save(files);
-        Map<String,Object> map = new HashMap<String,Object>();
-        Map<String,Object> map2 = new HashMap<String,Object>();
-        map.put("code",0);//0表示成功，1失败
-        map.put("msg","success");//提示消息
-        map.put("data",map2);
-        map2.put("src",fileUrl);//图片url
-        String result = new JSONObject(map).toString();
-        System.out.println(result);
-        return result;
-    }
 }

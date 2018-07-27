@@ -147,30 +147,44 @@ public class ProjectUndertakeController extends BaseController {
      * 参数 applyOrInvite ：
      * true    主动申请
      * false   被邀请
+     * 参数 flag ：
+     * true    作为请求发起方
+     * false   作为请求接受方
      */
     public void projectUndertakeList() {
+        User user = AuthUtils.getLoginUser();
         Boolean applyOrInvite = getParaToBoolean("applyOrInvite");
+        Boolean flag = getParaToBoolean("flag");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
         projectUndertake.setApplyOrInvite(applyOrInvite);
         projectUndertake.setIsEnable(true);
+        if (flag) {
+            projectUndertake.setCreateUserID(user.getId());
+        } else {
+            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId()).getId());
+        }
         Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<ProjectUndertake>(page));
     }
 
     /**
-     * 处理邀请请求，
+     * 处理邀请/申请请求，
      * 参数 invite：
      * 1   拒绝
      * 2   同意
+     * 参数 flag：
+     * true    作为请求发起方
+     * false   作为请求接受方
      * id：承接的 id
      * reply: 拒绝时回显
      */
     public void invite() {
         Integer invite = getParaToInt("invite");
+        Boolean flag = getParaToBoolean("flag");
         Long id = getParaToLong("id");
-        if (invite == null || id == null || (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
+        if (flag == null || invite == null || id == null || (!invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))
                 && !invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT)))) {
             renderJson(RestResult.buildError("请求参数错误"));
             throw new BusinessException("请求参数错误");
@@ -183,23 +197,41 @@ public class ProjectUndertakeController extends BaseController {
         User user = AuthUtils.getLoginUser();
         String reply = null;
         Notification notification = new Notification();
-        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
+
+        if (flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
             reply = getPara("reply");
-            notification.setName("邀请拒绝通知");
+            notification.setName("邀请介入拒绝通知");
             notification.setContent(user.getName() + "已拒绝您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
+        } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.REFUSE))) {
+            reply = getPara("reply");
+            notification.setName("申请介入拒绝通知");
+            notification.setContent(user.getName() + "已拒绝您的申请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
         }
-        if (invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
-            notification.setName("邀请接受通知");
+
+        if (flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
+            notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
+        } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
+            notification.setName("申请介入同意通知");
+            notification.setContent(user.getName() + "已接受您的申请！");
+            projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
         }
+
         projectUndertake.setReply(reply);
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setLastAccessTime(new Date());
 
         Long projectID = projectUndertake.getProjectID();
-        Long receiverID = projectService.findById(projectID).getUserId();
+        Long receiverID;
+        if (flag) {
+            receiverID = projectService.findById(projectID).getUserId();
+        } else {
+            receiverID = projectUndertake.getFacAgencyID();
+        }
+
         notification.setSource("/app/projectUndertake/invite");
         //TODO 等待书写接受模块
         notification.setRecModule("");
@@ -214,6 +246,13 @@ public class ProjectUndertakeController extends BaseController {
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
             renderJson(RestResult.buildError("请求失败，请重新尝试！"));
             throw new BusinessException("请求失败，请重新尝试！");
+        }
+        List<ProjectUndertake> list = projectUndertakeService.findListByProjectAndStatus(projectID, ProjectUndertakeStatus.WAITING);
+        for (ProjectUndertake model : list) {
+            model.setStatus(Integer.valueOf(ProjectUndertakeStatus.UNDERTAKE));
+            if (!projectUndertakeService.update(model)) {
+                throw new BusinessException("更新数据库的其他请求变为已承接状态失败！");
+            }
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -240,23 +279,23 @@ public class ProjectUndertakeController extends BaseController {
      * 实施小组建立初始页面(自评)
      */
     public void toSelfProjectImpTeam() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         User user = AuthUtils.getLoginUser();
         List<Project> projects = projectService.findAll();
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<Project> selfProjects = new ArrayList<>();
         List<OrgStructure> orgStructures = new ArrayList<>();
         //自评的所有项目
-        for (int i = 0; i < projects.size(); i++) {
-            if (projects.get(i).getUserId() == user.getId() && projects.get(i).getAssessmentMode().equals("自评")) {
-                selfProjects.add(projects.get(i));
+        for (Project project : projects) {
+            if (project.getUserId().equals(user.getId()) && project.getAssessmentMode().equals("自评")) {
+                selfProjects.add(project);
             }
         }
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            string += structPersonLinks.get(i).getStructID();
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            string.append(structPersonLink.getStructID());
         }
-        for (int i = 0; i < sub(string).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        for (int i = 0; i < sub(string.toString()).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
         setAttr("selfProjects", selfProjects).setAttr("orgStructures", orgStructures).render("selfProjectImpTeam.html");
     }
@@ -268,8 +307,8 @@ public class ProjectUndertakeController extends BaseController {
     public void persons() {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
         List<Person> persons = new ArrayList<>();
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            persons.add(personService.findById(structPersonLinks.get(i).getPersonID()));
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            persons.add(personService.findById(structPersonLink.getPersonID()));
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
@@ -281,22 +320,22 @@ public class ProjectUndertakeController extends BaseController {
      * 实施小组建立初始页面(委评)
      */
     public void toOtherProjectImpTeam() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         List<ProjectUndertake> projectUndertakes = projectUndertakeService.findAll();
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<ProjectUndertake> otherProjects = new ArrayList<>();
         List<OrgStructure> orgStructures = new ArrayList<>();
         //委评且同意介入或同意邀请的项目
-        for (int i = 0; i < projectUndertakes.size(); i++) {
-            if (projectUndertakes.get(i).getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
-                otherProjects.add(projectUndertakes.get(i));
+        for (ProjectUndertake projectUndertake : projectUndertakes) {
+            if (projectUndertake.getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
+                otherProjects.add(projectUndertake);
             }
         }
-        for (int i = 0; i < structPersonLinks.size(); i++) {
-            string += structPersonLinks.get(i).getStructID();
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            string.append(structPersonLink.getStructID());
         }
-        for (int i = 0; i < sub(string).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string).charAt(i))));
+        for (int i = 0; i < sub(string.toString()).length(); i++) {
+            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
         setAttr("otherProjects", otherProjects).setAttr("orgStructures", orgStructures).render("otherProjectImpTeam.html");
     }

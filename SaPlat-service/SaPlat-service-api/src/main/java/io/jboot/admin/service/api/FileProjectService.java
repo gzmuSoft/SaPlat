@@ -69,6 +69,7 @@ public interface FileProjectService  {
      */
     public boolean update(FileProject model);
 
+    public FileProject findByProjectID(Long id);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

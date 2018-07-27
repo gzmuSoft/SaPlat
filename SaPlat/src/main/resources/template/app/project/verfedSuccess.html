@@ -39,9 +39,8 @@
     {{# } else if(d.assessmentMode == '自评'){ }}
     ]]#
     <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">无需发布</a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="invite">邀请介入</a>
     #[[
-    {{# } else if((d.isPublic && d.assessmentMode == '委评'&&d.isReceive)||(d.assessmentMode == '自评'&&d.isReceive)){ }}
+    {{# } else if((d.isPublic && d.assessmentMode == '委评'&&d.isReceive)){ }}
     ]]#
     <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">已委托成功</a>
     #[[
