@@ -69,6 +69,9 @@ public interface ImpTeamService  {
      */
     public boolean update(ImpTeam model);
 
+    public List<ImpTeam> findByUserID(Long id);
+
+    public ImpTeam findByUserIDAndProjectID(Long userId,Long projectId);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

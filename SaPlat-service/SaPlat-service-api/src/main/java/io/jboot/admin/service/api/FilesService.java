@@ -74,7 +74,13 @@ public interface FilesService  {
      * @return
      */
     public boolean update(Files model);
-
+    /**
+     * save or update model
+     *
+     * @param model
+     * @return save model
+     */
+    public Files saveAndGet(Files model);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
