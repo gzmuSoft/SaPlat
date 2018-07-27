@@ -20,6 +20,15 @@ public interface ProjectService  {
 
 
     /**
+     * find model by primary key
+     *
+     * @param ids
+     * @return
+     */
+    public List<Project> findByIds(List<Object> ids);
+
+
+    /**
      * find all model
      * @return all <Project
      */

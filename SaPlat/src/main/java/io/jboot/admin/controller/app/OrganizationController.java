@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author LiuChuanjin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 23:44 2018/7/6
  */
 @RequestMapping("/app/organization")
@@ -581,8 +581,9 @@ public class OrganizationController extends BaseController {
     public void postProjectGet() {
         Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
-        UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(),id-5 );
-        if (userRole == null){
+        //TODO 待修复问题：投机取巧使用id相减方法
+        UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), id - 5);
+        if (userRole == null) {
             renderJson(RestResult.buildError("亲，请先去认证成为当前组织再来申请哦~~~"));
             throw new BusinessException("亲，请先去认证成为当前组织再来申请哦~~~");
         }

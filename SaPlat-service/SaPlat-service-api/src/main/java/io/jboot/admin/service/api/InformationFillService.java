@@ -2,12 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Notification;
-import io.jboot.admin.service.entity.model.ProjectUndertake;
+import io.jboot.admin.service.entity.model.InformationFill;
 
 import java.util.List;
 
-public interface ProjectUndertakeService {
+public interface InformationFillService  {
 
     /**
      * find model by primary key
@@ -15,53 +14,22 @@ public interface ProjectUndertakeService {
      * @param id
      * @return
      */
-    public ProjectUndertake findById(Object id);
+    public InformationFill findById(Object id);
 
 
+    /**
+     * 通过权限id查询需要填写的资料信息
+     * @param roleId 权限id
+     * @return 集合
+     */
+    public List<InformationFill> findByRoleId(Long roleId);
     /**
      * find all model
      *
-     * @return all <ProjectUndertake
+     * @return all <InformationFill
      */
-    public List<ProjectUndertake> findAll();
+    public List<InformationFill> findAll();
 
-    /**
-     * find model by facAgencyID and projectID
-     *
-     * @return all <ProjectUndertake
-     */
-    public boolean findIsInvite(Long facAgencyID, Long projectID);
-
-    /**
-     * find model projectID and status to isReceive
-     *
-     * @return all <ProjectUndertake
-     */
-    public boolean findIsReceive(Long projectID);
-
-    /**
-     *
-     * @param pageNumber
-     * @param pageSize
-     * @return Project
-     */
-    public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize);
-
-
-    /**
-     * 通过项目编号和服务机构编号查询项目承接
-     * @param projectId 项目编号
-     * @param facAgencyId 服务机构编号
-     * @return 项目承接
-     */
-    public ProjectUndertake findByProjectIdAndFacAgencyId(Long projectId,Long facAgencyId);
-
-    /**
-     * 通过项目编号查询项目承接
-     * @param projectId 项目编号
-     * @return 项目承接
-     */
-    public ProjectUndertake findByProjectId(Long projectId);
 
     /**
      * delete model by primary key
@@ -78,7 +46,7 @@ public interface ProjectUndertakeService {
      * @param model
      * @return
      */
-    public boolean delete(ProjectUndertake model);
+    public boolean delete(InformationFill model);
 
 
     /**
@@ -87,17 +55,8 @@ public interface ProjectUndertakeService {
      * @param model
      * @return
      */
-    public boolean save(ProjectUndertake model);
+    public boolean save(InformationFill model);
 
-
-    /**
-     * 保存或者更新并发送通知
-     *
-     * @param model        保存的项目承接
-     * @param notification 通知者
-     * @return 结果
-     */
-    public boolean saveOrUpdateAndSend(ProjectUndertake model, Notification notification);
 
     /**
      * save or update model
@@ -105,9 +64,7 @@ public interface ProjectUndertakeService {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(ProjectUndertake model);
-
-
+    public boolean saveOrUpdate(InformationFill model);
 
 
     /**
@@ -116,34 +73,23 @@ public interface ProjectUndertakeService {
      * @param model
      * @return
      */
-    public boolean update(ProjectUndertake model);
+    public boolean update(InformationFill model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
-
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
     public void join(List<? extends Model> models, String joinOnField);
-
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
     public void join(List<? extends Model> models, String joinOnField, String joinName);
-
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
     public void join(Model model, String joinOnField);
-
     public void join(Model model, String joinOnField, String[] attrs);
-
     public void join(Model model, String joinOnField, String joinName);
-
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
     public void keep(Model model, String... attrs);
-
     public void keep(List<? extends Model> models, String... attrs);
+
 }
