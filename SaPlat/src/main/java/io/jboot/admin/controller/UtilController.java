@@ -36,13 +36,14 @@ public class UtilController extends BaseController{
         String description = getPara("description");
         File file = upload.getFile();
         String oldName = file.getName();
+        String newName = UUID.randomUUID().toString();
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
+        File newFile = new File(path + "\\" +  newName+ "." + type);
         if(!file.renameTo(newFile)){
             throw new BusinessException("文件上传失败");
         }
-        String fileUrl = "/upload" +"/"+nowDate+"/"+ UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload" +"/"+nowDate+"/"+newName + "." + type;
         Files files = new Files();
         files.setName(oldName);
         files.setCreateTime(new Date());
