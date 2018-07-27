@@ -65,6 +65,14 @@ public abstract class BaseDiagnoses<M extends BaseDiagnoses<M>> extends JbootMod
 		return getStr("surveyMethod");
 	}
 
+	public void setSurveyWay(java.lang.String surveyWay) {
+		set("surveyWay", surveyWay);
+	}
+	
+	public java.lang.String getSurveyWay() {
+		return getStr("surveyWay");
+	}
+
 	public void setSampleRate(java.math.BigDecimal sampleRate) {
 		set("sampleRate", sampleRate);
 	}

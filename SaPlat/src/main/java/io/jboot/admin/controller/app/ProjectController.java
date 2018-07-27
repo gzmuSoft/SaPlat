@@ -352,11 +352,8 @@ public class ProjectController extends BaseController {
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setIsEnable(true);
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
-            renderJson(RestResult.buildError("邀请失败"));
             throw new BusinessException("邀请失败");
         }
-
-
     }
 
     /**

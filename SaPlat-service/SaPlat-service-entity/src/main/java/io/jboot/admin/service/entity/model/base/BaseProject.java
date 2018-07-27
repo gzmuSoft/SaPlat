@@ -57,21 +57,21 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getDouble("amount");
 	}
 
-    public void setPaTypeID(java.lang.Long paTypeID) {
-        set("paTypeID", paTypeID);
-    }
+	public void setPaTypeID(java.lang.Long paTypeID) {
+		set("paTypeID", paTypeID);
+	}
+	
+	public java.lang.Long getPaTypeID() {
+		return getLong("paTypeID");
+	}
 
-    public java.lang.Long getPaTypeID() {
-        return getLong("paTypeID");
-    }
-
-    public void setPStepID(java.lang.Long pStepID) {
-        set("pStepID", pStepID);
-    }
-
-    public java.lang.Long getPStepID() {
-        return getLong("pStepID");
-    }
+	public void setPStepID(java.lang.Long pStepID) {
+		set("pStepID", pStepID);
+	}
+	
+	public java.lang.Long getPStepID() {
+		return getLong("pStepID");
+	}
 
 	public void setSite(java.lang.String site) {
 		set("site", site);
@@ -97,45 +97,45 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getStr("assessmentMode");
 	}
 
-    public void setStatus(java.lang.String status) {
-        set("status", status);
-    }
+	public void setStatus(java.lang.String status) {
+		set("status", status);
+	}
+	
+	public java.lang.String getStatus() {
+		return getStr("status");
+	}
 
-    public java.lang.String getStatus() {
-        return getStr("status");
-    }
+	public void setIsPublic(java.lang.Boolean isPublic) {
+		set("isPublic", isPublic);
+	}
+	
+	public java.lang.Boolean getIsPublic() {
+		return get("isPublic");
+	}
 
-    public void setIsPublic(java.lang.Boolean isPublic) {
-        set("isPublic", isPublic);
-    }
+	public void setTag(java.lang.String tag) {
+		set("tag", tag);
+	}
+	
+	public java.lang.String getTag() {
+		return getStr("tag");
+	}
 
-    public java.lang.Boolean getIsPublic() {
-        return get("isPublic");
-    }
+	public void setPublicTime(java.util.Date publicTime) {
+		set("publicTime", publicTime);
+	}
+	
+	public java.util.Date getPublicTime() {
+		return get("publicTime");
+	}
 
-    public void setTag(java.lang.String tag) {
-        set("tag", tag);
-    }
-
-    public java.lang.String getTag() {
-        return getStr("tag");
-    }
-
-    public void setPublicTime(java.util.Date publicTime) {
-        set("publicTime", publicTime);
-    }
-
-    public java.util.Date getPublicTime() {
-        return get("publicTime");
-    }
-
-    public void setEndPublicTime(java.util.Date endPublicTime) {
-        set("endPublicTime", endPublicTime);
-    }
-
-    public java.util.Date getEndPublicTime() {
-        return get("endPublicTime");
-    }
+	public void setEndPublicTime(java.util.Date endPublicTime) {
+		set("endPublicTime", endPublicTime);
+	}
+	
+	public java.util.Date getEndPublicTime() {
+		return get("endPublicTime");
+	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
