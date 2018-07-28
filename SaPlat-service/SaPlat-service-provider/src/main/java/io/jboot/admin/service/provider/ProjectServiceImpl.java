@@ -21,6 +21,26 @@ import java.util.List;
 @Singleton
 @JbootrpcService
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
+    /**
+     * find all model
+     * @param model 项目主体
+     * @return all <Project>
+     */
+    public List<Project> findAll(Project model)
+    {
+        Columns columns = Columns.create();
+        if (StrKit.notNull(model.getIsEnable())){
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getUserId() != null){
+            columns.eq("userId",model.getUserId());
+        }
+        if (model.getId() != null){
+            columns.eq("id",model.getId());
+        }
+        return DAO.findListByColumns(columns);
+    }
+
     @Override
     public List<Project> findByIds(List<Object> ids) {
         List<Project> projects = Collections.synchronizedList(new ArrayList<Project>());

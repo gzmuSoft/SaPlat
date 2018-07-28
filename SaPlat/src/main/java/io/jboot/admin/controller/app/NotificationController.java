@@ -22,10 +22,10 @@ import java.util.Date;
 @RequestMapping("/app/notification")
 public class NotificationController extends BaseController {
     @JbootrpcService
-    NotificationService notificationService;
+    private NotificationService notificationService;
 
     @JbootrpcService
-    UserService userService;
+    private UserService userService;
     /**
      * index
      */
