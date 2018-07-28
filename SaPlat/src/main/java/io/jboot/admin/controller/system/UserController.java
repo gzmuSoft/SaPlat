@@ -14,6 +14,7 @@ import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.UserValidator;
 import io.jboot.admin.validator.system.ChangePwdValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -70,6 +71,7 @@ public class UserController extends BaseController {
     /**
      * 保存提交
      */
+    @Before({POST.class, UserValidator.class})
     public void postAdd() {
         User sysUser = getBean(User.class, "user");
         Long[] roles = getParaValuesToLong("userRole");
@@ -103,6 +105,7 @@ public class UserController extends BaseController {
     /**
      * 修改提交
      */
+    @Before({POST.class, UserValidator.class})
     public void postUpdate() {
         User sysUser = getBean(User.class, "user");
         Long[] roles = getParaValuesToLong("userRole");

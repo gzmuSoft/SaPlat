@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.system;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -11,6 +13,8 @@ import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.RoleValidator;
+import io.jboot.admin.validator.app.UserValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -58,6 +62,7 @@ public class RoleController extends BaseController {
     /**
      * 保存提交
      */
+    @Before({POST.class, RoleValidator.class})
     public void postAdd() {
         Role sysRole = getBean(Role.class, "role");
 
@@ -77,6 +82,7 @@ public class RoleController extends BaseController {
      * update
      */
     @NotNullPara({"id"})
+
     public void update() {
         Long id = getParaToLong("id");
 
@@ -87,6 +93,7 @@ public class RoleController extends BaseController {
     /**
      * 修改提交
      */
+    @Before({POST.class, RoleValidator.class})
     public void postUpdate() {
         Role sysRole = getBean(Role.class, "role");
 
