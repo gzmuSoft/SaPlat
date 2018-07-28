@@ -106,7 +106,7 @@ public class OccupationController extends BaseController{
         renderJson(RestResult.buildSuccess());
     }
     /**
-     * 启用项目阶段
+     * 启用职业
      */
     @NotNullPara({"id"})
     public void use() {
@@ -129,7 +129,7 @@ public class OccupationController extends BaseController{
     }
 
     /**
-     * 禁用项目阶段
+     * 禁用职业
      */
     @NotNullPara({"id"})
     public void unuse() {

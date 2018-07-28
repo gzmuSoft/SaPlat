@@ -80,7 +80,7 @@ public class UserController extends BaseController {
             throw new BusinessException("用户名已经存在");
         }
 
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         if (!userService.saveUser(sysUser, roles)) {
             throw new BusinessException("保存失败");
         }
@@ -115,7 +115,7 @@ public class UserController extends BaseController {
             throw new BusinessException("用户不存在");
         }
 
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
 
         if (!userService.updateUser(sysUser, roles)) {
             throw new BusinessException("修改失败");
@@ -149,8 +149,8 @@ public class UserController extends BaseController {
         }
 
         sysUser.setStatus(UserStatus.USED);
-        sysUser.setLastUpdTime(new Date());
-        sysUser.setNote("解锁系统用户");
+        sysUser.setLastAccessTime(new Date());
+        sysUser.setRemark("解锁系统用户");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("解锁失败");
@@ -172,8 +172,8 @@ public class UserController extends BaseController {
         }
 
         sysUser.setStatus(UserStatus.LOCKED);
-        sysUser.setLastUpdTime(new Date());
-        sysUser.setNote("锁定系统用户");
+        sysUser.setLastAccessTime(new Date());
+        sysUser.setRemark("锁定系统用户");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("锁定失败");
@@ -199,9 +199,9 @@ public class UserController extends BaseController {
             throw new BusinessException("无权操作");
         }
 
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysUser.setLastUpdTime(new Date());
-        sysUser.setNote("用户修改个人资料");
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setLastAccessTime(new Date());
+        sysUser.setRemark("用户修改个人资料");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("资料修改失败");
@@ -231,14 +231,14 @@ public class UserController extends BaseController {
         String pwd = getPara("newPwd");
 
 
-        String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-        SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
         pwd = hash.toHex();
         sysUser.setPwd(pwd);
-        sysUser.setSalt2(salt2);
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysUser.setLastUpdTime(new Date());
-        sysUser.setNote("用户修改密码");
+        sysUser.setSalt(salt);
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setLastAccessTime(new Date());
+        sysUser.setRemark("用户修改密码");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("修改密码失败");

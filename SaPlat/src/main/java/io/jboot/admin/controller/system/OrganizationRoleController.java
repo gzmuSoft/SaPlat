@@ -245,14 +245,14 @@ public class OrganizationRoleController extends Controller{
         String pwd = getPara("newPwd");
 
 
-        String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-        SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
         pwd = hash.toHex();
         sysUser.setPwd(pwd);
-        sysUser.setSalt2(salt2);
-        sysUser.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysUser.setLastUpdTime(new Date());
-        sysUser.setNote("用户修改密码");
+        sysUser.setSalt(salt);
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setLastAccessTime(new Date());
+        sysUser.setRemark("用户修改密码");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("修改密码失败");
