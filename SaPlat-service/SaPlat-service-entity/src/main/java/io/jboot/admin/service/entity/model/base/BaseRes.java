@@ -17,20 +17,28 @@ public abstract class BaseRes<M extends BaseRes<M>> extends JbootModel<M> implem
 		return getLong("id");
 	}
 
-	public void setPid(java.lang.Long pid) {
-		set("pid", pid);
-	}
-	
-	public java.lang.Long getPid() {
-		return getLong("pid");
-	}
-
 	public void setName(java.lang.String name) {
 		set("name", name);
 	}
 	
 	public java.lang.String getName() {
 		return getStr("name");
+	}
+
+	public void setSpell(java.lang.String spell) {
+		set("spell", spell);
+	}
+	
+	public java.lang.String getSpell() {
+		return getStr("spell");
+	}
+
+	public void setParentID(java.lang.Long parentID) {
+		set("parentID", parentID);
+	}
+	
+	public java.lang.Long getParentID() {
+		return getLong("parentID");
 	}
 
 	public void setDes(java.lang.String des) {
@@ -65,14 +73,6 @@ public abstract class BaseRes<M extends BaseRes<M>> extends JbootModel<M> implem
 		return getStr("iconCls");
 	}
 
-	public void setSeq(java.lang.Long seq) {
-		set("seq", seq);
-	}
-	
-	public java.lang.Long getSeq() {
-		return getLong("seq");
-	}
-
 	public void setType(java.lang.String type) {
 		set("type", type);
 	}
@@ -81,36 +81,60 @@ public abstract class BaseRes<M extends BaseRes<M>> extends JbootModel<M> implem
 		return getStr("type");
 	}
 
-	public void setStatus(java.lang.String status) {
-		set("status", status);
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
 	}
 	
-	public java.lang.String getStatus() {
-		return getStr("status");
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
 	}
 
-	public void setLastUpdAcct(java.lang.String lastUpdAcct) {
-		set("lastUpdAcct", lastUpdAcct);
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
 	}
 	
-	public java.lang.String getLastUpdAcct() {
-		return getStr("lastUpdAcct");
+	public java.util.Date getCreateTime() {
+		return get("createTime");
 	}
 
-	public void setLastUpdTime(java.util.Date lastUpdTime) {
-		set("lastUpdTime", lastUpdTime);
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
 	}
 	
-	public java.util.Date getLastUpdTime() {
-		return get("lastUpdTime");
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
 	}
 
-	public void setNote(java.lang.String note) {
-		set("note", note);
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
 	}
 	
-	public java.lang.String getNote() {
-		return getStr("note");
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
+	}
+
+	public void setSort(java.lang.Integer sort) {
+		set("sort", sort);
+	}
+	
+	public java.lang.Integer getSort() {
+		return getInt("sort");
+	}
+
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
+
+	public void setIsEnable(java.lang.Boolean isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }
