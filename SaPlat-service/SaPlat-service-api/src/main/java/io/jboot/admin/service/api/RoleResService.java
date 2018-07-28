@@ -6,7 +6,7 @@ import io.jboot.admin.service.entity.model.RoleRes;
 
 import java.util.List;
 
-public interface RoleResService  {
+public interface RoleResService {
 
     /**
      * 根据roleId删除model

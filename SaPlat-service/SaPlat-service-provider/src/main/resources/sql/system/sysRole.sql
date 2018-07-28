@@ -6,7 +6,7 @@
     sys_user d,
     sys_user_role e
   WHERE
-    b.id = e.role_id
-    AND d.id = e.user_id
+    b.id = e.roleID
+    AND d.id = e.userID
     AND d.`name` = ?
 #end

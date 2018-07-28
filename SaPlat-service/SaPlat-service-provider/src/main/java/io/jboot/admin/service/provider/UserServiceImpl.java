@@ -90,8 +90,8 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
                     List<UserRole> list = new ArrayList<UserRole>();
                     for (Long roleId : roles) {
                         UserRole userRole = new UserRole();
-                        userRole.setUserId(user.getId());
-                        userRole.setRoleId(roleId);
+                        userRole.setUserID(user.getId());
+                        userRole.setRoleID(roleId);
                         list.add(userRole);
                     }
                     int[] rets = userRoleService.batchSave(list);
@@ -136,8 +136,8 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
                     List<UserRole> list = new ArrayList<UserRole>();
                     for (Long roleId : roles) {
                         UserRole userRole = new UserRole();
-                        userRole.setUserId(user.getId());
-                        userRole.setRoleId(roleId);
+                        userRole.setUserID(user.getId());
+                        userRole.setRoleID(roleId);
                         list.add(userRole);
                     }
 

@@ -8,10 +8,10 @@
     sys_user d,
     sys_user_role e
   WHERE
-    a.id = c.res_id
-    AND b.id = c.role_id
-    AND d.id = e.user_id
-    and e.role_id = b.id
+    a.id = c.resID
+    AND b.id = c.roleID
+    AND d.id = e.userID
+    and e.roleID = b.id
     AND a.`status` = ?
     AND b.`status` = ?
     and d.`name` = ?
@@ -27,10 +27,10 @@ FROM
   sys_user d,
   sys_user_role e
 WHERE
-  a.id = c.res_id
-  AND b.id = c.role_id
-  AND d.id = e.user_id
-  and e.role_id = b.id
+  a.id = c.resID
+  AND b.id = c.roleID
+  AND d.id = e.userID
+  and e.roleID = b.id
   AND a.`status` = ?
   AND b.`status` = ?
   and a.pid = ?
@@ -48,10 +48,10 @@ FROM
   sys_user d,
   sys_user_role e
 WHERE
-  a.id = c.res_id
-  AND b.id = c.role_id
-  AND d.id = e.user_id
-  and e.role_id = b.id
+  a.id = c.resID
+  AND b.id = c.roleID
+  AND d.id = e.userID
+  and e.roleID = b.id
   AND a.`status` = ?
   AND b.`status` = ?
   AND FIND_IN_SET(a.id, querySysRes(?))
@@ -67,8 +67,8 @@ FROM
   sys_role_res role_res,
   sys_role role
 WHERE
-  role_res.res_id = res.id
-  AND role.id = role_res.role_id
+  role_res.resID = res.id
+  AND role.id = role_res.roleID
   AND res. STATUS = ?
   AND role. STATUS = ?
   AND ROLE.id = ?

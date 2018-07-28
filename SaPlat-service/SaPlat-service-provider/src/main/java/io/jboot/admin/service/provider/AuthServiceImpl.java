@@ -106,7 +106,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 }
                 List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
                 for (UserRole role : userRoleList) {
-                    if (model.getUserId().equals(role.getUserId()) && model.getRoleId().equals(role.getRoleId())) {
+                    if (model.getUserId().equals(role.getUserID()) && model.getRoleId().equals(role.getRoleID())) {
                         if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
                             userRoleService.delete(role);
                         }
@@ -115,8 +115,8 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 }
                 userRoleList = new ArrayList<UserRole>();
                 UserRole userRole = new UserRole();
-                userRole.setRoleId(model.getRoleId());
-                userRole.setUserId(model.getUserId());
+                userRole.setRoleID(model.getRoleId());
+                userRole.setUserID(model.getUserId());
                 userRoleList.add(userRole);
                 int[] rets = userRoleService.batchSave(userRoleList);
                 for (int ret : rets) {

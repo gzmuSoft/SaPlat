@@ -58,8 +58,8 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
                 String[] ress = resIds.split(",");
                 for (String resId : ress) {
                     RoleRes roleRes = new RoleRes();
-                    roleRes.setRoleId(id);
-                    roleRes.setResId(Long.parseLong(resId));
+                    roleRes.setRoleID(id);
+                    roleRes.setResID(Long.parseLong(resId));
                     roleResList.add(roleRes);
                 }
                 int[] rets = Db.batchSave(roleResList, roleResList.size());
