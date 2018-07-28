@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.FileProject;
+import io.jboot.admin.service.entity.model.ProjectFileType;
 
 import java.util.List;
 
-public interface FileProjectService  {
+public interface ProjectFileTypeService  {
 
     /**
      * find model by primary key
@@ -14,15 +14,15 @@ public interface FileProjectService  {
      * @param id
      * @return
      */
-    public FileProject findById(Object id);
+    public ProjectFileType findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <FileProject
+     * @return all <ProjectFileType
      */
-    public List<FileProject> findAll();
+    public List<ProjectFileType> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface FileProjectService  {
      * @param model
      * @return
      */
-    public boolean delete(FileProject model);
+    public boolean delete(ProjectFileType model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface FileProjectService  {
      * @param model
      * @return
      */
-    public boolean save(FileProject model);
+    public boolean save(ProjectFileType model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface FileProjectService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(FileProject model);
+    public boolean saveOrUpdate(ProjectFileType model);
 
 
     /**
@@ -67,11 +67,8 @@ public interface FileProjectService  {
      * @param model
      * @return
      */
-    public boolean update(FileProject model);
+    public boolean update(ProjectFileType model);
 
-    public FileProject findByProjectID(Long id);
-
-    public List<FileProject> findAllByProjectID(long id);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

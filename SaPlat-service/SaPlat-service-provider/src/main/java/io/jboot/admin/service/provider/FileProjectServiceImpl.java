@@ -8,6 +8,8 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -18,5 +20,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("projectID",id);
         return DAO.findFirstByColumns(columns);
+    }
+
+    public List<FileProject> findAllByProjectID(long id){
+        Columns columns = Columns.create();
+        columns.eq("projectID",id);
+        return DAO.findListByColumns(columns);
     }
 }
