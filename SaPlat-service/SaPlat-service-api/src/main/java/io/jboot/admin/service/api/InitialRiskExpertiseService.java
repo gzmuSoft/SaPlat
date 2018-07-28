@@ -2,28 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.base.common.ZTree;
-import io.jboot.admin.service.entity.model.ProAssReview;
+import io.jboot.admin.service.entity.model.InitialRiskExpertise;
 
 import java.util.List;
 
-public interface ProAssReviewService  {
-
-    /**
-     * find file URL by file id
-     *
-     * @param id
-     * @return url
-     * */
-    public String findFileURLByFileId(long id);
-
-    /**
-     * get file tree by project id
-     *
-     * @param id project
-     * @return List<ZTree>
-     * */
-    public List<ZTree> findFileTreeByProject(long id);
+public interface InitialRiskExpertiseService  {
 
     /**
      * find model by primary key
@@ -31,45 +14,15 @@ public interface ProAssReviewService  {
      * @param id
      * @return
      */
-    public ProAssReview findById(Object id);
+    public InitialRiskExpertise findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <ProAssReview
+     * @return all <InitialRiskExpertise
      */
-    public List<ProAssReview> findAll();
-
-
-    /**
-     * find all model
-     * @param model 项目审查
-     * @return all <ProAssReview>
-     */
-    public List<ProAssReview> findAll(ProAssReview model);
-
-    /**
-     * 分页查询 项目审查 信息
-     * @param model 项目审查
-     * @return 页
-     */
-    public Page<ProAssReview> findPage(ProAssReview model, int pageNumber, int pageSize);
-
-    /**
-     * 根据名称查询 项目审查 信息
-     * @param name
-     * @return
-     */
-    public ProAssReview findByName(String name);
-
-
-    /**
-     * 项目审查 是否存在
-     * @param name
-     * @return 存在返回-true，否则返回false
-     */
-    public boolean isExisted(String name);
+    public List<InitialRiskExpertise> findAll();
 
 
     /**
@@ -87,7 +40,7 @@ public interface ProAssReviewService  {
      * @param model
      * @return
      */
-    public boolean delete(ProAssReview model);
+    public boolean delete(InitialRiskExpertise model);
 
 
     /**
@@ -96,7 +49,7 @@ public interface ProAssReviewService  {
      * @param model
      * @return
      */
-    public boolean save(ProAssReview model);
+    public boolean save(InitialRiskExpertise model);
 
 
     /**
@@ -105,7 +58,7 @@ public interface ProAssReviewService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(ProAssReview model);
+    public boolean saveOrUpdate(InitialRiskExpertise model);
 
 
     /**
@@ -114,7 +67,7 @@ public interface ProAssReviewService  {
      * @param model
      * @return
      */
-    public boolean update(ProAssReview model);
+    public boolean update(InitialRiskExpertise model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
