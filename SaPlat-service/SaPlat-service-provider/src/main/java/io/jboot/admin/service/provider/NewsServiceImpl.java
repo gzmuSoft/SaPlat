@@ -24,4 +24,9 @@ public class NewsServiceImpl extends JbootServiceBase<News> implements NewsServi
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
+
+    @Override
+    public Page<News> findReverses(int size) {
+        return DAO.paginateByColumns(1, size, null,"id desc");
+    }
 }

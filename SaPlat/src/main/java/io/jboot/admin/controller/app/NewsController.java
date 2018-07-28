@@ -71,8 +71,6 @@ public class NewsController extends BaseController {
             model.setAstime(atime.substring(0,aindex-1));
             model.setAetime(atime.substring(aindex+2));
         }
-        System.out.println(model.getCstime() + "******************************************************1");
-        System.out.println(model.getCetime() + "******************************************************2");
         Page<News> page = newsService.findPage(model, pageNumber, pageSize);
         renderJson(new DataTable<News>(page));
     }
@@ -89,8 +87,8 @@ public class NewsController extends BaseController {
             personStatus.add(person.getId().toString(),person.getName());
         }
         setAttr("roleStatus", roleStatus).
-                setAttr("personStatus", personStatus).
-                render("add.html");
+        setAttr("personStatus", personStatus).
+        render("add.html");
     }
 
     @Before(POST.class)
@@ -146,27 +144,27 @@ public class NewsController extends BaseController {
     }
 
     @Before(POST.class)
-    public String uploadFile()
+    public void uploadFile()
     {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        String description = getPara("description");
+        String strUploadPath = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        UploadFile upload = getFile("file", strUploadPath);
         File file = upload.getFile();
         String oldName = file.getName();
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        String fileUrl = "/upload/" + UUID.randomUUID() + "." + type;
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
+        String strNewFileName = UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload/" + strUploadPath + "\\" + strNewFileName;
+        File newFile = new File(path + "\\" + strNewFileName);
         file.renameTo(newFile);
         Files files = new Files();
         files.setName(oldName);
         files.setCreateTime(new Date());
-        files.setDescription(description);
         files.setCreateUserID(AuthUtils.getLoginUser().getId());
         files.setIsEnable(false);
-        files.setPath(newFile.getName());
+        files.setPath(fileUrl);
         files.setSize(file.length());
         files.setType(type);
-        //filesService.save(files);
+        filesService.save(files);
         Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map2 = new HashMap<String,Object>();
         map.put("code",0);//0表示成功，1失败
@@ -175,22 +173,21 @@ public class NewsController extends BaseController {
         map2.put("src",fileUrl);//图片url
         String result = new JSONObject(map).toString();
         System.out.println(result);
-        return result;
+        renderJson(map);
     }
 
-    public String ueditor(){
+    public void ueditor(){
         String action = getPara("action");
         System.out.println(action);
         Ueditor ueditor = new Ueditor();
         try {
             if("config".equals(action)){    //如果是初始化
                 System.out.println(UeditorConfig.UEDITOR_CONFIG);
-                return UeditorConfig.UEDITOR_CONFIG;
+                renderJson(UeditorConfig.UEDITOR_CONFIG);
             }else if("uploadimage".equals(action) || "uploadvideo".equals(action) || "uploadfile".equals(action)){    //如果是上传图片、视频、和其他文件
 
             }
         } catch (Exception e) {
         }
-        return null;
     }
 }

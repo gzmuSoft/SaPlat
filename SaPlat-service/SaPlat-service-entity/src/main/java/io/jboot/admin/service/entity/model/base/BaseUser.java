@@ -100,7 +100,7 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 	public void setOnlineStatus(java.lang.String onlineStatus) {
 		set("onlineStatus", onlineStatus);
 	}
-
+	
 	public java.lang.String getOnlineStatus() {
 		return getStr("onlineStatus");
 	}
@@ -124,7 +124,7 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
 		set("lastUpdateUserID", lastUpdateUserID);
 	}
-
+	
 	public java.lang.Long getLastUpdateUserID() {
 		return getLong("lastUpdateUserID");
 	}
