@@ -65,10 +65,10 @@ public interface ResService  {
     /**
      * 查询左侧菜单树资源
      * @param name 用户名
-     * @param pid 顶部菜单id
+     * @param parentID 顶部菜单id
      * @return
      */
-    public List<Res> findLeftMenuByUserNameAndPid(String name, Long pid);
+    public List<Res> findLeftMenuByUserNameAndParentID(String name, Long parentID);
 
     /**
      * 资源节点是否有子节点

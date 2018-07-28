@@ -75,7 +75,7 @@ layui.define(['layer', 'element'], function (exports) {
         , top_left: function (addr, obj, treeStatus, data) {
             // 添加HTML
             this.addHtml(addr, obj, treeStatus, data);
-            this.main('/system/res/menuLeft?pid='+firstId,'side-main',true);
+            this.main('/system/res/menuLeft?parentID='+firstId,'side-main',true);
         }
         /*// 顶部右侧菜单
          ,top_right: function(){

@@ -12,7 +12,7 @@
     AND b.id = c.roleID
     AND d.id = e.userID
     and e.roleID = b.id
-    AND a.`status` = ?
+    AND a.`isEnable` = ?
     AND b.`status` = ?
     and d.`name` = ?
 #end
@@ -31,14 +31,14 @@ WHERE
   AND b.id = c.roleID
   AND d.id = e.userID
   and e.roleID = b.id
-  AND a.`status` = ?
+  AND a.`isEnable` = ?
   AND b.`status` = ?
-  and a.pid = ?
+  and a.parentID = ?
   and d.`name` = ?
-ORDER BY a.pid asc, a.seq asc
+ORDER BY a.parentID asc, a.sort asc
 #end
 
-#sql("findLeftMenuByUserNameAndPid")
+#sql("findLeftMenuByUserNameAndParentID")
 SELECT
   a.*
 FROM
@@ -52,11 +52,11 @@ WHERE
   AND b.id = c.roleID
   AND d.id = e.userID
   and e.roleID = b.id
-  AND a.`status` = ?
+  AND a.`isEnable` = ?
   AND b.`status` = ?
   AND FIND_IN_SET(a.id, querySysRes(?))
   AND d.`name` = ?
-ORDER BY a.pid asc, a.seq asc
+ORDER BY a.parentID asc, a.sort asc
 #end
 
 #sql("findByRoleIdAndStatusUsed")
@@ -69,9 +69,9 @@ FROM
 WHERE
   role_res.resID = res.id
   AND role.id = role_res.roleID
-  AND res. STATUS = ?
+  AND res. isEnable = ?
   AND role. STATUS = ?
   AND ROLE.id = ?
   AND res.url IS NOT NULL
-ORDER BY res.pid asc, res.seq asc
+ORDER BY res.parentID asc, res.sort asc
 #end

@@ -12,6 +12,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ResService;
 import io.jboot.admin.service.entity.model.Res;
+import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.ResValidator;
@@ -49,16 +50,16 @@ public class ResController extends BaseController {
     /**
      * add
      */
-    @NotNullPara({"pid"})
+    @NotNullPara({"parentID"})
     public void add() {
-        Long pid = getParaToLong("pid");
+        Long parentID = getParaToLong("parentID");
 
         Res pRes = new Res();
-        if (pid == null || pid == 0) {
+        if (parentID == null || parentID == 0) {
             pRes.setId(0L);
             pRes.setName("根节点");
         } else {
-            pRes = resService.findById(pid);
+            pRes = resService.findById(parentID);
         }
 
         setAttr("pRes", pRes).render("add.html");
@@ -69,11 +70,11 @@ public class ResController extends BaseController {
      */
     @Before({POST.class, ResValidator.class})
     public void postAdd() {
-        Long pid = getParaToLong("pid");
+        Long parentID = getParaToLong("parentID");
         Res sysRes = getBean(Res.class, "res");
 
-        if (pid != 0) {
-            Res pRes = resService.findById(pid);
+        if (parentID != 0) {
+            Res pRes = resService.findById(parentID);
             if (pRes == null) {
                 throw new BusinessException("上级资源不存在");
             } else {
@@ -87,11 +88,11 @@ public class ResController extends BaseController {
             sysRes.setIconCls("");
         }
 
-        sysRes.setPid(pid);
-        sysRes.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysRes.setParentID(parentID);
+        sysRes.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         sysRes.setStatus(ResStatus.USED);
-        sysRes.setLastUpdTime(new Date());
-        sysRes.setNote("保存系统资源");
+        sysRes.setLastAccessTime(new Date());
+        sysRes.setRemark("保存系统资源");
 
         if (!resService.save(sysRes)) {
             throw new BusinessException("保存失败，请重试");
@@ -109,11 +110,11 @@ public class ResController extends BaseController {
 
         Res sysRes = resService.findById(id);
         Res pRes = new Res();
-        if (sysRes.getPid() == null || sysRes.getPid() == 0) {
+        if (sysRes.getParentID() == null || sysRes.getParentID() == 0) {
             pRes.setId(0L);
             pRes.setName("根节点");
         } else {
-            pRes = resService.findById(sysRes.getPid());
+            pRes = resService.findById(sysRes.getParentID());
         }
 
         setAttr("pRes", pRes).setAttr("res", sysRes).render("update.html");
@@ -124,17 +125,17 @@ public class ResController extends BaseController {
      */
     @Before({POST.class, ResValidator.class})
     public void postUpdate() {
-        Long pid = getParaToLong("pid");
+        Long parentID = getParaToLong("parentID");
         Res sysRes = getBean(Res.class, "res");
 
         if (StrKit.isBlank(sysRes.getIconCls())) {
             sysRes.setIconCls("");
         }
 
-        sysRes.setPid(pid);
-        sysRes.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysRes.setLastUpdTime(new Date());
-        sysRes.setNote("修改系统资源");
+        sysRes.setParentID(parentID);
+        sysRes.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysRes.setLastAccessTime(new Date());
+        sysRes.setRemark("修改系统资源");
 
         if (!resService.update(sysRes)) {
             throw new BusinessException("修改失败，请重试");
@@ -173,8 +174,8 @@ public class ResController extends BaseController {
             throw new BusinessException("编号为" + id + "的资源不存在");
         }
         sysRes.setStatus(ResStatus.USED);
-        sysRes.setLastUpdTime(new Date());
-        sysRes.setNote("启用系统资源");
+        sysRes.setLastAccessTime(new Date());
+        sysRes.setRemark("启用系统资源");
 
         if (!resService.update(sysRes)) {
             throw new BusinessException("启用失败");
@@ -196,8 +197,8 @@ public class ResController extends BaseController {
         }
 
         sysRes.setStatus(ResStatus.UNUSED);
-        sysRes.setLastUpdTime(new Date());
-        sysRes.setNote("停用系统资源");
+        sysRes.setLastAccessTime(new Date());
+        sysRes.setRemark("停用系统资源");
 
         if (!resService.update(sysRes)) {
             throw new BusinessException("停用失败");
@@ -230,7 +231,7 @@ public class ResController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
 
         Res sysRes = new Res();
-        sysRes.setPid(getParaToLong("pid", 0L));
+        sysRes.setParentID(getParaToLong("parentID", 0L));
         sysRes.setName(getPara("name"));
         sysRes.setUrl(getPara("url"));
 
@@ -263,10 +264,10 @@ public class ResController extends BaseController {
     /**
      * 系统左侧菜单
      */
-    @NotNullPara({"pid"})
+    @NotNullPara({"parentID"})
     public void menuLeft() {
-        Long pid = getParaToLong("pid");
-        List<Res> list = resService.findLeftMenuByUserNameAndPid(AuthUtils.getLoginUser().getName(), pid);
+        Long parentID = getParaToLong("parentID");
+        List<Res> list = resService.findLeftMenuByUserNameAndParentID(AuthUtils.getLoginUser().getName(), parentID);
 
         List<MenuItem> listL1 = null;
         for (Res l1 : list) {
@@ -277,7 +278,7 @@ public class ResController extends BaseController {
                 MenuItem l1Item = new MenuItem(l1.getName(), l1.getIconCls(), l1.getUrl(), l1.getId());
                 List<MenuItem> subset = null;
                 for (Res l2 : list) {
-                    if (l2.getLevel() == 3 && l2.getPid().equals(l1.getId())) {
+                    if (l2.getLevel() == 3 && l2.getParentID().equals(l1.getId())) {
                         if (subset == null) {
                             subset = new LinkedList<MenuItem>();
                         }
