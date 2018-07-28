@@ -17,20 +17,92 @@ public abstract class BaseUserRole<M extends BaseUserRole<M>> extends JbootModel
 		return getLong("id");
 	}
 
-	public void setUserId(java.lang.Long userId) {
-		set("user_id", userId);
+	public void setName(java.lang.String name) {
+		set("name", name);
 	}
 	
-	public java.lang.Long getUserId() {
-		return getLong("user_id");
+	public java.lang.String getName() {
+		return getStr("name");
 	}
 
-	public void setRoleId(java.lang.Long roleId) {
-		set("role_id", roleId);
+	public void setSpell(java.lang.String spell) {
+		set("spell", spell);
 	}
 	
-	public java.lang.Long getRoleId() {
-		return getLong("role_id");
+	public java.lang.String getSpell() {
+		return getStr("spell");
+	}
+
+	public void setUserID(java.lang.Long userID) {
+		set("userID", userID);
+	}
+	
+	public java.lang.Long getUserID() {
+		return getLong("userID");
+	}
+
+	public void setRoleID(java.lang.Long roleID) {
+		set("roleID", roleID);
+	}
+	
+	public java.lang.Long getRoleID() {
+		return getLong("roleID");
+	}
+
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
+	}
+
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+	
+	public java.util.Date getCreateTime() {
+		return get("createTime");
+	}
+
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
+	}
+	
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
+	}
+
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
+	}
+	
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
+	}
+
+	public void setSort(java.lang.Integer sort) {
+		set("sort", sort);
+	}
+	
+	public java.lang.Integer getSort() {
+		return getInt("sort");
+	}
+
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
+
+	public void setIsEnable(java.lang.Boolean isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }

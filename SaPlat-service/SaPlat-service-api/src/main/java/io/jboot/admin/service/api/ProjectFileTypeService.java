@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Book;
+import io.jboot.admin.service.entity.model.ProjectFileType;
 
 import java.util.List;
 
-public interface BookService  {
+public interface ProjectFileTypeService  {
 
     /**
      * find model by primary key
@@ -14,38 +14,16 @@ public interface BookService  {
      * @param id
      * @return
      */
-    public Book findById(Object id);
-
-
-    /**
-     * 分页查询系统书籍信息
-     * @param book 书籍
-     * @return 页
-     */
-    public Page<Book> findPage(Book book, int pageNumber, int pageSize);
-
-    /**
-     * 根据书名查询书籍信息
-     * @param name
-     * @return
-     */
-    public Book findByName(String name);
-
-
-    /**
-     * 书籍是否存在
-     * @param name
-     * @return 存在返回-true，否则返回false
-     */
-    public boolean hasBook(String name);
+    public ProjectFileType findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <Book
+     * @return all <ProjectFileType
      */
-    public List<Book> findAll();
+    public List<ProjectFileType> findAll();
+
 
     /**
      * delete model by primary key
@@ -62,7 +40,7 @@ public interface BookService  {
      * @param model
      * @return
      */
-    public boolean delete(Book model);
+    public boolean delete(ProjectFileType model);
 
 
     /**
@@ -71,7 +49,7 @@ public interface BookService  {
      * @param model
      * @return
      */
-    public boolean save(Book model);
+    public boolean save(ProjectFileType model);
 
 
     /**
@@ -80,7 +58,7 @@ public interface BookService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Book model);
+    public boolean saveOrUpdate(ProjectFileType model);
 
 
     /**
@@ -89,7 +67,7 @@ public interface BookService  {
      * @param model
      * @return
      */
-    public boolean update(Book model);
+    public boolean update(ProjectFileType model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

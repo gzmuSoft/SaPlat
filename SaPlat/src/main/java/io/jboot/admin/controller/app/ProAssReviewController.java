@@ -50,7 +50,10 @@ public class ProAssReviewController extends BaseController{
     public void resTree() {
         renderJson(RestResult.buildSuccess(resService.findTreeOnUse()));
     }
-    //渲染文件目录
+    public void fileTree(){
+        System.out.print("Test\n\n\n");
+        /*renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));*/
+    }
 
 
     /**

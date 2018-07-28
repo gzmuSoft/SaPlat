@@ -11,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.EnterpriseService;
 import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.EnterpriseValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -80,6 +81,8 @@ public class EnterpriseController extends BaseController{
         if (enterpriseService.isExisted(model.getName())){
             throw new BusinessException("所指定的企业机构名称已存在");
         }
+        model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
         if (!enterpriseService.save(model)){
             throw new BusinessException("保存失败");
@@ -94,6 +97,7 @@ public class EnterpriseController extends BaseController{
         if (byId == null){
             throw new BusinessException("所指定的企业机构名称不存在");
         }
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!enterpriseService.update(model)){
             throw new BusinessException("修改失败");
         }

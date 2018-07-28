@@ -28,7 +28,7 @@
 
     function zTreeReload() {
         util.sendAjax ({
-            url : '#(ctxPath)/app/ass_review/resTree',
+            url : '#(ctxPath)/app/ass_review/fileTree',
             notice: false,
             success : function(data){
                 $.fn.zTree.init($("#tree"), setting, data.data);

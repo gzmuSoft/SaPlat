@@ -71,6 +71,8 @@ public interface FileProjectService  {
 
     public FileProject findByProjectID(Long id);
 
+    public List<FileProject> findAllByProjectID(long id);
+
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
