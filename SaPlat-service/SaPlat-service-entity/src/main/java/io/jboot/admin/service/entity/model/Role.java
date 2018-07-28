@@ -1,5 +1,6 @@
 package io.jboot.admin.service.entity.model;
 
+import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.db.annotation.Table;
 import io.jboot.admin.service.entity.model.base.BaseRole;
 
@@ -8,5 +9,19 @@ import io.jboot.admin.service.entity.model.base.BaseRole;
  */
 @Table(tableName = "sys_role", primaryKey = "id")
 public class Role extends BaseRole<Role> {
+    public void setStatus(java.lang.String status) {
+        if (status == ResStatus.USED) {
+            setIsEnable(true);
+        } else {
+            setIsEnable(false);
+        }
+    }
+
+    public java.lang.String getStatus() {
+        if(this.getIsEnable() == true)
+            return ResStatus.USED;
+        else
+            return ResStatus.UNUSED;
+    }
 	
 }

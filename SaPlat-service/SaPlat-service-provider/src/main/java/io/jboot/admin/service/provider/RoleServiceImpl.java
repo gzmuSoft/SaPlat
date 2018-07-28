@@ -39,7 +39,7 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
             columns.like("name", "%"+sysRole.getName()+"%");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "seq asc");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "sort asc");
     }
 
     @Override

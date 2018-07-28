@@ -66,10 +66,10 @@ public class RoleController extends BaseController {
     public void postAdd() {
         Role sysRole = getBean(Role.class, "role");
 
-        sysRole.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysRole.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         sysRole.setStatus(RoleStatus.USED);
-        sysRole.setLastUpdTime(new Date());
-        sysRole.setNote("保存系统角色");
+        sysRole.setLastAccessTime(new Date());
+        sysRole.setRemark("保存系统角色");
 
         if (!roleService.save(sysRole)) {
             throw new BusinessException("保存失败");
@@ -97,9 +97,9 @@ public class RoleController extends BaseController {
     public void postUpdate() {
         Role sysRole = getBean(Role.class, "role");
 
-        sysRole.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysRole.setLastUpdTime(new Date());
-        sysRole.setNote("修改系统资源");
+        sysRole.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysRole.setLastAccessTime(new Date());
+        sysRole.setRemark("修改系统资源");
 
         if (!roleService.update(sysRole)) {
             throw new BusinessException("修改失败");

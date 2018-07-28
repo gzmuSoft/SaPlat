@@ -228,22 +228,22 @@ public class ProjectAuthController extends BaseController {
         }
 
         Role role = roleService.findById(auth.getRoleId());
-        if ("expertGroup".equals(role.getNote())) {
+        if ("expertGroup".equals(role.getRemark())) {
             ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
             setAttr("person", person).setAttr("expertGroup", expertGroup).render("expertGroup.html");
-        } else if ("fac_agency".equals(role.getNote())) {
+        } else if ("fac_agency".equals(role.getRemark())) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("fac_agency", facAgency).render("fac_agency.html");
-        } else if ("management".equals(role.getNote())) {
+        } else if ("management".equals(role.getRemark())) {
             Management management = managementService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("management", management).render("management.html");
-        } else if ("enterprise".equals(role.getNote())) {
+        } else if ("enterprise".equals(role.getRemark())) {
             Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterprise.html");
-        } else if ("review_group".equals(role.getNote())) {
+        } else if ("review_group".equals(role.getRemark())) {
             ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("review_group", reviewGroup).render("review_group.html");
-        } else if ("prof_group".equals(role.getNote())) {
+        } else if ("prof_group".equals(role.getRemark())) {
             ProfGroup profGroup = profGroupService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("prof_group", profGroup).render("review_group.html");
         } else {
