@@ -27,7 +27,7 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
     public Page<Res> findPage(Res sysRes, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
 
-        columns.eq("pid", sysRes.getPid() == null ? 0L : sysRes.getPid());
+        columns.eq("parentID", sysRes.getParentID() == null ? 0L : sysRes.getParentID());
         if (StrKit.notBlank(sysRes.getName())) {
             columns.like("name", "%"+sysRes.getName()+"%");
         }
@@ -35,18 +35,18 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
             columns.like("url", "%"+sysRes.getUrl()+"%");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "seq asc");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "sort asc");
     }
 
     @Override
     public List<ZTree> findTreeOnUse() {
         Columns columns = Columns.create();
-        columns.eq("status", ResStatus.USED);
-        List<Res> list = DAO.findListByColumns(columns, "pid desc, seq asc");
+        columns.eq("isEnable", ResStatus.USED);
+        List<Res> list = DAO.findListByColumns(columns, "parentID desc, sort asc");
 
         List<ZTree> zList = new ArrayList<ZTree>();
         for (Res res : list) {
-            ZTree ztree = new ZTree(res.getId(), res.getName(), res.getPid());
+            ZTree ztree = new ZTree(res.getId(), res.getName(), res.getParentID());
             zList.add(ztree);
         }
         return zList;
@@ -58,7 +58,7 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
 
         List<ZTree> zList = new ArrayList<ZTree>();
         for (Res res : list) {
-            ZTree ztree = new ZTree(res.getId(), res.getName(), res.getPid());
+            ZTree ztree = new ZTree(res.getId(), res.getName(), res.getParentID());
             zList.add(ztree);
         }
         return zList;
@@ -92,8 +92,8 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
     }
 
     @Override
-    public List<Res> findByStatus(String status) {
-        return DAO.findListByColumn("status", status);
+    public List<Res> findByStatus(String isEnable) {
+        return DAO.findListByColumn("isEnable", isEnable);
     }
 
     @Override
@@ -116,17 +116,17 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
     }
 
     @Override
-    public List<Res> findLeftMenuByUserNameAndPid(String name, Long pid) {
-        SqlPara sp = Db.getSqlPara("system-res.findLeftMenuByUserNameAndPid");
+    public List<Res> findLeftMenuByUserNameAndParentID(String name, Long parentID) {
+        SqlPara sp = Db.getSqlPara("system-res.findLeftMenuByUserNameAndParentID");
         sp.addPara(ResStatus.USED);
         sp.addPara(RoleStatus.USED);
-        sp.addPara(pid);
+        sp.addPara(parentID);
         sp.addPara(name);
         return DAO.find(sp);
     }
 
     @Override
     public boolean hasChildRes(Long id) {
-        return DAO.findFirstByColumn("pid", id) != null;
+        return DAO.findFirstByColumn("parentID", id) != null;
     }
 }

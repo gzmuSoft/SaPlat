@@ -57,36 +57,36 @@ public abstract class BaseAffectedGroup<M extends BaseAffectedGroup<M>> extends 
 		return getStr("phone");
 	}
 
-	public void setPolitics(java.lang.String politics) {
-		set("politics", politics);
+	public void setPoliticsID(java.lang.Long politicsID) {
+		set("politicsID", politicsID);
 	}
 	
-	public java.lang.String getPolitics() {
-		return getStr("politics");
+	public java.lang.Long getPoliticsID() {
+		return getLong("politicsID");
 	}
 
-	public void setNation(java.lang.String nation) {
-		set("nation", nation);
+	public void setNationID(java.lang.Long nationID) {
+		set("nationID", nationID);
 	}
 	
-	public java.lang.String getNation() {
-		return getStr("nation");
+	public java.lang.Long getNationID() {
+		return getLong("nationID");
 	}
 
-	public void setNationality(java.lang.String nationality) {
-		set("nationality", nationality);
+	public void setNationalityID(java.lang.Long nationalityID) {
+		set("nationalityID", nationalityID);
 	}
 	
-	public java.lang.String getNationality() {
-		return getStr("nationality");
+	public java.lang.Long getNationalityID() {
+		return getLong("nationalityID");
 	}
 
-	public void setEducation(java.lang.String education) {
-		set("education", education);
+	public void setEducationID(java.lang.Long educationID) {
+		set("educationID", educationID);
 	}
 	
-	public java.lang.String getEducation() {
-		return getStr("education");
+	public java.lang.Long getEducationID() {
+		return getLong("educationID");
 	}
 
 	public void setOthername(java.lang.String othername) {
@@ -97,12 +97,12 @@ public abstract class BaseAffectedGroup<M extends BaseAffectedGroup<M>> extends 
 		return getStr("othername");
 	}
 
-	public void setDuty(java.lang.String duty) {
-		set("duty", duty);
+	public void setDutyID(java.lang.Long dutyID) {
+		set("dutyID", dutyID);
 	}
 	
-	public java.lang.String getDuty() {
-		return getStr("duty");
+	public java.lang.Long getDutyID() {
+		return getLong("dutyID");
 	}
 
 	public void setResidence(java.lang.String residence) {
@@ -153,12 +153,12 @@ public abstract class BaseAffectedGroup<M extends BaseAffectedGroup<M>> extends 
 		return getStr("census");
 	}
 
-	public void setOccupation(java.lang.String occupation) {
-		set("occupation", occupation);
+	public void setOccupationID(java.lang.Long occupationID) {
+		set("occupationID", occupationID);
 	}
 	
-	public java.lang.String getOccupation() {
-		return getStr("occupation");
+	public java.lang.Long getOccupationID() {
+		return getLong("occupationID");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {

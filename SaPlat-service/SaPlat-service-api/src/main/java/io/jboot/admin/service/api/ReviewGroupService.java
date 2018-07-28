@@ -99,6 +99,7 @@ public interface ReviewGroupService {
      */
     public boolean saveOrUpdate(ReviewGroup model, Auth auth);
 
+    public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize);
 
     public void join(Page<? extends Model> page, String joinOnField);
 

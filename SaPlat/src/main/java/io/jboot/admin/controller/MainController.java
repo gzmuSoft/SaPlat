@@ -1,15 +1,15 @@
 package io.jboot.admin.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
-import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserService;
-import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
@@ -22,9 +22,6 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 主控制器
@@ -33,6 +30,9 @@ import java.util.List;
  */
 @RequestMapping("/")
 public class MainController extends BaseController {
+
+    @JbootrpcService
+    NotificationService notificationService;
 
     @JbootrpcService
     private UserService userService;
@@ -116,4 +116,21 @@ public class MainController extends BaseController {
         render("welcome.html");
     }
 
+    public void message() {
+        User loginUser = AuthUtils.getLoginUser();
+        boolean sta = notificationService.findMessageByUserID(loginUser.getId());
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sta",sta);
+        jsonObject.put("code",0);
+        renderJson(jsonObject);
+    }
+
+    public void view(){
+        User loginUser = AuthUtils.getLoginUser();
+        if (loginUser.getId() == 3){
+            render("system/notification/main.html");
+        }else{
+            render("app/notification/main.html");
+        }
+    }
 }

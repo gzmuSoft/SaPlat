@@ -11,6 +11,7 @@ import java.util.Objects;
  */
 @Table(tableName = "fac_agency", primaryKey = "id")
 public class FacAgency extends BaseFacAgency<FacAgency> {
+
     public void setStatus(java.lang.String status) {
         if (Objects.equals(status, DataStatus.USED)) {
             setIsEnable(true);
@@ -25,5 +26,15 @@ public class FacAgency extends BaseFacAgency<FacAgency> {
         } else {
             return DataStatus.UNUSED;
         }
+    }
+
+    private boolean isInvite;
+
+    public void setIsInvite(boolean isInvite) {
+        this.isInvite = isInvite;
+    }
+
+    public boolean getIsInvite() {
+        return this.isInvite;
     }
 }

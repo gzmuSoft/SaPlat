@@ -55,21 +55,29 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
     }
 
     @Override
+    public User findByUserIdAndUserSource(Long userID, Long userSource) {
+        Columns columns = Columns.create();
+        columns.eq("userID", userID);
+        columns.eq("userSource", userSource);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
     public boolean saveUser(User user, Long[] roles) {
         String pwd = user.getPwd();
 
         if (StrKit.notBlank(pwd)) {
-            String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-            SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+            String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+            SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
             pwd = hash.toHex();
             user.setPwd(pwd);
-            user.setSalt2(salt2);
+            user.setSalt(salt);
         }
 
         user.setOnlineStatus(UserOnlineStatus.OFFLINE);
         user.setCreateTime(new Date());
-        user.setLastUpdTime(new Date());
-        user.setNote("保存系统用户");
+        user.setLastAccessTime(new Date());
+        user.setRemark("保存系统用户");
 
         return Db.tx(new IAtom() {
             @Override
@@ -82,8 +90,8 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
                     List<UserRole> list = new ArrayList<UserRole>();
                     for (Long roleId : roles) {
                         UserRole userRole = new UserRole();
-                        userRole.setUserId(user.getId());
-                        userRole.setRoleId(roleId);
+                        userRole.setUserID(user.getId());
+                        userRole.setRoleID(roleId);
                         list.add(userRole);
                     }
                     int[] rets = userRoleService.batchSave(list);
@@ -103,17 +111,17 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
     public boolean updateUser(User user, Long[] roles) {
         String pwd = user.getPwd();
         if (StrKit.notBlank(pwd)) {
-            String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-            SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+            String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+            SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
             pwd = hash.toHex();
             user.setPwd(pwd);
-            user.setSalt2(salt2);
+            user.setSalt(salt);
         } else {
             user.remove("pwd");
         }
 
-        user.setLastUpdTime(new Date());
-        user.setNote("修改系统用户");
+        user.setLastAccessTime(new Date());
+        user.setRemark("修改系统用户");
 
         return Db.tx(new IAtom() {
             @Override
@@ -128,8 +136,8 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
                     List<UserRole> list = new ArrayList<UserRole>();
                     for (Long roleId : roles) {
                         UserRole userRole = new UserRole();
-                        userRole.setUserId(user.getId());
-                        userRole.setRoleId(roleId);
+                        userRole.setUserID(user.getId());
+                        userRole.setRoleID(roleId);
                         list.add(userRole);
                     }
 
@@ -143,5 +151,13 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
                 return true;
             }
         });
+    }
+
+    @Override
+    public User findByUserIdAndUserSource(Long userId,Integer userSource){
+        Columns columns = Columns.create();
+        columns.eq("userID",userId);
+        columns.eq("userSource",userSource);
+        return DAO.findFirstByColumns(columns);
     }
 }

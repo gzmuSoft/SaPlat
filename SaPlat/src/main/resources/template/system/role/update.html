@@ -54,14 +54,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>排序号</label>
             <div class="layui-input-block">
-                <input type="number" name="role.seq" placeholder="排序号" class="layui-input" value="#(role.seq ??)" required  lay-verify="required" autocomplete="off"/>
+                <input type="number" name="role.sort" placeholder="排序号" class="layui-input" value="#(role.sort ??)" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
             <div class="layui-input-block">
-                <select id='status' name="role.status" lay-verify="required">
+                <select id='status' name="role.isEnable" lay-verify="required">
                     <option></option>
                     #statusOption(io.jboot.admin.service.entity.status.system.RoleStatus::me(), role.status)
                 </select>

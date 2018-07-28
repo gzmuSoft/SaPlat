@@ -11,6 +11,7 @@ import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -85,6 +86,8 @@ public class ExpertGroupController extends BaseController{
         if (expertGroupService.hasExpertGroup(model.getName())){
             throw new BusinessException("所指定的专家团体名称已存在");
         }
+        model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
         if (!expertGroupService.save(model)){
             throw new BusinessException("保存失败");
@@ -98,6 +101,7 @@ public class ExpertGroupController extends BaseController{
         if (byId == null){
             throw new BusinessException("所指定的专家团体名称不存在");
         }
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!expertGroupService.update(model)){
             throw new BusinessException("修改失败");
         }

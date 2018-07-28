@@ -2,7 +2,6 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.base.common.RetResult;
 import io.jboot.admin.service.entity.model.User;
 
 import java.util.List;
@@ -14,6 +13,8 @@ public interface UserService  {
     public boolean hasUser(String name);
 
     public User findByName(String name);
+
+    public User findByUserIdAndUserSource(Long userID, Long userSource);
 
     public boolean saveUser(User user, Long[] roles);
 
@@ -33,6 +34,7 @@ public interface UserService  {
 
     public boolean update(User model);
 
+    public User findByUserIdAndUserSource(Long userid,Integer usersource);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

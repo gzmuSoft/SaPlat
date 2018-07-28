@@ -21,14 +21,14 @@ layui.define(['layer', 'element'], function (exports) {
                 async : false,//取消异步
                 success : function(res){
                     var view = "";
-                    var isFirst = true;
+                    //var isFirst = true;
                     if (res.data) {
                         $(res.data).each(function (k, v) {
-                            if(isFirst == true) {//默认展开第一个菜单项
+                            /*if(isFirst == true) {//默认展开第一个菜单项
                                 v.subset && treeStatus ? view += '<li class="layui-nav-item layui-nav-itemed">' : view += '<li class="layui-nav-item" >';
                                 isFirst = false;
                             }
-                            else
+                            else*/
                                 v.subset && treeStatus ? view += '<li class="layui-nav-item">' : view += '<li class="layui-nav-item" >';
                             if (v.subset) {
                                 view += '<a href="javascript:;"><i class="layui-icon">' + v.icon + '</i>' + v.text + '</a><dl class="layui-nav-child">';
@@ -75,7 +75,7 @@ layui.define(['layer', 'element'], function (exports) {
         , top_left: function (addr, obj, treeStatus, data) {
             // 添加HTML
             this.addHtml(addr, obj, treeStatus, data);
-            this.main('/system/res/menuLeft?pid='+firstId,'side-main',true);
+            this.main('/system/res/menuLeft?parentID='+firstId,'side-main',true);
         }
         /*// 顶部右侧菜单
          ,top_right: function(){

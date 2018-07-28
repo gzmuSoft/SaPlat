@@ -29,7 +29,7 @@ public class ChangePwdValidator extends JsonValidator {
 
         User user = AuthUtils.getLoginUser();
 
-        if(!AuthUtils.checkPwd(pwd, user.getPwd(), user.getSalt2())){
+        if(!AuthUtils.checkPwd(pwd, user.getPwd(), user.getSalt())){
             addError("原密码不正确！");
         }
     }

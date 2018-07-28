@@ -49,10 +49,10 @@ public class LoginAuth implements MuitiAuthenticatied {
 
         UserService sysUserApi = Jboot.service(UserService.class);
         User sysUser = sysUserApi.findByName(loginName);
-        String salt2 = sysUser.getSalt2();
+        String salt = sysUser.getSalt();
         String pwd = sysUser.getPwd();
 
-        return new SimpleAuthenticationInfo(loginName, pwd, ByteSource.Util.bytes(salt2), "ShiroDbRealm");
+        return new SimpleAuthenticationInfo(loginName, pwd, ByteSource.Util.bytes(salt), "ShiroDbRealm");
     }
 
     @Override

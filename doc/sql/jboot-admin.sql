@@ -294,7 +294,7 @@ DETERMINISTIC
       IF (sTempChd != treeCode) THEN
         SET sTemp = concat(sTemp,',',sTempChd);
       END IF;
-      SELECT group_concat(id) INTO sTempChd FROM sys_res where FIND_IN_SET(pid,sTempChd)>0;
+      SELECT group_concat(id) INTO sTempChd FROM sys_res where FIND_IN_SET(parentID,sTempChd)>0;
     END WHILE;
     RETURN sTemp;
   END

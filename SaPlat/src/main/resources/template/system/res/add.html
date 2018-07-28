@@ -36,7 +36,7 @@
 #define content()
 <div class="x-body">
     <form class="layui-form" action="">
-        <input type="hidden" name="pid" value="#(pRes.id)">
+        <input type="hidden" name="parentID" value="#(pRes.id)">
         <div class="layui-form-item">
             <label class="layui-form-label">父级名称</label>
             <div class="layui-input-block">
@@ -85,7 +85,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>排序号</label>
             <div class="layui-input-block">
-                <input type="number" name="res.seq" placeholder="排序号" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
+                <input type="number" name="res.sort" placeholder="排序号" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 

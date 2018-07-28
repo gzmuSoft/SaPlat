@@ -1,5 +1,7 @@
 package io.jboot.admin.controller.system;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -11,6 +13,8 @@ import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.RoleValidator;
+import io.jboot.admin.validator.app.UserValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -58,13 +62,14 @@ public class RoleController extends BaseController {
     /**
      * 保存提交
      */
+    @Before({POST.class, RoleValidator.class})
     public void postAdd() {
         Role sysRole = getBean(Role.class, "role");
 
-        sysRole.setLastUpdAcct(AuthUtils.getLoginUser().getName());
+        sysRole.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         sysRole.setStatus(RoleStatus.USED);
-        sysRole.setLastUpdTime(new Date());
-        sysRole.setNote("保存系统角色");
+        sysRole.setLastAccessTime(new Date());
+        sysRole.setRemark("保存系统角色");
 
         if (!roleService.save(sysRole)) {
             throw new BusinessException("保存失败");
@@ -77,6 +82,7 @@ public class RoleController extends BaseController {
      * update
      */
     @NotNullPara({"id"})
+
     public void update() {
         Long id = getParaToLong("id");
 
@@ -87,12 +93,13 @@ public class RoleController extends BaseController {
     /**
      * 修改提交
      */
+    @Before({POST.class, RoleValidator.class})
     public void postUpdate() {
         Role sysRole = getBean(Role.class, "role");
 
-        sysRole.setLastUpdAcct(AuthUtils.getLoginUser().getName());
-        sysRole.setLastUpdTime(new Date());
-        sysRole.setNote("修改系统资源");
+        sysRole.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysRole.setLastAccessTime(new Date());
+        sysRole.setRemark("修改系统资源");
 
         if (!roleService.update(sysRole)) {
             throw new BusinessException("修改失败");

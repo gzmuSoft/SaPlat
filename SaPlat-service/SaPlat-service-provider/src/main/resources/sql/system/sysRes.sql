@@ -8,12 +8,12 @@
     sys_user d,
     sys_user_role e
   WHERE
-    a.id = c.res_id
-    AND b.id = c.role_id
-    AND d.id = e.user_id
-    and e.role_id = b.id
-    AND a.`status` = ?
-    AND b.`status` = ?
+    a.id = c.resID
+    AND b.id = c.roleID
+    AND d.id = e.userID
+    and e.roleID = b.id
+    AND a.`isEnable` = ?
+    AND b.`isEnable` = ?
     and d.`name` = ?
 #end
 
@@ -27,18 +27,18 @@ FROM
   sys_user d,
   sys_user_role e
 WHERE
-  a.id = c.res_id
-  AND b.id = c.role_id
-  AND d.id = e.user_id
-  and e.role_id = b.id
-  AND a.`status` = ?
-  AND b.`status` = ?
-  and a.pid = ?
+  a.id = c.resID
+  AND b.id = c.roleID
+  AND d.id = e.userID
+  and e.roleID = b.id
+  AND a.`isEnable` = ?
+  AND b.`isEnable` = ?
+  and a.parentID = ?
   and d.`name` = ?
-ORDER BY a.pid asc, a.seq asc
+ORDER BY a.parentID asc, a.sort asc
 #end
 
-#sql("findLeftMenuByUserNameAndPid")
+#sql("findLeftMenuByUserNameAndParentID")
 SELECT
   a.*
 FROM
@@ -48,15 +48,15 @@ FROM
   sys_user d,
   sys_user_role e
 WHERE
-  a.id = c.res_id
-  AND b.id = c.role_id
-  AND d.id = e.user_id
-  and e.role_id = b.id
-  AND a.`status` = ?
-  AND b.`status` = ?
+  a.id = c.resID
+  AND b.id = c.roleID
+  AND d.id = e.userID
+  and e.roleID = b.id
+  AND a.`isEnable` = ?
+  AND b.`isEnable` = ?
   AND FIND_IN_SET(a.id, querySysRes(?))
   AND d.`name` = ?
-ORDER BY a.pid asc, a.seq asc
+ORDER BY a.parentID asc, a.sort asc
 #end
 
 #sql("findByRoleIdAndStatusUsed")
@@ -67,11 +67,11 @@ FROM
   sys_role_res role_res,
   sys_role role
 WHERE
-  role_res.res_id = res.id
-  AND role.id = role_res.role_id
-  AND res. STATUS = ?
-  AND role. STATUS = ?
+  role_res.resID = res.id
+  AND role.id = role_res.roleID
+  AND res. isEnable = ?
+  AND role. isEnable = ?
   AND ROLE.id = ?
   AND res.url IS NOT NULL
-ORDER BY res.pid asc, res.seq asc
+ORDER BY res.parentID asc, res.sort asc
 #end

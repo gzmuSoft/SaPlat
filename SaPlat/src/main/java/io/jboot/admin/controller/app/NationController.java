@@ -36,7 +36,8 @@ public class NationController extends BaseController{
      * index
      */
     public void index() {
-        render("main.html");
+        String pdfURL = "/upload/test.pdf";
+        setAttr("pdfURL",pdfURL).render("main.html");
     }
     /**
      * res表格数据

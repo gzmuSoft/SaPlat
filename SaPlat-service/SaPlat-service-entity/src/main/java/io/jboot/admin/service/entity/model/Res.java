@@ -1,5 +1,6 @@
 package io.jboot.admin.service.entity.model;
 
+import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.db.annotation.Table;
 import io.jboot.admin.service.entity.model.base.BaseRes;
 
@@ -8,5 +9,18 @@ import io.jboot.admin.service.entity.model.base.BaseRes;
  */
 @Table(tableName = "sys_res", primaryKey = "id")
 public class Res extends BaseRes<Res> {
-	
+    public void setStatus(java.lang.String status) {
+        if (status == ResStatus.USED) {
+            setIsEnable(true);
+        } else {
+            setIsEnable(false);
+        }
+    }
+
+    public java.lang.String getStatus() {
+        if(this.getIsEnable() == true)
+            return ResStatus.USED;
+        else
+            return ResStatus.UNUSED;
+    }
 }

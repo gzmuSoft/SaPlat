@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.ImpTeam;
 
 import java.util.List;
@@ -24,6 +25,19 @@ public interface ImpTeamService  {
      */
     public List<ImpTeam> findAll();
 
+    /**
+     * 通过 project Id查询
+     * @param id
+     * @return
+     */
+    public ImpTeam findByProjectId(Long id);
+
+    /**
+     * 通过专家团体查找实现小组
+     * @param expertGroups 专家团体
+     * @return 所有符合条件的 <ImpTeam
+     */
+    List<ImpTeam> findByExpertGroup(ExpertGroup ...expertGroups);
 
     /**
      * delete model by primary key
@@ -69,6 +83,9 @@ public interface ImpTeamService  {
      */
     public boolean update(ImpTeam model);
 
+    public List<ImpTeam> findByUserID(Long id);
+
+    public ImpTeam findByUserIDAndProjectID(Long userId,Long projectId);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
@@ -85,4 +102,6 @@ public interface ImpTeamService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
+
 }

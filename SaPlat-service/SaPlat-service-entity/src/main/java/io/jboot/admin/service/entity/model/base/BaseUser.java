@@ -97,12 +97,12 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 		return getStr("phone");
 	}
 
-	public void setSalt2(java.lang.String salt2) {
-		set("salt2", salt2);
+	public void setOnlineStatus(java.lang.String onlineStatus) {
+		set("onlineStatus", onlineStatus);
 	}
-	
-	public java.lang.String getSalt2() {
-		return getStr("salt2");
+
+	public java.lang.String getOnlineStatus() {
+		return getStr("onlineStatus");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
@@ -121,36 +121,20 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 		return get("createTime");
 	}
 
-	public void setOnlineStatus(java.lang.String onlineStatus) {
-		set("onlineStatus", onlineStatus);
-	}
-	
-	public java.lang.String getOnlineStatus() {
-		return getStr("onlineStatus");
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
 	}
 
-	public void setLastUpdAcct(java.lang.String lastUpdAcct) {
-		set("lastUpdAcct", lastUpdAcct);
-	}
-	
-	public java.lang.String getLastUpdAcct() {
-		return getStr("lastUpdAcct");
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
 	}
 
-	public void setLastUpdTime(java.util.Date lastUpdTime) {
-		set("lastUpdTime", lastUpdTime);
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
 	}
 	
-	public java.util.Date getLastUpdTime() {
-		return get("lastUpdTime");
-	}
-
-	public void setNote(java.lang.String note) {
-		set("note", note);
-	}
-	
-	public java.lang.String getNote() {
-		return getStr("note");
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
 	}
 
 	public void setSort(java.lang.Integer sort) {

@@ -53,7 +53,7 @@
     <legend>您已获得的立项权限：</legend>
     <div>
         #for(auth : verify)
-        <button class="layui-btn layui-btn-primary layui-disabled" disabled>#(auth.remark)</button>
+        <button class="layui-btn layui-btn-primary ">#(auth.remark)</button>
         #end
     </div>
 </fieldset>
@@ -61,7 +61,7 @@
     <legend>正在等待审核的立项权限：</legend>
     <div>
         #for(auth : verifying)
-        <button class="layui-btn layui-btn-normal layui-disabled" disabled>#(auth.remark)</button>
+        <button class="layui-btn layui-btn-normal ">#(auth.remark)</button>
         #end
     </div>
 </fieldset>

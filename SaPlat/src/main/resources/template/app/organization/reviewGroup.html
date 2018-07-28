@@ -64,26 +64,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.comprehend">服务理解</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="reviewGroup.comprehend" name="reviewGroup.comprehend"
-                           value="#(reviewGroup.comprehend)" class="layui-input" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label" for="reviewGroup.performance">服务业绩</label>
                 <div class="layui-input-inline">
                     <input type="text" id="reviewGroup.performance" name="reviewGroup.performance"
                            value="#(reviewGroup.performance)" class="layui-input" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.framework">人员架构</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="reviewGroup.framework" name="reviewGroup.framework"
-                           value="#(reviewGroup.framework)" class="layui-input" required/>
                 </div>
             </div>
 
@@ -103,18 +87,6 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">有无犯罪记录</label>
-                <div class="layui-input-block">
-                    #if(reviewGroup.record == 0)
-                    <input type="radio" name="reviewGroup.record" value="0" title="有" checked="checked" required/>
-                    <input type="radio" name="reviewGroup.record" value="1" title="无" required/>
-                    #else
-                    <input type="radio" name="reviewGroup.record" value="0" title="有" required/>
-                    <input type="radio" name="reviewGroup.record" value="1" title="无" checked="checked" required/>
-                    #end
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="reviewGroup.administrator">管理员姓名</label>
@@ -154,21 +126,7 @@
     layui.use(['form', 'layer','upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
-            , form = layui.form
-            , upload = layui.upload;
-
-
-        upload.render({ //允许上传的文件后缀
-            elem: '#upload'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#organization.certificate").text(res.path);
-                $("#organization.certificate").val(res.path);
-                $("#organization.certificate").html(res.path);
-            }
-        });
+            , form = layui.form;
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({

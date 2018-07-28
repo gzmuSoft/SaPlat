@@ -97,12 +97,12 @@ public abstract class BaseNews<M extends BaseNews<M>> extends JbootModel<M> impl
 		return getStr("respEditer");
 	}
 
-	public void setIsPublish(java.lang.Boolean isPublish) {
+	public void setIsPublish(java.lang.Integer isPublish) {
 		set("isPublish", isPublish);
 	}
 	
-	public java.lang.Boolean getIsPublish() {
-		return get("isPublish");
+	public java.lang.Integer getIsPublish() {
+		return getInt("isPublish");
 	}
 
 	public void setReceiverRoles(java.lang.String receiverRoles) {

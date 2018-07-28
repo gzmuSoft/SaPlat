@@ -1,0 +1,191 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer','layedit'], function () {
+        var form = layui.form
+            ,layedit = layui.layedit;
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            postData+=('&diagnoses.sampleRate='+layedit.getContent(index));
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/diagnoses/save',
+                data: $('#Form').serialize(),
+                loadFlag: true,
+                success : function(data){
+                }
+            });
+        });
+        //自定义工具栏
+        var surveyGroupedit=layedit.build('surveyGroup', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
+        //自定义工具栏
+        var surveyDesignedit=layedit.build('surveyDesign', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
+
+        form.verify({
+            surveyDesignedit:function (vale) {
+                layedit.sync(surveyDesignedit); //同步编辑内容到textarea #10line
+                if(layedit.getText(surveyDesignedit).length==0){
+                    return "问卷调查设计不能为空";
+                }
+            },
+
+            surveyGroupedit:function (vale) {
+                layedit.sync(surveyGroupedit); //同步编辑内容到textarea #10line
+                if(layedit.getText(surveyGroupedit).length==0){
+                    return "调查群体不能为空";
+                }
+            },
+            sampleRateNumber:function (vale) {
+                if(vale>=100){
+                    return "数值不能大于100"
+                }
+
+            }
+
+
+        });
+    });
+    function pdf(element) {
+        element.media({
+            width:800
+            ,height:600
+            ,src: "../"+element.attr('href')
+        });
+    }
+    $("#media").click(function(){
+        $(this).css('display','none');
+        pdf($("a.media"));
+    });
+</script>
+#end
+
+#define content()
+<br>
+<h2 class="title" align="center">社会稳定风险评估调查分析表（建设类）</h2><br>
+<hr align="center" size="2" width="100%" />
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <!-- <ul class="layui-tab-title"> -->
+    <!-- <li class="layui-this">项目基本信息</li> -->
+    <!-- <li>问卷基本信息</li> -->
+    <!-- <li>调查内容</li> -->
+
+    <!-- </ul> -->
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" id="Form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">评估项目名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diagnoses.name" autocomplete="off" placeholder="系统读取"
+                               value="#(project.name)" class="layui-input" readonly = "readonly">
+                        <input type="text" name="diagnoses.project" autocomplete="off" placeholder="系统读取"
+                               value="#(project.id)" class="layui-input layui-hide">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">负责评估机构：</label>
+                    <div class="layui-input-block">
+                        <input type="text" autocomplete="off" placeholder="系统读取"
+                               value="#(facagency.name)" class="layui-input" disabled = "disabled" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">调查范围：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off" placeholder="系统读取"
+                               value="#(files.id)" class="layui-input layui-hide">
+                        <a class="media" href="#(pdfURL)" disabled="disabled"></a>
+                        <a class="layui-btn" id="media">点击查看</a>
+                        <button id="pdf"></button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">项目地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="diagnoses.project.site" autocomplete="off" placeholder="系统读取"
+                               value="#(project.site)" class="layui-input layui-disabled" disabled = "disabled" >
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">调查群体：</label>
+                    <div class="layui-input-block ">
+                        <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写" name="diagnoses.surveyGroup" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">调查方法</label>
+                    <div class="layui-input-inline">
+                        <label>
+                            <select lay-verify="required" name="diagnoses.surveyMethod">
+                                <option value="">请选择</option>
+                                <option value="全面调查">全面调查</option>
+                                <option value="抽样调查">抽样调查</option>
+                                <option value="个别调查">个别调查</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">调查方式</label>
+                    <input type="checkbox" name="surveyWays" value="走访" title="走访">
+                    <input type="checkbox" name="surveyWays" value="座谈" title="座谈">
+                    <input type="checkbox" name="surveyWays" value="听证会" title="听证会">
+                    <input type="checkbox" name="surveyWays" value="电话调查" title="电话调查">
+                    <input type="checkbox" name="surveyWays" value="邮件询问" title="邮件询问">
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">调查抽样率：</label>
+                    <div class="layui-input-block">
+                        <input type="number" lay-verify="required|sampleRateNumber" placeholder="请填写" class="layui-input" name="diagnoses.sampleRate">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">问卷调查设计：</label>
+                    <div class="layui-input-block">
+                        <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea" lay-verify="surveyDesignedit" name="diagnoses.surveyDesign"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">现场人员安排</label>
+                    <div class="layui-input-block">
+                        #for (invTeamID : invTeamMap.keySet())
+                        <input type="checkbox" name="staffArrangements" value="#(invTeamID)"
+                        title="#(invTeamMap[invTeamID])">
+                        #end
+                    </div>
+                </div>
+
+                <br>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+#end

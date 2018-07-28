@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author LiuChuanjin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 23:44 2018/7/6
  */
 @RequestMapping("/app/organization")
@@ -73,7 +73,7 @@ public class OrganizationController extends BaseController {
     }
 
     /**
-     * 组织结构注册功能
+     * 组织机构注册功能
      */
     @Before({POST.class, OrganizationValidator.class})
     public void postRegister() {
@@ -90,7 +90,7 @@ public class OrganizationController extends BaseController {
         Long[] roles = new Long[]{roleService.findByName("组织机构").getId()};
         user.setPhone(organization.getContact());
         user.setOnlineStatus("0");
-        user.setUserSource(1);
+        user.setUserSource(1);//设置对应的用户来源于“组织机构”的注册
 
         if (!organizationService.saveOrganization(organization, user, roles)) {
             renderJson(RestResult.buildError("用户保存失败"));
@@ -153,7 +153,7 @@ public class OrganizationController extends BaseController {
             auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
             if (auth != null) {
                 setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                        .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdAcct())
+                        .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())//TODO 原先为getLastUpdateUserID
                         .setAttr("auth", auth)
                         .render("proveing.html");
             } else if (auth1 != null) {
@@ -166,7 +166,7 @@ public class OrganizationController extends BaseController {
             }
         } else {
             setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdAcct())
+                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())//TODO 原先为getLastUpdateUserID
                     .setAttr("auth", auth)
                     .render("proveing.html");
         }
@@ -199,10 +199,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void managementProve() {
+        User loginUser = AuthUtils.getLoginUser();
         Management model = getBean(Management.class, "management");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Management name = managementService.findByName(model.getName());
         Auth auth;
@@ -269,10 +271,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void enterpriseProve() {
+        User loginUser = AuthUtils.getLoginUser();
         Enterprise model = getBean(Enterprise.class, "enterprise");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Enterprise name = enterpriseService.findByName(model.getName());
         Auth auth;
@@ -339,10 +343,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void facAgencyProve() {
+        User loginUser = AuthUtils.getLoginUser();
         FacAgency model = getBean(FacAgency.class, "facAgency");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         FacAgency name = facAgencyService.findByName(model.getName());
         Auth auth;
@@ -410,10 +416,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void profGroupProve() {
+        User loginUser = AuthUtils.getLoginUser();
         ProfGroup model = getBean(ProfGroup.class, "profGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         ProfGroup name = profGroupService.findByName(model.getName());
         Auth auth;
@@ -480,11 +488,12 @@ public class OrganizationController extends BaseController {
      */
     @Before(POST.class)
     public void reviewGroupProve() {
+        User loginUser = AuthUtils.getLoginUser();
         ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
         model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        model.setIsEnable(true);
-        User loginUser = AuthUtils.getLoginUser();
+        model.setCreateUserID(loginUser.getId());
+        model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         ReviewGroup name = reviewGroupService.findByName(model.getName());
         Auth auth;
@@ -572,8 +581,9 @@ public class OrganizationController extends BaseController {
     public void postProjectGet() {
         Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
-        UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(),id-5 );
-        if (userRole == null){
+        //TODO 待修复问题：投机取巧使用id相减方法
+        UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), id - 5);
+        if (userRole == null) {
             renderJson(RestResult.buildError("亲，请先去认证成为当前组织再来申请哦~~~"));
             throw new BusinessException("亲，请先去认证成为当前组织再来申请哦~~~");
         }

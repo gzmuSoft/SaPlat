@@ -39,7 +39,7 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
             columns.like("name", "%"+sysRole.getName()+"%");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "seq asc");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "sort asc");
     }
 
     @Override
@@ -58,8 +58,8 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
                 String[] ress = resIds.split(",");
                 for (String resId : ress) {
                     RoleRes roleRes = new RoleRes();
-                    roleRes.setRoleId(id);
-                    roleRes.setResId(Long.parseLong(resId));
+                    roleRes.setRoleID(id);
+                    roleRes.setResID(Long.parseLong(resId));
                     roleResList.add(roleRes);
                 }
                 int[] rets = Db.batchSave(roleResList, roleResList.size());
@@ -76,7 +76,7 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
 
     @Override
     public List<Role> findByStatusUsed() {
-        return DAO.findListByColumn("status", RoleStatus.USED);
+        return DAO.findListByColumn("isEnable", RoleStatus.USED);
     }
 
     @Override
