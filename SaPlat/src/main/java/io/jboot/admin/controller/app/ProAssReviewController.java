@@ -51,8 +51,11 @@ public class ProAssReviewController extends BaseController{
         renderJson(RestResult.buildSuccess(resService.findTreeOnUse()));
     }
     public void fileTree(){
-        System.out.print("Test\n\n\n");
-        /*renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));*/
+        renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));
+    }
+
+    public void findFileURL(){
+        renderJson(RestResult.buildSuccess(proAssReviewService.findFileURLByFileId(0L)));
     }
 
 

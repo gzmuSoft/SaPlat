@@ -130,17 +130,13 @@
                 <div class="layui-input-inline">
                     <input type="text" id="createUserID" name="createUserID" placeholder="用户名称" class="layui-input"/>
                 </div>
-                <label class="layui-form-label">创建日期</label>
-                <div class="layui-input-inline">
-                    <input class="layui-input" id="createTime" name="createTime" placeholder=" - " type="text">
-                </div>
                 <label class="layui-form-label">更新用户</label>
                 <div class="layui-input-inline">
                     <input type="text" id="lastUpdateUserID" name="lastUpdateUserID" placeholder="用户名称" class="layui-input"/>
                 </div>
-                <label class="layui-form-label">访问日期</label>
+                <label class="layui-form-label">创建日期</label>
                 <div class="layui-input-inline">
-                    <input class="layui-input" id="lastAccessTime" name="lastAccessTime" placeholder=" - " type="text">
+                    <input class="layui-input" id="createTime" name="createTime" placeholder=" - " type="text">
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn"  lay-submit lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
@@ -151,8 +147,8 @@
     <hr>
     <div class="layui-row">
         <div class="layui-btn-group">
-            #shiroHasPermission('/app/country/add')
-            <button id="add" class="layui-btn layui-btn-small">编写新闻</button>
+            #shiroHasPermission('/app/news/add')
+            <button id="add" class="layui-btn layui-btn-small">新建新闻</button>
             #end
         </div>
         <table id="dateTable" lay-filter="dateTable"></table>
@@ -160,11 +156,11 @@
 </div>
 
 <script type="text/html" id="barOption">
-    #shiroHasPermission('/app/country/update')
+    #shiroHasPermission('/app/news/update')
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     #end
 
-    #shiroHasPermission('/app/country/delete')
+    #shiroHasPermission('/app/news/delete')
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     #end
 </script>

@@ -10,6 +10,14 @@ import java.util.List;
 public interface ProAssReviewService  {
 
     /**
+     * find file URL by file id
+     *
+     * @param id
+     * @return url
+     * */
+    public String findFileURLByFileId(long id);
+
+    /**
      * get file tree by project id
      *
      * @param id project
