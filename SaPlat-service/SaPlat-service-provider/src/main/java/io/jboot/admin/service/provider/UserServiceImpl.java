@@ -67,17 +67,17 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
         String pwd = user.getPwd();
 
         if (StrKit.notBlank(pwd)) {
-            String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-            SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+            String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+            SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
             pwd = hash.toHex();
             user.setPwd(pwd);
-            user.setSalt2(salt2);
+            user.setSalt(salt);
         }
 
         user.setOnlineStatus(UserOnlineStatus.OFFLINE);
         user.setCreateTime(new Date());
-        user.setLastUpdTime(new Date());
-        user.setNote("保存系统用户");
+        user.setLastAccessTime(new Date());
+        user.setRemark("保存系统用户");
 
         return Db.tx(new IAtom() {
             @Override
@@ -111,17 +111,17 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
     public boolean updateUser(User user, Long[] roles) {
         String pwd = user.getPwd();
         if (StrKit.notBlank(pwd)) {
-            String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex();
-            SimpleHash hash = new SimpleHash("md5", pwd, salt2, 2);
+            String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+            SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
             pwd = hash.toHex();
             user.setPwd(pwd);
-            user.setSalt2(salt2);
+            user.setSalt(salt);
         } else {
             user.remove("pwd");
         }
 
-        user.setLastUpdTime(new Date());
-        user.setNote("修改系统用户");
+        user.setLastAccessTime(new Date());
+        user.setRemark("修改系统用户");
 
         return Db.tx(new IAtom() {
             @Override

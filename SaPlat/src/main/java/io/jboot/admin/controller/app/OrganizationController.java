@@ -73,7 +73,7 @@ public class OrganizationController extends BaseController {
     }
 
     /**
-     * 组织结构注册功能
+     * 组织机构注册功能
      */
     @Before({POST.class, OrganizationValidator.class})
     public void postRegister() {
@@ -90,7 +90,7 @@ public class OrganizationController extends BaseController {
         Long[] roles = new Long[]{roleService.findByName("组织机构").getId()};
         user.setPhone(organization.getContact());
         user.setOnlineStatus("0");
-        user.setUserSource(1);
+        user.setUserSource(1);//设置对应的用户来源于“组织机构”的注册
 
         if (!organizationService.saveOrganization(organization, user, roles)) {
             renderJson(RestResult.buildError("用户保存失败"));

@@ -9,6 +9,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FacAgencyService;
 import io.jboot.admin.service.entity.model.FacAgency;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -78,6 +79,8 @@ public class FacAgencyController extends BaseController{
         if (facAgencyService.isExisted(model.getName())){
             throw new BusinessException("所指定的服务机构名称已存在");
         }
+        model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
         if (!facAgencyService.save(model)){
             throw new BusinessException("保存失败");
@@ -91,6 +94,7 @@ public class FacAgencyController extends BaseController{
         if (byId == null){
             throw new BusinessException("所指定的服务机构名称不存在");
         }
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         if (!facAgencyService.update(model)){
             throw new BusinessException("修改失败");
         }
