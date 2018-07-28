@@ -13,7 +13,7 @@
     AND d.id = e.userID
     and e.roleID = b.id
     AND a.`isEnable` = ?
-    AND b.`status` = ?
+    AND b.`isEnable` = ?
     and d.`name` = ?
 #end
 
@@ -32,7 +32,7 @@ WHERE
   AND d.id = e.userID
   and e.roleID = b.id
   AND a.`isEnable` = ?
-  AND b.`status` = ?
+  AND b.`isEnable` = ?
   and a.parentID = ?
   and d.`name` = ?
 ORDER BY a.parentID asc, a.sort asc
@@ -53,7 +53,7 @@ WHERE
   AND d.id = e.userID
   and e.roleID = b.id
   AND a.`isEnable` = ?
-  AND b.`status` = ?
+  AND b.`isEnable` = ?
   AND FIND_IN_SET(a.id, querySysRes(?))
   AND d.`name` = ?
 ORDER BY a.parentID asc, a.sort asc
@@ -70,7 +70,7 @@ WHERE
   role_res.resID = res.id
   AND role.id = role_res.roleID
   AND res. isEnable = ?
-  AND role. STATUS = ?
+  AND role. isEnable = ?
   AND ROLE.id = ?
   AND res.url IS NOT NULL
 ORDER BY res.parentID asc, res.sort asc

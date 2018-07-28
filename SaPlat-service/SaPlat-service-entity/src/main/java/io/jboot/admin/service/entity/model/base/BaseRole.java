@@ -25,20 +25,20 @@ public abstract class BaseRole<M extends BaseRole<M>> extends JbootModel<M> impl
 		return getStr("name");
 	}
 
+	public void setSpell(java.lang.String spell) {
+		set("spell", spell);
+	}
+	
+	public java.lang.String getSpell() {
+		return getStr("spell");
+	}
+
 	public void setDes(java.lang.String des) {
 		set("des", des);
 	}
 	
 	public java.lang.String getDes() {
 		return getStr("des");
-	}
-
-	public void setSeq(java.lang.Long seq) {
-		set("seq", seq);
-	}
-	
-	public java.lang.Long getSeq() {
-		return getLong("seq");
 	}
 
 	public void setIconCls(java.lang.String iconCls) {
@@ -57,44 +57,60 @@ public abstract class BaseRole<M extends BaseRole<M>> extends JbootModel<M> impl
 		return getLong("pid");
 	}
 
-	public void setCreatedate(java.util.Date createdate) {
-		set("createdate", createdate);
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
 	}
 	
-	public java.util.Date getCreatedate() {
-		return get("createdate");
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
 	}
 
-	public void setStatus(java.lang.String status) {
-		set("status", status);
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
 	}
 	
-	public java.lang.String getStatus() {
-		return getStr("status");
+	public java.util.Date getCreateTime() {
+		return get("createTime");
 	}
 
-	public void setLastUpdAcct(java.lang.String lastUpdAcct) {
-		set("lastUpdAcct", lastUpdAcct);
+	public void setLastUpdateUserID(java.lang.Long lastUpdateUserID) {
+		set("lastUpdateUserID", lastUpdateUserID);
 	}
 	
-	public java.lang.String getLastUpdAcct() {
-		return getStr("lastUpdAcct");
+	public java.lang.Long getLastUpdateUserID() {
+		return getLong("lastUpdateUserID");
 	}
 
-	public void setLastUpdTime(java.util.Date lastUpdTime) {
-		set("lastUpdTime", lastUpdTime);
+	public void setLastAccessTime(java.util.Date lastAccessTime) {
+		set("lastAccessTime", lastAccessTime);
 	}
 	
-	public java.util.Date getLastUpdTime() {
-		return get("lastUpdTime");
+	public java.util.Date getLastAccessTime() {
+		return get("lastAccessTime");
 	}
 
-	public void setNote(java.lang.String note) {
-		set("note", note);
+	public void setSort(java.lang.Long sort) {
+		set("sort", sort);
 	}
 	
-	public java.lang.String getNote() {
-		return getStr("note");
+	public java.lang.Long getSort() {
+		return getLong("sort");
+	}
+
+	public void setRemark(java.lang.String remark) {
+		set("remark", remark);
+	}
+	
+	public java.lang.String getRemark() {
+		return getStr("remark");
+	}
+
+	public void setIsEnable(java.lang.Boolean isEnable) {
+		set("isEnable", isEnable);
+	}
+	
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }
