@@ -8,25 +8,30 @@
 #end
 
 #define js()
+<!-- 加载编辑器的容器 -->
+<!-- 配置文件 -->
 <script type="text/javascript">
     var index = null;
-    layui.use(['form', 'layer','layedit'], function () {
+    layui.use(['form', 'layer', 'layedit', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery
-            ,layedit = layui.layedit;
-        layedit.set({
-            uploadImage: {
-                url: '#(ctxPath)/util/uploadFile'
-            }
-        });
-        index = layedit.build('demo'); //建立编辑器
-
+            , layedit = layui.layedit;
+        // layedit.set({
+        //     uploadImage: {
+        //         url: '#(ctxPath)/app/news/uploadFile'
+        //         ,tpye: 'POST'
+        //     }
+        // });
+        // index = layedit.build('layContent'); //建立编辑器
         form.on('submit(sub)', function(data){
+            var dataParam = $('#addForm').serializeArray();
+            dataParam.push({"name":"model.content","value":layedit.getContent(index)});
+            //alert(dataParam);
             util.sendAjax ({
                 type: 'POST',
-                url: '#(ctxPath)/app/country/postAdd',
-                data: $('#addForm').serialize(),
+                url: '#(ctxPath)/app/news/postAdd',
+                data: dataParam,
                 loadFlag: true,
                 success : function(data){
                     pop_close();
@@ -59,6 +64,14 @@
         alert(arr.join("\n"));
     }
 </script>
+
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.config.js"></script>
+
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.all.js"></script>
+
+<script type="text/javascript">
+    var ue = UE.getEditor('container',{initialFrameHeight:500});
+</script>
 #end
 
 #define content()
@@ -67,19 +80,34 @@
         <div class="layui-form-item">
             <label class="layui-form-label">新闻标题</label>
             <div class="layui-input-block">
-                <input type="text" name="title" placeholder="请输入标题" class="layui-input" style="width:100%">
+                <input type="text" name="model.title" placeholder="请输入标题" class="layui-input" style="width:100%">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">编辑</label>
+                <div class="layui-input-block">
+                    <input name="model.source" id="source" autocomplete="off" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">编辑</label>
+                <div class="layui-input-inline">
+                    <input name="model.editer" id="editer" autocomplete="off" class="layui-input" type="text">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">新闻内容</label>
             <div class="layui-input-block">
-                <textarea id="demo" style="display: none;"></textarea>
+                <!--<textarea id="layContent" style="display: none;"></textarea>-->
+                <script id="container" name="content" type="text/plain"></script>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">新闻类型</label>
             <div class="layui-input-block">
-                <select name="interest" lay-filter="newsType">
+                <select name="model.type" lay-filter="newsType">
                     <option value="0"  selected="">政要文件</option>
                     <option value="1">跟踪动态</option>
                     <option value="2">最新政策</option>
@@ -90,19 +118,18 @@
         <div class="layui-form-item">
             <label class="layui-form-label">新闻属性</label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" value="0" title="公开" lay-filter="pub_object"  checked="">
-                <input type="radio" name="sex" value="1" title="角色" lay-filter="pub_object"  >
-                <input type="radio" name="sex" value="2" title="人群" lay-filter="pub_object"  >
+                <input type="radio" name="model.isPublish" value="0" title="全体" lay-filter="pub_object"  checked="">
+                <input type="radio" name="model.isPublish" value="1" title="角色" lay-filter="pub_object"  >
+                <input type="radio" name="model.isPublish" value="2" title="人群" lay-filter="pub_object"  >
             </div>
         </div>
 
         <div class="layui-form-item" id="character">
             <label class="layui-form-label">角色对象</label>
             <div class="layui-input-block">
-                <select name="interest" lay-filter="character">
-                    <option value="0"  selected="">企业</option>
-                    <option value="1">部门</option>
-                    <option value="2">人事</option>
+                <select name="model.receiverRoles" lay-filter="character">
+                    <option value=""></option>
+                    #statusOption(roleStatus);
                 </select>
             </div>
         </div>
@@ -110,17 +137,15 @@
         <div class="layui-form-item" id="individual">
             <label class="layui-form-label">个体对象</label>
             <div class="layui-input-block">
-                <select name="interest" lay-filter="individual">
-                    <option value="0"  selected="">国家</option>
-                    <option value="1">政府</option>
-                    <option value="2">人民</option>
+                <select name="model.receiverUsers" lay-filter="individual">
+                    <option value=""></option>
+                    #statusOption(personStatus);
                 </select>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <button onclick="getContent()" class="layui-btn">存草稿</button>
-            <button class="layui-btn" lay-submit lay-filter="newsFrom">提交</button>
+            <button class="layui-btn" lay-filter="sub" lay-submit>提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </form>

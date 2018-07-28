@@ -9,57 +9,151 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
-        // 操作对象
+    var index = null;
+    layui.use(['form', 'layer', 'layedit', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
-            , $ = layui.jquery;
-
+            , $ = layui.jquery
+            , layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: '#(ctxPath)/app/news/uploadFile'
+                ,tpye: 'POST'
+            }
+        });
+        index = layedit.build('layContent'); //建立编辑器
         form.on('submit(sub)', function(data){
-
+            var dataParam = $('#addForm').serializeArray();
+            dataParam.push({"name":"model.content","value":layedit.getContent(index)});
+            //alert(dataParam);
             util.sendAjax ({
                 type: 'POST',
-                url: '#(ctxPath)/app/country/postUpdate',
-                data: $('#addForm').serialize(),
+                url: '#(ctxPath)/app/news/postAdd',
+                data: dataParam,
                 loadFlag: true,
                 success : function(data){
                     pop_close();
                 }
             });
-
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+
+        form.on('radio(pub_object)', function (data) {
+            if(data.value == 0){
+                $("#character").hide();
+                $("#individual").hide();
+            }else if(data.value == 1){
+                $("#character").show();
+                $("#individual").hide();
+            }else{
+                $("#character").hide();
+                $("#individual").show();
+            }
+        });
     });
+    $(document).ready(function(){
+        var type = "#(model.type)";
+        var isPublish = "#(model.isPublish)";
+        var receiverRoles = "#(model.receiverRoles)";
+        var receiverUsers = "#(model.receiverUsers)";
+        $("#newsType").val(type);
+        $("input:radio[name='model.isPublish']").eq(isPublish).attr("checked",'checked');
+        if(isPublish == 0){
+            $("#character").hide();
+            $("#individual").hide();
+        }else if(isPublish == 1){
+            $("#character").show();
+            $("#individual").hide();
+            $("#receiverRoles").val(receiverRoles);
+        }else{
+            $("#character").hide();
+            $("#individual").show();
+            $("#receiverUsers").val(receiverUsers);
+        }
+    });
+
+    function getContent() {
+        var arr = [];
+        arr.push("使用getContent()方法可以获得编辑器的内容");
+        arr.push("内容为：");
+        arr.push(layedit.getContent(index));
+        alert(arr.join("\n"));
+    }
 </script>
 #end
 
 #define content()
 <div class="x-body">
-    <form id="addForm" class="layui-form" action="">
-        <input type="hidden" name="model.id" value="#(model.id)">
+    <form class="layui-form layui-form-pane" action="" id="addForm">
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
+            <label class="layui-form-label">新闻标题</label>
             <div class="layui-input-block">
-                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="#(model.name)" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="model.title" value="#(model.title)" placeholder="请输入标题" class="layui-input" style="width:100%">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">备注</label>
-            <div class="layui-input-block">
-                <input id="remark" type="text" name="model.remark" placeholder="备注" class="layui-input" value="#(model.remark)" autocomplete="off"/>
+            <div class="layui-inline">
+                <label class="layui-form-label">编辑</label>
+                <div class="layui-input-block">
+                    <input name="model.source" value="#(model.source)" autocomplete="off" class="layui-input" type="text">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">编辑</label>
+                <div class="layui-input-inline">
+                    <input name="model.editer" value="#(model.editer)" autocomplete="off" class="layui-input" type="text">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">排序</label>
+            <label class="layui-form-label">新闻内容</label>
             <div class="layui-input-block">
-                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input" value="#(model.sort)" autocomplete="off"/>
+                <textarea id="layContent" style="display: none;">#(model.content)</textarea>
+
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
-                保存
-            </button>
+            <label class="layui-form-label">新闻类型</label>
+            <div class="layui-input-block">
+                <select name="model.type" lay-filter="newsType" id="newsType">
+                    <option value="0">政要文件</option>
+                    <option value="1">跟踪动态</option>
+                    <option value="2">最新政策</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">新闻属性</label>
+            <div class="layui-input-block">
+                <input type="radio" name="model.isPublish" value="0" title="全体" lay-filter="pub_object">
+                <input type="radio" name="model.isPublish" value="1" title="角色" lay-filter="pub_object">
+                <input type="radio" name="model.isPublish" value="2" title="人群" lay-filter="pub_object">
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="character">
+            <label class="layui-form-label">角色对象</label>
+            <div class="layui-input-block">
+                <select name="model.receiverRoles" lay-filter="character" id="receiverRoles">
+                    <option value=""></option>
+                    #statusOption(roleStatus);
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="individual">
+            <label class="layui-form-label">个体对象</label>
+            <div class="layui-input-block">
+                <select name="model.receiverUsers" lay-filter="individual" id="receiverUsers">
+                    <option value=""></option>
+                    #statusOption(personStatus);
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-filter="sub" lay-submit>提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </form>
