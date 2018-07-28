@@ -3,11 +3,29 @@
 
 #define css()
 <link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<style>
+    .pdfobject-container {
+        width: 48%;
+        height: 100%;
+        padding: 5em 0;
+    }
+    html,body{
+        height:98%;
+    }
+</style>
 #end
 
 #define js()
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
 <script type="text/javascript">
+    var url=document.getElementById("pdfviewer").innerText;
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed(url,"#pdfviewer",options);
     var setting = {
         data: {
             simpleData: {
@@ -16,6 +34,9 @@
         },
         callback: {
             onClick: zTreeOnClick
+        },
+        view:{
+            showTitle:true
         }
     };
 
@@ -23,7 +44,7 @@
 
     //var reloadTable;
     function zTreeOnClick(event, treeId, treeNode) {
-        //reloadTable(treeNode.id);
+        PDFObject.embed(treeNode.title,"#pdfviewer",options);
     }
 
     function zTreeReload() {
@@ -44,30 +65,12 @@
 #end
 
 #define content()
-<div class="layui-fluid">
-    <div class="layui-row">
-        <div id="pdfviewer" class="layui-col-md6">#(pdfURL)</div>
-        <div class="layui-col-md6" style="overflow:auto;">
-            <ul id="tree" class="ztree"></ul>
+<div class="layui-fluid" style="height:100%;">
+    <div class="layui-row" style="height:100%;">
+        <div class="layui-col-md2" style="overflow:auto;height:100%;">
+            <ul id="tree" class="ztree" style="height:100%;"></ul>
         </div>
+        <div id="pdfviewer" class="layui-col-md6" style="height:100%;">#(pdfURL)</div>
     </div>
 </div>
-
-<style>
-    .pdfobject-container {
-        width: 48%;
-        height: 600px;
-        padding: 5em 0;
-    }
-</style>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
-<script>
-    var url=document.getElementById("pdfviewer").innerText;
-    var options = {
-        forcePDFJS: true,
-        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
-    };
-    PDFObject.embed(url,"#pdfviewer",options);
-</script>
 #end
