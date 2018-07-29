@@ -63,6 +63,8 @@ public class QuestionnaireController extends BaseController {
         Project project = projectService.findAll(pmodel).get(0);
         //加载问卷
         Questionnaire questionnaire = questionnaireService.findByProjectID(project.getId());
+        String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(questionnaire.getSurveyTime());
+        questionnaire.setSurveyTime(java.sql.Date.valueOf(date));
         if (questionnaire == null){
             questionnaire = new Questionnaire();
         }

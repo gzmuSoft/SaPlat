@@ -16,6 +16,12 @@ public interface EvaSchemeService  {
      */
     public EvaScheme findById(Object id);
 
+    /**
+     * 根据当前项目ID判断是否有对应的评估方案
+     * @param id
+     * @return
+     */
+    public EvaScheme findByProjectID(Object id);
 
     /**
      * find all model

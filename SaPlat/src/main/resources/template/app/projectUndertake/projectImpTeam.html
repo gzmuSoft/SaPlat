@@ -1,0 +1,560 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<!--<link rel="stylesheet" href="/static/css/login/layui.css" media="all">-->
+<!--<link rel="stylesheet" href="/static/css/shuttleStyle/cyStyle.css" media="all">-->
+<!--<link rel="stylesheet" href="/static/css/shuttleStyle/cyType.css" media="all">-->
+<!--<link rel="stylesheet" href="/static/css/shuttleStyle/font-awesome.min.css" media="all">-->
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+
+    h3 {
+        font-weight: bold;
+    }
+</style>
+#end
+
+#define content()
+<!--<script src="/static/js/layui/layui.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script src="/static/js/shuttleJS/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script src="/static/js/shuttleJS/utils.js" type="text/javascript" charset="utf-8"></script>-->
+<!--<script src="/static/js/shuttleJS/transferTool.js" type="text/javascript" charset="utf-8"></script>-->
+<div class="x-body">
+    <form id="impTeam" class="layui-form">
+        <h2>项目简介</h2>
+        <hr class="layui-bg-red">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <h3>项目名称:</h3>
+                <div>
+                    <span>#(project.name)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>角色名称:</h3>
+                <div>
+                    <span>#(project.roleName)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>预计金额:</h3>
+                <div>
+                    <span>#(project.amount)元</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>地址:</h3>
+                <div>
+                    <span>#(project.site)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>简介:</h3>
+                <div>
+                    <span>#(project.brief)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">委托第三方机构评估实施/自我评估实施</h2>
+        <hr class="layui-bg-orange">
+        <div class="layui-input-inline">
+            <h3>当前项目为：#(project.assessmentMode)</h3>
+        </div>
+
+        <h2 style="margin-top: 50px;">领导小组名单</h2>
+        <hr class="layui-bg-blue">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <h3>组长:</h3>
+                <div>
+                    <span>#(leaderGroup.leader)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>副组长:</h3>
+                <div>
+                    <span>#(leaderGroup.deputy)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>组员:</h3>
+                <div>
+                    <span>#(leaderGroup.crew)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">实施小组建立</h2>
+        <hr class="layui-bg-green">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.projectID">项目名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="impTeam.projectID" name="impTeam.projectID"
+                           class="layui-input layui-disabled" value="#(project.name)" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.name">小组名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="impTeam.name" name="impTeam.name" class="layui-input"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.leaderID1">组长</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption1" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption11" id="leaderID" name="leaderID" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID1"></p>
+                <h class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID"></h>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.assLeaderIDs1">副组长</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption2" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption21" id="assLeaderIDs" name="assLeaderIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.assLeaderIDs1"></p>
+                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs"></h>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.expertGroupIDs1">专家成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption3" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption31" id="expertGroupIDs" name="expertGroupIDs" lay-search>
+                        #for(List : expertGroups)
+                        <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.expertGroupIDs1"></p>
+                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs"></h>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.invTeamIDs1">现场调查成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption4" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption41" id="invTeamIDs" name="invTeamIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.invTeamIDs1"></p>
+                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.invTeamIDs"></h>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="impTeam.repTeamIDs1">报告编制成员</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption5" lay-search>
+                        #for(List : orgStructures)
+                        <option value="#(List.id)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select lay-filter="clickOption51" id="repTeamIDs" name="repTeamIDs" lay-search>
+                        #for(List : persons)
+                        <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
+                        #end
+                    </select>
+                </div>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.repTeamIDs1"></p>
+                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.repTeamIDs"></h>
+            </div>
+            <!--<div cyType="transferTool" cyProps="url:'/static/js/shuttleJS/list.json'" name="province[]"-->
+            <!--value="1111210000,1111340000"></div>-->
+            <!--<div cyType="transferTool"-->
+            <!--cyProps="url:'/static/js/shuttleJS/list.json',disabled:'1111210000,1111220000,1111230000'"-->
+            <!--name="test[]" value="1111340000"></div>-->
+        </div>
+
+        <h2 style="margin-top: 50px;">方案名称填写</h2>
+        <hr class="layui-bg-black">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <input type="text" id="EvaScheme.name" name="EvaScheme.name" class="layui-input"/>
+            </div>
+            <p class="layui-form-mid layui-word-aux">不要忽略哦</p>
+        </div>
+
+        <h2 style="margin-top: 50px;">方案依据填写</h2>
+        <hr class="layui-bg-red">
+        <textarea id="gist" name="EvaScheme.gist" style="display: none;"></textarea>
+
+        <h2 style="margin-top: 50px;">风险评估工作拟采取的工作方式填写</h2>
+        <hr class="layui-bg-orange">
+        <textarea id="method" name="EvaScheme.method" style="display: none;"></textarea>
+
+        <h2 style="margin-top: 50px;">工作要求填写</h2>
+        <hr class="layui-bg-blue">
+        <textarea id="demand" name="EvaScheme.demand" style="display: none;"></textarea>
+
+        <h2 style="margin-top: 50px;">具体措施填写</h2>
+        <hr class="layui-bg-green">
+        <textarea id="measure" name="EvaScheme.measure" style="display: none;"></textarea>
+
+        <h2 style="margin-top: 50px;">风险评估工作时间安排和进度计划表填写</h2>
+        <p class="layui-form-mid layui-word-aux">首行不可操作</p>
+        <hr class="layui-bg-black">
+        <div class="layui-row">
+            <div class="layui-btn-group ">
+                <button type="button" id="addTable" class="layui-btn layui-btn-small">添加</button>
+            </div>
+            <table id="dateTable" lay-filter="dateTable"></table>
+        </div>
+        <div class="layui-form-item x-center" style="margin-top: 50px;">
+            <div class="layui-input-block">
+                <button class="layui-btn site-demo-layedit" data-type="content" lay-submit lay-filter="sub" id="sub">
+                    保存
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+#end
+
+#define js()
+<script type="text/html" id="barDemo">
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>-->
+</script>
+
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'element', 'table', 'laydate','layedit', 'table'], function () {
+        /**
+         *  操作对象
+         */
+        var form = layui.form
+            , table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , layedit = layui.layedit
+            , laydate = layui.laydate
+            , string = "?"
+            , temp1 = [], temp2 = [], temp3 = [], temp4 = [];
+
+        /**
+         * 富文本编辑器
+         * 一个页面有多个富文本编辑器的话，只能读取第一个
+         * 所以就不能用一个layedit创建多个，只能一一创建
+         * 且必须返回才能读取多个。
+         * 基于这个bug，数据的部分打包只能放在此处执行
+         */
+        layui.use('layedit', function () {
+            var index = layedit.build('gist', {
+                height: 100,
+                hideTool: ['link', 'unlink', 'face', 'image', 'help']
+            });
+            $('#sub').on('click', function () {
+                if (layedit.getContent(index) != null) {
+                    string += "EvaScheme.gist=" + layedit.getContent(index) + "&";
+                    return true;
+                } else {
+                    alert("有地方没填")
+                }
+            });
+        });
+
+        layui.use('layedit', function () {
+            var index = layedit.build('method', {
+                height: 100,
+                hideTool: ['link', 'unlink', 'face', 'image', 'help']
+            });
+            $('#sub').on('click', function () {
+                if (layedit.getContent(index) != null) {
+                    string += "EvaScheme.method=" + layedit.getContent(index) + "&";
+                    return true;
+                } else {
+                    alert("有地方没填")
+                }
+            });
+        });
+
+        layui.use('layedit', function () {
+            var index = layedit.build('demand', {
+                height: 100,
+                hideTool: ['link', 'unlink', 'face', 'image', 'help']
+            });
+            $('#sub').on('click', function () {
+                if (layedit.getContent(index) != null) {
+                    string += "EvaScheme.demand=" + layedit.getContent(index) + "&";
+                    return true;
+                } else {
+                    alert("有地方没填")
+                }
+            });
+        });
+
+        layui.use('layedit', function () {
+            var index = layedit.build('measure', {
+                height: 100,
+                hideTool: ['link', 'unlink', 'face', 'image', 'help']
+            });
+            $('#sub').on('click', function () {
+                if (layedit.getContent(index) != null) {
+                    string += "EvaScheme.measure=" + layedit.getContent(index) + "&";
+                    return true;
+                } else {
+                    alert("有地方没填")
+                }
+            });
+        });
+
+        /**
+         * 表格初始化
+         */
+        table.cache.dateTable = [];
+        table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '300'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[
+                {type: 'numbers', unresize: 'true'}
+                , {field: 'name', title: '计划名称', align: 'center', width: 150}
+                , {field: 'startDate', title: '起始时间', align: 'center', width: 150, type: 'date'}
+                , {field: 'endDate', title: '结束时间', align: 'center', width: 150, type: 'date'}
+                , {field: 'content', title: '工作内容', align: 'center', width: 300}
+                , {field: 'action', title: '操作', align: 'center', unresize: true, rowspan: 1, toolbar: '#barDemo'}
+            ]]
+            , loading: true
+            , data: [{name: "", startDate: "", endDate: "", content: ""}]// 默认存在第一行
+            , method: 'get'
+        });
+
+        /**
+         * 表格添加事件
+         */
+        var index = table.cache.dateTable.length;
+        $('#addTable').click(function () {
+            var tr = $('<tr data-index="' + index + '"></tr>');
+            var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
+            var td2 = $('<td data-field="name" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fa"></div></td>');
+            var td3 = $('<td data-field="startDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fb" ></div></td>');
+            var td4 = $('<td data-field="endDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fc"></div></td>');
+            var td5 = $('<td data-field="content" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fd"></div></td>');
+            var td6 = $('<td data-field="action" align="center" data-off="true"><div class="layui-table-cell laytable-cell-1-action">' +
+                '<a class="layui-btn layui-btn-danger layui-btn-xs" id="del">删除</a></div></td>');
+            tr.append(td1).append(td2).append(td3).append(td4).append(td5).append(td6).appendTo($('tbody').first());
+            table.cache.dateTable.push({
+                "LAY_TABLE_INDEX": index,
+                "name": "",
+
+                "startDate": "",
+                "endDate": ""
+            });
+            index++;
+            $('.dateC').each(function(){
+                laydate.render({
+                    elem: this
+                    ,position: 'fixed'
+                    ,format:'yyyy-MM-dd'
+                });
+            })
+        });
+        //日期
+
+
+        /**
+         * 表格删除事件
+         */
+        $(document).on("click", "#del", function () {
+            var tr = $(this).parents("tr");
+            var id = parseInt(tr.attr("data-index"));
+            if (id === 0) {
+                layer.msg("至少保留一项！");
+                return;
+            }
+            tr.remove();
+            $.each(table.cache.dateTable, function (index, value) {
+                if (value.LAY_TABLE_INDEX === id) {
+                    value.LAY_TABLE_INDEX = -1;
+                }
+            });
+        });
+
+        /**
+         * 一级下拉框点击事件:
+         * 调用getJson函数以获取二级下拉框将要显示的数据
+         */
+        form.on('select(clickOption1)', function (data) {
+            getJson("#leaderID", data);
+        });
+        form.on('select(clickOption2)', function (data) {
+            getJson("#assLeaderIDs", data);
+        });
+        form.on('select(clickOption3)', function (data) {
+            getJson("#expertGroupIDs", data);
+        });
+        form.on('select(clickOption4)', function (data) {
+            getJson("#invTeamIDs", data);
+        });
+        form.on('select(clickOption5)', function (data) {
+            getJson("#repTeamIDs", data);
+            console.log(data.value)
+        });
+
+        /**
+         * 二级联动的数据获取
+         */
+        function getJson(id, data) {
+            var flag = false;
+            if(id==="#expertGroupIDs"){
+                console.log("jhhhhhhhhhhhhh");
+                flag = true;
+            }
+            $.getJSON(
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value + "&flag="+flag,
+                function (data) {
+                    var optionString = "";
+                    var string = "";
+                    $.each(data.persons, function (i, item) {
+                        optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    $.each(data.expertGroups, function (i, item) {
+                        console.log(item.name);
+                        string += '<option value= "' + item.id + '">' + item.name + '</option>';
+                    });
+                    if(string !== ""&&flag){
+                        $(id).html('<option value=""></option>' + string);
+                    }else if(flag&&string === ""){
+                        $(id).html('<option value="">无</option>');
+                    } else {
+                        $(id).html('<option value=""></option>' + optionString);
+                    }
+                    form.render('select'); //这个很重要
+                }
+            );
+        }
+
+        /**
+         * 二级下拉框的点击事件:
+         * 调用judge函数使得人员选择不能重复
+         * 并且将隐藏的h结点赋值value以方便数据库调用
+         */
+        form.on('select(clickOption11)', function (data) {
+            $("#impTeam\\.leaderID1").text(data.elem[data.elem.selectedIndex].text);
+            $("#impTeam\\.leaderID").text(data.value);
+        });
+        form.on('select(clickOption21)', function (data) {
+            judge("#impTeam\\.assLeaderIDs", "#impTeam\\.assLeaderIDs1", data, temp1)
+        });
+        form.on('select(clickOption31)', function (data) {
+            judge("#impTeam\\.expertGroupIDs", "#impTeam\\.expertGroupIDs1", data, temp2)
+        });
+        form.on('select(clickOption41)', function (data) {
+            judge("#impTeam\\.invTeamIDs", "#impTeam\\.invTeamIDs1", data, temp3)
+        });
+        form.on('select(clickOption51)', function (data) {
+            judge("#impTeam\\.repTeamIDs", "#impTeam\\.repTeamIDs1", data, temp4)
+        });
+
+        /**
+         * 禁止重复选择
+         * 显示name，返回value
+         */
+        function judge(id1, id2, data, temp) {
+            var count = temp.length;
+            for (var i = 0; i < temp.length; i++) {
+                if (temp[i] === data.value) {
+                    count--;
+                }
+            }
+            if (count === temp.length) {
+                temp.length++;
+                temp[temp.length - 1] = data.value;
+                $(id2).append(data.elem[data.elem.selectedIndex].text + " ");
+                $(id1).append(data.value + ",");
+            }
+        }
+
+        /**
+         * 提交
+         */
+        form.on('submit(sub)', function () {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
+                loadFlag: true
+            });
+            return false;
+        });
+
+        /**
+         * 数据打包
+         */
+        function dataString() {
+            $.each(table.cache.dateTable, function (index, value) {
+                if (value.LAY_TABLE_INDEX > 0) {
+                    string += "ScheduledPlan.name=" + value.name +  "&ScheduledPlan.content=" + value.content + "&";
+                }
+            });
+            var temp = 2;
+            $('.dateC').each(function(){
+               if(temp%2==0){
+                   string+="ScheduledPlan.startDate=" +$(this).text()+ "&";
+                   temp++;
+               }else{
+                   string+="ScheduledPlan.endDate=" +$(this).text()+ "&";
+                   temp++;
+               }
+            });
+            $("h").each(function () {
+                string += $(this).attr('id') + "=" + $(this).text() + "&";
+            });
+            string += $("#impTeam\\.name").attr('name') + "=" + $("#impTeam\\.name").val() + "&";
+            string += $("#EvaScheme\\.name").attr('name') + "=" + $("#EvaScheme\\.name").val();
+            console.log(string);
+            return string;
+        }
+    });
+</script>
+#end
