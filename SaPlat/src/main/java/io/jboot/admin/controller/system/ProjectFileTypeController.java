@@ -12,6 +12,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectFileTypeService;
 import io.jboot.admin.service.entity.model.ProjectFileType;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.ProjectFileTypeValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -63,7 +64,7 @@ public class ProjectFileTypeController extends BaseController {
         render("update.html");
     }
 
-    @Before({POST.class})
+    @Before({POST.class, ProjectFileTypeValidator.class})
     public void postUpdate() {
         ProjectFileType projectFileType = getBean(ProjectFileType.class, "projectFileType");
         projectFileType.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
@@ -95,7 +96,8 @@ public class ProjectFileTypeController extends BaseController {
     }
 
 
-    @Before({POST.class})
+
+    @Before({POST.class, ProjectFileTypeValidator.class})
     public void postAdd() {
         ProjectFileType projectFileType = getBean(ProjectFileType.class, "projectFileType");
 
