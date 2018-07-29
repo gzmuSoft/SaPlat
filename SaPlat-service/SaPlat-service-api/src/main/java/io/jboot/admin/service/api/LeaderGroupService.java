@@ -24,13 +24,6 @@ public interface LeaderGroupService  {
      */
     public List<LeaderGroup> findAll();
 
-    /**
-     * find model by projectID
-     *
-     * @param projectID
-     * @return
-     */
-    public LeaderGroup findByProject(Long projectID);
 
     /**
      * delete model by primary key

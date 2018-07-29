@@ -20,7 +20,7 @@ public class LeaderGroupServiceImpl extends JbootServiceBase<LeaderGroup> implem
      * @return LeaderGroup
      */
     @Override
-    public LeaderGroup findByProjectID(Long projectID){
+    public LeaderGroup findByProjectID(Object projectID) {
         return DAO.findFirstByColumn("projectID", projectID);
     }
 }

@@ -2,7 +2,6 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
-import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -16,7 +15,6 @@ import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.ProjectValidator;
-import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -214,7 +212,7 @@ public class ProjectController extends BaseController {
     public void projectMessage() {
         Long id = getParaToLong("id");
         Project project = projectService.findById(id);
-        LeaderGroup leaderGroup = leaderGroupService.findByProject(id);
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }

@@ -6,11 +6,11 @@ import io.jboot.admin.service.entity.model.InformationFill;
 
 import java.util.List;
 
-<<<<<<< HEAD
+
+/**
+ * @author ASUS
+ */
 public interface InformationFillService {
-=======
-public interface InformationFillService  {
->>>>>>> origin/master
 
     /**
      * find model by primary key
