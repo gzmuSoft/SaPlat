@@ -49,13 +49,13 @@ public abstract class BaseRole<M extends BaseRole<M>> extends JbootModel<M> impl
 		return getStr("iconCls");
 	}
 
-	public void setPid(java.lang.Long pid) {
-		set("pid", pid);
-	}
-	
-	public java.lang.Long getPid() {
-		return getLong("pid");
-	}
+    public void setParentID(java.lang.Long parentID) {
+        set("parentID", parentID);
+    }
+
+    public java.lang.Long getParentID() {
+        return getLong("parentID");
+    }
 
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);

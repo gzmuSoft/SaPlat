@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.LeaderGroup;
+import io.jboot.admin.service.entity.model.InitialRiskExpertise;
 
 import java.util.List;
 
-public interface LeaderGroupService  {
+public interface InitialRiskExpertiseService {
 
     /**
      * find model by primary key
@@ -14,23 +14,16 @@ public interface LeaderGroupService  {
      * @param id
      * @return
      */
-    public LeaderGroup findById(Object id);
+    public InitialRiskExpertise findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <LeaderGroup
+     * @return all <InitialRiskExpertise
      */
-    public List<LeaderGroup> findAll();
+    public List<InitialRiskExpertise> findAll();
 
-    /**
-     * find model by projectID
-     *
-     * @param projectID
-     * @return
-     */
-    public LeaderGroup findByProject(Long projectID);
 
     /**
      * delete model by primary key
@@ -47,7 +40,7 @@ public interface LeaderGroupService  {
      * @param model
      * @return
      */
-    public boolean delete(LeaderGroup model);
+    public boolean delete(InitialRiskExpertise model);
 
 
     /**
@@ -56,7 +49,7 @@ public interface LeaderGroupService  {
      * @param model
      * @return
      */
-    public boolean save(LeaderGroup model);
+    public boolean save(InitialRiskExpertise model);
 
 
     /**
@@ -65,7 +58,7 @@ public interface LeaderGroupService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(LeaderGroup model);
+    public boolean saveOrUpdate(InitialRiskExpertise model);
 
 
     /**
@@ -74,22 +67,34 @@ public interface LeaderGroupService  {
      * @param model
      * @return
      */
-    public boolean update(LeaderGroup model);
+    public boolean update(InitialRiskExpertise model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
+
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField);
+
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
+
     public void join(Model model, String joinOnField);
+
     public void join(Model model, String joinOnField, String[] attrs);
+
     public void join(Model model, String joinOnField, String joinName);
+
     public void join(Model model, String joinOnField, String joinName, String[] attrs);
 
     public void keep(Model model, String... attrs);
+
     public void keep(List<? extends Model> models, String... attrs);
 }

@@ -51,6 +51,12 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private UserService userService;
 
+    @JbootrpcService
+    private LeaderGroupService leaderGroupService;
+
+    @JbootrpcService
+    private FileProjectService fileProjectService;
+
 
     /**
      * 项目立项基本资料初始化至信息管理界面
@@ -173,6 +179,47 @@ public class ProjectController extends BaseController {
             renderJson(RestResult.buildError("取消立项失败"));
             throw new BusinessException("取消立项失败");
         }
+    }
+
+    /**
+     * 通往项目管理界面-立项中
+     */
+    public void toBuildProject() {
+        render("buildProject.html");
+    }
+
+    /**
+     * 立项中-表格渲染
+     */
+    public void buildProject() {
+        User loginUser = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project = new Project();
+        project.setUserId(loginUser.getId());
+        project.setStatus(ProjectStatus.BUILDING);
+        project.setIsEnable(true);
+        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        renderJson(new DataTable<Project>(page));
+    }
+
+    /**
+     * 立项中-资料补充
+     */
+    @NotNullPara({"id"})
+    public void projectMessage() {
+        Long id = getParaToLong("id");
+        Project project = projectService.findById(id);
+        LeaderGroup leaderGroup = leaderGroupService.findByProject(id);
+        if (leaderGroup == null) {
+            leaderGroup = new LeaderGroup();
+        }
+        List<FileProject> fileProject = fileProjectService.findAllByProjectID(id);
+        if (fileProject == null) {
+            fileProject = new ArrayList<>();
+        }
+        render("projectMessage.html");
+
     }
 
     /**
