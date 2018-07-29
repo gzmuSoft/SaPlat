@@ -51,7 +51,6 @@ public class NewsController extends BaseController {
         News model = new News();
 
         String ctime = getPara("ctime","ctime");
-        String atime = getPara("atime","atime");
         String title = getPara("title",null);
 
         Long createUserID = getParaToLong("createUserID");
@@ -65,11 +64,6 @@ public class NewsController extends BaseController {
         if (cindex > 0){
             model.setCstime(ctime.substring(0,cindex-1));
             model.setCetime(ctime.substring(cindex+2));
-        }
-        int aindex = atime.indexOf("/");
-        if (aindex > 0){
-            model.setAstime(atime.substring(0,aindex-1));
-            model.setAetime(atime.substring(aindex+2));
         }
         Page<News> page = newsService.findPage(model, pageNumber, pageSize);
         renderJson(new DataTable<News>(page));

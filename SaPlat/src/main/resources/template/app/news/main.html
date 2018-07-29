@@ -27,15 +27,6 @@
                 cTime = value;
             }
         });
-        laydate.render({
-            elem: '#lastAccessTime'
-            ,type: 'datetime'
-            ,range: '/'
-            ,format: 'yyyy-MM-dd HH:mm:ss'
-            ,done: function(value){
-                aTime = value;
-            }
-        });
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -101,7 +92,7 @@
 
         form.on('submit(search)', function(data){
             reloadTable(data.field.title,data.field.createUserID,data.field.lastUpdateUserID
-                ,cTime,aTime);
+                ,cTime);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -110,7 +101,7 @@
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/news/tableData'
                 ,where: {title:title, createUserID:createUserID,lastUpdateUserID:lastUpdateUserID,
-                    ctime:ctime,atime:atime} //设定异步数据接口的额外参数
+                    ctime:ctime} //设定异步数据接口的额外参数
             });
         };
     });
@@ -137,10 +128,6 @@
                 <label class="layui-form-label">更新用户</label>
                 <div class="layui-input-inline">
                     <input type="text" id="lastUpdateUserID" name="lastUpdateUserID" placeholder="用户名称" class="layui-input"/>
-                </div>
-                <label class="layui-form-label">访问日期</label>
-                <div class="layui-input-inline">
-                    <input class="layui-input" id="lastAccessTime" name="lastAccessTime" placeholder=" - " type="text">
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn"  lay-submit lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
