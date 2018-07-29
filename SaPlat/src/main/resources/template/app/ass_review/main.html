@@ -10,7 +10,7 @@
         padding: 5em 0;
     }
     html,body{
-        height:98%;
+        height:97%;
     }
 </style>
 #end
@@ -20,12 +20,11 @@
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
 <script type="text/javascript">
-    var url=document.getElementById("pdfviewer").innerText;
     var options = {
         forcePDFJS: true,
         PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
     };
-    PDFObject.embed(url,"#pdfviewer",options);
+    PDFObject.embed("","#pdfviewer",options);
     var setting = {
         data: {
             simpleData: {
@@ -40,11 +39,15 @@
         }
     };
 
-    var pid = 0;
-
-    //var reloadTable;
     function zTreeOnClick(event, treeId, treeNode) {
         PDFObject.embed(treeNode.title,"#pdfviewer",options);
+        util.sendAjax ({
+            url : '#(ctxPath)/app/ass_review/findProAssReviewByFileIdAndProjectId',
+            notice: false,
+            success:function(data){
+
+            }
+        });
     }
 
     function zTreeReload() {
@@ -54,7 +57,7 @@
             success : function(data){
                 $.fn.zTree.init($("#tree"), setting, data.data);
             }
-        })
+        });
     }
 
     $(document).ready(function(){
@@ -67,10 +70,16 @@
 #define content()
 <div class="layui-fluid" style="height:100%;">
     <div class="layui-row" style="height:100%;">
-        <div class="layui-col-md2" style="overflow:auto;height:100%;">
-            <ul id="tree" class="ztree" style="height:100%;"></ul>
+        <div class="layui-col-md3" style="overflow:auto;height:100%;">
+            <ul id="tree" class="ztree" style="height:95%;"></ul>
         </div>
-        <div id="pdfviewer" class="layui-col-md6" style="height:100%;">#(pdfURL)</div>
+        <div id="pdfviewer" class="layui-col-md6" style="height:100%;"></div>
+        <div class="layui-col-md3">
+            #for(item : proAssReviews)
+                <div style="background:green;width:100%">#(item.recomment)</div>
+                <div style="background:red;width:100%">#(item.feedback)</div>
+            #end
+        </div>
     </div>
 </div>
 #end

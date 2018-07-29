@@ -63,6 +63,25 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
 
 
     /**
+     * find model by fileId and projectId
+     *
+     * @param fileId
+     * @param projectId
+     * @return ProAssReview model
+     */
+    public List<ProAssReview> findByFileIdAndProjectId(long fileId,long projectId){
+        Columns columns = new Columns();
+        columns.eq("fileID",fileId);
+        columns.eq("projectID",projectId);
+        List<ProAssReview> pars = DAO.findListByColumns(columns);
+        System.out.print("#############################################start######################################################");
+        System.out.print("\n\n"+pars.size()+"\n\n");
+        System.out.print("#############################################end######################################################");
+        return pars;
+    }
+
+
+    /**
      * find all model
      *
      * @param model 项目阶段
