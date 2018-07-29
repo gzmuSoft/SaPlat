@@ -12,9 +12,11 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.NewsService;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.RoleService;
+import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.News;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -26,6 +28,8 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
+import java.util.List;
+
 
 /**
  * 主控制器
@@ -34,9 +38,11 @@ import org.apache.shiro.subject.Subject;
  */
 @RequestMapping("/")
 public class MainController extends BaseController {
+    @JbootrpcService
+    private UserRoleService userRoleService;
 
     @JbootrpcService
-    NotificationService notificationService;
+    private NotificationService notificationService;
 
     @JbootrpcService
     private UserService userService;
@@ -140,10 +146,16 @@ public class MainController extends BaseController {
 
     public void view(){
         User loginUser = AuthUtils.getLoginUser();
-        if (loginUser.getId() == 3){
-            render("system/notification/main.html");
-        }else{
-            render("app/notification/main.html");
+        //当前用户权限
+        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
+        for (UserRole list : roles){
+            if (list.getRoleID() == 1){
+                render("system/notification/main.html");
+                break;
+            }else{
+                render("app/notification/main.html");
+                break;
+            }
         }
     }
 }

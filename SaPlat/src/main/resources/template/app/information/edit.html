@@ -1,0 +1,105 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+    html,body{
+        height: 98%;
+        width: 98%;
+    }
+
+    .layui-text p {
+        cursor: pointer;
+    }
+
+    .layui-text p:hover {
+        color: red;
+    }
+
+    #list{
+        padding: 10px;
+    }
+
+    #content {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use('layer', function () {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            util = layui.util;
+        var ul;
+        $.get("#(ctxPath)/app/information/editData", {id:"#(projectId)"}, function(res) {
+            var data = res.list;
+            ul = $('<ul class="layui-timeline"></ul>');
+            data.forEach(function(ele) {
+                var li = $('<li class="layui-timeline-item"></li>');
+                var i = $('<i class="layui-icon layui-timeline-axis" data-htmlName="' + ele.htmlName + '">&#xe63f;</i>');
+                var lt = $('<div class="layui-timeline-content layui-text"></div>');
+                var h = $('<p class="layui-timeline-title htmlName" data-htmlName="' + ele.htmlName + '">' + ele.name + '</p>');
+                h.appendTo(lt);
+                li.append(i).append(lt);
+                ul.append(li);
+            });
+        });
+
+        $(document).on('click','.htmlName',function(e){
+            var s = "#(ctxPath)/app/information/" + $(this).attr("data-htmlName") + "?id=#(projectId)";
+            $('#content').css("display","").prop("src",s);
+        });
+
+        util.fixbar({
+            bar1: "&#xe60a;",
+            bar2: "&#xe604;",
+            click: function(type) {
+                if(type === 'bar1') {
+                    layer.open({
+                        title: '资料查看',
+                        id: 'list',
+                        type: 1,
+                        content: ul.html(),
+                        skin: 'layui-layer-molv',
+                        closeBtn: 1,
+                        offset: 'r',
+                        shadeClose: true,
+                        anim: 1,
+                        resize: false,
+                        area: ['20%', '100%']
+                    });
+                } else if(type === 'bar2') {
+                    layer.msg("回到顶部");
+                }
+            }
+        });
+
+        $(function (e) {
+            // $('li[type="bar1"]').prop("id","bar1");
+            // $('li[type="bar2"]').prop("id","bar2");
+           // layer.tips("点击这里查看资料哦","#bar1");
+           layer.tips("点击这里查看资料哦",'li[lay-type="bar1"]',{
+               tipsMore: true,
+               time:3000
+           });
+           // layer.tips("点击这里回到顶部哈","#bar2");
+           layer.tips("点击这里回到顶部哈",'li[lay-type="bar2"]',{
+               tipsMore: true,
+               time:3000
+           });
+        });
+
+
+    });
+</script>
+#end
+
+#define content()
+<iframe style="display: none;" id="content">
+</iframe>
+#end

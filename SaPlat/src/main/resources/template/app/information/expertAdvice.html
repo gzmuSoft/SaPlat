@@ -1,0 +1,223 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+    .layui-input-inline p {
+        padding: 8px 15px;
+        line-height: 20px;
+    }
+
+    .layui-form-item .layui-form-label {
+        width: 200px;
+    }
+
+    .layui-form-pane .layui-form-text .layui-input-block, .layui-row {
+        margin-top: 20px;
+    }
+
+    .layui-input-block input {
+        width: 100%;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer','layedit','element'], function () {
+        var $ = layui.jquery,
+            layedit = layui.layedit,
+            form = layui.form,
+            layer = layui.layer;
+        var option = {
+            tool: [
+                'strong'
+                ,'italic'
+                ,'underline'
+                ,'del'
+                ,'|'
+                ,'left'
+                ,'center'
+                ,'right'
+                ,'link'
+                ,'unlink'
+            ]
+        };
+
+        /**
+         * 增加行，已废弃
+         */
+        // $('.addRow').click(function (e) {
+        //     var block = $(this).parents(".layui-input-block");
+        //     var row = $('<div class="layui-row"></div>');
+        //     var inp = $('<div class="layui-col-md10"><input type="text" id="facAgency.address" name="' + $(this).attr("data-name") +'" class="layui-input" required/></div>');
+        //     var btn = $('<div class="layui-col-md2"><button type="button" class="layui-btn layui-btn-danger delRow" >删除</button></div>');
+        //     row.append(inp).append(btn).appendTo(block);
+        // });
+        // $(document).on('click', '.delRow', function (e) {
+        //     $(this).parents('.layui-row').remove();
+        // });
+
+
+
+        var riskFactor = layedit.build('riskFactor',option);
+        var resolving = layedit.build('resolving',option);
+        var index = layedit.build('otherComments',option);
+       $('#save').click(function (obj) {
+            // var riskFactor = "";
+            // $('input[name="riskFactor"]').each(function (e) {
+            //     riskFactor = riskFactor + $(this).val() + "------";
+            // });
+            // var resolving = "";
+            // $('input[name="resolving"]').each(function (e) {
+            //     resolving += resolving + $(this).val() + "------";
+            // });
+
+            var data = {
+                riskFactor : layedit.getContent(riskFactor),
+                resolving : layedit.getContent(resolving),
+                content : layedit.getContent(index),
+                projectID : "#(projectID)"
+            };
+            // console.log(obj);
+            $.post("#(ctxPath)/app/information/expertAdvicePost",data,function (e) {
+                layer.msg("提交成功！");
+            });
+            // console.log(data);
+            return false;
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid ">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>社会稳定风险评估现场踏勘专家意见表</legend>
+    </fieldset>
+
+    <form class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">制表单位</label>
+                <div class="layui-input-inline">
+                    <p>#(name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">日期</label>
+                <div class="layui-input-inline">
+                    <p>#(date)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <p>#(expertGroup.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <p>#(occupation)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">职称（职务）</label>
+                <div class="layui-input-inline">
+                    <p>#(post)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-inline">
+                    <p>#(phone)</p>
+                </div>
+            </div>
+
+
+            <!--行列布局，已废弃-->
+            <!--<div class="layui-form-item layui-form-text">-->
+                <!--<label class="layui-form-label" for="riskFactor">项目建设可能存在的风险因素</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<div class="layui-row">-->
+                        <!--<div class="layui-col-md10">-->
+                            <!--<input type="text" id="riskFactor" name="riskFactor"-->
+                                   <!--value="#(model.riskFactor)" class="layui-input" required/>-->
+                        <!--</div>-->
+                        <!--<div class="layui-col-md2">-->
+                            <!--<button type="button" class="layui-btn addRow" data-name="riskFactor">添加</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="layui-form-item layui-form-text">-->
+                <!--<label class="layui-form-label" for="resolving">应采取的相应化解措施</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<div class="layui-row">-->
+                        <!--<div class="layui-col-md10">-->
+                            <!--<input type="text" id="resolving" name="resolving"-->
+                                   <!--value="#(model.resolving)" class="layui-input" required/>-->
+                        <!--</div>-->
+                        <!--<div class="layui-col-md2">-->
+                            <!--<button type="button" class="layui-btn addRow" data-name="resolving">添加</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" for="riskFactor">项目建设可能存在的风险因素</label>
+                <div class="layui-input-block">
+                    #if(riskFactor.equals("") || riskFactor == null)
+                    <textarea id="riskFactor" style="display: none;"></textarea>
+                    #else
+                    <div>#(riskFactor)</div>
+                    #end
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" for="resolving">应采取的相应化解措施</label>
+                <div class="layui-input-block">
+                    #if(resolving.equals("") || resolving == null)
+                    <textarea id="resolving" style="display: none;"></textarea>
+                    #else
+                    <div>#(resolving)</div>
+                    #end
+                </div>
+            </div>
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" for="otherComments">其它意见（建议）</label>
+                <div class="layui-input-block">
+                    #if(otherComments.equals("") || otherComments == null)
+                    <textarea id="otherComments" style="display: none;"></textarea>
+                    #else
+                    <div>#(otherComments)</div>
+                    #end
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    #if(otherComments.equals("") || otherComments == null)
+                    <button class="layui-btn" id="save">保存</button>
+                    <button class="layui-btn layui-btn-danger" id="reset">取消</button>
+                    #else
+                    <button class="layui-btn layui-btn-warm" >返回</button>
+                    #end
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+#end

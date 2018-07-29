@@ -2,8 +2,10 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Data;
 import io.jboot.admin.service.entity.model.QuestionnaireContent;
 
+import java.util.Date;
 import java.util.List;
 
 public interface QuestionnaireContentService  {
@@ -16,6 +18,20 @@ public interface QuestionnaireContentService  {
      */
     public QuestionnaireContent findById(Object id);
 
+    /**
+     * 分页查询系统信息
+     * @param ids ids
+     * @return 页
+     */
+    public Page<QuestionnaireContent> findPageById(Long[] ids, int pageNumber, int pageSize);
+
+    /**
+     * find model by primary key
+     *
+     * @param model
+     * @return
+     */
+    public QuestionnaireContent findByModel(QuestionnaireContent model);
 
     /**
      * find all model

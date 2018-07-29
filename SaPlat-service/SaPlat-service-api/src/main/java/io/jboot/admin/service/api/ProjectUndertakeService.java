@@ -67,6 +67,13 @@ public interface ProjectUndertakeService {
     public ProjectUndertake findByProjectIdAndFacAgencyId(Long projectId,Long facAgencyId);
 
     /**
+     * 通过项目编号查询项目承接
+     * @param projectId 项目编号
+     * @return 项目承接
+     */
+    public ProjectUndertake findByProjectId(Long projectId);
+
+    /**
      * delete model by primary key
      *
      * @param id

@@ -10,6 +10,14 @@ import java.util.List;
 public interface ProAssReviewService  {
 
     /**
+     * find file URL by file id
+     *
+     * @param id
+     * @return url
+     * */
+    public String findFileURLByFileId(long id);
+
+    /**
      * get file tree by project id
      *
      * @param id project
@@ -25,6 +33,15 @@ public interface ProAssReviewService  {
      */
     public ProAssReview findById(Object id);
 
+
+    /**
+     * find model by fileId and projectId
+     *
+     * @param fileId
+     * @param projectId
+     * @return ProAssReview model
+     */
+    public List<ProAssReview> findByFileIdAndProjectId(long fileId,long projectId);
 
     /**
      * find all model

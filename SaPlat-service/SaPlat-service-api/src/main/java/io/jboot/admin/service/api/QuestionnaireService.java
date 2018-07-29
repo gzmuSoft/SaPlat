@@ -24,6 +24,12 @@ public interface QuestionnaireService  {
      */
     public List<Questionnaire> findAll();
 
+    /**
+     * 根据当前项目ID判断是否有对应的问卷
+     * @param id
+     * @return
+     */
+    public Questionnaire findByProjectID(Object id);
 
     /**
      * delete model by primary key

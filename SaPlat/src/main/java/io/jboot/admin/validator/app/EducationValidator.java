@@ -17,7 +17,7 @@ public class EducationValidator extends JsonValidator {
             validateString("model.name",1,50,"名称的长度必须是介于1至50个字符之间");
         }
         if(!c.getPara("model.sort").equals("")) {
-            validateInteger("model.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间", Integer.MAX_VALUE));
+            validateInteger("model.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间的整数", Integer.MAX_VALUE));
         }
     }
 }

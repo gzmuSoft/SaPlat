@@ -18,6 +18,21 @@ public interface ProjectService  {
      */
     public Project findById(Object id);
 
+    /**
+     * find all model
+     * @param model 项目主体
+     * @return all <Project>
+     */
+    public List<Project> findAll(Project model);
+    
+    /**
+     * find model by primary key
+     *
+     * @param ids
+     * @return
+     */
+    public List<Project> findByIds(List<Object> ids);
+
 
     /**
      * find all model

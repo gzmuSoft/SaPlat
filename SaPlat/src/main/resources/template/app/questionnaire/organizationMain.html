@@ -1,0 +1,245 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    .title {
+        color: #009688;
+        font-weight: 700;
+        font-family: "微软雅黑";
+    }
+</style>
+#end
+
+
+#define content()
+<br>
+<h2 class="title" align="center">社会稳定风险评估调查问卷表（团体）</h2><br>
+<hr align="center" size="2" width="100%" />
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">项目基本信息</li>
+        <li>问卷基本信息</li>
+        <li>调查内容</li>
+
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <form class="layui-form" action="">
+                <input type="hidden" name="project.id" value="#(project.id)">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">评估项目名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="project.name" name="project.name" lay-verify="required" placeholder="请输入" value="#(project.name)" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">项目简介：</label>
+                    <div class="layui-input-block">
+                        <textarea id="brief" name="project.brief" style="display: none;" placeholder="请输入">#(project.brief)</textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button lay-filter="up" class="layui-btn" lay-submit="">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="">
+                <input type="hidden" name="pid" value="#(project.id)">
+                <input type="hidden" name="type" value="#(type)">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">问卷信息所属部门：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="department" lay-verify="required"  value="#(questionnaire.department)" autocomplete="off" placeholder="请输入问卷信息所属部门" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">问卷对象单位（盖章）：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="unit" lay-verify="required" value="#(questionnaire.unit)" autocomplete="off" placeholder="请输入问卷对象单位"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">问卷对象单位地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="unitAddress" lay-verify="required" value="#(questionnaire.unitAddress)" autocomplete="off" placeholder="请输入问卷对象单位地址"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">问卷对象联系电话：</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="unitTel" lay-verify="required|phone" value="#(questionnaire.unitTel)" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">问卷调查结束时间：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="surveyTime" id="date" value="#(questionnaire.surveyTime)" lay-verify="surveyTime" placeholder="yyyy-MM-dd"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="sub">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" action="">
+                <input type="hidden" id="pid"name="pid" value="#(project.id)">
+                <div class="layui-btn-group">
+                    <button id="add" class="layui-btn layui-btn-small"lay-submit="" lay-filter="add" >添加一条调查内容</button>
+                </div>
+            </form>
+            <div class="layui-row">
+
+                <table id="dateTable" lay-filter="dateTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/questionnaire/delete')
+      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    #end
+</script>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'element', 'laydate','layedit','table'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , $ = layui.jquery
+            , element = layui.element
+            , table = layui.table;
+
+        var pid = document.getElementById("pid").value;
+        var layedit = layui.layedit;
+        var briefIndex = layedit.build('brief'); //建立编辑器
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+
+        form.on('submit(sub)', function(data){
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/questionnaire/postSub',
+                data: $.param(data.field),
+                loadFlag: true,
+                success : function(data){
+                }
+            });
+            return false;
+        });
+        form.on('submit(up)',function (data) {
+            data.field['project.brief'] = layedit.getContent(briefIndex);
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/questionnaire/updateProject',
+                data: $.param(data.field),
+                loadFlag: true,
+                success : function(data){
+                }
+            });
+            return false;
+        })
+        form.on('submit(add)',function (data) {
+            $.post('#(ctxPath)/app/questionnaire/addContent',$.param(data.field),function () {
+                reloadTable(data.pid);
+            })
+            return false;
+        })
+
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'del') {
+                layer.confirm('是否删除这条调查内容', function(index){
+                    util.sendAjax ({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/questionnaire/delete',
+                        data: {id : data.id},
+                        loadFlag: true,
+                        success : function(data){
+                            layer.close(index);
+                            reloadTable(pid);
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            }
+        });
+        reloadTable = function (pid) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/questionnaire/tableData'
+                , where: {pid:pid} //设定异步数据接口的额外参数
+            });
+        }
+
+
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cellMinWidth: 100       //单元格最小宽度
+            , where:{pid:pid}
+            , cols: [[                  //标题栏
+                {type:'numbers', fixed: true, unresize: true}
+                , {field: 'name', title: '名称',edit: 'text', align: 'center',width: 350}
+                , {field: 'content', title: '调查内容详情',edit: 'text', align: 'center',unresize: true}
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/questionnaire/tableData'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+                var last = $('.layui-table-body').first().height();
+                $('.layui-table-body').first().height(last * 0.920);
+            }
+        });
+
+        //监听单元格编辑
+        table.on('edit(dateTable)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            $.post('#(ctxPath)/app/questionnaire/updateTable',data,function () {
+                layer.msg("保存成功");
+            })
+        });
+    });
+</script>
+#end
