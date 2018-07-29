@@ -24,6 +24,12 @@ public interface QuestionnaireContentLinkService  {
      */
     public List<QuestionnaireContentLink> findAll();
 
+    /**
+     * 调查问卷ID查找属于问卷的内容ID
+     * @param id
+     * @return all QuestionnaireContentID
+     */
+    public Long[] findContentIdByQuestionnaireId(Long id);
 
     /**
      * delete model by primary key
@@ -33,6 +39,12 @@ public interface QuestionnaireContentLinkService  {
      */
     public boolean deleteById(Object id);
 
+    /**
+     * 根据调查内容id 查出关联id
+     * @param contentId
+     * @return all QuestionnaireContentID
+     */
+    public Long findIdByContentId(Long contentId);
 
     /**
      * delete model

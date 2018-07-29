@@ -2,6 +2,7 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -14,6 +15,8 @@ import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.ProjectValidator;
+import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -76,7 +79,7 @@ public class ProjectController extends BaseController {
     /**
      * 自评提交立项资料并进入已审核状态
      */
-    @Before(GET.class)
+    @Before({GET.class, ProjectValidator.class})
     public void selfAssessment() {
         User loginUser = AuthUtils.getLoginUser();
         Project project = getBean(Project.class, "project");
@@ -115,7 +118,8 @@ public class ProjectController extends BaseController {
     /**
      * 委评提交立项资料并进入待审核状态
      */
-    @Before(GET.class)
+    @Before({GET.class, ProjectValidator.class})
+
     public void othersAssessment() {
         User loginUser = AuthUtils.getLoginUser();
         Project project = getBean(Project.class, "project");

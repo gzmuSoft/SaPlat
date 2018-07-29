@@ -13,8 +13,14 @@ import javax.inject.Singleton;
 @JbootrpcService
 public class LeaderGroupServiceImpl extends JbootServiceBase<LeaderGroup> implements LeaderGroupService {
 
+    /**
+     * 根据字段查询对象
+     *
+     * @param projectID
+     * @return LeaderGroup
+     */
     @Override
-    public LeaderGroup findByProject(Long projectID) {
+    public LeaderGroup findByProjectID(Long projectID){
         return DAO.findFirstByColumn("projectID", projectID);
     }
 }

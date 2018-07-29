@@ -8,5 +8,4 @@ import io.jboot.admin.service.entity.model.base.BaseQuestionnaireContent;
  */
 @Table(tableName = "questionnaire_content", primaryKey = "id")
 public class QuestionnaireContent extends BaseQuestionnaireContent<QuestionnaireContent> {
-	
 }

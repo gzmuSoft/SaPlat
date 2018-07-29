@@ -85,10 +85,10 @@ public abstract class JsonValidator extends BaseValidator {
     protected void validateMobile(String field, String errorMessage) {
         validateRegex(field, RegexKey.MOBILE, false, errorMessage);
     }
-//检验机构代码的正确性
-protected void validateOgCode(String field, String errorMessage) {
-    validateRegex(field, RegexKey.OgCode, false, errorMessage);
-}
+    //检验机构代码的正确性
+    protected void validateOgCode(String field, String errorMessage) {
+        validateRegex(field, RegexKey.OgCode, false, errorMessage);
+    }
     protected void validateUrl(String field, String errorMessage) {
         super.validateUrl(field, ERROR_MSG_KEY, errorMessage);
     }

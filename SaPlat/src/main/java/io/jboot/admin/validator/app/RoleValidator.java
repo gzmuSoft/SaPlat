@@ -15,7 +15,7 @@ public class RoleValidator extends JsonValidator {
     protected void validate(Controller c) {
 
         if(!c.getPara("role.sort").equals("")) {
-            validateInteger("role.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间", Integer.MAX_VALUE));
+            validateInteger("role.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间的整数", Integer.MAX_VALUE));
         }
     }
 }

@@ -69,6 +69,7 @@ public interface ProjectFileTypeService  {
      */
     public boolean update(ProjectFileType model);
 
+    public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

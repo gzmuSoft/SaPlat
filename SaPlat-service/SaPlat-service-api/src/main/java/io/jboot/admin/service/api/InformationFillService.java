@@ -6,7 +6,11 @@ import io.jboot.admin.service.entity.model.InformationFill;
 
 import java.util.List;
 
+<<<<<<< HEAD
 public interface InformationFillService {
+=======
+public interface InformationFillService  {
+>>>>>>> origin/master
 
     /**
      * find model by primary key
@@ -17,6 +21,12 @@ public interface InformationFillService {
     public InformationFill findById(Object id);
 
 
+    /**
+     * 通过权限id查询需要填写的资料信息
+     * @param roleId 权限id
+     * @return 集合
+     */
+    public List<InformationFill> findByRoleId(Long roleId);
     /**
      * find all model
      *

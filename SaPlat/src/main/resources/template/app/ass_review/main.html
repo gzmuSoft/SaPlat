@@ -3,11 +3,31 @@
 
 #define css()
 <link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<style>
+    .pdfobject-container {
+        width: 48%;
+        height: 100%;
+        padding: 5em 0;
+    }
+    html,body{
+        height:97%;
+    }
+    ul{
+        padding:0px 10px;
+    }
+</style>
 #end
 
 #define js()
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
 <script type="text/javascript">
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed("","#pdfviewer",options);
     var setting = {
         data: {
             simpleData: {
@@ -16,14 +36,61 @@
         },
         callback: {
             onClick: zTreeOnClick
+        },
+        view:{
+            showTitle:true
         }
     };
 
-    var pid = 0;
-
-    //var reloadTable;
     function zTreeOnClick(event, treeId, treeNode) {
-        //reloadTable(treeNode.id);
+        PDFObject.embed(treeNode.title,"#pdfviewer",options);
+        layui.use('flow', function(){
+          var $ = layui.jquery;
+          var flow = layui.flow;
+          flow.load({
+            elem: '#recomment'
+            ,done: function(page, next){
+              var lis = [];
+              $.get('#(ctxPath)/app/ass_review/findProAssReviewByFileIdAndProjectId', function(res){
+                var liTagS = '<li class="layui-timeline-item">';
+                var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+                var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+                var timeTxtTagS = '<h3 class="layui-timeline-title">';
+                var timeTxtTagE = '</h3>';
+                var reTitle = '评估审查意见：';
+                var timeLineContentDivE = '</div>';
+                var liTagE = '</li>';
+                var liItem = '';
+                layui.each(res.data, function(index, item){
+                if(item){
+                      if(item.recomment){
+                        liItem = '';
+                        liItem += liTagS;
+                        liItem += timeLineIcon;
+                        liItem += timeLineContentDivS;
+                        liItem += timeTxtTagS;
+                        liItem += item.createTime;
+                        liItem += timeTxtTagE;
+                        liItem += reTitle ;
+                        liItem += item.recomment;
+                        liItem += '<hr class="layui-bg-gray">';
+                        liItem += '意见反馈：';
+                        if(item.feedback){
+                            liItem += item.feedback;
+                        }else{
+                            liItem += '暂无';
+                        }
+                        liItem += timeLineContentDivE;
+                        liItem += liTagE;
+                        lis.push(liItem);
+                      }
+                  }
+                });
+                next(lis.join(''), page < res.pages);
+              });
+            }
+          });
+        });
     }
 
     function zTreeReload() {
@@ -33,7 +100,7 @@
             success : function(data){
                 $.fn.zTree.init($("#tree"), setting, data.data);
             }
-        })
+        });
     }
 
     $(document).ready(function(){
@@ -44,30 +111,16 @@
 #end
 
 #define content()
-<div class="layui-fluid">
-    <div class="layui-row">
-        <div id="pdfviewer" class="layui-col-md6">#(pdfURL)</div>
-        <div class="layui-col-md6" style="overflow:auto;">
-            <ul id="tree" class="ztree"></ul>
+<div class="layui-fluid" style="height:100%;">
+    <div class="layui-row" style="height:100%;">
+        <div class="layui-col-md3" style="overflow:auto;height:100%;">
+            <ul id="tree" class="ztree" style="height:95%;"></ul>
+        </div>
+        <div id="pdfviewer" class="layui-col-md6" style="height:100%;"></div>
+        <div class="layui-col-md3">
+            <ul id="recomment"></ul>
+            <div style="width:100%;background:green">操作操作区域</div>
         </div>
     </div>
 </div>
-
-<style>
-    .pdfobject-container {
-        width: 48%;
-        height: 600px;
-        padding: 5em 0;
-    }
-</style>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
-<script>
-    var url=document.getElementById("pdfviewer").innerText;
-    var options = {
-        forcePDFJS: true,
-        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
-    };
-    PDFObject.embed(url,"#pdfviewer",options);
-</script>
 #end

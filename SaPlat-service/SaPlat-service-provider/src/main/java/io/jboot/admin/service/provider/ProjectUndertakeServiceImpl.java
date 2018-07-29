@@ -9,6 +9,7 @@ import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
@@ -77,6 +78,11 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         columns.eq("projectID", projectId);
         columns.eq("facAgencyID", facAgencyId);
         return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public ProjectUndertake findByProjectId(Long projectId) {
+        return DAO.findFirstByColumn(Column.create("projectID",projectId));
     }
 
     @Override

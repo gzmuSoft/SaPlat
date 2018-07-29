@@ -12,6 +12,7 @@ public class ZTree implements java.io.Serializable {
 	private Long id;
 	private Long pId;
 	private String name;
+	private String title;
 	private boolean open = true;
 	private boolean checked = false;
 	private boolean chkDisabled = false;
@@ -20,6 +21,13 @@ public class ZTree implements java.io.Serializable {
 		this.id = id;
 		this.name = name;
 		this.pId = pid;
+	}
+
+	public ZTree(Long id, String name, Long pid,String title){
+		this.id = id;
+		this.name = name;
+		this.pId = pid;
+		this.title = title;
 	}
 
 	public void setDisCheck(boolean b) {
@@ -62,6 +70,10 @@ public class ZTree implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getTitle(){return this.title;}
+
+	public void setTitle(String title){this.title = title;}
 
 	public boolean isOpen() {
 		return open;

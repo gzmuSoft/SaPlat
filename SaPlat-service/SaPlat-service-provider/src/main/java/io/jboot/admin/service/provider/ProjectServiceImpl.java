@@ -13,12 +13,46 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Bean
 @Singleton
 @JbootrpcService
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
+    /**
+     * find all model
+     * @param model 项目主体
+     * @return all <Project>
+     */
+    public List<Project> findAll(Project model)
+    {
+        Columns columns = Columns.create();
+        if (StrKit.notNull(model.getIsEnable())){
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getUserId() != null){
+            columns.eq("userId",model.getUserId());
+        }
+        if (model.getId() != null){
+            columns.eq("id",model.getId());
+        }
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public List<Project> findByIds(List<Object> ids) {
+        List<Project> projects = Collections.synchronizedList(new ArrayList<Project>());
+        for (Object id : ids) {
+            Project byId = findById(id);
+            if (byId != null && byId.getIsEnable() && byId.getStatus().equals("2")){
+                projects.add(byId);
+            }
+        }
+        return projects;
+    }
+
     @Override
     public boolean saveOrUpdate(Project model, AuthProject authProject) {
         return Db.tx(() -> {

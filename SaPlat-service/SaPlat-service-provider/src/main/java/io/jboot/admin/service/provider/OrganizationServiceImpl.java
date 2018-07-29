@@ -30,6 +30,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
      * @param pageSize
      * @return
      */
+    @Override
     public Page<Organization> findPage(Organization organization, int pageNumber, int pageSize){
         Columns columns = Columns.create();
         if (StrKit.notBlank(organization.getName())){
