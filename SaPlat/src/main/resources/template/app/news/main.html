@@ -10,7 +10,6 @@
 #define js()
 <script type="text/javascript">
     var cTime = null;
-    var aTime = null;
     layui.use(['laydate','table', 'layer'], function () {
         var laydate = layui.laydate
             , table = layui.table
@@ -25,15 +24,6 @@
             ,format: 'yyyy-MM-dd HH:mm:ss'
             ,done: function(value){
                 cTime = value;
-            }
-        });
-        laydate.render({
-            elem: '#lastAccessTime'
-            ,type: 'datetime'
-            ,range: '/'
-            ,format: 'yyyy-MM-dd HH:mm:ss'
-            ,done: function(value){
-                aTime = value;
             }
         });
         // 表格渲染
@@ -94,14 +84,14 @@
         });
 
         $("#add").click(function(){
-            pop_show('新闻编辑','#(ctxPath)/app/news/add','1200','700', function(){
+            pop_show('添加新闻','#(ctxPath)/app/news/add','1200','700', function(){
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
 
         form.on('submit(search)', function(data){
             reloadTable(data.field.title,data.field.createUserID,data.field.lastUpdateUserID
-                ,cTime,aTime);
+                ,cTime);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -110,7 +100,7 @@
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/news/tableData'
                 ,where: {title:title, createUserID:createUserID,lastUpdateUserID:lastUpdateUserID,
-                    ctime:ctime,atime:atime} //设定异步数据接口的额外参数
+                    ctime:ctime} //设定异步数据接口的额外参数
             });
         };
     });

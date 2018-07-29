@@ -26,6 +26,7 @@
                 {type:'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID'}
                 , {field: 'name', title: '名称'}
+                , {field: 'sort', title: '顺序'}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
                 ]]
             , url: '#(ctxPath)/system/projectfiletype/tableData?parentID='+parentID
@@ -47,7 +48,7 @@
             if (obj.event === 'editfile') {
                 window.location.href='#(ctxPath)/system/projectfiletype/file?id='+data.id;
             } else if(obj.event === 'edit'){
-                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '', '', function () {
+                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
                     reloadTable(null);
                 });
             } else if(obj.event === 'use'){
@@ -61,7 +62,7 @@
                     }
                 });
             } else if(obj.event === 'unuse'){
-                layer.confirm('确定锁定该用户吗', function(index){
+                layer.confirm('确定锁定该记录吗', function(index){
                     util.sendAjax ({
                         type: 'POST',
                         url: '#(ctxPath)/system/projectfiletype/unuse',
@@ -79,7 +80,7 @@
             }
         });
         $("#add").click(function(){
-            pop_show('编辑', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '', '', function () {
+            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
                 reloadTable(null);
             });
         });
@@ -133,7 +134,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     #end
     #shiroHasPermission('/system/projectfiletype/file')
-    <a class="layui-btn layui-btn-xs" lay-event="editfile">编辑项目文件</a>
+    <a class="layui-btn layui-btn-xs" lay-event="editfile">设定文件列表</a>
     #end
     #[[
     {{#  if(d.isEnable){ }}

@@ -35,6 +35,15 @@ public interface ProAssReviewService  {
 
 
     /**
+     * find model by fileId and projectId
+     *
+     * @param fileId
+     * @param projectId
+     * @return ProAssReview model
+     */
+    public List<ProAssReview> findByFileIdAndProjectId(long fileId,long projectId);
+
+    /**
      * find all model
      *
      * @return all <ProAssReview

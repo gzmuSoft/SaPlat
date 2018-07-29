@@ -18,6 +18,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * -----------------------------
@@ -37,25 +38,17 @@ public class ProAssReviewController extends BaseController{
      * index
      */
     public void index() {
-        render("main.html");
+               render("main.html");
     }
 
 
     //渲染文件目录
-    @JbootrpcService
-    private ResService resService;
-    /**
-     * 系统资源资源树
-     */
-    public void resTree() {
-        renderJson(RestResult.buildSuccess(resService.findTreeOnUse()));
-    }
     public void fileTree(){
         renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));
     }
-
-    public void findFileURL(){
-        renderJson(RestResult.buildSuccess(proAssReviewService.findFileURLByFileId(0L)));
+    public void findProAssReviewByFileIdAndProjectId(){
+       List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L,28L);;
+        renderJson(RestResult.buildSuccess(proAssReviews));
     }
 
 

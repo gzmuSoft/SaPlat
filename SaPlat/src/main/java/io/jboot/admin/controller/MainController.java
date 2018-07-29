@@ -3,14 +3,18 @@ package io.jboot.admin.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
+import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.NewsService;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.News;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.admin.support.auth.AuthUtils;
@@ -46,6 +50,9 @@ public class MainController extends BaseController {
     @JbootrpcService
     private RoleService roleService;
 
+    @JbootrpcService
+    private NewsService newsService;
+
     public void index() {
         render("index.html");
     }
@@ -54,6 +61,9 @@ public class MainController extends BaseController {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             redirect("/");
         } else {
+            Page<News> news = newsService.findReverses(5);
+            DataTable newsTable = new DataTable<News>(news);
+            setAttr("newsList", newsTable.getData());
             render("login.html");
         }
     }
@@ -115,6 +125,9 @@ public class MainController extends BaseController {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             SecurityUtils.getSubject().logout();
         }
+        Page<News> news = newsService.findReverses(5);
+        DataTable newsTable = new DataTable<News>(news);
+        setAttr("newsList", newsTable.getData());
         render("login.html");
     }
 
