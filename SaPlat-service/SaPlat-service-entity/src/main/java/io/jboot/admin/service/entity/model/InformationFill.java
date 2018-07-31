@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseInformationFill;
  */
 @Table(tableName = "information_fill", primaryKey = "id")
 public class InformationFill extends BaseInformationFill<InformationFill> {
-	
+
 }

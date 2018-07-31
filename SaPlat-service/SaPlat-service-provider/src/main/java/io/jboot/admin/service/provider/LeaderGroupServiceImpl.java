@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class LeaderGroupServiceImpl extends JbootServiceBase<LeaderGroup> implements LeaderGroupService {
+
     /**
      * 根据字段查询对象
      *
@@ -19,7 +20,7 @@ public class LeaderGroupServiceImpl extends JbootServiceBase<LeaderGroup> implem
      * @return LeaderGroup
      */
     @Override
-    public LeaderGroup findByProjectID(Object projectID){
+    public LeaderGroup findByProjectID(Object projectID) {
         return DAO.findFirstByColumn("projectID", projectID);
     }
 }

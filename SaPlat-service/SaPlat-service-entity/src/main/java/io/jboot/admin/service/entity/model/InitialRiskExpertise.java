@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseInitialRiskExpertise;
  */
 @Table(tableName = "initial_risk_expertise", primaryKey = "id")
 public class InitialRiskExpertise extends BaseInitialRiskExpertise<InitialRiskExpertise> {
-	
+
 }

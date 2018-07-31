@@ -61,6 +61,9 @@ public class ProjectUndertakeController extends BaseController {
     private ImpTeamService impTeamService;
 
     @JbootrpcService
+    InitialRiskExpertiseService initialRiskExpertiseService;
+
+    @JbootrpcService
     private ScheduledPlanService scheduledPlanService;
     /**
      * 跳转榜单页面
@@ -383,5 +386,41 @@ public class ProjectUndertakeController extends BaseController {
         }
 
         renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 临时-项目风险因素影响程度及概率
+     */
+    public void toInitialRiskExpertise() {
+        render("initialRiskExpertise.html");
+    }
+
+    /**
+     * 项目风险因素影响程度及概率数据提交
+     */
+    @Before(POST.class)
+    public void initialRiskExpertise() {
+        User user = AuthUtils.getLoginUser();
+        InitialRiskExpertise model = new InitialRiskExpertise();
+        model.setProjectID(28L);
+        model.setExpertID(7L);
+        model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
+        model.setRiskExpertise(getParaToInt("riskExpertise"));
+        if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
+            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
+            model.setRiskProbability((float) getParaToLong("riskProbability"));
+            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
+        }
+        model.setRiskFactor(getPara("riskFactor"));
+        model.setCreateUserID(user.getId());
+        model.setCreateTime(new Date());
+        model.setLastAccessTime(new Date());
+        model.setLastUpdateUserID(user.getId());
+        model.setStatus(3);
+        model.setIsEnable(1);
+        if (!initialRiskExpertiseService.save(model)) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        }
     }
 }
