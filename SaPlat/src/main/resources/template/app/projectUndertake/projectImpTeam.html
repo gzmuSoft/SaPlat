@@ -98,14 +98,14 @@
                 <label class="layui-form-label" for="impTeam.projectID">项目名</label>
                 <div class="layui-input-inline">
                     <input type="text" id="impTeam.projectID" name="impTeam.projectID"
-                           class="layui-input layui-disabled" value="#(project.name)" required/>
+                           class="layui-input layui-disabled" readonly="readonly" value="#(project.name)" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.name">小组名称</label>
+                <label class="layui-form-label" for="impTeamName">小组名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="impTeam.name" name="impTeam.name" class="layui-input"/>
+                    <input type="text" id="impTeamName" name="impTeam.name" class="layui-input"/>
                 </div>
             </div>
 
@@ -215,15 +215,6 @@
             <!--name="test[]" value="1111340000"></div>-->
         </div>
 
-        <h2 style="margin-top: 50px;">方案名称填写</h2>
-        <hr class="layui-bg-black">
-        <div class="layui-form-item">
-            <div class="layui-input-inline">
-                <input type="text" id="EvaScheme.name" name="EvaScheme.name" class="layui-input"/>
-            </div>
-            <p class="layui-form-mid layui-word-aux">不要忽略哦</p>
-        </div>
-
         <h2 style="margin-top: 50px;">方案依据填写</h2>
         <hr class="layui-bg-red">
         <textarea id="gist" name="EvaScheme.gist" style="display: none;"></textarea>
@@ -243,12 +234,29 @@
         <h2 style="margin-top: 50px;">风险评估工作时间安排和进度计划表填写</h2>
         <p class="layui-form-mid layui-word-aux">首行不可操作</p>
         <hr class="layui-bg-black">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="startDate" style="width: 100px">总开始时间：</label>
+            <div class="layui-input-inline">
+                <input type="text" id="startDate" name="EvaScheme.startDate" autocomplete="off"
+                       class="layui-input"/>
+            </div>
+
+            <label class="layui-form-label" for="endDate" style="width: 100px">总结束时间：</label>
+            <div class="layui-input-inline">
+                <input type="text" id="endDate" name="EvaScheme.endDate" autocomplete="off"
+                       class="layui-input"/>
+            </div>
+        </div>
+
         <div class="layui-row">
             <div class="layui-btn-group ">
                 <button type="button" id="addTable" class="layui-btn layui-btn-small">添加</button>
             </div>
             <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+
         <div class="layui-form-item x-center" style="margin-top: 50px;">
             <div class="layui-input-block">
                 <button class="layui-btn site-demo-layedit" data-type="content" lay-submit lay-filter="sub" id="sub">
@@ -266,7 +274,7 @@
 </script>
 
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'table', 'laydate','layedit', 'table'], function () {
+    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table'], function () {
         /**
          *  操作对象
          */
@@ -279,6 +287,14 @@
             , string = "?"
             , temp1 = [], temp2 = [], temp3 = [], temp4 = [];
 
+
+        //建立日期
+        laydate.render({
+            elem: '#startDate'
+        });
+        laydate.render({
+            elem: '#endDate'
+        });
         /**
          * 富文本编辑器
          * 一个页面有多个富文本编辑器的话，只能读取第一个
@@ -292,11 +308,12 @@
                 hideTool: ['link', 'unlink', 'face', 'image', 'help']
             });
             $('#sub').on('click', function () {
-                if (layedit.getContent(index) != null) {
+                if (layedit.getText(index) != null && layedit.getText(index) != "") {
                     string += "EvaScheme.gist=" + layedit.getContent(index) + "&";
                     return true;
                 } else {
-                    alert("有地方没填")
+                    layer.msg("方案依据不能为空！");
+                    return false;
                 }
             });
         });
@@ -307,11 +324,12 @@
                 hideTool: ['link', 'unlink', 'face', 'image', 'help']
             });
             $('#sub').on('click', function () {
-                if (layedit.getContent(index) != null) {
+                if (layedit.getText(index) != null && layedit.getText(index) != "") {
                     string += "EvaScheme.method=" + layedit.getContent(index) + "&";
                     return true;
                 } else {
-                    alert("有地方没填")
+                    layer.msg("工作方式不能为空！");
+                    return false;
                 }
             });
         });
@@ -322,11 +340,12 @@
                 hideTool: ['link', 'unlink', 'face', 'image', 'help']
             });
             $('#sub').on('click', function () {
-                if (layedit.getContent(index) != null) {
+                if (layedit.getText(index) != null && layedit.getText(index) != "") {
                     string += "EvaScheme.demand=" + layedit.getContent(index) + "&";
                     return true;
                 } else {
-                    alert("有地方没填")
+                    layer.msg("工作要求不能为空！");
+                    return true;
                 }
             });
         });
@@ -337,11 +356,12 @@
                 hideTool: ['link', 'unlink', 'face', 'image', 'help']
             });
             $('#sub').on('click', function () {
-                if (layedit.getContent(index) != null) {
+                if (layedit.getText(index) != null && layedit.getText(index) != "") {
                     string += "EvaScheme.measure=" + layedit.getContent(index) + "&";
                     return true;
                 } else {
-                    alert("有地方没填")
+                    layer.msg("具体措施不能为空！");
+                    return false;
                 }
             });
         });
@@ -359,10 +379,10 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[
                 {type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '计划名称', align: 'center', width: 150}
-                , {field: 'startDate', title: '起始时间', align: 'center', width: 150, type: 'date'}
-                , {field: 'endDate', title: '结束时间', align: 'center', width: 150, type: 'date'}
-                , {field: 'content', title: '工作内容', align: 'center', width: 300}
+                , {field: 'name', title: '计划名称', align: 'center', width: 250}
+                , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date'}
+                , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date'}
+                , {field: 'content', title: '工作内容', align: 'center', width: 400}
                 , {field: 'action', title: '操作', align: 'center', unresize: true, rowspan: 1, toolbar: '#barDemo'}
             ]]
             , loading: true
@@ -373,40 +393,72 @@
         /**
          * 表格添加事件
          */
+        var not = false;
         var index = table.cache.dateTable.length;
         $('#addTable').click(function () {
-            var tr = $('<tr data-index="' + index + '"></tr>');
-            var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
-            var td2 = $('<td data-field="name" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fa"></div></td>');
-            var td3 = $('<td data-field="startDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fb" ></div></td>');
-            var td4 = $('<td data-field="endDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fc"></div></td>');
-            var td5 = $('<td data-field="content" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fd"></div></td>');
-            var td6 = $('<td data-field="action" align="center" data-off="true"><div class="layui-table-cell laytable-cell-1-action">' +
-                '<a class="layui-btn layui-btn-danger layui-btn-xs" id="del">删除</a></div></td>');
-            tr.append(td1).append(td2).append(td3).append(td4).append(td5).append(td6).appendTo($('tbody').first());
-            table.cache.dateTable.push({
-                "LAY_TABLE_INDEX": index,
-                "name": "",
-
-                "startDate": "",
-                "endDate": ""
-            });
-            index++;
-            $('.dateC').each(function(){
-                laydate.render({
-                    elem: this
-                    ,position: 'fixed'
-                    ,format:'yyyy-MM-dd'
+            if (not) {
+                isNull();
+            }
+            if (!not) {
+                var tr = $('<tr data-index="' + index + '"></tr>');
+                var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
+                var td2 = $('<td data-field="name" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fa"></div></td>');
+                var td3 = $('<td data-field="startDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fb" ></div></td>');
+                var td4 = $('<td data-field="endDate" data-edit="true" align="center" type="text"><div class="layui-table-cell dateC laytable-cell-1-fc"></div></td>');
+                var td5 = $('<td data-field="content" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-fd"></div></td>');
+                var td6 = $('<td data-field="action" align="center" data-off="true"><div class="layui-table-cell laytable-cell-1-action">' +
+                    '<a class="layui-btn layui-btn-danger layui-btn-xs" id="del">删除</a></div></td>');
+                tr.append(td1).append(td2).append(td3).append(td4).append(td5).append(td6).appendTo($('tbody').first());
+                table.cache.dateTable.push({
+                    "LAY_TABLE_INDEX": index,
+                    "name": "",
+                    "startDate": "",
+                    "endDate": ""
                 });
-            })
+                index++;
+                not = true;
+                $('.dateC').each(function () {
+                    laydate.render({
+                        elem: this
+                        , position: 'fixed'
+                        , format: 'yyyy-MM-dd'
+                    });
+                })
+            } else {
+                layer.msg('表格不能为空！');
+            }
         });
-        //日期
+        /**
+         * 判表格是否空逻辑
+         */
+        function isNull() {
+            $.each(table.cache.dateTable, function notNull(index, value) {
+                if (value.LAY_TABLE_INDEX > 0) {
+                    if (value.name != null) {
+                        if (value.content != null) {
+                            not = false;
+                        }
+                        else
+                            not = true;
+                    } else
+                        not = true;
+                }
+            });
+            $('.dateC').each(function () {
+                alert($(this).text());
+                console.log("sssss:"+$(this).text());
+                if ($(this).text() == '' || $(this).text() == ' ')
+                    not = true;
+            });
+        }
+
 
 
         /**
          * 表格删除事件
          */
         $(document).on("click", "#del", function () {
+            not = false;
             var tr = $(this).parents("tr");
             var id = parseInt(tr.attr("data-index"));
             if (id === 0) {
@@ -447,12 +499,11 @@
          */
         function getJson(id, data) {
             var flag = false;
-            if(id==="#expertGroupIDs"){
-                console.log("jhhhhhhhhhhhhh");
+            if (id === "#expertGroupIDs") {
                 flag = true;
             }
             $.getJSON(
-                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value + "&flag="+flag,
+                "#(ctxPath)/app/projectUndertake/persons?orgStructureId=" + data.value + "&flag=" + flag,
                 function (data) {
                     var optionString = "";
                     var string = "";
@@ -463,9 +514,9 @@
                         console.log(item.name);
                         string += '<option value= "' + item.id + '">' + item.name + '</option>';
                     });
-                    if(string !== ""&&flag){
+                    if (string !== "" && flag) {
                         $(id).html('<option value=""></option>' + string);
-                    }else if(flag&&string === ""){
+                    } else if (flag && string === "") {
                         $(id).html('<option value="">无</option>');
                     } else {
                         $(id).html('<option value=""></option>' + optionString);
@@ -517,16 +568,91 @@
         }
 
         /**
+         * 判总日期是否不正确
+         */
+        function dateIsCorrect() {
+            var startDate = new Date($('#startDate').val());
+            var endDate = new Date($('#endDate').val());
+            var startDate1;
+            var endDate1;
+            var temp = 2;
+            var date = true;
+            $('.dateC').each(function () {
+                if (temp % 2 == 0) {
+                    startDate1 = new Date($(this).text());
+                    if ($(this).text() == '' || $(this).text() == ' ')
+                        date = false;
+                    if (startDate <= startDate1){
+                        date = true;
+                    }else
+                        date = false;
+                    temp++;
+                } else {
+                    endDate1 = new Date($(this).text())
+                    if ($(this).text() == '' || $(this).text() == ' ')
+                        date = false;
+                    if (endDate >= endDate1)
+                        date = true;
+                    else
+                        date = false;
+                    temp++;
+                }
+                if (startDate1 > endDate1)
+                    date = false;
+            });
+            if (startDate > endDate)
+                date = false;
+
+            return date;
+        }
+
+
+        function tableNull() {
+            var dte = false;
+            $.each(table.cache.dateTable, function notNull(index, value) {
+                if (value.LAY_TABLE_INDEX > 0) {
+                    if (value.name != null) {
+                        if (value.content != null) {
+                            dte = true;
+                        }
+                        else
+                            dte = false;
+                    } else
+                        dte = false;
+                }
+            });
+            $('.dateC').each(function () {
+                if ($(this).text() == '' || $(this).text() == ' ')
+                    dte = false;
+            });
+            return dte
+        }
+        /**
          * 提交
          */
         form.on('submit(sub)', function () {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
-                loadFlag: true
-            });
+            if (dateIsCorrect()){
+                if ($("#impTeamName").val() != null && $("#impTeamName").val() != '' ){
+                    if (tableNull()){
+                        util.sendAjax({
+                            type: 'POST',
+                            url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
+                            loadFlag: true
+                        });
+                    }else {
+                        layer.msg("至少有一条计划！且计划不能为空");
+                    }
+                }else {
+                    layer.msg("小组名称不能为空！");
+                }
+            }else {
+                layer.msg("计划日期填写错误！");
+            }
             return false;
         });
+
+
+
 
         /**
          * 数据打包
@@ -534,24 +660,25 @@
         function dataString() {
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX > 0) {
-                    string += "ScheduledPlan.name=" + value.name +  "&ScheduledPlan.content=" + value.content + "&";
+                    string += "ScheduledPlan.name=" + value.name + "&ScheduledPlan.content=" + value.content + "&";
                 }
             });
             var temp = 2;
-            $('.dateC').each(function(){
-               if(temp%2==0){
-                   string+="ScheduledPlan.startDate=" +$(this).text()+ "&";
-                   temp++;
-               }else{
-                   string+="ScheduledPlan.endDate=" +$(this).text()+ "&";
-                   temp++;
-               }
+            $('.dateC').each(function () {
+                if (temp % 2 == 0) {
+                    string += "ScheduledPlan.startDate=" + $(this).text() + "&";
+                    temp++;
+                } else {
+                    string += "ScheduledPlan.endDate=" + $(this).text() + "&";
+                    temp++;
+                }
             });
             $("h").each(function () {
                 string += $(this).attr('id') + "=" + $(this).text() + "&";
             });
-            string += $("#impTeam\\.name").attr('name') + "=" + $("#impTeam\\.name").val() + "&";
-            string += $("#EvaScheme\\.name").attr('name') + "=" + $("#EvaScheme\\.name").val();
+            string += $("#impTeamName").attr('name') + "=" + $("#impTeamName").val() + "&";
+            string += $("#startDate").attr('name') + "=" + $("#startDate").val() + "&";
+            string += $("#endDate").attr('name') + "=" + $("#endDate").val();
             console.log(string);
             return string;
         }

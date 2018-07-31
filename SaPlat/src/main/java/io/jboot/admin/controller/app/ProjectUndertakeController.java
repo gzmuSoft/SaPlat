@@ -368,7 +368,7 @@ public class ProjectUndertakeController extends BaseController {
         for (int i = 0; i<sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
             scheduledPlan.setEvaSchemeID(evaScheme.getId());//评估方案编号
-            scheduledPlan.setName(sName[i].toString());
+            scheduledPlan.setName(sName[i]);
             scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));//起始时间
             scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));//结束时间
             scheduledPlan.setContent(sContent[i]);//工作内容
