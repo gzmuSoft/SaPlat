@@ -23,20 +23,20 @@ import java.util.List;
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
     /**
      * find all model
+     *
      * @param model 项目主体
      * @return all <Project>
      */
-    public List<Project> findAll(Project model)
-    {
+    public List<Project> findAll(Project model) {
         Columns columns = Columns.create();
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
-        if (model.getUserId() != null){
-            columns.eq("userId",model.getUserId());
+        if (model.getUserId() != null) {
+            columns.eq("userId", model.getUserId());
         }
-        if (model.getId() != null){
-            columns.eq("id",model.getId());
+        if (model.getId() != null) {
+            columns.eq("id", model.getId());
         }
         return DAO.findListByColumns(columns);
     }
@@ -46,7 +46,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         List<Project> projects = Collections.synchronizedList(new ArrayList<Project>());
         for (Object id : ids) {
             Project byId = findById(id);
-            if (byId != null && byId.getIsEnable() && byId.getStatus().equals("2")){
+            if (byId != null && byId.getIsEnable() && byId.getStatus().equals("2")) {
                 projects.add(byId);
             }
         }
@@ -82,7 +82,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (project.getIsPublic()) {
-            columns.eq("isPublic",project.getIsPublic());
+            columns.eq("isPublic", project.getIsPublic());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -106,4 +106,23 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public List<Project> findByIsPublic(boolean isPublic) {
         return DAO.findListByColumn("isPublic", isPublic);
     }
+
+    @Override
+    public Long saveProject(Project model) {
+        if (Db.tx(() -> {
+            if (!model.save()) {
+                return false;
+            } else {
+                return true;
+            }
+        })) {
+            Columns columns = new Columns();
+            columns.eq("name", model.getName());
+            columns.eq("brief", model.getBrief());
+            return DAO.findFirstByColumns(columns).getId();
+        } else {
+            return -1L;
+        }
+    }
+
 }

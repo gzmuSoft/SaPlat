@@ -17,6 +17,7 @@ public interface LeaderGroupService  {
     public LeaderGroup findById(Object id);
 
 
+
     /**
      * find all model
      *
@@ -66,6 +67,7 @@ public interface LeaderGroupService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(LeaderGroup model);
+
 
 
     /**

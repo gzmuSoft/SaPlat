@@ -1,5 +1,6 @@
 package io.jboot.admin.controller.app;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.plugin.activerecord.Page;
@@ -58,6 +59,8 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private FileProjectService fileProjectService;
 
+    @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
 
     /**
      * 项目立项基本资料初始化至信息管理界面
@@ -75,81 +78,114 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 自评提交立项资料并进入已审核状态
+     * 立项文件列表表格渲染
      */
-    @Before({GET.class, ProjectValidator.class})
-    public void selfAssessment() {
-        User loginUser = AuthUtils.getLoginUser();
-        Project project = getBean(Project.class, "project");
-        project.setCreateTime(new Date());
-        project.setLastAccessTime(new Date());
-        project.setIsEnable(true);
-        project.setStatus(ProjectStatus.IS_VERIFY);
-        project.setUserId(loginUser.getId());
-        project.setCreateUserID(loginUser.getId());
-        project.setLastUpdateUserID(loginUser.getId());
+    public void fileTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        ProjectFileType projectFileType = new ProjectFileType();
+        projectFileType.setParentID(1L);
+        Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
+        renderJson(new DataTable<ProjectFileType>(page));
+    }
 
-        LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
-        leaderGroup.setCreateTime(new Date());
-        leaderGroup.setLastAccessTime(new Date());
-        leaderGroup.setCreateUserID(loginUser.getId());
-        leaderGroup.setLastUpdateUserID(loginUser.getId());
+    /**
+     * 立项文件上传页面
+     */
+    @NotNullPara({"id","projectId"})
+    public void fileUploading() {
+        Long id = getParaToLong("id");
+        ProjectFileType model = projectFileTypeService.findById(id);
+        setAttr("projectId",getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
+    }
 
-        AuthProject authProject = new AuthProject();
-        authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
-        authProject.setUserId(loginUser.getId());
-        authProject.setLastUpdTime(new Date());
-        authProject.setType(TypeStatus.PROJECT_VERIFY);
-        authProject.setStatus(AuthStatus.IS_VERIFY);
-        authProject.setName(loginUser.getName());
-        authProject.setLastUpdUser(loginUser.getName());
-        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
-            renderJson(RestResult.buildSuccess("立项成功"));
-            render("verfedSuccess.html");
-        } else {
-            renderJson(RestResult.buildError("立项失败"));
-            render("verfedDefeat.html");
-            throw new BusinessException("立项失败");
+    /**
+     * 项目文件关联
+     */
+    @NotNullPara({"fileId","projectId","fileTypeId"})
+    public void upFile() {
+        User user = AuthUtils.getLoginUser();
+        FileProject model = new FileProject();
+        model.setFileID(getParaToLong("fileId"));
+        model.setProjectID(getParaToLong("projectId"));
+        model.setFileTypeID(getParaToLong("fileTypeId"));
+        model.setCreateTime(new Date());
+        model.setLastAccessTime(new Date());
+        model.setCreateUserID(user.getId());
+        model.setLastUpdateUserID(user.getId());
+        if(!fileProjectService.save(model)){
+            renderJson(RestResult.buildError("上传失败"));
+            throw new BusinessException("上传失败");
         }
     }
 
     /**
-     * 委评提交立项资料并进入待审核状态
+     * project资料上传
      */
     @Before({GET.class, ProjectValidator.class})
-
-    public void othersAssessment() {
+    public void projectUploading() {
         User loginUser = AuthUtils.getLoginUser();
         Project project = getBean(Project.class, "project");
+        project.setUserId(loginUser.getId());
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setIsEnable(true);
-        project.setStatus(ProjectStatus.VERIFIING);
-        project.setUserId(loginUser.getId());
+        project.setStatus(ProjectStatus.BUILDING);
         project.setCreateUserID(loginUser.getId());
         project.setLastUpdateUserID(loginUser.getId());
-        project.setIsPublic(false);
+        project.setIsEnable(true);
+        int saveOrUpdate = getParaToInt("saveOrUpdate");
+        if (saveOrUpdate == 1) {
+            Long projectId = projectService.saveProject(project);
+            JSONObject json = new JSONObject();
+            json.put("projectId", projectId);
+            if (projectId != -1L) {
+                renderJson(json);
+            } else {
+                renderJson(RestResult.buildError("项目资料上传失败"));
+                throw new BusinessException("项目资料上传失败");
+            }
+        } else if (saveOrUpdate == 0) {
+            if (getParaToLong("projectId") != -1) {
+                project.setId(getParaToLong("projectId"));
+            }
+            if (projectService.update(project)) {
+                renderJson(RestResult.buildSuccess("项目资料更新成功"));
+            } else {
+                renderJson(RestResult.buildError("项目资料更新失败"));
+                throw new BusinessException("项目资料更新失败");
+            }
+        }
+    }
 
+    /**
+     * leaderGroup资料上传
+     */
+    @Before({GET.class, ProjectValidator.class})
+    public void leaderGroupUploading() {
+        User loginUser = AuthUtils.getLoginUser();
         LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
         leaderGroup.setCreateTime(new Date());
         leaderGroup.setLastAccessTime(new Date());
         leaderGroup.setCreateUserID(loginUser.getId());
         leaderGroup.setLastUpdateUserID(loginUser.getId());
-
-        AuthProject authProject = new AuthProject();
-        authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
-        authProject.setUserId(loginUser.getId());
-        authProject.setLastUpdTime(new Date());
-        authProject.setType(TypeStatus.PROJECT_VERIFY);
-        authProject.setStatus(AuthStatus.VERIFYING);
-        authProject.setName(loginUser.getName());
-        authProject.setLastUpdUser(loginUser.getName());
-        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
-            renderJson(RestResult.buildSuccess("提交立项资料成功，请等待审核"));
-            render("verfiing.html");
-        } else {
-            renderJson(RestResult.buildError("立项失败"));
-            throw new BusinessException("立项失败");
+        leaderGroup.setProjectID(getParaToLong("projectId"));
+        int saveOrUpdate = getParaToInt("saveOrUpdate");
+        if (saveOrUpdate == 1) {
+            if (leaderGroupService.save(leaderGroup)) {
+                renderJson(RestResult.buildError("稳评小组资料上传成功"));
+            } else {
+                renderJson(RestResult.buildError("稳评小组资料上传失败"));
+                throw new BusinessException("稳评小组资料上传失败");
+            }
+        } else if (saveOrUpdate == 0) {
+            LeaderGroup leaderGroup1 = leaderGroupService.findByProjectID(getParaToLong("projectId"));
+            leaderGroup.setId(leaderGroup1.getId());
+            if (leaderGroupService.update(leaderGroup)) {
+                renderJson(RestResult.buildSuccess("稳评小组资料更新成功"));
+            } else {
+                renderJson(RestResult.buildError("稳评小组资料更新失败"));
+                throw new BusinessException("稳评小组资料更新失败");
+            }
         }
     }
 
