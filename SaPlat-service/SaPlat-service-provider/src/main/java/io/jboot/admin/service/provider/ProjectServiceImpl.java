@@ -30,16 +30,17 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
      * @return all <Project>
      */
     @Override
-    public List<Project> findAll(Project model) {
+    public List<Project> findAll(Project model)
+    {
         Columns columns = Columns.create();
-        if (StrKit.notNull(model.getIsEnable())) {
+        if (StrKit.notNull(model.getIsEnable())){
             columns.eq("isEnable", model.getIsEnable());
         }
-        if (model.getUserId() != null) {
-            columns.eq("userId", model.getUserId());
+        if (model.getUserId() != null){
+            columns.eq("userId",model.getUserId());
         }
-        if (model.getId() != null) {
-            columns.eq("id", model.getId());
+        if (model.getId() != null){
+            columns.eq("id",model.getId());
         }
         return DAO.findListByColumns(columns);
     }
@@ -145,4 +146,23 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public List<Project> findByIsPublic(boolean isPublic) {
         return DAO.findListByColumn("isPublic", isPublic);
     }
+
+//    @Override
+    public Long saveProject(Project model) {
+        if (Db.tx(() -> {
+            if (!model.save()) {
+                return false;
+            } else {
+                return true;
+            }
+        })) {
+            Columns columns = new Columns();
+            columns.eq("name", model.getName());
+            columns.eq("brief", model.getBrief());
+            return DAO.findFirstByColumns(columns).getId();
+        } else {
+            return -1L;
+        }
+    }
+
 }

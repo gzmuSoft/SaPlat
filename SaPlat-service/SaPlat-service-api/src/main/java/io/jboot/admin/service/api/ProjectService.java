@@ -123,6 +123,13 @@ public interface ProjectService  {
      */
     public boolean save(Project model);
 
+    /**
+     * save model and authProject to database
+     *
+     * @param model,authProject
+     * @return
+     */
+    public Long saveProject(Project model);
 
     /**
      * save or update model

@@ -36,7 +36,7 @@ public class QuestionnaireContentServiceImpl extends JbootServiceBase<Questionna
                 sql.append("?)");
             }
         }
-        return DAO.paginate(pageNumber, pageSize, false, select, sql.toString(), ids);
+        return DAO.paginate(pageNumber, pageSize, false, select, sql.toString(),ids);
     }
 
     /**
