@@ -42,6 +42,13 @@ public interface LeaderGroupService  {
      */
     public boolean delete(LeaderGroup model);
 
+    /**
+     * 根据字段查询对象
+     *
+     * @param projectID
+     * @return LeaderGroup
+     */
+    public LeaderGroup findByProjectID(Object projectID);
 
     /**
      * save model to database

@@ -134,7 +134,10 @@
 
         var pid = document.getElementById("pid").value;
         var layedit = layui.layedit;
-        var briefIndex = layedit.build('brief'); //建立编辑器
+        //建立编辑器
+        var briefIndex = layedit.build('brief',{
+            hideTool: ['link', 'unlink', 'face', 'image', 'help']
+        });
         //日期
         laydate.render({
             elem: '#date'

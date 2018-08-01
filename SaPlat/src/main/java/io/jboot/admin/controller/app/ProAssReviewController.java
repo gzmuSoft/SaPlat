@@ -47,11 +47,8 @@ public class ProAssReviewController extends BaseController{
         renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));
     }
     public void findProAssReviewByFileIdAndProjectId(){
-       List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L,28L);
-       System.out.print("#####################################################S########################################################");
-       System.out.print("\n\n"+proAssReviews.size()+"\n\n");
-       System.out.print("#####################################################E########################################################");
-       setAttr("proAssReviews",proAssReviews).render("main.html");
+       List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L,28L);;
+        renderJson(RestResult.buildSuccess(proAssReviews));
     }
 
 
