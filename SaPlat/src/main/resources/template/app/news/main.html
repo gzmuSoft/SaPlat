@@ -41,7 +41,8 @@
                 ,{field: 'createTime', title: '创建时间', sort: true}
                 ,{field: 'lastUpdateUserID', title: '更新用户', sort: true}
                 ,{field: 'lastAccessTime', title: '访问日期', sort: true}
-                ,{field: 'isPublish', title: '是否公开', sort: true, templet: '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'}
+                ,{field: 'isPublish', title: '是否公开', sort: true, templet:
+                        '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'}
                 ,{fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/news/tableData'

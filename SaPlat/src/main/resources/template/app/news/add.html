@@ -9,24 +9,23 @@
 
 #define js()
 <!-- 加载编辑器的容器 -->
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.config.js"></script>
+
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.all.js"></script>
 <!-- 配置文件 -->
 <script type="text/javascript">
-    var index = null;
-    layui.use(['form', 'layer', 'layedit', 'upload'], function () {
+    var ue = UE.getEditor('container',{initialFrameHeight:360});
+    layui.use(['form', 'layer', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
-            , $ = layui.jquery
-            , layedit = layui.layedit;
-        // layedit.set({
-        //     uploadImage: {
-        //         url: '#(ctxPath)/app/news/uploadFile'
-        //         ,tpye: 'POST'
-        //     }
-        // });
-        // index = layedit.build('layContent'); //建立编辑器
+            , $ = layui.jquery;
+
         form.on('submit(sub)', function(data){
             var dataParam = $('#addForm').serializeArray();
-            dataParam.push({"name":"model.content","value":layedit.getContent(index)});
+            var newsletter = ue.getContentTxt().substring(0,160) + "...";
+            newsletter = newsletter.replace(/\s+/g,"");
+            dataParam.push({"name":"model.content","value":ue.getContent()});
+            dataParam.push({"name":"model.newsletter","value":newsletter});
             //alert(dataParam);
             util.sendAjax ({
                 type: 'POST',
@@ -53,24 +52,8 @@
             }
         });
     });
-
     $("#character").hide();
     $("#individual").hide();
-    function getContent() {
-        var arr = [];
-        arr.push("使用getContent()方法可以获得编辑器的内容");
-        arr.push("内容为：");
-        arr.push(layedit.getContent(index));
-        alert(arr.join("\n"));
-    }
-</script>
-
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.config.js"></script>
-
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.all.js"></script>
-
-<script type="text/javascript">
-    var ue = UE.getEditor('container',{initialFrameHeight:500});
 </script>
 #end
 

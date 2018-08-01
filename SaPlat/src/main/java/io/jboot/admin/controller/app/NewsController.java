@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.ueditor.ActionEnter;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
@@ -17,8 +18,11 @@ import io.jboot.admin.service.entity.model.Ueditor;
 import io.jboot.admin.service.entity.model.UeditorConfig;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -88,7 +92,7 @@ public class NewsController extends BaseController {
     @Before(POST.class)
     public void postAdd(){
         News model = getBean(News.class, "model");
-        System.out.println(model.toString());
+        //System.out.println(model.toString());
         User user = AuthUtils.getLoginUser();
         model.setCreateUserID(user.getUserID());
         model.setIsEnable(true);
@@ -119,7 +123,8 @@ public class NewsController extends BaseController {
 
     public void postUpdate(){
         News model = getBean(News.class, "model");
-        News byId = newsService.findById(model.getId());
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
+        //System.out.println(model.toString());
         if (!newsService.update(model)){
             throw new BusinessException("修改失败");
         }
@@ -147,8 +152,8 @@ public class NewsController extends BaseController {
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
         String strNewFileName = UUID.randomUUID() + "." + type;
-        String fileUrl = "/upload/" + strUploadPath + "\\" + strNewFileName;
-        File newFile = new File(path + "\\" + strNewFileName);
+        String fileUrl = "/upload/" + strUploadPath + "/" + strNewFileName;
+        File newFile = new File(path + "/" + strNewFileName);
         file.renameTo(newFile);
         Files files = new Files();
         files.setName(oldName);
@@ -166,20 +171,52 @@ public class NewsController extends BaseController {
         map.put("data",map2);
         map2.put("src",fileUrl);//图片url
         String result = new JSONObject(map).toString();
-        System.out.println(result);
+        //System.out.println(result);
         renderJson(map);
+    }
+
+    public Map<String,Object> uploadFiles(UploadFile upload,String strUploadPath){
+        // 文件名称生成策略（日期时间+uuid ）
+        File file = upload.getFile();
+        String oldName = file.getName();
+        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
+        String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
+        String strNewFileName = UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload/" + strUploadPath + "/" + strNewFileName;
+        File newFile = new File(path + "/" + strNewFileName);
+        file.renameTo(newFile);
+        Files files = new Files();
+        files.setName(oldName);
+        files.setCreateTime(new Date());
+        files.setCreateUserID(AuthUtils.getLoginUser().getId());
+        files.setIsEnable(false);
+        files.setPath(fileUrl);
+        files.setSize(file.length());
+        files.setType(type);
+        filesService.save(files);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("state", "SUCCESS");
+        map.put("original", oldName);//原来的文件名
+        map.put("size", file.getTotalSpace());//文件大小
+        map.put("title", oldName);//随意，代表的是鼠标经过图片时显示的文字
+        map.put("type", type);//文件后缀名
+        map.put("url", fileUrl);//这里的url字段表示的是上传后的图片在图片服务器的完整地址（http://ip:端口/***/***/***.jpg）
+        String result = new JSONObject(map).toString();
+        return map;
     }
 
     public void ueditor(){
         String action = getPara("action");
-        System.out.println(action);
         Ueditor ueditor = new Ueditor();
         try {
             if("config".equals(action)){    //如果是初始化
-                System.out.println(UeditorConfig.UEDITOR_CONFIG);
+                //System.out.println(UeditorConfig.UEDITOR_CONFIG);
                 renderJson(UeditorConfig.UEDITOR_CONFIG);
-            }else if("uploadimage".equals(action) || "uploadvideo".equals(action) || "uploadfile".equals(action)){    //如果是上传图片、视频、和其他文件
-
+            }else if("uploadimage".equals(action) || "uploadvideo".equals(action) || "uploadfile".equals(action)){
+                //如果是上传图片、视频、和其他文件
+                String strUploadPath = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+                UploadFile upload = getFile("upfile", strUploadPath);
+                renderJson(uploadFiles(upload,strUploadPath));
             }
         } catch (Exception e) {
         }

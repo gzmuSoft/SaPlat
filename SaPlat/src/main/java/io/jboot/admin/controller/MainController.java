@@ -68,6 +68,38 @@ public class MainController extends BaseController {
         }
     }
 
+
+    public void nshow() {
+        int id = getParaToInt("id");
+        News model = newsService.findById(id);
+        System.out.println(model.toString());
+        setAttr("model", model).
+                render("nshow.html");
+    }
+
+    public void nlist() {
+        int current = getParaToInt("current", 1);
+        int pageNum = getParaToInt("pageNum", 20);
+        News model = new News();
+        Page<News> page = newsService.findPage(model, current, pageNum);
+        DataTable newsTable = new DataTable<News>(page);
+        //System.out.println("newsTable.getData():" + newsTable.getData().toString());
+        setAttr("newsList", newsTable.getData()).
+                setAttr("current", current).
+                render("nlist.html");
+    }
+
+    public void nlistPage() {
+        int current = getParaToInt("current", 1);
+        int pageNum = getParaToInt("pageNum", 20);
+        News model = new News();
+        Page<News> page = newsService.findPage(model, current, pageNum);
+        DataTable newsTable = new DataTable<News>(page);
+        setAttr("newsList", newsTable.getData()).
+                setAttr("current", current).
+                render("nlist.html");
+    }
+
     public void register() {
         setAttr("roleList", roleService.findByNames("个人群体","组织机构"))
                 .render("register.html");
@@ -127,8 +159,8 @@ public class MainController extends BaseController {
         }
         Page<News> news = newsService.findReverses(5);
         DataTable newsTable = new DataTable<News>(news);
-        setAttr("newsList", newsTable.getData());
-        render("login.html");
+        setAttr("newsList", newsTable.getData()).
+                render("login.html");
     }
 
     public void welcome() {
