@@ -13,6 +13,7 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
+import io.jboot.admin.service.entity.status.system.ProjectTypeStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.ProjectValidator;
@@ -92,17 +93,17 @@ public class ProjectController extends BaseController {
     /**
      * 立项文件上传页面
      */
-    @NotNullPara({"id","projectId"})
+    @NotNullPara({"id", "projectId"})
     public void fileUploading() {
         Long id = getParaToLong("id");
         ProjectFileType model = projectFileTypeService.findById(id);
-        setAttr("projectId",getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
+        setAttr("projectId", getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
     }
 
     /**
      * 项目文件关联
      */
-    @NotNullPara({"fileId","projectId","fileTypeId"})
+    @NotNullPara({"fileId", "projectId", "fileTypeId"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
         FileProject model = new FileProject();
@@ -113,9 +114,26 @@ public class ProjectController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setCreateUserID(user.getId());
         model.setLastUpdateUserID(user.getId());
-        if(!fileProjectService.save(model)){
+        if (!fileProjectService.save(model)) {
             renderJson(RestResult.buildError("上传失败"));
             throw new BusinessException("上传失败");
+        }
+    }
+
+    /**
+     * 判断当前项目文件是否上传完毕
+     */
+    public void judgeFile() {
+        List<FileProject> fileProjects = fileProjectService.findAllByProjectID(getParaToLong("projectId"));
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findByParentId(1L);
+        System.out.println("projectFileTypes.size:" + projectFileTypes.size() + "/t fileProjects.size:" + fileProjects.size());
+        JSONObject json = new JSONObject();
+        if (projectFileTypes.size() == fileProjects.size()) {
+            json.put("judgeFile", true);
+            renderJson(json);
+        } else {
+            json.put("judgeFile", false);
+            renderJson(json);
         }
     }
 
@@ -145,6 +163,29 @@ public class ProjectController extends BaseController {
                 throw new BusinessException("项目资料上传失败");
             }
         } else if (saveOrUpdate == 0) {
+            if (getParaToBoolean("judgeFile")) {
+                AuthProject authProject = new AuthProject();
+                authProject.setUserId(loginUser.getId());
+                authProject.setRoleId(roleService.findByName(projectService.findById(getParaToLong("projectId")).getRoleName()).getId());
+                authProject.setProjectId(getParaToLong("projectId"));
+                authProject.setLastUpdTime(new Date());
+                authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+                authProject.setName(loginUser.getName());
+                authProject.setLastUpdUser(loginUser.getName());
+                if (project.getAssessmentMode().equals("自评")) {
+                    authProject.setStatus(ProjectStatus.IS_VERIFY);
+                    project.setStatus(ProjectStatus.IS_VERIFY);
+                } else if (project.getAssessmentMode().equals("委评")) {
+                    authProject.setStatus(ProjectStatus.VERIFIING);
+                    project.setStatus(ProjectStatus.VERIFIING);
+                }
+                if (authProjectService.save(authProject)) {
+                    renderJson(RestResult.buildSuccess("项目状态表上传成功"));
+                } else {
+                    renderJson(RestResult.buildError("项目状态表上传失败"));
+                    throw new BusinessException("项目状态表上传失败");
+                }
+            }
             if (getParaToLong("projectId") != -1) {
                 project.setId(getParaToLong("projectId"));
             }

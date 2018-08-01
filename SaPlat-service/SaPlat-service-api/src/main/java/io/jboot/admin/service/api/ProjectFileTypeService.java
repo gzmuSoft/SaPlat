@@ -18,6 +18,14 @@ public interface ProjectFileTypeService  {
 
 
     /**
+     * find List by primary key
+     *
+     * @param parentId
+     * @return
+     */
+    public List<ProjectFileType> findByParentId(Long parentId);
+
+    /**
      * find all model
      *
      * @return all <ProjectFileType
