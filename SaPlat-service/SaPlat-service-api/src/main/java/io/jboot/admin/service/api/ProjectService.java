@@ -24,14 +24,50 @@ public interface ProjectService  {
      * @return all <Project>
      */
     public List<Project> findAll(Project model);
-    
+
     /**
-     * find model by primary key
+     * 根据列名和列值查询
+     * @param columnName 列名
+     * @param value 值
+     * @return 列表
+     */
+    public List<Project> findListByColumn(String columnName,Object value);
+
+    /**
+     * 根据列名和列值查询第一个
+     * @param columnName 列名
+     * @param value 值
+     * @return 第一个
+     */
+    public Project findFirstByColumn(String columnName,Object value);
+
+    /**
+     * 根据多个列名和多个列值查询第一个数据
+     * @param columnNames 列名
+     * @param values 值
+     * @return 第一个
+     */
+    public Project findFirstByColumns(String[] columnNames,String[] values);
+
+
+
+    /**
+     * 根据多个列名和多个列值查询
+     * @param columnNames 列名
+     * @param values 值
+     * @return 列表
+     */
+    public List<Project> findListByColumns(String[] columnNames,String[] values);
+
+
+    /**
+     * find List<Project> by ids and status
      *
-     * @param ids
+     * @param ids ids
+     * @param status
      * @return
      */
-    public List<Project> findByIds(List<Object> ids);
+    public List<Project> findByIds(List<Object> ids,String[] status);
 
 
     /**

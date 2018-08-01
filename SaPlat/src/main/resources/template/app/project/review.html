@@ -10,7 +10,7 @@
 #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>评估完成的项目</legend>
+        <legend>项目审查</legend>
     </fieldset>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
@@ -46,7 +46,7 @@
                 , {field: 'remark', title: '备注', width: 100}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/assed'
+            , url: '#(ctxPath)/app/project/reviewTable'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page

@@ -102,15 +102,15 @@
                 <input type="text" id="leaderGroup.name" name="leaderGroup.name"/>
             </div>
             <div>
-                <label for="LeaderGroup.leader">组长</label>
+                <label for="leaderGroup.leader">组长</label>
                 <input type="text" id="leaderGroup.leader" name="leaderGroup.leader"/>
             </div>
             <div>
-                <label for="LeaderGroup.deputy">副组长</label>
+                <label for="leaderGroup.deputy">副组长</label>
                 <input type="text" id="leaderGroup.deputy" name="leaderGroup.deputy"/>
             </div>
             <div>
-                <label for="LeaderGroup.crew">组员</label>
+                <label for="leaderGroup.crew">组员</label>
                 <input type="text" id="leaderGroup.crew" name="leaderGroup.crew"/>
             </div>
             <input type="button" name="previous" class="previous action-button" value="上一步"/>
@@ -151,10 +151,11 @@
     $('.next').click(function () {
         if (animating)
             return false;
-        animating = true;
+        animating
+            = true;
         current_fs = $(this).parent();
         next_fs = $(this).parent().next();
-        $('#progressbar li').eq($('fieldset').index(next_fs)).addClass('active');
+        $('#progressbar').find('li').eq($('fieldset').index(next_fs)).addClass('active');
         next_fs.show();
         current_fs.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -185,7 +186,7 @@
         animating = true;
         current_fs = $(this).parent();
         previous_fs = $(this).parent().prev();
-        $('#progressbar li').eq($('fieldset').index(current_fs)).removeClass('active');
+        $('#progressbar').find('li').eq($('fieldset').index(current_fs)).removeClass('active');
         previous_fs.show();
         current_fs.animate({opacity: 0}, {
             step: function (now, mx) {
@@ -211,20 +212,16 @@
      * 自评按钮事件
      */
     $('#selfAssessment').click(function () {
-        $('#selfAssessment').attr("name", "project.assessmentMode");
-        $('#selfAssessment').addClass("buttonChange");
-        $('#othersAssessment').removeClass("buttonChange");
-        $('#othersAssessment').attr("name", null);
+        $('#selfAssessment').attr("name", "project.assessmentMode").addClass("buttonChange");
+        $('#othersAssessment').removeClass("buttonChange").attr("name", null);
     });
 
     /**
      * 委评按钮事件
      */
     $('#othersAssessment').click(function () {
-        $('#othersAssessment').attr("name", "project.assessmentMode");
-        $('#othersAssessment').addClass("buttonChange");
-        $('#selfAssessment').removeClass("buttonChange");
-        $('#selfAssessment').attr("name", null);
+        $('#othersAssessment').attr("name", "project.assessmentMode").addClass("buttonChange");
+        $('#selfAssessment').removeClass("buttonChange").attr("name", null);
     });
 
     /**
@@ -232,8 +229,8 @@
      */
     function parame() {
         var string = "?";
-        var valueArray = new Array();
-        var nameArray = new Array();
+        var valueArray = [];
+        var nameArray = [];
         $("input").each(function (key) {
             valueArray[key] = $(this).val();
             nameArray[key] = $(this).attr('name');

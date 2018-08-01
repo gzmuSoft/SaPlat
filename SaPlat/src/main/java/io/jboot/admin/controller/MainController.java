@@ -101,8 +101,7 @@ public class MainController extends BaseController {
     }
 
     public void register() {
-        setAttr("roleList", roleService.findByNames("个人群体","组织机构"))
-                .render("register.html");
+        render("register.html");
     }
 
     public void captcha() {

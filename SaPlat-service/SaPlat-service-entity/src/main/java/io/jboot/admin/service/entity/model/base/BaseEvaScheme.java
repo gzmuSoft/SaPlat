@@ -121,6 +121,14 @@ public abstract class BaseEvaScheme<M extends BaseEvaScheme<M>> extends JbootMod
 		return get("lastAccessTime");
 	}
 
+	public void setStatus(java.lang.String status) {
+		set("status", status);
+	}
+	
+	public java.lang.String getStatus() {
+		return getStr("status");
+	}
+
 	public void setSort(java.lang.Integer sort) {
 		set("sort", sort);
 	}
