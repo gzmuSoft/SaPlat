@@ -21,16 +21,18 @@ public class Project extends BaseProject<Project> {
     }
 
     public String getTypeName() {
-            return typeName;
-        }
+        return typeName;
+    }
 
     public void setTypeName(String typeName) {
-            this.typeName = typeName;
-        }
+        this.typeName = typeName;
+    }
 
     public void setReply(String reply) {
-            this.reply = reply;
-        }
+        this.reply = reply;
     }
+
+
+}
 
 

@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
 
 import java.util.List;
@@ -32,6 +33,15 @@ public interface ProjectUndertakeService {
      * @return all <ProjectUndertake
      */
     public boolean findIsInvite(Long facAgencyID, Long projectID);
+
+    /**
+     * find List<ProjectUndertake> by facAgencyId and status
+     *
+     * @param facAgencyId facAgencyId
+     * @param status <ProjectUndertakeStatus>
+     * @return all List<ProjectUndertake>
+     */
+    public List<ProjectUndertake> findListByFacAgencyIdAndStatus(Long facAgencyId,String status);
 
     /**
      * find List<ProjectUndertake> by projectID and status
@@ -65,6 +75,9 @@ public interface ProjectUndertakeService {
      * @return 项目承接
      */
     public ProjectUndertake findByProjectIdAndFacAgencyId(Long projectId,Long facAgencyId);
+
+
+
 
     /**
      * 通过项目编号查询项目承接
@@ -156,4 +169,5 @@ public interface ProjectUndertakeService {
     public void keep(Model model, String... attrs);
 
     public void keep(List<? extends Model> models, String... attrs);
+
 }
