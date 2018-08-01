@@ -335,14 +335,14 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-评估中
      */
-    public void toAssing() {
-        render("assing.html");
+    public void evaluation() {
+        render("evaluation.html");
     }
 
     /**
      * 项目管理界面-评估中-表格渲染
      */
-    public void assing() {
+    public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -357,15 +357,15 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-已评估
      */
-    public void toAssed() {
-        render("assed.html");
+    public void review() {
+        render("review.html");
 
     }
 
     /**
      * 项目管理界面-评估完成-表格渲染
      */
-    public void assed() {
+    public void reviewTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
