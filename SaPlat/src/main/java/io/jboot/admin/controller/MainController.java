@@ -3,14 +3,20 @@ package io.jboot.admin.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
+import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.NewsService;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.RoleService;
+import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.News;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -22,6 +28,8 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
+import java.util.List;
+
 
 /**
  * 主控制器
@@ -30,15 +38,20 @@ import org.apache.shiro.subject.Subject;
  */
 @RequestMapping("/")
 public class MainController extends BaseController {
+    @JbootrpcService
+    private UserRoleService userRoleService;
 
     @JbootrpcService
-    NotificationService notificationService;
+    private NotificationService notificationService;
 
     @JbootrpcService
     private UserService userService;
 
     @JbootrpcService
     private RoleService roleService;
+
+    @JbootrpcService
+    private NewsService newsService;
 
     public void index() {
         render("index.html");
@@ -48,13 +61,47 @@ public class MainController extends BaseController {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             redirect("/");
         } else {
+            Page<News> news = newsService.findReverses(5);
+            DataTable newsTable = new DataTable<News>(news);
+            setAttr("newsList", newsTable.getData());
             render("login.html");
         }
     }
 
+
+    public void nshow() {
+        int id = getParaToInt("id");
+        News model = newsService.findById(id);
+        System.out.println(model.toString());
+        setAttr("model", model).
+                render("nshow.html");
+    }
+
+    public void nlist() {
+        int current = getParaToInt("current", 1);
+        int pageNum = getParaToInt("pageNum", 20);
+        News model = new News();
+        Page<News> page = newsService.findPage(model, current, pageNum);
+        DataTable newsTable = new DataTable<News>(page);
+        //System.out.println("newsTable.getData():" + newsTable.getData().toString());
+        setAttr("newsList", newsTable.getData()).
+                setAttr("current", current).
+                render("nlist.html");
+    }
+
+    public void nlistPage() {
+        int current = getParaToInt("current", 1);
+        int pageNum = getParaToInt("pageNum", 20);
+        News model = new News();
+        Page<News> page = newsService.findPage(model, current, pageNum);
+        DataTable newsTable = new DataTable<News>(page);
+        setAttr("newsList", newsTable.getData()).
+                setAttr("current", current).
+                render("nlist.html");
+    }
+
     public void register() {
-        setAttr("roleList", roleService.findByNames("个人群体","组织机构"))
-                .render("register.html");
+        render("register.html");
     }
 
     public void captcha() {
@@ -109,7 +156,10 @@ public class MainController extends BaseController {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             SecurityUtils.getSubject().logout();
         }
-        render("login.html");
+        Page<News> news = newsService.findReverses(5);
+        DataTable newsTable = new DataTable<News>(news);
+        setAttr("newsList", newsTable.getData()).
+                render("login.html");
     }
 
     public void welcome() {
@@ -127,10 +177,16 @@ public class MainController extends BaseController {
 
     public void view(){
         User loginUser = AuthUtils.getLoginUser();
-        if (loginUser.getId() == 3){
-            render("system/notification/main.html");
-        }else{
-            render("app/notification/main.html");
+        //当前用户权限
+        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
+        for (UserRole list : roles){
+            if (list.getRoleID() == 1){
+                render("system/notification/main.html");
+                break;
+            }else{
+                render("app/notification/main.html");
+                break;
+            }
         }
     }
 }

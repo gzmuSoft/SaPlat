@@ -69,7 +69,7 @@ public class OrganizationController extends BaseController {
      * 跳转注册页面
      */
     public void register() {
-        render("register.html");
+        render("template/register.html");
     }
 
     /**

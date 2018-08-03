@@ -13,8 +13,6 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.service.entity.model.Ueditor;
-import io.jboot.admin.service.entity.model.UeditorConfig;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
@@ -51,7 +49,6 @@ public class NewsController extends BaseController {
         News model = new News();
 
         String ctime = getPara("ctime","ctime");
-        String atime = getPara("atime","atime");
         String title = getPara("title",null);
 
         Long createUserID = getParaToLong("createUserID");
@@ -66,13 +63,6 @@ public class NewsController extends BaseController {
             model.setCstime(ctime.substring(0,cindex-1));
             model.setCetime(ctime.substring(cindex+2));
         }
-        int aindex = atime.indexOf("/");
-        if (aindex > 0){
-            model.setAstime(atime.substring(0,aindex-1));
-            model.setAetime(atime.substring(aindex+2));
-        }
-        System.out.println(model.getCstime() + "******************************************************1");
-        System.out.println(model.getCetime() + "******************************************************2");
         Page<News> page = newsService.findPage(model, pageNumber, pageSize);
         renderJson(new DataTable<News>(page));
     }
@@ -89,14 +79,14 @@ public class NewsController extends BaseController {
             personStatus.add(person.getId().toString(),person.getName());
         }
         setAttr("roleStatus", roleStatus).
-                setAttr("personStatus", personStatus).
-                render("add.html");
+        setAttr("personStatus", personStatus).
+        render("add.html");
     }
 
     @Before(POST.class)
     public void postAdd(){
         News model = getBean(News.class, "model");
-        System.out.println(model.toString());
+        //System.out.println(model.toString());
         User user = AuthUtils.getLoginUser();
         model.setCreateUserID(user.getUserID());
         model.setIsEnable(true);
@@ -127,7 +117,8 @@ public class NewsController extends BaseController {
 
     public void postUpdate(){
         News model = getBean(News.class, "model");
-        News byId = newsService.findById(model.getId());
+        model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
+        //System.out.println(model.toString());
         if (!newsService.update(model)){
             throw new BusinessException("修改失败");
         }
@@ -146,27 +137,27 @@ public class NewsController extends BaseController {
     }
 
     @Before(POST.class)
-    public String uploadFile()
+    public void uploadFile()
     {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        String description = getPara("description");
+        String strUploadPath = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        UploadFile upload = getFile("file", strUploadPath);
         File file = upload.getFile();
         String oldName = file.getName();
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        String fileUrl = "/upload/" + UUID.randomUUID() + "." + type;
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
+        String strNewFileName = UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload/" + strUploadPath + "/" + strNewFileName;
+        File newFile = new File(path + "/" + strNewFileName);
         file.renameTo(newFile);
         Files files = new Files();
         files.setName(oldName);
         files.setCreateTime(new Date());
-        files.setDescription(description);
         files.setCreateUserID(AuthUtils.getLoginUser().getId());
         files.setIsEnable(false);
-        files.setPath(newFile.getName());
+        files.setPath(fileUrl);
         files.setSize(file.length());
         files.setType(type);
-        //filesService.save(files);
+        filesService.save(files);
         Map<String,Object> map = new HashMap<String,Object>();
         Map<String,Object> map2 = new HashMap<String,Object>();
         map.put("code",0);//0表示成功，1失败
@@ -174,23 +165,54 @@ public class NewsController extends BaseController {
         map.put("data",map2);
         map2.put("src",fileUrl);//图片url
         String result = new JSONObject(map).toString();
-        System.out.println(result);
-        return result;
+        //System.out.println(result);
+        renderJson(map);
     }
 
-    public String ueditor(){
+    public Map<String,Object> uploadFiles(UploadFile upload,String strUploadPath){
+        // 文件名称生成策略（日期时间+uuid ）
+        File file = upload.getFile();
+        String oldName = file.getName();
+        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
+        String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
+        String strNewFileName = UUID.randomUUID() + "." + type;
+        String fileUrl = "/upload/" + strUploadPath + "/" + strNewFileName;
+        File newFile = new File(path + "/" + strNewFileName);
+        file.renameTo(newFile);
+        Files files = new Files();
+        files.setName(oldName);
+        files.setCreateTime(new Date());
+        files.setCreateUserID(AuthUtils.getLoginUser().getId());
+        files.setIsEnable(false);
+        files.setPath(fileUrl);
+        files.setSize(file.length());
+        files.setType(type);
+        filesService.save(files);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("state", "SUCCESS");
+        map.put("original", oldName);//原来的文件名
+        map.put("size", file.getTotalSpace());//文件大小
+        map.put("title", oldName);//随意，代表的是鼠标经过图片时显示的文字
+        map.put("type", type);//文件后缀名
+        map.put("url", fileUrl);//这里的url字段表示的是上传后的图片在图片服务器的完整地址（http://ip:端口/***/***/***.jpg）
+        String result = new JSONObject(map).toString();
+        return map;
+    }
+
+    public void ueditor(){
         String action = getPara("action");
-        System.out.println(action);
         Ueditor ueditor = new Ueditor();
         try {
             if("config".equals(action)){    //如果是初始化
-                System.out.println(UeditorConfig.UEDITOR_CONFIG);
-                return UeditorConfig.UEDITOR_CONFIG;
-            }else if("uploadimage".equals(action) || "uploadvideo".equals(action) || "uploadfile".equals(action)){    //如果是上传图片、视频、和其他文件
-
+                //System.out.println(UeditorConfig.UEDITOR_CONFIG);
+                renderJson(UeditorConfig.UEDITOR_CONFIG);
+            }else if("uploadimage".equals(action) || "uploadvideo".equals(action) || "uploadfile".equals(action)){
+                //如果是上传图片、视频、和其他文件
+                String strUploadPath = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+                UploadFile upload = getFile("upfile", strUploadPath);
+                renderJson(uploadFiles(upload,strUploadPath));
             }
         } catch (Exception e) {
         }
-        return null;
     }
 }

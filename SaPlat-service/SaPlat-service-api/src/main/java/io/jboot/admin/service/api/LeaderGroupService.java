@@ -17,6 +17,7 @@ public interface LeaderGroupService  {
     public LeaderGroup findById(Object id);
 
 
+
     /**
      * find all model
      *
@@ -42,6 +43,13 @@ public interface LeaderGroupService  {
      */
     public boolean delete(LeaderGroup model);
 
+    /**
+     * 根据字段查询对象
+     *
+     * @param projectID
+     * @return LeaderGroup
+     */
+    public LeaderGroup findByProjectID(Object projectID);
 
     /**
      * save model to database
@@ -59,6 +67,7 @@ public interface LeaderGroupService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(LeaderGroup model);
+
 
 
     /**

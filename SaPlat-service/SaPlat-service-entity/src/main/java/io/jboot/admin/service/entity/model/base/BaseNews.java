@@ -49,6 +49,14 @@ public abstract class BaseNews<M extends BaseNews<M>> extends JbootModel<M> impl
 		return get("publishTime");
 	}
 
+	public void setNewsletter(java.lang.String newsletter) {
+		set("newsletter", newsletter);
+	}
+	
+	public java.lang.String getNewsletter() {
+		return getStr("newsletter");
+	}
+
 	public void setContent(java.lang.String content) {
 		set("content", content);
 	}

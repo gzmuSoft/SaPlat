@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.InformationFill;
+import io.jboot.admin.service.entity.model.FileForm;
 
 import java.util.List;
 
-public interface InformationFillService  {
+public interface FileFormService  {
 
     /**
      * find model by primary key
@@ -14,21 +14,15 @@ public interface InformationFillService  {
      * @param id
      * @return
      */
-    public InformationFill findById(Object id);
+    public FileForm findById(Object id);
 
 
-    /**
-     * 通过权限id查询需要填写的资料信息
-     * @param roleId 权限id
-     * @return 集合
-     */
-    public List<InformationFill> findByRoleId(Long roleId);
     /**
      * find all model
      *
-     * @return all <InformationFill
+     * @return all <FileForm
      */
-    public List<InformationFill> findAll();
+    public List<FileForm> findAll();
 
 
     /**
@@ -46,7 +40,7 @@ public interface InformationFillService  {
      * @param model
      * @return
      */
-    public boolean delete(InformationFill model);
+    public boolean delete(FileForm model);
 
 
     /**
@@ -55,7 +49,7 @@ public interface InformationFillService  {
      * @param model
      * @return
      */
-    public boolean save(InformationFill model);
+    public boolean save(FileForm model);
 
 
     /**
@@ -64,7 +58,7 @@ public interface InformationFillService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(InformationFill model);
+    public boolean saveOrUpdate(FileForm model);
 
 
     /**
@@ -73,7 +67,7 @@ public interface InformationFillService  {
      * @param model
      * @return
      */
-    public boolean update(InformationFill model);
+    public boolean update(FileForm model);
 
 
     public void join(Page<? extends Model> page, String joinOnField);
@@ -91,5 +85,4 @@ public interface InformationFillService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
-
 }

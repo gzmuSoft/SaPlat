@@ -9,6 +9,9 @@
 
 #define content()
 <div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>项目评估</legend>
+    </fieldset>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -16,7 +19,7 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/project/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">评估详情</a>
     #end
 </script>
 #end
@@ -25,7 +28,7 @@
 <script type="text/javascript">
     layui.use(['table', 'layer'], function () {
         var table = layui.table;
-
+        var url = "#(url)";
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -43,7 +46,7 @@
                 , {field: 'remark', title: '备注', width: 100}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/assed'
+            , url: '#(ctxPath)/app/project/evaluationTable'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -58,12 +61,12 @@
         });
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
-                });
-            }
+            window.location.href = "#(ctxPath)/app/evaluation/evaluationInformation?id=" + data.id;
+            // if (obj.event === 'see') {
+            //     pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+            //     });
+            // }
         });
     });
-
 </script>
 #end

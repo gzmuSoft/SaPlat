@@ -10,31 +10,31 @@ public class UeditorConfig {
             "    \"imageCompressBorder\": 1600,\n" +
             "    \"imageInsertAlign\": \"none\",\n" +
             "    \"imageUrlPrefix\": \"\",\n" +
-            "    \"imagePathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"imagePathFormat\": \"/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "\n" +
             "    \"scrawlActionName\": \"uploadscrawl\",\n" +
             "    \"scrawlFieldName\": \"upfile\",\n" +
-            "    \"scrawlPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"scrawlPathFormat\": \"/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "    \"scrawlMaxSize\": 2048000,\n" +
             "    \"scrawlUrlPrefix\": \"\",\n" +
             "    \"scrawlInsertAlign\": \"none\",\n" +
             "\n" +
             "    \"snapscreenActionName\": \"uploadimage\",\n" +
-            "    \"snapscreenPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"snapscreenPathFormat\": \"/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "    \"snapscreenUrlPrefix\": \"\",\n" +
             "    \"snapscreenInsertAlign\": \"none\",\n" +
             "\n" +
             "    \"catcherLocalDomain\": [\"127.0.0.1\", \"localhost\", \"img.baidu.com\"],\n" +
             "    \"catcherActionName\": \"catchimage\",\n" +
             "    \"catcherFieldName\": \"source\",\n" +
-            "    \"catcherPathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"catcherPathFormat\": \"/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "    \"catcherUrlPrefix\": \"\",\n" +
             "    \"catcherMaxSize\": 2048000,\n" +
             "    \"catcherAllowFiles\": [\".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"],\n" +
             "\n" +
             "    \"videoActionName\": \"uploadvideo\",\n" +
             "    \"videoFieldName\": \"upfile\",\n" +
-            "    \"videoPathFormat\": \"/ueditor/jsp/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"videoPathFormat\": \"/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "    \"videoUrlPrefix\": \"\",\n" +
             "    \"videoMaxSize\": 102400000,\n" +
             "    \"videoAllowFiles\": [\n" +
@@ -43,7 +43,7 @@ public class UeditorConfig {
             "\n" +
             "    \"fileActionName\": \"uploadfile\",\n" +
             "    \"fileFieldName\": \"upfile\",\n" +
-            "    \"filePathFormat\": \"/ueditor/jsp/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
+            "    \"filePathFormat\": \"/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}\",\n" +
             "    \"fileUrlPrefix\": \"\",\n" +
             "    \"fileMaxSize\": 51200000,\n" +
             "    \"fileAllowFiles\": [\n" +
@@ -55,14 +55,14 @@ public class UeditorConfig {
             "    ],\n" +
             "\n" +
             "    \"imageManagerActionName\": \"listimage\",\n" +
-            "    \"imageManagerListPath\": \"/ueditor/jsp/upload/image/\",\n" +
+            "    \"imageManagerListPath\": \"/upload/image/\",\n" +
             "    \"imageManagerListSize\": 20,\n" +
             "    \"imageManagerUrlPrefix\": \"\",\n" +
             "    \"imageManagerInsertAlign\": \"none\",\n" +
             "    \"imageManagerAllowFiles\": [\".png\", \".jpg\", \".jpeg\", \".gif\", \".bmp\"],\n" +
             "\n" +
             "    \"fileManagerActionName\": \"listfile\",\n" +
-            "    \"fileManagerListPath\": \"/ueditor/jsp/upload/file/\",\n" +
+            "    \"fileManagerListPath\": \"/upload/file/\",\n" +
             "    \"fileManagerUrlPrefix\": \"\",\n" +
             "    \"fileManagerListSize\": 20,\n" +
             "    \"fileManagerAllowFiles\": [\n" +

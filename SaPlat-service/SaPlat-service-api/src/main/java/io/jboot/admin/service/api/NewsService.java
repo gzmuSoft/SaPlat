@@ -15,10 +15,20 @@ public interface NewsService  {
      * @return
      */
     public News findById(Object id);
-
-
-
+    /**
+     * find model by primary key
+     *
+     * @param model,pageNumber,pageSize
+     * @return Page
+     */
     public Page<News> findPage(News model, int pageNumber, int pageSize);
+    /**
+     * find model by primary key
+     *
+     * @param size
+     * @return
+     */
+    public Page<News> findReverses(int size);
     /**
      * find all model
      *

@@ -67,43 +67,32 @@
                 <div class="grid-demo" style="color: #fff;margin: 0 50px"><br>
                     <h3>Logo:#(APP.name)</h3><br></div>
             </div>
-            <div class="layui-col-xs6 layui-hide-xs" style="border-right: 1px solid #fff9ec">
-                <div class="grid-demo grid-demo-bg2" style="margin: 10px 50px"><br>
+            <div class="layui-col-xs7 layui-hide-xs" style="border-right: 1px solid #fff9ec">
+                <div class="layui-row grid-demo grid-demo-bg2" style="margin: 10px 20px">
                     <ul class="layui-timeline">
+                        #for(model : newsList)
                         <li class="layui-timeline-item">
                             <i class="layui-icon layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text">
-                                <div class="layui-timeline-title">2018年，测试资讯。</div>
+                            <div class="layui-timeline-title layui-row" onclick="nshow('#(model.id)')">
+                                <div class="layui-col-md9">
+                                    <div class="layui-timeline-title" style="padding-left: 20px">#(model.title)</div>
+                                </div>
+                                <div class="layui-col-md3">
+                                    <div class="layui-timeline-title" style="text-align: right">#(model.createTime)</div>
+                                </div>
                             </div>
                         </li>
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text">
-                                <div class="layui-timeline-title">2017年，测试资讯</div>
-                            </div>
-                        </li>
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text">
-                                <div class="layui-timeline-title">2016年，测试资讯</div>
-                            </div>
-                        </li>
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text">
-                                <div class="layui-timeline-title">2015年，项目孵化</div>
-                            </div>
-                        </li>
+                        #end
                         <li class="layui-timeline-item">
                             <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-content layui-text" id="newsList">
                                 <div class="layui-timeline-title">更久前，测试资讯</div>
                             </div>
                         </li>
                     </ul>
-                    <br></div>
+                </div>
             </div>
-            <div class="layui-col-xs6">
+            <div class="layui-col-xs5">
                 <div class="grid-demo grid-demo-bg3" style="margin: 0 10%;"><br>
                     <form  method="post" action="" id="form">
                         <div class="login-ic " style="width: 300px;">
@@ -175,13 +164,26 @@
 
             return false;
         });
+
         $(document).on('click', '#reg', function () {
             window.location.href = "/register";
         });
+        $(document).on('click', '#newsList', function () {
+            window.location.href = "/nlist";
+        });
+    });
 
-
-    })
-
+    function nshow(id) {
+        var url = "/nshow";
+        var form = $("<form method='post'></form>");
+        form.attr({"action":url});
+        var input = $("<input type='hidden'>");
+        input.attr({"name":"id"});
+        input.val(id);
+        form.append(input);
+        $("html").append(form);
+        form.submit();
+    }
 </script>
 </body>
 </html>

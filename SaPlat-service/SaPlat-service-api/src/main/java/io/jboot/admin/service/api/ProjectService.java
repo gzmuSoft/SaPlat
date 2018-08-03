@@ -18,14 +18,56 @@ public interface ProjectService  {
      */
     public Project findById(Object id);
 
+    /**
+     * find all model
+     * @param model 项目主体
+     * @return all <Project>
+     */
+    public List<Project> findAll(Project model);
 
     /**
-     * find model by primary key
+     * 根据列名和列值查询
+     * @param columnName 列名
+     * @param value 值
+     * @return 列表
+     */
+    public List<Project> findListByColumn(String columnName,Object value);
+
+    /**
+     * 根据列名和列值查询第一个
+     * @param columnName 列名
+     * @param value 值
+     * @return 第一个
+     */
+    public Project findFirstByColumn(String columnName,Object value);
+
+    /**
+     * 根据多个列名和多个列值查询第一个数据
+     * @param columnNames 列名
+     * @param values 值
+     * @return 第一个
+     */
+    public Project findFirstByColumns(String[] columnNames,String[] values);
+
+
+
+    /**
+     * 根据多个列名和多个列值查询
+     * @param columnNames 列名
+     * @param values 值
+     * @return 列表
+     */
+    public List<Project> findListByColumns(String[] columnNames,String[] values);
+
+
+    /**
+     * find List<Project> by ids and status
      *
-     * @param ids
+     * @param ids ids
+     * @param status
      * @return
      */
-    public List<Project> findByIds(List<Object> ids);
+    public List<Project> findByIds(List<Object> ids,String[] status);
 
 
     /**
@@ -37,11 +79,21 @@ public interface ProjectService  {
     boolean saveOrUpdate(Project model, AuthProject authProject);
 
     /**
+     * save Or Update Project And LeaderGroup
+     *
+     * @param model
+     * @param leaderGroup
+     * @return
+     */
+    boolean saveOrUpdate(Project model, LeaderGroup leaderGroup);
+
+    /**
      * find model by user and role and isEnable
      *
      * @param pageNumber
      * @param pageSize
-     * @return Project
+     * @param project
+     * @return project
      */
     public Page<Project> findPage(Project project, int pageNumber, int pageSize);
 
@@ -50,6 +102,7 @@ public interface ProjectService  {
      *
      * @param pageNumber
      * @param pageSize
+     * @param project
      * @return Project
      */
     public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize);
@@ -81,6 +134,13 @@ public interface ProjectService  {
      */
     public boolean save(Project model);
 
+    /**
+     * save model and authProject to database
+     *
+     * @param model,authProject
+     * @return
+     */
+    public Long saveProject(Project model);
 
     /**
      * save or update model

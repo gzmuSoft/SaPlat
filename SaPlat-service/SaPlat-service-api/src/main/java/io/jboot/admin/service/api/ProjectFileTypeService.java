@@ -17,12 +17,35 @@ public interface ProjectFileTypeService  {
     public ProjectFileType findById(Object id);
 
 
+
     /**
      * find all model
      *
      * @return all <ProjectFileType
      */
     public List<ProjectFileType> findAll();
+
+    /**
+     * 通过名字查找
+     * @param name 名字
+     * @return 文件类型
+     */
+    public ProjectFileType findByName(String name);
+
+    /**
+     * 通过父级id查找列表
+     * @param parentId 父级 id
+     * @return 列表
+     */
+    public List<ProjectFileType> findListByParentId(Long parentId);
+
+    /**
+     * find List by parentId
+     *
+     * @param parentId
+     * @return
+     */
+    public List<ProjectFileType> findByParentId(Long parentId);
 
 
     /**
@@ -69,6 +92,14 @@ public interface ProjectFileTypeService  {
      */
     public boolean update(ProjectFileType model);
 
+    /**
+     * 分页查询
+     * @param projectFileType 模型
+     * @param pageNumber 页数
+     * @param pageSize 大小
+     * @return 页
+     */
+    public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
@@ -85,4 +116,5 @@ public interface ProjectFileTypeService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }

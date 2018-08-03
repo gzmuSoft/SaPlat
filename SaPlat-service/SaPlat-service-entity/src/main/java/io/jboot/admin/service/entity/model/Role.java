@@ -23,5 +23,4 @@ public class Role extends BaseRole<Role> {
         else
             return ResStatus.UNUSED;
     }
-	
 }

@@ -1,0 +1,90 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['layer','form','table'], function () {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            util = layui.util,
+            table = layui.table;
+        var url = "#(url)DataTable";
+        console.log(url);
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {type:'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: '编号', width: 60}
+                , {field: 'name', title: '名称', width: 200}
+                , {field: 'remark', title: '其他信息', width: 200}
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)#(url)DataTable'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , where:{
+                id : "#(projectId)"
+            }
+            , done: function (res, curr, count) {
+                $('[data-field="id"]').css("display","none");
+            }
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            console.log(obj);
+            if (obj.event === 'edit') {
+                window.location.href = "#(ctxPath)#(url)?id=#(projectId)&expertID=" + data.expertID;
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除吗？', function(index){
+                    $.post("#(ctxPath)/app/information/expertAdviceDelete", {id:data.id}, function (e) {
+                        layer.close(index);
+                        layer.msg("删除成功！");
+                        table.reload('dateTable', {
+                            url: '#(ctxPath)#(url)DataTable'
+                        });
+                    });
+                });
+
+            }
+        });
+
+        $('#add').click(function () {
+           window.location.href = "#(ctxPath)#(url)?id=#(projectId)";
+        });
+    });
+</script>
+#end
+
+#define content()
+
+<div class="layui-row">
+    <div class="layui-btn-group">
+        <button id="add" class="layui-btn layui-btn-small">添加</button>
+    </div>
+</div>
+<table id="dateTable" lay-filter="dateTable"></table>
+
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+#end

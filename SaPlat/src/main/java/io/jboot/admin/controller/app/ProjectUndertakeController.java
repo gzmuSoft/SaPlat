@@ -49,8 +49,22 @@ public class ProjectUndertakeController extends BaseController {
     private OrgStructureService orgStructureService;
 
     @JbootrpcService
+    private LeaderGroupService leaderGroupService;
+
+    @JbootrpcService
+    private ExpertGroupService expertGroupService;
+
+    @JbootrpcService
+    private EvaSchemeService evaSchemeService;
+
+    @JbootrpcService
     private ImpTeamService impTeamService;
 
+    @JbootrpcService
+    InitialRiskExpertiseService initialRiskExpertiseService;
+
+    @JbootrpcService
+    private ScheduledPlanService scheduledPlanService;
     /**
      * 跳转榜单页面
      */
@@ -276,28 +290,26 @@ public class ProjectUndertakeController extends BaseController {
     }
 
     /**
-     * 实施小组建立初始页面(自评)
+     * 稳评方案初始页面
      */
-    public void toSelfProjectImpTeam() {
+    @NotNullPara("id")
+    public void toProjectImpTeam() {
+        Long id = getParaToLong("id");
         StringBuilder string = new StringBuilder();
-        User user = AuthUtils.getLoginUser();
-        List<Project> projects = projectService.findAll();
+        Project project = projectService.findById(id);//点击的当前项目
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<Project> selfProjects = new ArrayList<>();
         List<OrgStructure> orgStructures = new ArrayList<>();
-        //自评的所有项目
-        for (Project project : projects) {
-            if (project.getUserId().equals(user.getId()) && project.getAssessmentMode().equals("自评")) {
-                selfProjects.add(project);
-            }
-        }
         for (StructPersonLink structPersonLink : structPersonLinks) {
             string.append(structPersonLink.getStructID());
         }
         for (int i = 0; i < sub(string.toString()).length(); i++) {
             orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
-        setAttr("selfProjects", selfProjects).setAttr("orgStructures", orgStructures).render("selfProjectImpTeam.html");
+        if (leaderGroup == null){
+            leaderGroup = new LeaderGroup();
+        }
+        setAttr("leaderGroup", leaderGroup).setAttr("project", project).setAttr("orgStructures", orgStructures).render("projectImpTeam.html");
     }
 
     /**
@@ -306,56 +318,116 @@ public class ProjectUndertakeController extends BaseController {
     @Before(GET.class)
     public void persons() {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
+        List<ExpertGroup> expertGroups = new ArrayList<>();
         List<Person> persons = new ArrayList<>();
         for (StructPersonLink structPersonLink : structPersonLinks) {
             persons.add(personService.findById(structPersonLink.getPersonID()));
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
+        if(getParaToBoolean("flag")){
+            ExpertGroup expertGroupModel;
+            for (int i = 0; i < persons.size(); i++) {
+                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
+                if (expertGroupModel != null){
+                    expertGroups.add(expertGroupModel);
+                }
+            }
+            json.put("expertGroups",expertGroups);
+        }
         renderJson(json);
     }
 
-
     /**
-     * 实施小组建立初始页面(委评)
-     */
-    public void toOtherProjectImpTeam() {
-        StringBuilder string = new StringBuilder();
-        List<ProjectUndertake> projectUndertakes = projectUndertakeService.findAll();
-        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<ProjectUndertake> otherProjects = new ArrayList<>();
-        List<OrgStructure> orgStructures = new ArrayList<>();
-        //委评且同意介入或同意邀请的项目
-        for (ProjectUndertake projectUndertake : projectUndertakes) {
-            if (projectUndertake.getStatus() == 2) {//不管是邀请时服务机构同意还是申请时项目自身同意，这里只做一个判断即可
-                otherProjects.add(projectUndertake);
-            }
-        }
-        for (StructPersonLink structPersonLink : structPersonLinks) {
-            string.append(structPersonLink.getStructID());
-        }
-        for (int i = 0; i < sub(string.toString()).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
-        }
-        setAttr("otherProjects", otherProjects).setAttr("orgStructures", orgStructures).render("otherProjectImpTeam.html");
-    }
-
-    /**
-     * 实施小组提交资料
+     * 稳评方案提交资料
      */
     @Before(POST.class)
+    @NotNullPara("id")
     public void ImpTeam() {
         User loginUser = AuthUtils.getLoginUser();
+        Long id = getParaToLong("id");
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
+        impTeam.setProjectID(id);//当前项目id
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
         impTeam.setCreateUserID(loginUser.getId());
         impTeam.setLastUpdateUserID(loginUser.getId());
-        if (impTeamService.saveOrUpdate(impTeam)) {
-            renderJson(RestResult.buildSuccess("立项成功"));
-        } else {
-            renderJson(RestResult.buildError("立项失败"));
-            throw new BusinessException("立项失败");
+        if (!impTeamService.save(impTeam)){
+            renderJson(RestResult.buildError("保存失败"));
+        }
+
+        EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");//评估方案
+        evaScheme.setProjectID(id);//当前项目id
+        evaScheme.setCreateTime(new Date());
+        evaScheme.setLastAccessTime(new Date());
+        evaScheme.setCreateUserID(loginUser.getId());
+        evaScheme.setLastUpdateUserID(loginUser.getId());
+        evaScheme.setStatus("1");
+        if (!evaSchemeService.save(evaScheme)){
+            renderJson(RestResult.buildError("保存失败"));
+        }else{
+            evaScheme = evaSchemeService.findByProjectID(id);
+        }
+
+        ScheduledPlan scheduledPlan;//进度计划 (多个)
+        String[] sName = getParaValues("ScheduledPlan.name");
+        String[] sStartDate = getParaValues("ScheduledPlan.startDate");
+        String[] sEndDate = getParaValues("ScheduledPlan.endDate");
+        String[] sContent = getParaValues("ScheduledPlan.content");
+
+        for (int i = 0; i<sName.length; i++) {
+            scheduledPlan = new ScheduledPlan();
+            scheduledPlan.setEvaSchemeID(evaScheme.getId());//评估方案编号
+            scheduledPlan.setName(sName[i]);
+            scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));//起始时间
+            scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));//结束时间
+            scheduledPlan.setContent(sContent[i]);//工作内容
+            scheduledPlan.setCreateTime(new Date());
+            scheduledPlan.setLastAccessTime(new Date());
+            scheduledPlan.setCreateUserID(loginUser.getId());
+            scheduledPlan.setLastUpdateUserID(loginUser.getId());
+
+            if (!scheduledPlanService.save(scheduledPlan)){
+                renderJson(RestResult.buildError("保存失败"));
+            }
+        }
+
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 临时-项目风险因素影响程度及概率
+     */
+    public void toInitialRiskExpertise() {
+        render("initialRiskExpertise.html");
+    }
+
+    /**
+     * 项目风险因素影响程度及概率数据提交
+     */
+    @Before(POST.class)
+    public void initialRiskExpertise() {
+        User user = AuthUtils.getLoginUser();
+        InitialRiskExpertise model = new InitialRiskExpertise();
+        model.setProjectID(28L);
+        model.setExpertID(7L);
+        model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
+        model.setRiskExpertise(getParaToInt("riskExpertise"));
+        if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
+            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
+            model.setRiskProbability((float) getParaToLong("riskProbability"));
+            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
+        }
+        model.setRiskFactor(getPara("riskFactor"));
+        model.setCreateUserID(user.getId());
+        model.setCreateTime(new Date());
+        model.setLastAccessTime(new Date());
+        model.setLastUpdateUserID(user.getId());
+        model.setStatus(3);
+        model.setIsEnable(1);
+        if (!initialRiskExpertiseService.save(model)) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
         }
     }
 }

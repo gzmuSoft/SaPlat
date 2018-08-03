@@ -33,10 +33,14 @@ public class ProjectStatus extends BaseStatus {
      */
     public final static String REVIEW = "4";
     /**
-     * 评估完成
+     * 审查中
      */
     public final static String REVIEWED = "5";
 
+    /**
+     * 立项中
+     */
+    public final static String BUILDING = "6";
 
     public ProjectStatus() {
         add(CANCEL_VERIFY, "取消审核");
@@ -44,7 +48,8 @@ public class ProjectStatus extends BaseStatus {
         add(IS_VERIFY, "审核成功");
         add(VERIFIING, "审核中");
         add(REVIEW, "评估中");
-        add(REVIEWED, "评估完成");
+        add(REVIEWED, "审查中");
+        add(BUILDING, "立项中");
     }
 
     private static ProjectStatus me;

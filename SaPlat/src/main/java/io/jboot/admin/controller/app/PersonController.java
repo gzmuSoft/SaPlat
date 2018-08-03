@@ -2,7 +2,6 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -155,7 +154,7 @@ public class PersonController extends BaseController {
      * 注册页面
      */
     public void register() {
-        render("register.html");
+        render("template/register.html");
     }
 
     /**

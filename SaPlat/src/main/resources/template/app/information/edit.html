@@ -41,9 +41,9 @@
             ul = $('<ul class="layui-timeline"></ul>');
             data.forEach(function(ele) {
                 var li = $('<li class="layui-timeline-item"></li>');
-                var i = $('<i class="layui-icon layui-timeline-axis" data-htmlName="' + ele.htmlName + '">&#xe63f;</i>');
+                var i = $('<i class="layui-icon layui-timeline-axis" data-htmlName="' + ele.url + '">&#xe63f;</i>');
                 var lt = $('<div class="layui-timeline-content layui-text"></div>');
-                var h = $('<p class="layui-timeline-title htmlName" data-htmlName="' + ele.htmlName + '">' + ele.name + '</p>');
+                var h = $('<p class="layui-timeline-title htmlName" data-htmlName="' + ele.url + '">' + ele.name + '</p>');
                 h.appendTo(lt);
                 li.append(i).append(lt);
                 ul.append(li);
@@ -51,8 +51,7 @@
         });
 
         $(document).on('click','.htmlName',function(e){
-            var s = "#(ctxPath)/app/information/" + $(this).attr("data-htmlName") + "?id=#(projectId)";
-            $('#content').css("display","").prop("src",s);
+            $('#content').prop("src","#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")));
         });
 
         util.fixbar({
@@ -100,6 +99,6 @@
 #end
 
 #define content()
-<iframe style="display: none;" id="content">
+<iframe style="display: none" id="content" src="">
 </iframe>
 #end

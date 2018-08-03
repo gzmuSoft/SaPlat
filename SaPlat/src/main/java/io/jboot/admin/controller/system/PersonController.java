@@ -11,6 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.status.system.PersonStatus;
+import io.jboot.admin.validator.app.ProjectFileTypeValidator;
 import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
