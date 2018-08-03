@@ -1,0 +1,136 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {checkbox: false, sort: true, fixed: true, space: true}
+                , {field: 'id', title: 'ID', width: 60}
+                , {field: 'name', title: '架构名称', width: 150}
+                , {field: 'spell', title: '名称全拼', width: 100}
+                , {field: 'orgType', title: '组织类型', width: 150}
+                , {field: 'orgID', title: '机构代码', width: 100}
+                , {field: 'parentID', title: '上级架构ID', width: 100}
+                , {field: 'createUserID', title: '创建用户ID', width: 100}
+                , {field: 'createTime', title: '创建时间', width: 160}
+                , {field: 'lastAccessTime', title: '最后访问时间', width: 160}
+                , {field: 'remark', title: '备注', width: 100}
+                , {fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#barOption'}
+
+            ]]
+            , url: '#(ctxPath)/app/OrgStructure/tableData?orgName=#(orgName)'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+        table.on('tool(dateTable)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'addPerson') {
+                pop_show('添加架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id, '', '', function () {
+                });
+            }else if(obj.event === 'update'){
+                pop_show('修改架构信息', '#(ctxPath)/app/OrgStructure/updateStructure?id=' + data.id, '', '', function () {
+                    reloadTable($('#name').val());
+                });
+            }else if(obj.event === 'addStructure'){
+                pop_show('添加子架构','#(ctxPath)/app/OrgStructure/addStructure?orgName=#(orgName)&parentID=' + data.id, '','',function () {
+                    reloadTable($('#name').val());
+                });
+            }else if (obj.event === 'showPerson') {
+                pop_show('查看架构成员', '#(ctxPath)/app/OrgStructure/showPerson?structureID=' + data.id, '', '', function () {
+                });
+            }
+        });
+        //添加架构
+        $("#add").click(function(){
+            pop_show('添加根架构','#(ctxPath)/app/OrgStructure/addStructure?orgName=#(orgName)','','', function(){
+                reloadTable($('#name').val());
+            });
+        });
+        reloadTable = function (name) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/OrgStructure/tableData?orgName=#(orgName)'
+                ,where: {name: name} //设定异步数据接口的额外参数
+            });
+        }
+
+        form.on('submit(search)', function(data){
+            reloadTable(data.field.name);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="" >
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">组织名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="组织名称" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            #shiroHasPermission('/app/OrgStructure/addPerson')
+            <button id="add" class="layui-btn layui-btn-small">添加架构</button>
+            #end
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/OrgStructure/addPerson')
+    <a class="layui-btn layui-btn-xs" lay-event="addPerson">添加人员</a>
+    #end
+
+    #shiroHasPermission('/app/OrgStructure/updateStructure')
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="update">修改</a>
+    #end
+
+    #shiroHasPermission('/app/OrgStructure/addStructure')
+    <a class="layui-btn layui-btn-xs" lay-event="addStructure">添加子架构</a>
+    #end
+
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="showPerson">成员</a>
+
+</script>
+#end

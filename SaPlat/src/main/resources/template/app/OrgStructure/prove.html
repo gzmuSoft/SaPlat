@@ -1,0 +1,43 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+            var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        //按钮点击事件
+        form.on('submit(sub)', function (data) {
+            var v = data.elem.value;
+            window.location.href = '#(ctxPath)/app/OrgStructure/management?orgName=' + v;
+            return false;
+        });
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>组织架构管理</legend>
+        <div>
+            <form action="" method="">
+                #for(list : nameList)
+                <button class="layui-btn layui-btn-lg layui-btn-normal layui-btn-radius" lay-submit lay-filter="sub" value="#(list)">#(list)</button>
+                #end
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+#end
