@@ -21,6 +21,7 @@ import java.util.List;
 @JbootrpcService
 public class QuestionnaireContentServiceImpl extends JbootServiceBase<QuestionnaireContent> implements QuestionnaireContentService {
     /**
+     * 改需求后废弃的方法 。。。
      * 分页查询系统信息
      * @param ids ids
      * @return 页
@@ -49,7 +50,7 @@ public class QuestionnaireContentServiceImpl extends JbootServiceBase<Questionna
     public QuestionnaireContent findByModel(QuestionnaireContent model){
         if (model == null)
             return null;
-        List<QuestionnaireContent> list = DAO.findListByColumn("remark",model.getRemark());
+        List<QuestionnaireContent> list = DAO.findListByColumn("content",model.getContent());
         if (list.size() != 0){
             return list.get(0);
         }else
