@@ -140,9 +140,6 @@
         //监听提交
         form.on('submit(demo1)', function (data) {
             data.field['project.brief'] = layedit.getContent(briefIndex);
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            })
             util.sendAjax ({
                 type: 'POST',
                 url: '#(ctxPath)/app/questionnaire/add'+jointString(),
