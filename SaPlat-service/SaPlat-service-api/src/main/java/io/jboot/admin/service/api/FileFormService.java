@@ -2,11 +2,11 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.ProjectFileType;
+import io.jboot.admin.service.entity.model.FileForm;
 
 import java.util.List;
 
-public interface ProjectFileTypeService  {
+public interface FileFormService  {
 
     /**
      * find model by primary key
@@ -14,31 +14,15 @@ public interface ProjectFileTypeService  {
      * @param id
      * @return
      */
-    public ProjectFileType findById(Object id);
+    public FileForm findById(Object id);
 
-
-    /**
-     * find List by primary key
-     *
-     * @param parentId
-     * @return
-     */
-    public List<ProjectFileType> findByParentId(Long parentId);
 
     /**
      * find all model
      *
-     * @return all <ProjectFileType
+     * @return all <FileForm
      */
-    public List<ProjectFileType> findAll();
-
-    /**
-     * find List by parentId
-     *
-     * @param parentId
-     * @return
-     */
-    public List<ProjectFileType> findByParentId(Long parentId);
+    public List<FileForm> findAll();
 
 
     /**
@@ -56,7 +40,7 @@ public interface ProjectFileTypeService  {
      * @param model
      * @return
      */
-    public boolean delete(ProjectFileType model);
+    public boolean delete(FileForm model);
 
 
     /**
@@ -65,7 +49,7 @@ public interface ProjectFileTypeService  {
      * @param model
      * @return
      */
-    public boolean save(ProjectFileType model);
+    public boolean save(FileForm model);
 
 
     /**
@@ -74,7 +58,7 @@ public interface ProjectFileTypeService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(ProjectFileType model);
+    public boolean saveOrUpdate(FileForm model);
 
 
     /**
@@ -83,9 +67,8 @@ public interface ProjectFileTypeService  {
      * @param model
      * @return
      */
-    public boolean update(ProjectFileType model);
+    public boolean update(FileForm model);
 
-    public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

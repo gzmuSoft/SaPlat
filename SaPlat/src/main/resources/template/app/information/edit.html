@@ -3,7 +3,7 @@
 
 #define css()
 <style>
-    html, body {
+    html,body{
         height: 98%;
         width: 98%;
     }
@@ -16,7 +16,7 @@
         color: red;
     }
 
-    #list {
+    #list{
         padding: 10px;
     }
 
@@ -34,12 +34,12 @@
     layui.use('layer', function () {
         var layer = layui.layer,
             $ = layui.jquery,
-            util = layui.util,
-            ul;
-        $.get("#(ctxPath)/app/information/editData", {id: "#(projectId)"}, function (res) {
+            util = layui.util;
+        var ul;
+        $.get("#(ctxPath)/app/information/editData", {id:"#(projectId)"}, function(res) {
             var data = res.list;
             ul = $('<ul class="layui-timeline"></ul>');
-            data.forEach(function (ele) {
+            data.forEach(function(ele) {
                 var li = $('<li class="layui-timeline-item"></li>');
                 var i = $('<i class="layui-icon layui-timeline-axis" data-htmlName="' + ele.htmlName + '">&#xe63f;</i>');
                 var lt = $('<div class="layui-timeline-content layui-text"></div>');
@@ -50,16 +50,16 @@
             });
         });
 
-        $(document).on('click', '.htmlName', function (e) {
+        $(document).on('click','.htmlName',function(e){
             var s = "#(ctxPath)/app/information/" + $(this).attr("data-htmlName") + "?id=#(projectId)";
-            $('#content').css("display", "").prop("src", s);
+            $('#content').css("display","").prop("src",s);
         });
 
         util.fixbar({
             bar1: "&#xe60a;",
             bar2: "&#xe604;",
-            click: function (type) {
-                if (type === 'bar1') {
+            click: function(type) {
+                if(type === 'bar1') {
                     layer.open({
                         title: '资料查看',
                         id: 'list',
@@ -73,7 +73,7 @@
                         resize: false,
                         area: ['20%', '100%']
                     });
-                } else if (type === 'bar2') {
+                } else if(type === 'bar2') {
                     layer.msg("回到顶部");
                 }
             }
@@ -82,16 +82,16 @@
         $(function (e) {
             // $('li[type="bar1"]').prop("id","bar1");
             // $('li[type="bar2"]').prop("id","bar2");
-            // layer.tips("点击这里查看资料哦","#bar1");
-            layer.tips("点击这里查看资料哦", 'li[lay-type="bar1"]', {
-                tipsMore: true,
-                time: 3000
-            });
-            // layer.tips("点击这里回到顶部哈","#bar2");
-            layer.tips("点击这里回到顶部哈", 'li[lay-type="bar2"]', {
-                tipsMore: true,
-                time: 3000
-            });
+           // layer.tips("点击这里查看资料哦","#bar1");
+           layer.tips("点击这里查看资料哦",'li[lay-type="bar1"]',{
+               tipsMore: true,
+               time:3000
+           });
+           // layer.tips("点击这里回到顶部哈","#bar2");
+           layer.tips("点击这里回到顶部哈",'li[lay-type="bar2"]',{
+               tipsMore: true,
+               time:3000
+           });
         });
 
 

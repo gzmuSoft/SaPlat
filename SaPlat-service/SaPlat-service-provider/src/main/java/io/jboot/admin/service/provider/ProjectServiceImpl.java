@@ -9,11 +9,13 @@ import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,24 +31,60 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public List<Project> findAll(Project model) {
         Columns columns = Columns.create();
-        if (StrKit.notNull(model.getIsEnable())) {
+        if (StrKit.notNull(model.getIsEnable())){
             columns.eq("isEnable", model.getIsEnable());
         }
-        if (model.getUserId() != null) {
-            columns.eq("userId", model.getUserId());
+        if (model.getUserId() != null){
+            columns.eq("userId",model.getUserId());
         }
-        if (model.getId() != null) {
-            columns.eq("id", model.getId());
+        if (model.getId() != null){
+            columns.eq("id",model.getId());
         }
         return DAO.findListByColumns(columns);
     }
 
     @Override
-    public List<Project> findByIds(List<Object> ids) {
+    public List<Project> findListByColumn(String columnName, Object value) {
+        return DAO.findListByColumn(Column.create(columnName,value));
+    }
+
+    @Override
+    public Project findFirstByColumn(String columnName, Object value) {
+        return DAO.findFirstByColumn(Column.create(columnName,value));
+    }
+
+    @Override
+    public Project findFirstByColumns(String[] columnNames, String[] values) {
+        Columns columns = Columns.create();
+        if (columnNames.length != values.length){
+            return null;
+        }
+        for (int i = 0; i < columnNames.length; i++) {
+            columns.eq(columnNames[i],values[i]);
+        }
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<Project> findListByColumns(String[] columnNames, String[] values) {
+        Columns columns = Columns.create();
+        if (columnNames.length != values.length){
+            return null;
+        }
+
+        for (int i = 0; i < columnNames.length; i++) {
+            columns.eq(columnNames[i],values[i]);
+        }
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public List<Project> findByIds(List<Object> ids,String[] status) {
+        List<String> statusList = Arrays.asList(status);
         List<Project> projects = Collections.synchronizedList(new ArrayList<Project>());
         for (Object id : ids) {
             Project byId = findById(id);
-            if (byId != null && byId.getIsEnable() && byId.getStatus().equals("2")) {
+            if (byId != null && byId.getIsEnable() && statusList.contains(byId.getStatus())) {
                 projects.add(byId);
             }
         }

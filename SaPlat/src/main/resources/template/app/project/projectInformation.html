@@ -127,7 +127,7 @@
     var current_fs, next_fs;
     var left, opacity, scale;
     var animating;
-    var projectId = -1;
+    var projectId = -1, judgeFile = false;
     layui.use(['layedit', 'table'], function () {
         /**
          * 操作对象
@@ -182,8 +182,11 @@
          */
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
+            var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
             if (obj.event === 'edit') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
+                    $(btn).addClass("layui-disabled").removeClass("layui-btn-danger").addClass("layui-btn-normal")
+                        .removeAttr("lay-event").text("已上传");
                 });
             }
         });
@@ -229,97 +232,136 @@
             });
         });
 
+        /**
+         * 页面1判空
+         */
+        function notNull() {
+            var valueArray = [];
+            $(".project").each(function (key) {
+                valueArray[key] = $(this).val();
+                if (valueArray[key] == null || valueArray[key] == '')
+                    return false;
+            });
+            if (layedit.getText(index) == null || layedit.getText(index) == '')
+                return false;
+            return true;
+        }
+
+        /**
+         * 页面2判空
+         */
+        function notNull_2() {
+            var valueArray = [];
+            $(".leaderGroup").each(function (key) {
+                valueArray[key] = $(this).val();
+                if (valueArray[key] == null || valueArray[key] == '')
+                    return false;
+            });
+            if ($("#crew").val() == null || $("#crew").val() == '')
+                return false;
+            return true;
+        }
 
         /**
          * 下一步按钮事件
          */
         $('.next').click(function () {
+            var not = true;
             if (this.id === "nextPage1") {
-                var string = "?", valueArray = [], nameArray = [];
-                if (maxPage < 2) maxPage = 2 , saveOrUpdate = 1;
-                presentPage = 2;
-                string += "saveOrUpdate=" + saveOrUpdate + "&";
-                $(".project").each(function (key) {
-                    nameArray[key] = $(this).attr('name');
-                    valueArray[key] = $(this).val();
-                    string += nameArray[key] + "=" + valueArray[key] + "&";
-                });
-                string += "project.brief=" + layedit.getContent(index);
-                console.log(string);
-                if (saveOrUpdate === 1) {
-                    $.getJSON(
-                        "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,
-                        function (data) {
-                            projectId = data.projectId;
-                            console.log(data.projectId);
-                        });
-                } else if (saveOrUpdate === 0) {
-                    $.get("#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId);
+                if (notNull()) {
+                    not = true;
+                    var string = "?", valueArray = [], nameArray = [];
+                    if (maxPage < 2) maxPage = 2 , saveOrUpdate = 1;
+                    presentPage = 2;
+                    string += "saveOrUpdate=" + saveOrUpdate + "&";
+                    $(".project").each(function (key) {
+                        nameArray[key] = $(this).attr('name');
+                        valueArray[key] = $(this).val();
+                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                    });
+                    string += "project.brief=" + layedit.getContent(index);
+                    if (saveOrUpdate === 1) {
+                        $.getJSON(
+                            "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,
+                            function (data) {
+                                projectId = data.projectId;
+                            });
+                    } else if (saveOrUpdate === 0) {
+                        $.get("#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId + '&judgeFile=' + false);
+                    }
+                } else {
+                    not = false;
+                    layer.msg("数据不能为空！");
                 }
-
             } else if (this.id === "nextPage2") {
-                var string = "?", valueArray = [], nameArray = [];
-                if (maxPage < 3) maxPage = 3, saveOrUpdate = 1;
-                presentPage = 3;
-                string += "saveOrUpdate=" + saveOrUpdate + "&";
-                $(".leaderGroup").each(function (key) {
-                    nameArray[key] = $(this).attr('name');
-                    valueArray[key] = $(this).val();
-                    string += nameArray[key] + "=" + valueArray[key] + "&";
-                });
-                string += "leaderGroup.crew=" + $("#crew").val();
-                console.log(string);
-                $.get("#(ctxPath)/app/project/leaderGroupUploading" + string + '&projectId=' + projectId);
+                if (notNull_2()) {
+                    not = true;
+                    var string = "?", valueArray = [], nameArray = [];
+                    if (maxPage < 3) maxPage = 3, saveOrUpdate = 1;
+                    presentPage = 3;
+                    string += "saveOrUpdate=" + saveOrUpdate + "&";
+                    $(".leaderGroup").each(function (key) {
+                        nameArray[key] = $(this).attr('name');
+                        valueArray[key] = $(this).val();
+                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                    });
+                    string += "leaderGroup.crew=" + $("#crew").val();
+                    $.get("#(ctxPath)/app/project/leaderGroupUploading" + string + '&projectId=' + projectId);
+                }
+                else {
+                    not = false;
+                    layer.msg("数据不能为空！");
+                }
             } else if (this.id === "nextPage3") {
                 var string = "?", valueArray = [], nameArray = [];
                 if (maxPage < 4) maxPage = 4 , saveOrUpdate = 1;
                 presentPage = 4;
-                string += "saveOrUpdate=" + saveOrUpdate + "&";
+                $.getJSON("#(ctxPath)/app/project/judgeFile?projectId=" + projectId,
+                    function (data) {
+                        judgeFile = data.judgeFile;
+                        if (judgeFile === true) {
+                            alert("您的所有文件都已上传完毕，点击确定继续…")
+                        } else if (judgeFile === false) {
+                            alert("您还有部分文件未上传，之后您可以前往“立项中的项目”进行完善，点击确定继续…")
+                        }
+                    });
+            }
+            if (not) {
+                if (animating)
+                    return false;
+                animating = true;
+                current_fs = $(this).parent();
+                next_fs = $(this).parent().next();
+                $('#progressbar').find('li').eq($('fieldset').index(next_fs)).addClass('active');
+                next_fs.show();
+                current_fs.animate({opacity: 0}, {
+                    step: function (now, mx) {
+                        scale = 1 - (1 - now) * 0.2;
+                        left = now * 50 + '%';
+                        opacity = 1 - now;
+                        current_fs.css({'transform': 'scale(' + scale + ')'});
+                        next_fs.css({
+                            'left': left,
+                            'opacity': opacity
+                        });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        animating = false;
+                    },
+                    easing: 'easeInOutBack'
+                });
             }
 
-            if (animating)
-                return false;
-            animating = true;
-            current_fs = $(this).parent();
-            next_fs = $(this).parent().next();
-            $('#progressbar').find('li').eq($('fieldset').index(next_fs)).addClass('active');
-            next_fs.show();
-            current_fs.animate({opacity: 0}, {
-                step: function (now, mx) {
-                    scale = 1 - (1 - now) * 0.2;
-                    left = now * 50 + '%';
-                    opacity = 1 - now;
-                    current_fs.css({'transform': 'scale(' + scale + ')'});
-                    next_fs.css({
-                        'left': left,
-                        'opacity': opacity
-                    });
-                },
-                duration: 800,
-                complete: function () {
-                    current_fs.hide();
-                    animating = false;
-                },
-                easing: 'easeInOutBack'
-            });
         });
 
         /**
-         * 自评按钮事件
+         * 自评、委评按钮事件
          */
-        $('#selfAssessment').click(function () {
-            console.log($(this).attr('name') + ":" + $(this).val())
-            window.location.href = "#(ctxPath)/app/project/projectUploading?" + $(this).attr('name') + "=" + $(this).val();
+        $('.submit').click(function () {
+            window.location.href = "#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile;
         });
-
-        /**
-         * 委评按钮事件
-         */
-        $('#othersAssessment').click(function () {
-            console.log($(this).attr('name') + ":" + $(this).val())
-            window.location.href = "#(ctxPath)/app/project/projectUploading?" + $(this).attr('name') + "=" + $(this).val();
-        });
-
     });
 
 </script>

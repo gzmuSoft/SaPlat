@@ -89,7 +89,7 @@ public class ProjectController extends BaseController {
     public void fileUploading() {
         Long id = getParaToLong("id");
         ProjectFileType model = projectFileTypeService.findById(id);
-        setAttr("projectId",getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
+        setAttr("projectId", getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
     }
 
     /**
@@ -118,6 +118,29 @@ public class ProjectController extends BaseController {
                 throw new BusinessException("项目资料上传失败");
             }
         } else if (saveOrUpdate == 0) {
+            if (getParaToBoolean("judgeFile")) {
+                AuthProject authProject = new AuthProject();
+                authProject.setUserId(loginUser.getId());
+                authProject.setRoleId(roleService.findByName(projectService.findById(getParaToLong("projectId")).getRoleName()).getId());
+                authProject.setProjectId(getParaToLong("projectId"));
+                authProject.setLastUpdTime(new Date());
+                authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+                authProject.setName(loginUser.getName());
+                authProject.setLastUpdUser(loginUser.getName());
+                if (project.getAssessmentMode().equals("自评")) {
+                    authProject.setStatus(ProjectStatus.IS_VERIFY);
+                    project.setStatus(ProjectStatus.IS_VERIFY);
+                } else if (project.getAssessmentMode().equals("委评")) {
+                    authProject.setStatus(ProjectStatus.VERIFIING);
+                    project.setStatus(ProjectStatus.VERIFIING);
+                }
+                if (authProjectService.save(authProject)) {
+                    renderJson(RestResult.buildSuccess("项目状态表上传成功"));
+                } else {
+                    renderJson(RestResult.buildError("项目状态表上传失败"));
+                    throw new BusinessException("项目状态表上传失败");
+                }
+            }
             if (getParaToLong("projectId") != -1) {
                 project.setId(getParaToLong("projectId"));
             }
@@ -468,14 +491,14 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-评估中
      */
-    public void toAssing() {
-        render("assing.html");
+    public void evaluation() {
+        render("evaluation.html");
     }
 
     /**
      * 项目管理界面-评估中-表格渲染
      */
-    public void assing() {
+    public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -490,15 +513,15 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-已评估
      */
-    public void toAssed() {
-        render("assed.html");
+    public void review() {
+        render("review.html");
 
     }
 
     /**
      * 项目管理界面-评估完成-表格渲染
      */
-    public void assed() {
+    public void reviewTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);

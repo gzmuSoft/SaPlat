@@ -16,13 +16,13 @@ import java.util.List;
 @JbootrpcService
 public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType> implements ProjectFileTypeService {
     @Override
-    public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize){
+    public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (projectFileType.getName() != null) {
             columns.like("name", "%" + projectFileType.getName() + "%");
         }
-        if(projectFileType.getParentID()!=null){
-            columns.eq("parentID",projectFileType.getParentID());
+        if (projectFileType.getParentID() != null) {
+            columns.eq("parentID", projectFileType.getParentID());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
     }
