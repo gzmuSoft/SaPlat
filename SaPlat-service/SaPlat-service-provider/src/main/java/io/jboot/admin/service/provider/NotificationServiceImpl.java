@@ -28,20 +28,20 @@ public class NotificationServiceImpl extends JbootServiceBase<Notification> impl
         if (StrKit.notBlank(notification.getContent())) {
             columns.like("content", "%" + notification.getContent() + "%");
         }
-        if (notification.getReceiverID() != null){
-            columns.eq("receiverID",notification.getReceiverID());
+        if (notification.getReceiverID() != null) {
+            columns.eq("receiverID", notification.getReceiverID());
         }
-        if (notification.getStatus() != null){
-            columns.eq("status",notification.getStatus());
+        if (notification.getStatus() != null) {
+            columns.eq("status", notification.getStatus());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "status asc");
     }
 
     @Override
-    public boolean findMessageByUserID(Object id){
-        List<Notification> list = DAO.findListByColumn("receiverID",id);
-        for (int i = 0; i < list.size(); i++ ) {
-            if (list.get(i).getStatus() == 0){
+    public boolean findMessageByUserID(Object id) {
+        List<Notification> list = DAO.findListByColumn("receiverID", id);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() == 0) {
                 return true;
             }
         }
@@ -49,12 +49,12 @@ public class NotificationServiceImpl extends JbootServiceBase<Notification> impl
     }
 
     @Override
-    public boolean haveReadAll(Object id){
-        List<Notification> list = DAO.findListByColumn("receiverID",id);
-        for (int i = 0; i < list.size(); i++ ) {
-            if (list.get(i).getStatus() != 1){
+    public boolean haveReadAll(Object id) {
+        List<Notification> list = DAO.findListByColumn("receiverID", id);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus() != 1) {
                 list.get(i).setStatus(1);
-                if(!update(list.get(i))){
+                if (!update(list.get(i))) {
                     return false;
                 }
             }

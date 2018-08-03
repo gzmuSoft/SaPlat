@@ -25,42 +25,43 @@ import java.util.List;
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
     /**
      * find all model
+     *
      * @param model 项目主体
      * @return all <Project>
      */
     @Override
     public List<Project> findAll(Project model) {
         Columns columns = Columns.create();
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
-        if (model.getUserId() != null){
-            columns.eq("userId",model.getUserId());
+        if (model.getUserId() != null) {
+            columns.eq("userId", model.getUserId());
         }
-        if (model.getId() != null){
-            columns.eq("id",model.getId());
+        if (model.getId() != null) {
+            columns.eq("id", model.getId());
         }
         return DAO.findListByColumns(columns);
     }
 
     @Override
     public List<Project> findListByColumn(String columnName, Object value) {
-        return DAO.findListByColumn(Column.create(columnName,value));
+        return DAO.findListByColumn(Column.create(columnName, value));
     }
 
     @Override
     public Project findFirstByColumn(String columnName, Object value) {
-        return DAO.findFirstByColumn(Column.create(columnName,value));
+        return DAO.findFirstByColumn(Column.create(columnName, value));
     }
 
     @Override
     public Project findFirstByColumns(String[] columnNames, String[] values) {
         Columns columns = Columns.create();
-        if (columnNames.length != values.length){
+        if (columnNames.length != values.length) {
             return null;
         }
         for (int i = 0; i < columnNames.length; i++) {
-            columns.eq(columnNames[i],values[i]);
+            columns.eq(columnNames[i], values[i]);
         }
         return DAO.findFirstByColumns(columns);
     }
@@ -68,18 +69,18 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public List<Project> findListByColumns(String[] columnNames, String[] values) {
         Columns columns = Columns.create();
-        if (columnNames.length != values.length){
+        if (columnNames.length != values.length) {
             return null;
         }
 
         for (int i = 0; i < columnNames.length; i++) {
-            columns.eq(columnNames[i],values[i]);
+            columns.eq(columnNames[i], values[i]);
         }
         return DAO.findListByColumns(columns);
     }
 
     @Override
-    public List<Project> findByIds(List<Object> ids,String[] status) {
+    public List<Project> findByIds(List<Object> ids, String[] status) {
         List<String> statusList = Arrays.asList(status);
         List<Project> projects = Collections.synchronizedList(new ArrayList<Project>());
         for (Object id : ids) {

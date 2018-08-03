@@ -9,7 +9,7 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['layer','form','table'], function () {
+    layui.use(['layer', 'form', 'table'], function () {
         var layer = layui.layer,
             $ = layui.jquery,
             util = layui.util,
@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: '编号', width: 60}
                 , {field: 'name', title: '名称', width: 200}
                 , {field: 'remark', title: '其他信息', width: 200}
@@ -39,11 +39,11 @@
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30
             , loading: true
-            , where:{
-                id : "#(projectId)"
+            , where: {
+                id: "#(projectId)"
             }
             , done: function (res, curr, count) {
-                $('[data-field="id"]').css("display","none");
+                $('[data-field="id"]').css("display", "none");
             }
         });
 
@@ -53,8 +53,8 @@
             if (obj.event === 'edit') {
                 window.location.href = "#(ctxPath)#(url)?id=#(projectId)&expertID=" + data.expertID;
             } else if (obj.event === 'delete') {
-                layer.confirm('确定删除吗？', function(index){
-                    $.post("#(ctxPath)/app/information/expertAdviceDelete", {id:data.id}, function (e) {
+                layer.confirm('确定删除吗？', function (index) {
+                    $.post("#(ctxPath)/app/information/expertAdviceDelete", {id: data.id}, function (e) {
                         layer.close(index);
                         layer.msg("删除成功！");
                         table.reload('dateTable', {
@@ -67,7 +67,7 @@
         });
 
         $('#add').click(function () {
-           window.location.href = "#(ctxPath)#(url)?id=#(projectId)";
+            window.location.href = "#(ctxPath)#(url)?id=#(projectId)";
         });
     });
 </script>

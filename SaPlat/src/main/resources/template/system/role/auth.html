@@ -14,7 +14,7 @@
     var setting = {
         check: {
             enable: true,
-            chkboxType: { "Y": "ps", "N": "s" }
+            chkboxType: {"Y": "ps", "N": "s"}
         },
         data: {
             simpleData: {
@@ -35,25 +35,29 @@
         var selectNodes = zTree.getCheckedNodes(true);
 
         var ids = "";
-        for (var i=0; i < selectNodes.length; i++) {
+        for (var i = 0; i < selectNodes.length; i++) {
             ids += selectNodes[i].id + ",";
         }
         $("#resIds").val(ids);
     }
 
     function zTreeReload() {
-        util.sendAjax ({
-            url : '#(ctxPath)/system/res/resAuthTree',
-            data : {id: #(role.id ??)},
-            notice: false,
-            success : function(data){
-                $.fn.zTree.init($("#tree"), setting, data.data);
-                setcheckValue();
-            }
-        })
+        util.sendAjax({
+            url: '#(ctxPath)/system/res/resAuthTree',
+            data: {id: #(role.id ? ?)
+    },
+        notice: false,
+            success
+    :
+
+        function (data) {
+            $.fn.zTree.init($("#tree"), setting, data.data);
+            setcheckValue();
+        }
+    })
     }
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         zTreeReload();
     });
 
@@ -64,14 +68,14 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
 
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/system/role/postAuth',
                 data: $.param(data.field),
                 loadFlag: true,
-                success : function(data){//
+                success: function (data) {//
                     pop_close();
                 }
             });
@@ -86,7 +90,7 @@
 <div class="x-body">
     <form class="layui-form" action="">
         <input type="hidden" id="id" name="id" value="#(role.id)">
-        <input type="hidden" id="resIds" name="resIds" />
+        <input type="hidden" id="resIds" name="resIds"/>
         <div class="layui-form-item">
             <p>#(role.name ??) 角色赋权</p>
         </div>
@@ -97,7 +101,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
+            <button class="layui-btn" lay-filter="sub" lay-submit>
                 保存
             </button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>

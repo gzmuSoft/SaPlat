@@ -22,8 +22,8 @@ import java.util.Date;
 
 /**
  * 系统角色管理
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/system/role")
 public class RoleController extends BaseController {
@@ -133,7 +133,7 @@ public class RoleController extends BaseController {
     /**
      * 角色赋权提交
      */
-    @NotNullPara({"id","resIds"})
+    @NotNullPara({"id", "resIds"})
     public void postAuth() {
         String resIds = getPara("resIds");
         Long id = getParaToLong("id");

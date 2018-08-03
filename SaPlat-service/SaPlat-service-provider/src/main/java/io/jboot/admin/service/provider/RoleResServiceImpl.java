@@ -22,7 +22,7 @@ public class RoleResServiceImpl extends JbootServiceBase<RoleRes> implements Rol
 
     @Override
     public int[] batchSave(List<RoleRes> list) {
-        return  Db.batchSave(list, list.size());
+        return Db.batchSave(list, list.size());
     }
 
 }

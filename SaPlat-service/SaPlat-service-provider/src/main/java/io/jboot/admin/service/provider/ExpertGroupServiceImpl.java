@@ -53,14 +53,14 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     @Override
     public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files) {
         return Db.tx(() -> {
-            if (!saveOrUpdate(model) || !authService.saveOrUpdate(auth)){
+            if (!saveOrUpdate(model) || !authService.saveOrUpdate(auth)) {
                 return false;
             }
-            if (files == null){
+            if (files == null) {
                 return true;
             }
             for (Files file : files) {
-                if (!filesService.update(file)){
+                if (!filesService.update(file)) {
                     return false;
                 }
             }

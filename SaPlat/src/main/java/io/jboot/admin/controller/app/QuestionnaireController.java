@@ -46,6 +46,7 @@ public class QuestionnaireController extends BaseController {
 
     @JbootrpcService
     private QuestionnaireContentLinkService questionnaireContentLinkService;
+
     /**
      * index
      */
@@ -62,13 +63,14 @@ public class QuestionnaireController extends BaseController {
         Project project = projectService.findAll(pmodel).get(0);
 
         for (UserRole userRole : roles) {
-            if (userRole.getRoleID()== 2) {
+            if (userRole.getRoleID() == 2) {
 
                 //加载民族
                 Nation nmodel = new Nation();
                 nmodel.setIsEnable(true);
                 List<Nation> nations = nationService.findAll(nmodel);
-                BaseStatus nationStatus = new BaseStatus() {};
+                BaseStatus nationStatus = new BaseStatus() {
+                };
                 for (Nation nation : nations) {
                     nationStatus.add(nation.getId().toString(), nation.getName());
                 }
@@ -76,7 +78,8 @@ public class QuestionnaireController extends BaseController {
                 Educational emodel = new Educational();
                 emodel.setIsEnable(true);
                 List<Educational> educationals = educationalService.findAll(emodel);
-                BaseStatus educationalStatus = new BaseStatus() {};
+                BaseStatus educationalStatus = new BaseStatus() {
+                };
                 for (Educational educational : educationals) {
                     educationalStatus.add(educational.getId().toString(), educational.getName());
                 }
@@ -84,21 +87,22 @@ public class QuestionnaireController extends BaseController {
                 Occupation omodel = new Occupation();
                 omodel.setIsEnable(true);
                 List<Occupation> occupations = occupationService.findAll(omodel);
-                BaseStatus occupationStatus = new BaseStatus() {};
+                BaseStatus occupationStatus = new BaseStatus() {
+                };
                 for (Occupation item : occupations) {
                     occupationStatus.add(item.getId().toString(), item.getName());
                 }
-                setAttr("type",0).
-                setAttr("project", project).
-                setAttr("occupationStatus", occupationStatus).
-                setAttr("educationalStatus", educationalStatus).
-                setAttr("nationStatus", nationStatus).
-                render("personMain.html");
+                setAttr("type", 0).
+                        setAttr("project", project).
+                        setAttr("occupationStatus", occupationStatus).
+                        setAttr("educationalStatus", educationalStatus).
+                        setAttr("nationStatus", nationStatus).
+                        render("personMain.html");
                 break;
             } else {
-                setAttr("type",1).
-                setAttr("project", project).
-                render("organizationMain.html");
+                setAttr("type", 1).
+                        setAttr("project", project).
+                        render("organizationMain.html");
                 break;
             }
         }
@@ -107,19 +111,19 @@ public class QuestionnaireController extends BaseController {
     /*
      *提交保存调查问卷
      */
-    public void add(){
+    public void add() {
         //修改项目资料
-        Project project = getBean(Project.class ,"project");
+        Project project = getBean(Project.class, "project");
         project.setLastAccessTime(new Date());
-        if (!projectService.update(project)){
+        if (!projectService.update(project)) {
             throw new BusinessException("项目资料修改失败！");
         }
         //调查问卷的创建
-        if (!postAdd(project.getId())){
+        if (!postAdd(project.getId())) {
             throw new BusinessException("调查问卷保存失败！");
         }
         //调查内容的保存
-        String[] questionnaireContents  = getParaValues("content");
+        String[] questionnaireContents = getParaValues("content");
         Questionnaire questionnaire = questionnaireService.findByProjectID(project.getId());
         QuestionnaireContent questionnaireContent;
         QuestionnaireContentLink questionnaireContentLink;
@@ -128,18 +132,18 @@ public class QuestionnaireController extends BaseController {
             questionnaireContent.setContent(questionnaireContents[j]);
             questionnaireContent.setCreateTime(new Date());
             questionnaireContent.setLastAccessTime(new Date());
-            if (! questionnaireContentService.save(questionnaireContent)){
+            if (!questionnaireContentService.save(questionnaireContent)) {
                 throw new BusinessException("调查内容保存失败！");
             }
             questionnaireContent = questionnaireContentService.findByModel(questionnaireContent);//找到刚创建的内容
-            if (questionnaireContent != null){
+            if (questionnaireContent != null) {
                 questionnaireContentLink = new QuestionnaireContentLink();
                 questionnaireContentLink.setQuestionnaireID(questionnaire.getId());
                 questionnaireContentLink.setQuestionnaireContentID(questionnaireContent.getId());
-                if (!questionnaireContentLinkService.save(questionnaireContentLink)){
+                if (!questionnaireContentLinkService.save(questionnaireContentLink)) {
                     throw new BusinessException("调查内容保存失败！");
                 }
-            }else {
+            } else {
                 throw new BusinessException("调查内容保存失败！");
             }
         }
@@ -150,7 +154,7 @@ public class QuestionnaireController extends BaseController {
     /**
      * 添加调查问卷
      */
-    private boolean postAdd(Long id){
+    private boolean postAdd(Long id) {
         User loginUser = AuthUtils.getLoginUser();
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setLastAccessTime(new Date());
@@ -172,7 +176,7 @@ public class QuestionnaireController extends BaseController {
         questionnaire.setDegreeOfEducationID(getParaToLong("degreeOfEducationID"));
         questionnaire.setOccupationID(getParaToLong("occupationID"));
         questionnaire.setCreateUserID(loginUser.getId());
-        if (!questionnaireService.save(questionnaire)){
+        if (!questionnaireService.save(questionnaire)) {
             return false;
         }
         return true;

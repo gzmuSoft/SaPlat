@@ -33,8 +33,8 @@ import java.util.List;
 
 /**
  * 主控制器
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/")
 public class MainController extends BaseController {
@@ -109,7 +109,7 @@ public class MainController extends BaseController {
     }
 
 
-    @Before( {POST.class, LoginValidator.class} )
+    @Before({POST.class, LoginValidator.class})
     public void postLogin() {
         String loginName = getPara("loginName");
         String pwd = getPara("password");
@@ -170,20 +170,20 @@ public class MainController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         boolean sta = notificationService.findMessageByUserID(loginUser.getId());
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sta",sta);
-        jsonObject.put("code",0);
+        jsonObject.put("sta", sta);
+        jsonObject.put("code", 0);
         renderJson(jsonObject);
     }
 
-    public void view(){
+    public void view() {
         User loginUser = AuthUtils.getLoginUser();
         //当前用户权限
         List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
-        for (UserRole list : roles){
-            if (list.getRoleID() == 1){
+        for (UserRole list : roles) {
+            if (list.getRoleID() == 1) {
                 render("system/notification/main.html");
                 break;
-            }else{
+            } else {
                 render("app/notification/main.html");
                 break;
             }

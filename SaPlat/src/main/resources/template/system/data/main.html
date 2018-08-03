@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'code', title: '代码', width: 60}
                 , {field: 'codeDesc', title: '代码描述', width: 120}
@@ -40,7 +40,7 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -50,16 +50,16 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/data/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTableQuery();
                         },
@@ -68,28 +68,28 @@
                         }
                     })
                 });
-            } else if(obj.event === 'edit'){
-                pop_show('编辑数据','#(ctxPath)/system/data/update?id=' + data.id,'','', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑数据', '#(ctxPath)/system/data/update?id=' + data.id, '', '', function () {
                     reloadTableQuery();
                 });
-            } else if(obj.event === 'use'){
-                util.sendAjax ({
+            } else if (obj.event === 'use') {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/system/data/use',
-                    data: {id : data.id},
+                    data: {id: data.id},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         reloadTableQuery();
                     }
                 });
-            } else if(obj.event === 'unuse'){
-                layer.confirm('确定停用该数据吗', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'unuse') {
+                layer.confirm('确定停用该数据吗', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/data/unuse',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTableQuery();
                         },
@@ -101,20 +101,20 @@
             }
         });
 
-        $("#add").click(function(){
-            pop_show('添加数据','#(ctxPath)/system/data/add','','', function(){
+        $("#add").click(function () {
+            pop_show('添加数据', '#(ctxPath)/system/data/add', '', '', function () {
                 reloadTableQuery();
             });
         });
 
-        $("#cache").click(function(){
-            layer.confirm('确定刷新数据缓存吗', function(index){
-                util.sendAjax ({
+        $("#cache").click(function () {
+            layer.confirm('确定刷新数据缓存吗', function (index) {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/system/data/cache',
                     data: {},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         layer.close(index);
                     },
                     unSuccess: function (data) {
@@ -127,18 +127,18 @@
         reloadTableQuery = function () {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/data/tableData'
-                ,where: {type: $('#type').val(), typeDesc: $('#typeDesc').val()} //设定异步数据接口的额外参数
+                , where: {type: $('#type').val(), typeDesc: $('#typeDesc').val()} //设定异步数据接口的额外参数
             });
         }
 
         reloadTable = function (type, typeDesc) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/data/tableData'
-                ,where: {type: type, typeDesc: typeDesc} //设定异步数据接口的额外参数
+                , where: {type: type, typeDesc: typeDesc} //设定异步数据接口的额外参数
             });
         }
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.type, data.field.typeDesc);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -147,39 +147,40 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" action="" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">类型编码</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="type" name="type" placeholder="类型编码" class="layui-input"/>
-                    </div>
-                    <label class="layui-form-label">类型描述</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="typeDesc" name="typeDesc" placeholder="类型描述" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型编码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="type" name="type" placeholder="类型编码" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">类型描述</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="typeDesc" name="typeDesc" placeholder="类型描述" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <div class="layui-btn-group">
-                #shiroHasPermission('/system/data/add')
-                <button id="add" class="layui-btn layui-btn-small">添加数据</button>
-                #end
-            </div>
-            <div class="layui-btn-group">
-                #shiroHasPermission('/system/data/cache')
-                <button id="cache" class="layui-btn layui-btn-small">刷新缓存</button>
-                #end
-            </div>
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            #shiroHasPermission('/system/data/add')
+            <button id="add" class="layui-btn layui-btn-small">添加数据</button>
+            #end
+        </div>
+        <div class="layui-btn-group">
+            #shiroHasPermission('/system/data/cache')
+            <button id="cache" class="layui-btn layui-btn-small">刷新缓存</button>
+            #end
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/system/data/update')

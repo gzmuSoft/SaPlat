@@ -23,21 +23,22 @@ public class QuestionnaireContentServiceImpl extends JbootServiceBase<Questionna
     /**
      * 改需求后废弃的方法 。。。
      * 分页查询系统信息
+     *
      * @param ids ids
      * @return 页
      */
     @Override
-    public Page<QuestionnaireContent> findPageById(Long[] ids, int pageNumber, int pageSize){
+    public Page<QuestionnaireContent> findPageById(Long[] ids, int pageNumber, int pageSize) {
         String select = "SELECT * ";
         StringBuilder sql = new StringBuilder("FROM questionnaire_content WHERE `id` IN(");
         for (int i = 0; i < ids.length; i++) {
-            if (i != ids.length - 1){
-               sql.append("?,");
+            if (i != ids.length - 1) {
+                sql.append("?,");
             } else {
                 sql.append("?)");
             }
         }
-        return DAO.paginate(pageNumber, pageSize, false, select, sql.toString(),ids);
+        return DAO.paginate(pageNumber, pageSize, false, select, sql.toString(), ids);
     }
 
     /**
@@ -47,13 +48,15 @@ public class QuestionnaireContentServiceImpl extends JbootServiceBase<Questionna
      * @return
      */
     @Override
-    public QuestionnaireContent findByModel(QuestionnaireContent model){
-        if (model == null)
+    public QuestionnaireContent findByModel(QuestionnaireContent model) {
+        if (model == null) {
             return null;
-        List<QuestionnaireContent> list = DAO.findListByColumn("content",model.getContent());
-        if (list.size() != 0){
+        }
+        List<QuestionnaireContent> list = DAO.findListByColumn("content", model.getContent());
+        if (list.size() != 0) {
             return list.get(0);
-        }else
+        } else {
             return null;
+        }
     }
 }

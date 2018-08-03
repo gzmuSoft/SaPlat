@@ -14,25 +14,25 @@
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.all.js"></script>
 <!-- 配置文件 -->
 <script type="text/javascript">
-    var ue = UE.getEditor('container',{initialFrameHeight:360});
+    var ue = UE.getEditor('container', {initialFrameHeight: 360});
     layui.use(['form', 'layer', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
             var dataParam = $('#addForm').serializeArray();
-            var newsletter = ue.getContentTxt().substring(0,160) + "...";
-            newsletter = newsletter.replace(/\s+/g,"");
-            dataParam.push({"name":"model.content","value":ue.getContent()});
-            dataParam.push({"name":"model.newsletter","value":newsletter});
+            var newsletter = ue.getContentTxt().substring(0, 160) + "...";
+            newsletter = newsletter.replace(/\s+/g, "");
+            dataParam.push({"name": "model.content", "value": ue.getContent()});
+            dataParam.push({"name": "model.newsletter", "value": newsletter});
             //alert(dataParam);
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/news/postAdd',
                 data: dataParam,
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                     pop_close();
                 }
             });
@@ -40,13 +40,13 @@
         });
 
         form.on('radio(pub_object)', function (data) {
-            if(data.value == 0){
+            if (data.value == 0) {
                 $("#character").hide();
                 $("#individual").hide();
-            }else if(data.value == 1){
+            } else if (data.value == 1) {
                 $("#character").show();
                 $("#individual").hide();
-            }else{
+            } else {
                 $("#character").hide();
                 $("#individual").show();
             }
@@ -91,7 +91,7 @@
             <label class="layui-form-label">新闻类型</label>
             <div class="layui-input-block">
                 <select name="model.type" lay-filter="newsType">
-                    <option value="0"  selected="">政要文件</option>
+                    <option value="0" selected="">政要文件</option>
                     <option value="1">跟踪动态</option>
                     <option value="2">最新政策</option>
                 </select>
@@ -101,9 +101,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">新闻属性</label>
             <div class="layui-input-block">
-                <input type="radio" name="model.isPublish" value="0" title="全体" lay-filter="pub_object"  checked="">
-                <input type="radio" name="model.isPublish" value="1" title="角色" lay-filter="pub_object"  >
-                <input type="radio" name="model.isPublish" value="2" title="人群" lay-filter="pub_object"  >
+                <input type="radio" name="model.isPublish" value="0" title="全体" lay-filter="pub_object" checked="">
+                <input type="radio" name="model.isPublish" value="1" title="角色" lay-filter="pub_object">
+                <input type="radio" name="model.isPublish" value="2" title="人群" lay-filter="pub_object">
             </div>
         </div>
 

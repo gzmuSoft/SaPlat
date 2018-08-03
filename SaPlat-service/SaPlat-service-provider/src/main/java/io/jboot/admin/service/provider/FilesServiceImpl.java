@@ -21,15 +21,16 @@ public class FilesServiceImpl extends JbootServiceBase<Files> implements FilesSe
         List<Files> files = Collections.synchronizedList(new ArrayList<Files>());
         for (String p : path) {
             Files file = DAO.findFirstByColumn("path", p);
-            if (file != null){
+            if (file != null) {
                 files.add(file);
             }
         }
         return files;
     }
+
     @Override
     public Files saveAndGet(Files model) {
-        if(!model.save()){
+        if (!model.save()) {
             return null;
         }
         return model;

@@ -20,16 +20,16 @@ public class OccupationServiceImpl extends JbootServiceBase<Occupation> implemen
 
     /**
      * find all model
+     *
      * @param model 职业
      * @return all <Occupation>
      */
-    public List<Occupation> findAll(Occupation model)
-    {
+    public List<Occupation> findAll(Occupation model) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.findListByColumns(columns);
@@ -38,8 +38,8 @@ public class OccupationServiceImpl extends JbootServiceBase<Occupation> implemen
     @Override
     public Page<Occupation> findPage(Occupation model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }

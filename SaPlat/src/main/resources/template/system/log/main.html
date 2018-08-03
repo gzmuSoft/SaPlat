@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'lastUpdAcct', title: '用户', width: 100}
                 , {field: 'url', title: '请求url', width: 180}
@@ -37,7 +37,7 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -50,18 +50,18 @@
         reloadTableQuery = function () {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/log/tableData'
-                ,where: {ip: $('#ip').val(), url: $('#url').val(), userName: $('#userName').val()} //设定异步数据接口的额外参数
+                , where: {ip: $('#ip').val(), url: $('#url').val(), userName: $('#userName').val()} //设定异步数据接口的额外参数
             });
         }
 
         reloadTable = function (ip, url, userName) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/log/tableData'
-                ,where: {ip: ip, url: url, userName: userName} //设定异步数据接口的额外参数
+                , where: {ip: ip, url: url, userName: userName} //设定异步数据接口的额外参数
             });
         }
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.ip, data.field.url, data.field.userName);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -70,32 +70,33 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">用户名</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="userName" name="userName" placeholder="用户名" class="layui-input"/>
-                    </div>
-                    <label class="layui-form-label">IP</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="ip" name="ip" placeholder="IP" class="layui-input"/>
-                    </div>
-                    <label class="layui-form-label">URL</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="url" name="url" placeholder="请求URL" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="userName" name="userName" placeholder="用户名" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">IP</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ip" name="ip" placeholder="IP" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">URL</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="url" name="url" placeholder="请求URL" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 #end

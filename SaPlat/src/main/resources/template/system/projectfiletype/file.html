@@ -15,7 +15,7 @@
             , $ = layui.jquery
             , form = layui.form;
 
-        var parentID="#(projectFileType.id)";
+        var parentID = "#(projectFileType.id)";
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -24,13 +24,13 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID'}
                 , {field: 'name', title: '名称'}
                 , {field: 'sort', title: '顺序'}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
-                ]]
-            , url: '#(ctxPath)/system/projectfiletype/tableData?parentID='+parentID
+            ]]
+            , url: '#(ctxPath)/system/projectfiletype/tableData?parentID=' + parentID
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -50,24 +50,24 @@
                 pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
                     reloadTable(null);
                 });
-            } else if(obj.event === 'use'){
-                util.sendAjax ({
+            } else if (obj.event === 'use') {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/system/projectfiletype/use',
-                    data: {id : data.id},
+                    data: {id: data.id},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         reloadTable($('#name').val());
                     }
                 });
-            } else if(obj.event === 'unuse'){
-                layer.confirm('确定锁定该记录吗', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'unuse') {
+                layer.confirm('确定锁定该记录吗', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/projectfiletype/unuse',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable(null);
                         },
@@ -78,14 +78,14 @@
                 });
             }
         });
-        $("#add").click(function(){
+        $("#add").click(function () {
             pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
                 reloadTable(null);
             });
         });
 
-        $("#back").click(function(){
-            window.location.href='#(ctxPath)/system/projectfiletype/index';
+        $("#back").click(function () {
+            window.location.href = '#(ctxPath)/system/projectfiletype/index';
         });
 
 
@@ -94,7 +94,7 @@
                 url: '#(ctxPath)/system/projectfiletype/tableData'
                 , where: {
                     name: _name,
-                    parentID:parentID
+                    parentID: parentID
                 } //设定异步数据接口的额外参数
             });
         };
@@ -130,8 +130,8 @@
     <div class="layui-row">
         <fieldset class="layui-elem-field">
             <legend>#(projectFileType.name)</legend>
-        <button id="add" class="layui-btn layui-btn-small ">添加</button>
-        <table id="dateTable" lay-filter="dateTable"></table>
+            <button id="add" class="layui-btn layui-btn-small ">添加</button>
+            <table id="dateTable" lay-filter="dateTable"></table>
         </fieldset>
     </div>
     <div class="layui-layer-btn-c">

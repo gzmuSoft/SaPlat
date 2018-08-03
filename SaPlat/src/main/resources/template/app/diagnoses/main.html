@@ -14,48 +14,48 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer','layedit'], function () {
+    layui.use(['form', 'layer', 'layedit'], function () {
         var form = layui.form
-            ,layedit = layui.layedit;
+            , layedit = layui.layedit;
         //监听提交
-        form.on('submit(demo1)', function(data){
-            postData+=('&diagnoses.sampleRate='+layedit.getContent(index));
-            util.sendAjax ({
+        form.on('submit(demo1)', function (data) {
+            postData += ('&diagnoses.sampleRate=' + layedit.getContent(index));
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/diagnoses/save',
                 data: $('#Form').serialize(),
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                 }
             });
         });
         //自定义工具栏
-        var surveyGroupedit=layedit.build('surveyGroup', {
+        var surveyGroupedit = layedit.build('surveyGroup', {
             tool: ['left', 'center', 'right'],
             height: 100
         });
         //自定义工具栏
-        var surveyDesignedit=layedit.build('surveyDesign', {
+        var surveyDesignedit = layedit.build('surveyDesign', {
             tool: ['left', 'center', 'right'],
             height: 100
         });
 
         form.verify({
-            surveyDesignedit:function (vale) {
+            surveyDesignedit: function (vale) {
                 layedit.sync(surveyDesignedit); //同步编辑内容到textarea #10line
-                if(layedit.getText(surveyDesignedit).length==0){
+                if (layedit.getText(surveyDesignedit).length == 0) {
                     return "问卷调查设计不能为空";
                 }
             },
 
-            surveyGroupedit:function (vale) {
+            surveyGroupedit: function (vale) {
                 layedit.sync(surveyGroupedit); //同步编辑内容到textarea #10line
-                if(layedit.getText(surveyGroupedit).length==0){
+                if (layedit.getText(surveyGroupedit).length == 0) {
                     return "调查群体不能为空";
                 }
             },
-            sampleRateNumber:function (vale) {
-                if(vale>=100){
+            sampleRateNumber: function (vale) {
+                if (vale >= 100) {
                     return "数值不能大于100"
                 }
 
@@ -64,15 +64,17 @@
 
         });
     });
+
     function pdf(element) {
         element.media({
-            width:800
-            ,height:600
-            ,src: "../"+element.attr('href')
+            width: 800
+            , height: 600
+            , src: "../" + element.attr('href')
         });
     }
-    $("#media").click(function(){
-        $(this).css('display','none');
+
+    $("#media").click(function () {
+        $(this).css('display', 'none');
         pdf($("a.media"));
     });
 </script>
@@ -81,7 +83,7 @@
 #define content()
 <br>
 <h2 class="title" align="center">社会稳定风险评估调查分析表（建设类）</h2><br>
-<hr align="center" size="2" width="100%" />
+<hr align="center" size="2" width="100%"/>
 
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <!-- <ul class="layui-tab-title"> -->
@@ -97,7 +99,7 @@
                     <label class="layui-form-label">评估项目名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.name" autocomplete="off" placeholder="系统读取"
-                               value="#(project.name)" class="layui-input" readonly = "readonly">
+                               value="#(project.name)" class="layui-input" readonly="readonly">
                         <input type="text" name="diagnoses.project" autocomplete="off" placeholder="系统读取"
                                value="#(project.id)" class="layui-input layui-hide">
                     </div>
@@ -106,7 +108,7 @@
                     <label class="layui-form-label">负责评估机构：</label>
                     <div class="layui-input-block">
                         <input type="text" autocomplete="off" placeholder="系统读取"
-                               value="#(facagency.name)" class="layui-input" disabled = "disabled" >
+                               value="#(facagency.name)" class="layui-input" disabled="disabled">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -123,13 +125,14 @@
                     <label class="layui-form-label">项目地址：</label>
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.project.site" autocomplete="off" placeholder="系统读取"
-                               value="#(project.site)" class="layui-input layui-disabled" disabled = "disabled" >
+                               value="#(project.site)" class="layui-input layui-disabled" disabled="disabled">
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">调查群体：</label>
                     <div class="layui-input-block ">
-                        <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写" name="diagnoses.surveyGroup" class="layui-textarea"></textarea>
+                        <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写"
+                                  name="diagnoses.surveyGroup" class="layui-textarea"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -156,13 +159,15 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">调查抽样率：</label>
                     <div class="layui-input-block">
-                        <input type="number" lay-verify="required|sampleRateNumber" placeholder="请填写" class="layui-input" name="diagnoses.sampleRate">
+                        <input type="number" lay-verify="required|sampleRateNumber" placeholder="请填写"
+                               class="layui-input" name="diagnoses.sampleRate">
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">问卷调查设计：</label>
                     <div class="layui-input-block">
-                        <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea" lay-verify="surveyDesignedit" name="diagnoses.surveyDesign"></textarea>
+                        <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
+                                  lay-verify="surveyDesignedit" name="diagnoses.surveyDesign"></textarea>
                     </div>
                 </div>
 
@@ -172,7 +177,7 @@
                     <div class="layui-input-block">
                         #for (invTeamID : invTeamMap.keySet())
                         <input type="checkbox" name="staffArrangements" value="#(invTeamID)"
-                        title="#(invTeamMap[invTeamID])">
+                               title="#(invTeamMap[invTeamID])">
                         #end
                     </div>
                 </div>

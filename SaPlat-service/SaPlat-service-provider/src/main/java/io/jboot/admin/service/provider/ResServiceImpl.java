@@ -29,10 +29,10 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
 
         columns.eq("parentID", sysRes.getParentID() == null ? 0L : sysRes.getParentID());
         if (StrKit.notBlank(sysRes.getName())) {
-            columns.like("name", "%"+sysRes.getName()+"%");
+            columns.like("name", "%" + sysRes.getName() + "%");
         }
         if (StrKit.notBlank(sysRes.getUrl())) {
-            columns.like("url", "%"+sysRes.getUrl()+"%");
+            columns.like("url", "%" + sysRes.getUrl() + "%");
         }
 
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "sort asc");

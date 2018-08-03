@@ -22,9 +22,13 @@ public class DataTplDirective extends JbootDirectiveBase {
     @JbootrpcService
     private DataService dataApi;
 
-    /** 数据字典类型编码 */
+    /**
+     * 数据字典类型编码
+     */
     private String typeCode;
-    /** 属性名默认status，laytpl 里 d.attrName */
+    /**
+     * 属性名默认status，laytpl 里 d.attrName
+     */
     private String attrName;
 
     @Override

@@ -34,30 +34,31 @@ public class EvaluationController extends BaseController {
 
     @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
+
     /**
      * 评估详情
      */
     @NotNullPara({"id"})
-    public void evaluationInformation(){
+    public void evaluationInformation() {
         Long id = getParaToLong("id");
         Project project = projectService.findFirstByColumns(new String[]{"id", "status"},
                 new String[]{id.toString(), ProjectStatus.REVIEW});
         EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
-        if (project == null){
+        if (project == null) {
             project = new Project();
         }
-        if (evaScheme == null){
+        if (evaScheme == null) {
             evaScheme = new EvaScheme();
         } else {
             List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(id);
-            if (model == null || model.size() == 0){
-                setAttr("siteSurveyExpertAdvice","false");
+            if (model == null || model.size() == 0) {
+                setAttr("siteSurveyExpertAdvice", "false");
             } else {
-                setAttr("siteSurveyExpertAdvice","true");
+                setAttr("siteSurveyExpertAdvice", "true");
             }
         }
-        setAttr("project",project.toJson())
-                .setAttr("evaScheme",evaScheme.toJson())
+        setAttr("project", project.toJson())
+                .setAttr("evaScheme", evaScheme.toJson())
                 .render("evaluation.html");
     }
 }

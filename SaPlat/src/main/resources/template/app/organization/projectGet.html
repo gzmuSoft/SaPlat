@@ -44,7 +44,8 @@
     <legend>未通过审核的立项权限：</legend>
     <div>
         #for(auth : noVerify)
-        <button class="layui-btn layui-btn-danger" name="#(auth.roleId)" lay-submit lay-filter="sub">#(auth.remark)</button>
+        <button class="layui-btn layui-btn-danger" name="#(auth.roleId)" lay-submit lay-filter="sub">#(auth.remark)
+        </button>
         <h3>原因：#(auth.reply)</h3>
         #end
     </div>

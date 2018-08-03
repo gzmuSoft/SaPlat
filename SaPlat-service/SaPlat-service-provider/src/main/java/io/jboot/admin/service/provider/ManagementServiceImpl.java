@@ -38,9 +38,9 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
 
     @Override
-    public Page<Management> findPage(Management management, int pageNumber, int pageSize){
+    public Page<Management> findPage(Management management, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if(null!=management.getName()){
+        if (null != management.getName()) {
             columns.like("name", "%" + management.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");

@@ -227,13 +227,13 @@ public class InformationController extends BaseController {
      */
     @Before(POST.class)
     @NotNullPara("id")
-    public void expertAdviceDelete(){
+    public void expertAdviceDelete() {
         Long id = getParaToLong("id");
         SiteSurveyExpertAdvice model = siteSurveyExpertAdviceService.findById(id);
-        if (model == null){
+        if (model == null) {
             throw new BusinessException("删除失败！");
         }
-        if (!siteSurveyExpertAdviceService.delete(model)){
+        if (!siteSurveyExpertAdviceService.delete(model)) {
             throw new BusinessException("删除失败！");
         }
         renderJson(RestResult.buildSuccess());

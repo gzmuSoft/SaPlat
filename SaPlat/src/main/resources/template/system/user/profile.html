@@ -15,14 +15,14 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
 
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/system/user/postProfile',
                 data: $('#addForm').serialize(),
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                     history.go(0);
                 }
             });
@@ -40,27 +40,30 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>用户帐号</label>
             <div class="layui-input-block">
-                <input type="text" name="user.name" placeholder="用户帐号" class="layui-input" value="#(user.name)" required  lay-verify="required" autocomplete="off" disabled/>
+                <input type="text" name="user.name" placeholder="用户帐号" class="layui-input" value="#(user.name)" required
+                       lay-verify="required" autocomplete="off" disabled/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">电话号码</label>
             <div class="layui-input-block">
-                <input type="text" name="user.phone" placeholder="电话号码" class="layui-input" value="#(user.phone)" autocomplete="off"/>
+                <input type="text" name="user.phone" placeholder="电话号码" class="layui-input" value="#(user.phone)"
+                       autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
-                <input type="text" name="user.email" placeholder="邮箱" class="layui-input" value="#(user.email)" autocomplete="off"/>
+                <input type="text" name="user.email" placeholder="邮箱" class="layui-input" value="#(user.email)"
+                       autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
+            <button class="layui-btn" lay-filter="sub" lay-submit>
                 保存
             </button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>

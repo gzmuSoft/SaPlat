@@ -17,17 +17,18 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
 
     /**
      * 根据当前项目ID判断是否有对应的问卷
+     *
      * @param id
      * @return
      */
     @Override
-    public Questionnaire findByProjectID(Object id){
+    public Questionnaire findByProjectID(Object id) {
         if (id == null)
             return null;
-        List<Questionnaire> list = DAO.findListByColumn("projectID",id);
-        if (list.size()!= 0){
+        List<Questionnaire> list = DAO.findListByColumn("projectID", id);
+        if (list.size() != 0) {
             return list.get(0);
-        }else
+        } else
             return null;
     }
 }

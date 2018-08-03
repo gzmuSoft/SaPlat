@@ -10,15 +10,19 @@ import io.jboot.web.directive.base.JbootDirectiveBase;
 
 /**
  * 状态layui模版，状态数据desc
- * @author Rlax
  *
+ * @author Rlax
  */
 @JFinalDirective("statusTpl")
 public class StatusTplDirective extends JbootDirectiveBase {
 
-    /** 状态类全路径 例如：com.AbcStatus */
+    /**
+     * 状态类全路径 例如：com.AbcStatus
+     */
     private BaseStatus status;
-    /** 属性名默认status，laytpl 里 d.attrName */
+    /**
+     * 属性名默认status，laytpl 里 d.attrName
+     */
     private String attrName;
 
     @Override

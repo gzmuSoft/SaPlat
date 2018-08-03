@@ -28,7 +28,7 @@ public class OptionDirective extends JbootDirectiveBase {
 
     @Override
     public void exec(Env env, Scope scope, Writer writer) {
-        LogKit.info("option====="+typeCode);
+        LogKit.info("option=====" + typeCode);
         if (exprList.length() > 2) {
             throw new ParseException("Wrong number parameter of #date directive, two parameters allowed at most", location);
         }
@@ -45,9 +45,9 @@ public class OptionDirective extends JbootDirectiveBase {
         List<Data> list = dataApi.getListByTypeOnUse(typeCode);
         for (Data data : list) {
             if (value != null && data.getCode().equals(value)) {
-                write(writer, "<option selected value=\"" + data.getCode()  + "\">" + data.getCodeDesc() + "</option>");
+                write(writer, "<option selected value=\"" + data.getCode() + "\">" + data.getCodeDesc() + "</option>");
             } else {
-                write(writer, "<option value=\"" + data.getCode()  + "\">" + data.getCodeDesc() + "</option>");
+                write(writer, "<option value=\"" + data.getCode() + "\">" + data.getCodeDesc() + "</option>");
             }
         }
     }

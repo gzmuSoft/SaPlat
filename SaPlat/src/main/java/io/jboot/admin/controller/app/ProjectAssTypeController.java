@@ -27,7 +27,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/project_ass_type")
-public class ProjectAssTypeController extends BaseController{
+public class ProjectAssTypeController extends BaseController {
 
     @JbootrpcService
     private ProjectAssTypeService projectAssTypeService;
@@ -38,6 +38,7 @@ public class ProjectAssTypeController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -57,53 +58,54 @@ public class ProjectAssTypeController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!projectAssTypeService.deleteById(id)){
+        if (!projectAssTypeService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         ProjectAssType model = projectAssTypeService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, ProjectAssTypeValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         ProjectAssType model = getBean(ProjectAssType.class, "model");
-        if (projectAssTypeService.isExisted(model.getName())){
+        if (projectAssTypeService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目评估类型名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!projectAssTypeService.save(model)){
+        if (!projectAssTypeService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, ProjectAssTypeValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         ProjectAssType model = getBean(ProjectAssType.class, "model");
         ProjectAssType byId = projectAssTypeService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的项目评估类型不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!projectAssTypeService.update(model)){
+        if (!projectAssTypeService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

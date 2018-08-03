@@ -27,7 +27,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/nation")
-public class NationController extends BaseController{
+public class NationController extends BaseController {
 
     @JbootrpcService
     private NationService nationService;
@@ -37,8 +37,9 @@ public class NationController extends BaseController{
      */
     public void index() {
         String pdfURL = "/upload/test.pdf";
-        setAttr("pdfURL",pdfURL).render("main.html");
+        setAttr("pdfURL", pdfURL).render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -57,53 +58,54 @@ public class NationController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!nationService.deleteById(id)){
+        if (!nationService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         Nation model = nationService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, NationValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         Nation model = getBean(Nation.class, "model");
-        if (nationService.isExisted(model.getName())){
+        if (nationService.isExisted(model.getName())) {
             throw new BusinessException("所指定的民族名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!nationService.save(model)){
+        if (!nationService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, NationValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         Nation model = getBean(Nation.class, "model");
         Nation byId = nationService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的民族名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!nationService.update(model)){
+        if (!nationService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用民族
      */

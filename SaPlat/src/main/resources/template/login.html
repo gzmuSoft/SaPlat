@@ -78,7 +78,8 @@
                                     <div class="layui-timeline-title" style="padding-left: 20px">#(model.title)</div>
                                 </div>
                                 <div class="layui-col-md3">
-                                    <div class="layui-timeline-title" style="text-align: right">#(model.createTime)</div>
+                                    <div class="layui-timeline-title" style="text-align: right">#(model.createTime)
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -94,7 +95,7 @@
             </div>
             <div class="layui-col-xs5">
                 <div class="grid-demo grid-demo-bg3" style="margin: 0 10%;"><br>
-                    <form  method="post" action="" id="form">
+                    <form method="post" action="" id="form">
                         <div class="login-ic " style="width: 300px;">
                             <i></i>
                             <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
@@ -176,9 +177,9 @@
     function nshow(id) {
         var url = "/nshow";
         var form = $("<form method='post'></form>");
-        form.attr({"action":url});
+        form.attr({"action": url});
         var input = $("<input type='hidden'>");
-        input.attr({"name":"id"});
+        input.attr({"name": "id"});
         input.val(id);
         form.append(input);
         $("html").append(form);

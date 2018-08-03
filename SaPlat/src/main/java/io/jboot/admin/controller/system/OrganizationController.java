@@ -22,8 +22,8 @@ import java.util.Date;
 
 /**
  * 组织管理
- * @author rainsLM
  *
+ * @author rainsLM
  */
 @RequestMapping("/system/organization")
 public class OrganizationController extends BaseController {
@@ -34,7 +34,7 @@ public class OrganizationController extends BaseController {
     /**
      * index
      */
-    public void index(){
+    public void index() {
         render("main.html");
     }
 
@@ -54,27 +54,25 @@ public class OrganizationController extends BaseController {
 
     /**
      * 显示更新页面
-     *
      */
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         Organization organization = organizationService.findById(id);
-        setAttr("organization",organization).render("update.html");
+        setAttr("organization", organization).render("update.html");
     }
 
     /**
      * 提交更新数据
-     *
      */
     @Before({POST.class, OrganizationValidator.class})
-    public void postUpdate(){
-        Organization organization = getBean(Organization.class,"organization");
+    public void postUpdate() {
+        Organization organization = getBean(Organization.class, "organization");
         Organization oid = organizationService.findById(organization.getId());
-        if(oid == null){
+        if (oid == null) {
             throw new BusinessException("组织不存在");
         }
-        if(!organizationService.update(organization)){
+        if (!organizationService.update(organization)) {
             throw new BusinessException("组织更新失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -82,39 +80,37 @@ public class OrganizationController extends BaseController {
 
     /**
      * 停用组织
-     *
      */
     @NotNullPara({"id"})
-    public void unuse(){
+    public void unuse() {
         Long id = getParaToLong("id");
         Organization organization = organizationService.findById(id);
-        if(organization == null){
+        if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
         organization.setStatus(DataStatus.UNUSED);
         organization.setRemark("禁用组织");
         organization.setLastAccessTime(new Date());
-        if(!organizationService.update(organization)){
+        if (!organizationService.update(organization)) {
             throw new BusinessException("禁用失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     /**
-     *  启用组织
-     *
+     * 启用组织
      */
     @NotNullPara({"id"})
-    public void use(){
+    public void use() {
         Long id = getParaToLong("id");
         Organization organization = organizationService.findById(id);
-        if(organization == null){
+        if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
         organization.setStatus(DataStatus.USED);
         organization.setRemark("启用组织");
         organization.setLastAccessTime(new Date());
-        if(!organizationService.update(organization)){
+        if (!organizationService.update(organization)) {
             throw new BusinessException("启用失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -122,13 +118,12 @@ public class OrganizationController extends BaseController {
 
     /**
      * 查看证书文件
-     *
      */
     @NotNullPara({"id"})
-    public void certificate(){
+    public void certificate() {
         Long id = getParaToLong("id");
         Organization organization = organizationService.findById(id);
         String path = organization.getCertificate();
-        setAttr("certificate",path).render("view.html");
+        setAttr("certificate", path).render("view.html");
     }
 }

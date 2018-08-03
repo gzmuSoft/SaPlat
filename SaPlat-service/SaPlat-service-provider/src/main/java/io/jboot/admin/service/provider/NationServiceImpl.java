@@ -21,16 +21,16 @@ public class NationServiceImpl extends JbootServiceBase<Nation> implements Natio
 
     /**
      * find all model
+     *
      * @param model 民族
      * @return all <Nation>
      */
-    public List<Nation> findAll(Nation model)
-    {
+    public List<Nation> findAll(Nation model) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.findListByColumns(columns);
@@ -39,10 +39,10 @@ public class NationServiceImpl extends JbootServiceBase<Nation> implements Natio
     @Override
     public Page<Nation> findPage(Nation model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");

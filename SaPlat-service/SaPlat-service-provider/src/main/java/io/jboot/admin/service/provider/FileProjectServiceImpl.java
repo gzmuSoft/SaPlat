@@ -21,7 +21,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Override
     public List<FileProject> findAllByProjectID(Long id) {
         Columns columns = Columns.create();
-        columns.eq("projectID",id);
+        columns.eq("projectID", id);
         return DAO.findListByColumns(columns);
     }
 

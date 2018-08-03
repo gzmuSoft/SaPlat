@@ -16,37 +16,39 @@ import java.util.List;
 public class QuestionnaireContentLinkServiceImpl extends JbootServiceBase<QuestionnaireContentLink> implements QuestionnaireContentLinkService {
     /**
      * 调查问卷ID查找属于问卷的内容ID
+     *
      * @param id
      * @return all QuestionnaireContentID
      */
     @Override
-    public Long[] findContentIdByQuestionnaireId(Long id){
+    public Long[] findContentIdByQuestionnaireId(Long id) {
         Columns columns = Columns.create();
-        if (id != null){
-            columns.eq("questionnaireID",id);
+        if (id != null) {
+            columns.eq("questionnaireID", id);
         }
         List<QuestionnaireContentLink> questionnaireContentLinks = DAO.findListByColumns(columns);
         Long[] contentIds = new Long[questionnaireContentLinks.size()];
-        for (int i = 0;i< questionnaireContentLinks.size();i++){
+        for (int i = 0; i < questionnaireContentLinks.size(); i++) {
             contentIds[i] = questionnaireContentLinks.get(i).getQuestionnaireContentID();
         }
         return contentIds;
     }
+
     /**
      * 根据调查内容id 查出关联id
+     *
      * @param contentId
      * @return all QuestionnaireContentID
      */
     @Override
-    public Long findIdByContentId(Long contentId){
-        if (contentId == null){
+    public Long findIdByContentId(Long contentId) {
+        if (contentId == null) {
             return null;
         }
-        List<QuestionnaireContentLink> list = DAO.findListByColumn("questionnaireContentID",contentId);
-        if (list.size() != 0){
+        List<QuestionnaireContentLink> list = DAO.findListByColumn("questionnaireContentID", contentId);
+        if (list.size() != 0) {
             return list.get(0).getId();
-        }
-        else
+        } else
             return null;
     }
 }
