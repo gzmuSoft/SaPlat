@@ -23,10 +23,10 @@ import java.util.List;
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
     /**
      * find all model
-     *
      * @param model 项目主体
      * @return all <Project>
      */
+    @Override
     public List<Project> findAll(Project model) {
         Columns columns = Columns.create();
         if (StrKit.notNull(model.getIsEnable())) {
@@ -59,14 +59,20 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             if (!model.saveOrUpdate()) {
                 return false;
             }
-            Columns columns = new Columns();
-            columns.eq("name", model.getName());
-            columns.eq("brief", model.getBrief());
-            authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
+            if (model.getId() == null && model.getName() != null && model.getBrief() != null) {
+                Columns columns = new Columns();
+                columns.eq("name", model.getName());
+                columns.eq("brief", model.getBrief());
+                authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
+            }
             return authProject.saveOrUpdate();
         });
     }
 
+    @Override
+    public boolean saveOrUpdate(Project model, LeaderGroup leaderGroup) {
+        return Db.tx(() -> model.saveOrUpdate() && leaderGroup.saveOrUpdate());
+    }
 
     @Override
     public Page<Project> findPage(Project project, int pageNumber, int pageSize) {
@@ -93,12 +99,14 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             if (!model.saveOrUpdate()) {
                 return false;
             }
-            Columns columns = new Columns();
-            columns.eq("name", model.getName());
-            columns.eq("brief", model.getBrief());
-            leaderGroup.setProjectID(DAO.findFirstByColumns(columns).getId());
-            authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
-            return Db.tx(() -> authProject.save() && leaderGroup.save());
+            if (model.getId() == null && model.getName() != null && model.getBrief() != null) {
+                Columns columns = new Columns();
+                columns.eq("name", model.getName());
+                columns.eq("brief", model.getBrief());
+                leaderGroup.setProjectID(DAO.findFirstByColumns(columns).getId());
+                authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
+            }
+            return Db.tx(() -> authProject.saveOrUpdate() && leaderGroup.saveOrUpdate());
         });
     }
 

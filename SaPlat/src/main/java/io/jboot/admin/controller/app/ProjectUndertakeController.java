@@ -294,7 +294,7 @@ public class ProjectUndertakeController extends BaseController {
      */
     public void toProjectImpTeam() {
         StringBuilder string = new StringBuilder();
-        Project project = projectService.findById(36);//点击的当前项目
+        Project project = projectService.findById(36);
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(36);
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<OrgStructure> orgStructures = new ArrayList<>();
@@ -341,7 +341,7 @@ public class ProjectUndertakeController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
 
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
-        impTeam.setProjectID(36L);//当前项目id
+        impTeam.setProjectID(36L);
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
         impTeam.setCreateUserID(loginUser.getId());
@@ -350,8 +350,8 @@ public class ProjectUndertakeController extends BaseController {
             renderJson(RestResult.buildError("保存失败"));
         }
 
-        EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");//评估方案
-        evaScheme.setProjectID(36L);//当前项目id
+        EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");
+        evaScheme.setProjectID(36L);
         evaScheme.setCreateTime(new Date());
         evaScheme.setLastAccessTime(new Date());
         evaScheme.setCreateUserID(loginUser.getId());
@@ -370,11 +370,11 @@ public class ProjectUndertakeController extends BaseController {
 
         for (int i = 0; i<sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
-            scheduledPlan.setEvaSchemeID(evaScheme.getId());//评估方案编号
-            scheduledPlan.setName(sName[i]);
-            scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));//起始时间
-            scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));//结束时间
-            scheduledPlan.setContent(sContent[i]);//工作内容
+            scheduledPlan.setEvaSchemeID(evaScheme.getId());
+            scheduledPlan.setName(sName[i].toString());
+            scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));
+            scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));
+            scheduledPlan.setContent(sContent[i]);
             scheduledPlan.setCreateTime(new Date());
             scheduledPlan.setLastAccessTime(new Date());
             scheduledPlan.setCreateUserID(loginUser.getId());

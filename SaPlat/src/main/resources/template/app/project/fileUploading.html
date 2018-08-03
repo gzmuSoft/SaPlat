@@ -26,9 +26,11 @@
                 console.log(res.data);
                 if (res.code == 0) {
                     pop_close();
-                    $.get('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + $('#fileTypeId').val() + '&projectId=' + $('#projectId').val());
+                    window.location.href = '#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + $('#fileTypeId').val() + '&projectId=' + $('#projectId').val();
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
                 }
             }
             , error: function (index, upload) {

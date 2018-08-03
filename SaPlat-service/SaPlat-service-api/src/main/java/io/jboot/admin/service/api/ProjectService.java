@@ -43,11 +43,21 @@ public interface ProjectService  {
     boolean saveOrUpdate(Project model, AuthProject authProject);
 
     /**
+     * save Or Update Project And LeaderGroup
+     *
+     * @param model
+     * @param leaderGroup
+     * @return
+     */
+    boolean saveOrUpdate(Project model, LeaderGroup leaderGroup);
+
+    /**
      * find model by user and role and isEnable
      *
      * @param pageNumber
      * @param pageSize
-     * @return Project
+     * @param project
+     * @return project
      */
     public Page<Project> findPage(Project project, int pageNumber, int pageSize);
 
@@ -56,6 +66,7 @@ public interface ProjectService  {
      *
      * @param pageNumber
      * @param pageSize
+     * @param project
      * @return Project
      */
     public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize);

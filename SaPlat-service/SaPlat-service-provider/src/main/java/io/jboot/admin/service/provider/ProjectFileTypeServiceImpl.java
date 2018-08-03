@@ -9,6 +9,7 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -24,5 +25,12 @@ public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType
             columns.eq("parentID",projectFileType.getParentID());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
+    }
+
+    @Override
+    public List<ProjectFileType> findByParentId(Long parentId) {
+        Columns columns = Columns.create();
+        columns.eq("parentID", parentId);
+        return DAO.findListByColumns(columns);
     }
 }
