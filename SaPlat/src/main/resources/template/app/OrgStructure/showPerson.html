@@ -53,17 +53,10 @@
             }
         });
 
-        // reloadTable = function (name) {
-        //     table.reload('dateTable', {
-        //         url: '#(ctxPath)/app/OrgStructure/tableData'
-        //         ,where: {name: name} //设定异步数据接口的额外参数
-        //     });
-        // }
-
-        form.on('submit(search)', function(data){
-            reloadTable(data.field.name);
-            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-        });
+        // form.on('submit(search)', function(data){
+        //     reloadTable(data.field.name);
+        //     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        // });
     });
 
 
@@ -72,20 +65,6 @@
 
 #define content()
 <div class="layui-fluid">
-    <form id="searchForm" class="layui-form x-center" action="" >
-        <div class="layui-form-pane">
-            <div class="layui-form-item">
-                <label class="layui-form-label">组织名称</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="name" name="name" placeholder="组织名称" class="layui-input"/>
-                </div>
-                <div class="layui-input-inline" style="width : 80px">
-                    <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                </div>
-            </div>
-        </div>
-    </form>
-    <hr>
     <div class="layui-row">
         <div class="layui-btn-group">
 

@@ -138,8 +138,6 @@ public class OrgStructureController extends BaseController {
      * 添加架构信息
      */
     public void postAddStructure(){
-        //组织类型OrgType（0：管理机构、1：企业机构、2：服务机构、3：审查团体、4：专业团体）
-        //List<String> list = Arrays.asList("管理机构","企业机构","服务机构","审查团体","专业团体");
         OrgStructure orgStructure = getBean(OrgStructure.class, "orgstructure");
         //获取用户uid
         orgStructure.setCreateUserID(AuthUtils.getLoginUser().getUserID());
@@ -157,7 +155,6 @@ public class OrgStructureController extends BaseController {
         applyInvite.setCreateUserID(AuthUtils.getLoginUser().getUserID());
         applyInvite.setCreateTime(new Date());
         applyInvite.setApplyOrInvite(1);
-        //等待做
         applyInvite.setUserSource(0);
         Long uid = applyInvite.getUserID();
         User user = userService.findById(uid);
@@ -193,8 +190,6 @@ public class OrgStructureController extends BaseController {
     @NotNullPara({"structureID"})
     public void showPerson(){
         Long sid = getParaToLong("structureID");
-//        Map<String,Object> structPersonLink = structPersonLinkService.findByStructIdAndUsername(sid);
-//        renderJson(structPersonLink);
         setAttr("sid",sid).
             render("showPerson.html");
     }
