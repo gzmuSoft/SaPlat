@@ -62,6 +62,9 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ProjectFileTypeService projectFileTypeService;
 
+    @JbootrpcService
+    private EvaSchemeService evaSchemeService;
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -472,6 +475,5 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<FacAgency>(page));
     }
-
 
 }

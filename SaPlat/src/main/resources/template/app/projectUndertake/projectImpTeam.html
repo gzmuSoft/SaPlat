@@ -678,7 +678,8 @@
             });
             string += $("#impTeamName").attr('name') + "=" + $("#impTeamName").val() + "&";
             string += $("#startDate").attr('name') + "=" + $("#startDate").val() + "&";
-            string += $("#endDate").attr('name') + "=" + $("#endDate").val();
+            string += $("#endDate").attr('name') + "=" + $("#endDate").val() + "&";
+            string += 'id=#(project.id)';
             console.log(string);
             return string;
         }

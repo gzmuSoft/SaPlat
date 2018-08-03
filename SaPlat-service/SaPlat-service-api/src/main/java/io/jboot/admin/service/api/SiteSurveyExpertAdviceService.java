@@ -27,6 +27,24 @@ public interface SiteSurveyExpertAdviceService  {
     public SiteSurveyExpertAdvice findByColumn(String columnName, String value, String logic);
 
     /**
+     * 通过项目id获取项目列表
+     * @param projectId 项目ID
+     * @return 结果
+     */
+    public List<SiteSurveyExpertAdvice> findListByProjectId(Long projectId);
+
+
+    /**
+     * 分页查询
+     * @param siteSurveyExpertAdvice 模型
+     * @param pageNumber 页数
+     * @param pageSize 每页数目
+     * @return 页码
+     */
+    public Page<SiteSurveyExpertAdvice> findPage(SiteSurveyExpertAdvice siteSurveyExpertAdvice, int pageNumber, int pageSize);
+
+
+    /**
      * 通过列名、值获取第一个结果
      * @param columnNames 列名
      * @param values 值

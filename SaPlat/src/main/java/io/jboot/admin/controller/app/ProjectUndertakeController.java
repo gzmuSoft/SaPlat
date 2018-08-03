@@ -292,10 +292,12 @@ public class ProjectUndertakeController extends BaseController {
     /**
      * 稳评方案初始页面
      */
+    @NotNullPara("id")
     public void toProjectImpTeam() {
+        Long id = getParaToLong("id");
         StringBuilder string = new StringBuilder();
-        Project project = projectService.findById(36);//点击的当前项目
-        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(36);
+        Project project = projectService.findById(id);//点击的当前项目
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
         List<OrgStructure> orgStructures = new ArrayList<>();
         for (StructPersonLink structPersonLink : structPersonLinks) {
@@ -303,6 +305,9 @@ public class ProjectUndertakeController extends BaseController {
         }
         for (int i = 0; i < sub(string.toString()).length(); i++) {
             orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
+        }
+        if (leaderGroup == null){
+            leaderGroup = new LeaderGroup();
         }
         setAttr("leaderGroup", leaderGroup).setAttr("project", project).setAttr("orgStructures", orgStructures).render("projectImpTeam.html");
     }
@@ -337,11 +342,12 @@ public class ProjectUndertakeController extends BaseController {
      * 稳评方案提交资料
      */
     @Before(POST.class)
+    @NotNullPara("id")
     public void ImpTeam() {
         User loginUser = AuthUtils.getLoginUser();
-
+        Long id = getParaToLong("id");
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
-        impTeam.setProjectID(36L);//当前项目id
+        impTeam.setProjectID(id);//当前项目id
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
         impTeam.setCreateUserID(loginUser.getId());
@@ -351,15 +357,16 @@ public class ProjectUndertakeController extends BaseController {
         }
 
         EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");//评估方案
-        evaScheme.setProjectID(36L);//当前项目id
+        evaScheme.setProjectID(id);//当前项目id
         evaScheme.setCreateTime(new Date());
         evaScheme.setLastAccessTime(new Date());
         evaScheme.setCreateUserID(loginUser.getId());
         evaScheme.setLastUpdateUserID(loginUser.getId());
+        evaScheme.setStatus("1");
         if (!evaSchemeService.save(evaScheme)){
             renderJson(RestResult.buildError("保存失败"));
         }else{
-            evaScheme = evaSchemeService.findByProjectID(36L);
+            evaScheme = evaSchemeService.findByProjectID(id);
         }
 
         ScheduledPlan scheduledPlan;//进度计划 (多个)
