@@ -44,17 +44,13 @@
     function zTreeReload() {
         util.sendAjax({
             url: '#(ctxPath)/system/res/resAuthTree',
-            data: {id: #(role.id ? ?)
-    },
-        notice: false,
-            success
-    :
-
-        function (data) {
-            $.fn.zTree.init($("#tree"), setting, data.data);
-            setcheckValue();
-        }
-    })
+            data: {id: '#(role.id ??)'},
+            notice: false,
+            success: function (data) {
+                $.fn.zTree.init($("#tree"), setting, data.data);
+                setcheckValue();
+            }
+        });
     }
 
     $(document).ready(function () {
