@@ -2,9 +2,9 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.json.JFinalJson;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
+import io.jboot.admin.base.common.ZTree;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
@@ -73,6 +73,9 @@ public class InformationController extends BaseController {
 
     @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
+
+    @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
     /**
      * 项目信息页面
      */
@@ -230,5 +233,39 @@ public class InformationController extends BaseController {
             throw new BusinessException("啊哦，保存失败，请重新尝试！");
         }
         renderJson(RestResult.buildSuccess());
+    }
+
+
+
+
+
+
+
+
+    @NotNullPara({"id","projectID"})
+    public void fileIndex(){
+        setAttr("projectID",getParaToLong("projectID"));
+        setAttr("parentID",getParaToLong("id"));
+        render("filemain.html");
+    }
+
+    @NotNullPara("parentID")
+    public void fileTree(){
+        Long parentID=getParaToLong("parentID");
+        List<ZTree> ztree = projectFileTypeService.findTreeOnUse(parentID);
+
+        renderJson(RestResult.buildSuccess(ztree));
+    }
+
+    public void fileTableData(){
+
+    }
+
+    public void fileDel(){
+
+    }
+
+    public void fileSave(){
+
     }
 }
