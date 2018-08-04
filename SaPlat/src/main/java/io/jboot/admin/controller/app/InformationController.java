@@ -138,6 +138,7 @@ public class InformationController extends BaseController {
     public void list() {
         String url = getPara("url");
         Long projectId = getParaToLong("id");
+
         setAttr("url", url)
                 .setAttr("projectId", projectId)
                 .render("tableView.html");

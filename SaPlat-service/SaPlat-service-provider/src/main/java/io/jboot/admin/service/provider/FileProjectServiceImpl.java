@@ -28,6 +28,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     private FilesService filesService;
 
     @Override
+    public List<FileProject> findListById(Long id) {
+        return DAO.findListByColumn(Column.create("parentID",id));
+    }
+
+    @Override
     public List<FileProject> findAllByProjectID(Long id) {
         Columns columns = Columns.create();
         columns.eq("projectID", id);
@@ -40,10 +45,18 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public FileProject findByProjectIDAndProjectFileID(Long projectID, Long projectFileID) {
+    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID){
+        Columns columns = Columns.create();
+        columns.eq("projectID",projectID);
+        columns.eq("fileTypeID",fileTypeID);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public FileProject findByProjectIDAndFileTypeID(Long projectID, Long fileTypeID) {
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
-        columns.eq("fileTypeID", projectFileID);
+        columns.eq("fileTypeID", fileTypeID);
         return DAO.findFirstByColumns(columns);
     }
 

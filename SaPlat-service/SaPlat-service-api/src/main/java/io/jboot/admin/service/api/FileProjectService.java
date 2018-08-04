@@ -25,6 +25,12 @@ public interface FileProjectService  {
      */
     public List<FileProject> findAll();
 
+    /**
+     * 通過id查询列表
+     * @param id id
+     * @return 列表
+     */
+    public List<FileProject> findListById(Long id);
 
     /**
      * find All By ProjectID
@@ -43,13 +49,21 @@ public interface FileProjectService  {
     public FileProject findByProjectID(Long projectId);
 
     /**
+     * 通过文件类型id和项目id查询列表
+     * @param fileTypeID 文件类型id
+     * @param projectID 项目id
+     * @return 文件列表
+     */
+    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID);
+
+    /**
      * find model By projectID And fileTypeID
      *
      * @param projectID
-     * @param projectFileID
+     * @param fileTypeID
      * @return
      */
-    public FileProject findByProjectIDAndProjectFileID(Long projectID, Long projectFileID);
+    public FileProject findByProjectIDAndFileTypeID(Long projectID, Long fileTypeID);
 
     /**
      * delete model by primary key

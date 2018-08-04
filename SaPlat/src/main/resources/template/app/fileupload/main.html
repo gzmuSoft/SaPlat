@@ -12,7 +12,7 @@
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
 <script type="text/javascript">
     var setting = {
-        view:{
+        view: {
             showLine: false
         },
         data: {
@@ -25,35 +25,36 @@
         }
     };
 
-    var pid ='#(parentID)';
-    var projectID='#(projectID)';
-    var fileTypeID=null;
+    var pid = '#(parentID)';
+    var projectID = '#(projectID)';
+    var fileTypeID = null;
 
     var reloadTable;
+
     function zTreeOnClick(event, treeId, treeNode) {
         $("#add").removeClass("layui-hide");
         reloadTable(treeNode.id);
-        fileTypeID=treeNode.id;
+        fileTypeID = treeNode.id;
     }
 
     function zTreeReload() {
-        util.sendAjax ({
-            url : '#(ctxPath)/app/fileupload/tree',
-            data:{
-              parentID:pid
+        util.sendAjax({
+            url: '#(ctxPath)/app/fileupload/tree',
+            data: {
+                parentID: pid
             },
             notice: false,
-            success : function(data){
+            success: function (data) {
                 $.fn.zTree.init($("#tree"), setting, data.data);
             }
         })
     }
 
-    $(document).ready(function(){
+    $(document).ready(function () {
         zTreeReload();
     });
 
-    layui.use(['table', 'layer','upload'], function () {
+    layui.use(['table', 'layer', 'upload'], function () {
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
@@ -67,7 +68,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-100'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称'}
                 , {field: 'createTime', title: '上传时间'}
                 , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
@@ -76,7 +77,7 @@
 //            , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -87,15 +88,17 @@
         });
 
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del') {
+            if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
                     util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/fileupload/delete',
-                        data: {id: data.id,
-                                projectID:projectID},
+                        data: {
+                            id: data.id,
+                            projectID: projectID
+                        },
                         loadFlag: true,
                         success: function (data) {
                             layer.close(index);
@@ -106,7 +109,7 @@
                         }
                     })
                 });
-            } else if (obj.event === 'view'){
+            } else if (obj.event === 'view') {
                 pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
                 });
             }
@@ -124,7 +127,7 @@
             , done: function (res) {
                 console.log(res);
                 if (res.code == 0) {
-                    postFileID(fileTypeID,res.data.fileId,projectID);
+                    postFileID(fileTypeID, res.data.fileId, projectID);
                     return true;
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
@@ -139,19 +142,23 @@
         reloadTable = function (_fileTypeID) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/fileupload/tableData'
-                ,where: {fileTypeID: _fileTypeID,
-                    projectID:projectID} //设定异步数据接口的额外参数
+                , where: {
+                    fileTypeID: _fileTypeID,
+                    projectID: projectID
+                } //设定异步数据接口的额外参数
             });
         };
     });
 
-    function postFileID(_fileTypeID,_fileID,_projectID) {
+    function postFileID(_fileTypeID, _fileID, _projectID) {
         util.sendAjax({
             type: 'POST',
             url: '#(ctxPath)/app/fileupload/save',
-            data: {'fileProject.fileID': _fileID,
-                'fileProject.projectID':_projectID,
-                    'fileProject.fileTypeID':_fileTypeID},
+            data: {
+                'fileProject.fileID': _fileID,
+                'fileProject.projectID': _projectID,
+                'fileProject.fileTypeID': _fileTypeID
+            },
             loadFlag: true,
             success: function (data) {
                 reloadTable(fileTypeID);
@@ -166,19 +173,19 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <div class="layui-row">
-            <div class="layui-col-md3" style="overflow:auto;">
-                <ul id="tree" class="ztree"></ul>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-col-md3" style="overflow:auto;">
+            <ul id="tree" class="ztree"></ul>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-btn-group">
+                <button id="add" class="layui-btn layui-btn-small layui-hide">上传文件</button>
             </div>
-            <div class="layui-col-md9">
-                <div class="layui-btn-group">
-                    <button id="add" class="layui-btn layui-btn-small layui-hide">上传文件</button>
-                </div>
-                <table id="dateTable" lay-filter="dateTable"></table>
-            </div>
+            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>

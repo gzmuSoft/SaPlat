@@ -130,7 +130,6 @@
                         <option value="#(e.id)">#(e.name)</option>
                         #end
                     </select>
-                    #else
                     <div>#(expertGroup.name)</div>
                     #end
                 </div>
@@ -142,6 +141,7 @@
                     #if(riskFactor == null || riskFactor.equals("") )
                     <textarea id="riskFactor" style="display: none;"></textarea>
                     #else
+                    <textarea id="riskFactor" style="display: none;">#(riskFactor)</textarea>
                     <div>#(riskFactor)</div>
                     #end
                 </div>
@@ -153,6 +153,7 @@
                     #if( resolving == null || resolving.equals("") )
                     <textarea id="resolving" style="display: none;"></textarea>
                     #else
+                    <textarea id="resolving" style="display: none;">#(resolving)</textarea>
                     <div>#(resolving)</div>
                     #end
                 </div>
@@ -165,6 +166,7 @@
                     #if(otherComments == null || otherComments.equals("") )
                     <textarea id="otherComments" style="display: none;"></textarea>
                     #else
+                    <textarea id="otherComments" style="display: none;">#(otherComments)</textarea>
                     <div>#(otherComments)</div>
                     #end
                 </div>
