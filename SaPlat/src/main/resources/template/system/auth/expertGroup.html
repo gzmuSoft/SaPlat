@@ -33,7 +33,7 @@
             <div class="layui-input-inline">
                 <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required"
                        value="#(expertGroup.name)"
-                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input">
+                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input layui-disabled" disabled="disabled">
             </div>
         </div>
 
@@ -41,16 +41,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.workstate">在职状态</label>
             <div class="layui-input-inline">
-                <select name="expertGroup.workstate" id="expertGroup.workstate">
-                    <option value="">请选择</option>
-                    #if(expertGroup.wokstate == 0)
-                    <option value="在职">在职</option>
-                    <option value="离职" selected="">离职</option>
-                    #else
-                    <option value="在职" selected="">在职</option>
-                    <option value="离职">离职</option>
-                    #end
-                </select>
+                <input type="text" name="expertGroup.workstate" id="expertGroup.workstate" required lay-verify="required"
+                       value="#(expertGroup.workstate)"
+                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input layui-disabled" disabled="disabled">
             </div>
         </div>
 
@@ -59,7 +52,7 @@
                 <label class="layui-form-label" for="expertGroup.worktime">工作时间</label>
                 <div class="layui-input-block">
                     <input type="date" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
-                           value="#(expertGroup.worktime)" class="layui-input">
+                           value="#(expertGroup.worktime)" class="layui-input layui-disabled" disabled="disabled">
                 </div>
             </div>
         </div>
@@ -68,7 +61,7 @@
                 <label class="layui-form-label" for="expertGroup.department">部门名称</label>
                 <div class="layui-input-block">
                     <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
-                           value="#(expertGroup.department)" class="layui-input">
+                           value="#(expertGroup.department)" class="layui-input layui-disabled" disabled="disabled">
                 </div>
             </div>
         </div>
@@ -79,7 +72,7 @@
                 <div class="layui-upload">
                     <div class="layui-upload">
                         <button type="button" class="layui-btn" name="upload1" id="upload1">
-                            <i class="layui-icon"></i>上传文件
+                            <i class="layui-icon"></i>查看页面
                         </button>
                         <button type="button" class="layui-hide" id="uploadBtn1"></button>
                     </div>
@@ -92,21 +85,16 @@
             <label class="layui-form-label" for="expertGroup.profess">专业资格内容</label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
-                          class="layui-textarea">#(expertGroup.profess)</textarea>
+                          class="layui-textarea layui-disabled" disabled="disabled">#(expertGroup.profess)</textarea>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="upload2"><em class="require-mark">*</em>专业资格证书</label>
             <div class="layui-input-block">
-                <div class="layui-upload">
-                    <div class="layui-upload">
-                        <button type="button" class="layui-btn" name="upload2" id="upload2">
-                            <i class="layui-icon"></i>上传文件
-                        </button>
-                        <button type="button" class="layui-hide" id="uploadBtn2"></button>
-                    </div>
-                </div>
+                <button type="button" class="layui-btn" name="upload2" id="upload2">
+                    <i class="layui-icon"> </i>查看文件
+                </button>
             </div>
         </div>
 
@@ -115,16 +103,13 @@
             <label class="layui-form-label" for="expertGroup.project">参与项目经历</label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.project" id="expertGroup.project"
-                          class="layui-textarea">#(expertGroup.project)</textarea>
+                          class="layui-textarea layui-disabled" disabled="disabled">#(expertGroup.project)</textarea>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <button class="layui-btn" lay-filter="sub" lay-submit id="sub">
-                保存
-            </button>
             <button class="layui-btn" id="back">
-                返回
+                关闭
             </button>
         </div>
     </form>
