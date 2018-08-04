@@ -1,0 +1,39 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        //按钮点击事件
+        $("#prove").click(function () {
+            window.location.href = '#(ctxPath)/app/organization/prove';
+        });
+
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend>还没有通过任何机构认证</legend>
+        <div>
+            <button class="layui-btn layui-btn-lg layui-btn-warm layui-btn-radius" id="prove">立即申请认证</button>
+        </div>
+    </fieldset>
+</div>
+
+#end

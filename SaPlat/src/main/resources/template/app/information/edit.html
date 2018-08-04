@@ -51,7 +51,8 @@
         });
 
         $(document).on('click', '.htmlName', function (e) {
-            $('#content').prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")));
+            $('#content').prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")))
+                .css("display","");
         });
 
         util.fixbar({

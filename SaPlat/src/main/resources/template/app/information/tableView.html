@@ -51,10 +51,10 @@
             var data = obj.data;
             console.log(obj);
             if (obj.event === 'edit') {
-                window.location.href = "#(ctxPath)#(url)?id=#(projectId)&expertID=" + data.expertID;
+                window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&id=" + data.id;
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除吗？', function (index) {
-                    $.post("#(ctxPath)/app/information/expertAdviceDelete", {id: data.id}, function (e) {
+                    $.post("#(ctxPath)#(url)Delete", {id: data.id}, function (e) {
                         layer.close(index);
                         layer.msg("删除成功！");
                         table.reload('dateTable', {
@@ -62,7 +62,6 @@
                         });
                     });
                 });
-
             }
         });
 

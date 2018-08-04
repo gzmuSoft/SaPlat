@@ -5,8 +5,15 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 
 import java.util.List;
+import java.util.Map;
 
 public interface StructPersonLinkService {
+    /**
+     * 架构人员列表
+     * @param orgStructureId
+     * @return
+     */
+    public Map<String,Object> findByStructIdAndUsername(Long orgStructureId);
 
     /**
      * find model by primary key
@@ -23,6 +30,13 @@ public interface StructPersonLinkService {
      * @return all <StructPersonLink
      */
     public List<StructPersonLink> findAll();
+
+    /**
+     *根据用户名查询
+     * @param orgStructureId
+     * @return
+     */
+    public List<StructPersonLink> findByPersonID(Long personID);
 
     /**
      * find List<model> by orgStructureId

@@ -58,17 +58,16 @@ public class ProjectController extends BaseController {
     private LeaderGroupService leaderGroupService;
 
     @JbootrpcService
-    private ProjectFileTypeService projectFileTypeService;
-
-    @JbootrpcService
     private FileProjectService fileProjectService;
 
     @JbootrpcService
     private FilesService filesService;
 
-
     @JbootrpcService
     private EvaSchemeService evaSchemeService;
+
+    @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
 
     /**
      * 项目立项基本资料初始化至信息管理界面
@@ -131,8 +130,8 @@ public class ProjectController extends BaseController {
                 authProject.setName(loginUser.getName());
                 authProject.setLastUpdUser(loginUser.getName());
                 if (project.getAssessmentMode().equals("自评")) {
-                    authProject.setStatus(ProjectStatus.IS_VERIFY);
-                    project.setStatus(ProjectStatus.IS_VERIFY);
+                    authProject.setStatus(ProjectStatus.REVIEW);
+                    project.setStatus(ProjectStatus.REVIEW);
                 } else if (project.getAssessmentMode().equals("委评")) {
                     authProject.setStatus(ProjectStatus.VERIFIING);
                     project.setStatus(ProjectStatus.VERIFIING);
@@ -631,5 +630,6 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<FacAgency>(page));
     }
+
 
 }
