@@ -39,9 +39,9 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
     }
 
     @Override
-    public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize){
+    public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if(null!=profGroup.getName()){
+        if (null != profGroup.getName()) {
             columns.like("name", "%" + profGroup.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");

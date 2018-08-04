@@ -21,11 +21,11 @@
         backfun: function (data) {
             var url = "/nlistPage";
             var form = $("<form method='post'></form>");
-            form.attr({"action":url});
+            form.attr({"action": url});
             var input = $("<input type='hidden'>");
-            input.attr({"name":"pageNum"});
+            input.attr({"name": "pageNum"});
             input.val(data.pageNum);
-            input.attr({"name":"current"});
+            input.attr({"name": "current"});
             input.val(data.current);
             form.append(input);
             $("html").append(form);
@@ -36,9 +36,9 @@
     function nshow(id) {
         var url = "/nshow";
         var form = $("<form method='post'></form>");
-        form.attr({"action":url});
+        form.attr({"action": url});
         var input = $("<input type='hidden'>");
-        input.attr({"name":"id"});
+        input.attr({"name": "id"});
         input.val(id);
         form.append(input);
         $("html").append(form);
@@ -52,7 +52,7 @@
     <div class="news-list">
         <ul class="news-list-left">
             #for(model : newsList)
-            <li  class="news-list-item">
+            <li class="news-list-item">
                 <div class="author-time">
                     <span>#(model.editer)</span> &nbsp;&nbsp;发表于 <span>#(model.createTime)</span>
                 </div>

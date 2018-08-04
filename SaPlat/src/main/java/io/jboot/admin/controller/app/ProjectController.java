@@ -88,7 +88,7 @@ public class ProjectController extends BaseController {
     /**
      * 立项文件上传页面
      */
-    @NotNullPara({"id","projectId"})
+    @NotNullPara({"id", "projectId"})
     public void fileUploading() {
         Long id = getParaToLong("id");
         ProjectFileType model = projectFileTypeService.findById(id);

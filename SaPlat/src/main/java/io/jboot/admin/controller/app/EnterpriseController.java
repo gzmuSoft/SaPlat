@@ -27,7 +27,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/enterprise")
-public class EnterpriseController extends BaseController{
+public class EnterpriseController extends BaseController {
 
     @JbootrpcService
     private EnterpriseService enterpriseService;
@@ -38,6 +38,7 @@ public class EnterpriseController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -56,49 +57,49 @@ public class EnterpriseController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!enterpriseService.deleteById(id)){
+        if (!enterpriseService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         Enterprise model = enterpriseService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, EnterpriseValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         Enterprise model = getBean(Enterprise.class, "model");
-        if (enterpriseService.isExisted(model.getName())){
+        if (enterpriseService.isExisted(model.getName())) {
             throw new BusinessException("所指定的企业机构名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!enterpriseService.save(model)){
+        if (!enterpriseService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, EnterpriseValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         Enterprise model = getBean(Enterprise.class, "model");
         Enterprise byId = enterpriseService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的企业机构名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!enterpriseService.update(model)){
+        if (!enterpriseService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());

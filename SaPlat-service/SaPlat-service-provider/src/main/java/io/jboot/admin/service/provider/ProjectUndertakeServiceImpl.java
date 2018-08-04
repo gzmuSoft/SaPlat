@@ -41,8 +41,8 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     @Override
     public List<ProjectUndertake> findListByFacAgencyIdAndStatus(Long facAgencyId, String status) {
         Columns columns = Columns.create();
-        columns.eq("facAgencyID",facAgencyId);
-        columns.eq("status",status);
+        columns.eq("facAgencyID", facAgencyId);
+        columns.eq("status", status);
         return DAO.findListByColumns(columns);
     }
 
@@ -90,7 +90,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     @Override
     public ProjectUndertake findByProjectId(Long projectId) {
-        return DAO.findFirstByColumn(Column.create("projectID",projectId));
+        return DAO.findFirstByColumn(Column.create("projectID", projectId));
     }
 
     @Override

@@ -41,34 +41,39 @@
         <div class="layui-form-item">
             <label class="layui-form-label">标题</label>
             <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="标题" readonly="readonly"  value="#(notification.name)" class="layui-input">
+                <input type="text" name="title" autocomplete="off" placeholder="标题" readonly="readonly"
+                       value="#(notification.name)" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">接收人</label>
             <div class="layui-input-block">
-                <input type="text" name="receiverUser.name" readonly="readonly" placeholder="接收人" class="layui-input" value="#(receiverUser.name)"
+                <input type="text" name="receiverUser.name" readonly="readonly" placeholder="接收人" class="layui-input"
+                       value="#(receiverUser.name)"
                        required lay-verify="required" autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea placeholder="内容" class="layui-textarea" value="" readonly="readonly">#(notification.content)</textarea>
+                <textarea placeholder="内容" class="layui-textarea" value=""
+                          readonly="readonly">#(notification.content)</textarea>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">发送时间</label>
             <div class="layui-input-block">
-                <input type="text" name="notification.createTime" placeholder="发送时间" readonly="readonly" class="layui-input" value="#(notification.createTime)"
+                <input type="text" name="notification.createTime" placeholder="发送时间" readonly="readonly"
+                       class="layui-input" value="#(notification.createTime)"
                        autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">发送人</label>
             <div class="layui-input-block">
-                <input type="text" name="createUser.name" readonly="readonly" placeholder="发送人" class="layui-input" value="#(createUser.name)"
+                <input type="text" name="createUser.name" readonly="readonly" placeholder="发送人" class="layui-input"
+                       value="#(createUser.name)"
                        required lay-verify="required" autocomplete="off"/>
             </div>
         </div>

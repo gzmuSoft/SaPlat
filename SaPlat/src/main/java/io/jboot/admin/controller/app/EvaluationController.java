@@ -2,9 +2,11 @@ package io.jboot.admin.controller.app;
 
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.DiagnosesService;
 import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.SiteSurveyExpertAdviceService;
+import io.jboot.admin.service.entity.model.Diagnoses;
 import io.jboot.admin.service.entity.model.EvaScheme;
 import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.SiteSurveyExpertAdvice;
@@ -34,30 +36,39 @@ public class EvaluationController extends BaseController {
 
     @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
+
+    @JbootrpcService
+    private DiagnosesService diagnosesService;
     /**
      * 评估详情
      */
     @NotNullPara({"id"})
-    public void evaluationInformation(){
+    public void evaluationInformation() {
         Long id = getParaToLong("id");
         Project project = projectService.findFirstByColumns(new String[]{"id", "status"},
                 new String[]{id.toString(), ProjectStatus.REVIEW});
         EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
-        if (project == null){
+        if (project == null) {
             project = new Project();
         }
-        if (evaScheme == null){
+        if (evaScheme == null) {
             evaScheme = new EvaScheme();
         } else {
             List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(id);
-            if (model == null || model.size() == 0){
-                setAttr("siteSurveyExpertAdvice","false");
+            if (model == null || model.size() == 0) {
+                setAttr("siteSurveyExpertAdvice", "false");
             } else {
-                setAttr("siteSurveyExpertAdvice","true");
+                setAttr("siteSurveyExpertAdvice", "true");
+            }
+            List<Diagnoses> diagnoses =  diagnosesService.findListByProjectId(id);
+            if (diagnoses == null || diagnoses.size() == 0){
+                setAttr("diagnoses", "false");
+            } else {
+                setAttr("diagnoses", "true");
             }
         }
-        setAttr("project",project.toJson())
-                .setAttr("evaScheme",evaScheme.toJson())
+        setAttr("project", project.toJson())
+                .setAttr("evaScheme", evaScheme.toJson())
                 .render("evaluation.html");
     }
 }

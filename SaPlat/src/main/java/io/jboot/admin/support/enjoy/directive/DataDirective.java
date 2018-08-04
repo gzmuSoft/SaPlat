@@ -22,9 +22,13 @@ public class DataDirective extends JbootDirectiveBase {
     @JbootrpcService
     private DataService dataApi;
 
-    /** 数据字典类型编码 */
+    /**
+     * 数据字典类型编码
+     */
     private String typeCode;
-    /**需要查询的字典代码*/
+    /**
+     * 需要查询的字典代码
+     */
     private String code;
 
     @Override
@@ -39,9 +43,8 @@ public class DataDirective extends JbootDirectiveBase {
         }
 
         if (exprList.length() > 1) {
-            code = getParam(1,scope);
+            code = getParam(1, scope);
         }
-
 
 
         List<Data> list = dataApi.getListByTypeOnUse(typeCode);
@@ -50,8 +53,8 @@ public class DataDirective extends JbootDirectiveBase {
             write(writer, "");
         } else {
             for (Data data : list) {
-                if(code.equals(data.getCode())) {
-                    write(writer,data.getCodeDesc());
+                if (code.equals(data.getCode())) {
+                    write(writer, data.getCodeDesc());
                 }
             }
         }

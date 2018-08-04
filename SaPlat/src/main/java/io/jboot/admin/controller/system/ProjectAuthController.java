@@ -82,7 +82,7 @@ public class ProjectAuthController extends BaseController {
             roleStatus.add(role.getId().toString(), role.getName());
         }
 
-        
+
         setAttr("roleStatus", roleStatus).render("verifyIndex.html");
     }
 
@@ -127,11 +127,10 @@ public class ProjectAuthController extends BaseController {
     }
 
 
-
     @Before(POST.class)
     public void verifyPostupdate() {
         Auth auth = getBean(Auth.class, "auth");
-        Auth model =authService.findById(auth.getId());
+        Auth model = authService.findById(auth.getId());
         if (model == null) {
             throw new BusinessException("没有这个审核");
         }
@@ -151,7 +150,7 @@ public class ProjectAuthController extends BaseController {
     @Before(POST.class)
     public void dataPostupdate() {
         AuthProject authProject = getBean(AuthProject.class, "authProject");
-        AuthProject model =authProjectService.findById(authProject.getId());
+        AuthProject model = authProjectService.findById(authProject.getId());
         if (model == null) {
             throw new BusinessException("没有这个审核");
         }
@@ -175,7 +174,7 @@ public class ProjectAuthController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Auth auth = new Auth();
-        if(getParaToLong("userId")!=null) {
+        if (getParaToLong("userId") != null) {
             auth.setUserId(getParaToLong("userId"));
         }
         if (!"".equals(getPara("status"))) {
@@ -196,7 +195,7 @@ public class ProjectAuthController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         AuthProject authProject = new AuthProject();
-        if(getParaToLong("userId")!=null) {
+        if (getParaToLong("userId") != null) {
             authProject.setUserId(getParaToLong("userId"));
         }
         if (!"".equals(getPara("status"))) {
@@ -221,7 +220,7 @@ public class ProjectAuthController extends BaseController {
         }
         User user = userService.findById(auth.getUserId());
         Person person = personService.findById(user.getUserID());
-        Organization organization= organizationService.findById(user.getUserID());
+        Organization organization = organizationService.findById(user.getUserID());
 
         if (!auth.getType().equals(TypeStatus.PROJECT_VERIFY)) {
             throw new BusinessException("请求参数非法");

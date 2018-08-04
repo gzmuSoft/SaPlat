@@ -26,6 +26,7 @@ public class NotificationController extends BaseController {
 
     @JbootrpcService
     private UserService userService;
+
     /**
      * index
      */
@@ -53,12 +54,12 @@ public class NotificationController extends BaseController {
      * 查看
      */
     @NotNullPara({"id"})
-    public void view(){
+    public void view() {
         Notification notification = notificationService.findById(getParaToLong("id"));
         User createUser = userService.findById(notification.getCreateUserID());
         User receiverUser = userService.findById(notification.getReceiverID());
-        setAttr("notification",notification).
-                setAttr("createUser",createUser).setAttr("receiverUser",receiverUser).
+        setAttr("notification", notification).
+                setAttr("createUser", createUser).setAttr("receiverUser", receiverUser).
                 render("view.html");
         notification.setLastAccessTime(new Date());
         notification.setStatus(1);
@@ -80,9 +81,9 @@ public class NotificationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    public void haveRead(){
+    public void haveRead() {
         User loginUser = AuthUtils.getLoginUser();
-        if(!notificationService.haveReadAll(loginUser.getId())) {
+        if (!notificationService.haveReadAll(loginUser.getId())) {
             throw new BusinessException("标记失败");
         }
         renderJson(RestResult.buildSuccess());

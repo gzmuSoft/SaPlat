@@ -13,25 +13,25 @@
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ueditor/ueditor.all.js"></script>
 
 <script type="text/javascript">
-    var ue = UE.getEditor('container',{initialFrameHeight:500});
+    var ue = UE.getEditor('container', {initialFrameHeight: 500});
     layui.use(['form', 'layer', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
             var dataParam = $('#addForm').serializeArray();
-            var newsletter = ue.getContentTxt().substring(0,160) + "...";
-            newsletter = newsletter.replace(/\s+/g,"");
-            dataParam.push({"name":"model.content","value":ue.getContent()});
-            dataParam.push({"name":"model.newsletter","value":newsletter});
+            var newsletter = ue.getContentTxt().substring(0, 160) + "...";
+            newsletter = newsletter.replace(/\s+/g, "");
+            dataParam.push({"name": "model.content", "value": ue.getContent()});
+            dataParam.push({"name": "model.newsletter", "value": newsletter});
             //alert(dataParam);
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/news/postUpdate',
                 data: dataParam,
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                     pop_close();
                 }
             });
@@ -39,33 +39,33 @@
         });
 
         form.on('radio(pub_object)', function (data) {
-            if(data.value == 0){
+            if (data.value == 0) {
                 $("#character").hide();
                 $("#individual").hide();
-            }else if(data.value == 1){
+            } else if (data.value == 1) {
                 $("#character").show();
                 $("#individual").hide();
-            }else{
+            } else {
                 $("#character").hide();
                 $("#individual").show();
             }
         });
     });
-    $(document).ready(function(){
+    $(document).ready(function () {
         var type = "#(model.type)";
         var isPublish = "#(model.isPublish)";
         var receiverRoles = "#(model.receiverRoles)";
         var receiverUsers = "#(model.receiverUsers)";
         $("#newsType").val(type);
-        $("input:radio[name='model.isPublish']").eq(isPublish).attr("checked",'checked');
-        if(isPublish == 0){
+        $("input:radio[name='model.isPublish']").eq(isPublish).attr("checked", 'checked');
+        if (isPublish == 0) {
             $("#character").hide();
             $("#individual").hide();
-        }else if(isPublish == 1){
+        } else if (isPublish == 1) {
             $("#character").show();
             $("#individual").hide();
             $("#receiverRoles").val(receiverRoles);
-        }else{
+        } else {
             $("#character").hide();
             $("#individual").show();
             $("#receiverUsers").val(receiverUsers);
@@ -93,13 +93,15 @@
             <div class="layui-inline">
                 <label class="layui-form-label">来源</label>
                 <div class="layui-input-block">
-                    <input name="model.source" value="#(model.source)" autocomplete="off" class="layui-input" type="text">
+                    <input name="model.source" value="#(model.source)" autocomplete="off" class="layui-input"
+                           type="text">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">编辑</label>
                 <div class="layui-input-inline">
-                    <input name="model.editer" value="#(model.editer)" autocomplete="off" class="layui-input" type="text">
+                    <input name="model.editer" value="#(model.editer)" autocomplete="off" class="layui-input"
+                           type="text">
                 </div>
             </div>
         </div>

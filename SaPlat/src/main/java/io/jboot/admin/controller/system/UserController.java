@@ -26,8 +26,8 @@ import java.util.List;
 
 /**
  * 系统用户管理
+ *
  * @author Rlax
- * 
  */
 @RequestMapping("/system/user")
 public class UserController extends BaseController {
@@ -221,7 +221,7 @@ public class UserController extends BaseController {
     /**
      * 修改密码提交
      */
-    @Before( {POST.class, ChangePwdValidator.class} )
+    @Before({POST.class, ChangePwdValidator.class})
     public void postChangepwd() {
         User sysUser = getBean(User.class, "user");
         if (!sysUser.getId().equals(AuthUtils.getLoginUser().getId())) {

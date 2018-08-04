@@ -17,11 +17,11 @@
 
         form.val("formTest", {
             "affectedGroup.occupation": $('#occupationSelected').val()
-            ,"affectedGroup.duty": $('#dutySelected').val()
-            ,"affectedGroup.politics": $('#politicsSelected').val()
-            ,"affectedGroup.nation": $('#nationSelected').val()
-            ,"affectedGroup.education": $('#educationSelected').val()
-            ,"affectedGroup.nationality": $('#nationalitySelected').val()
+            , "affectedGroup.duty": $('#dutySelected').val()
+            , "affectedGroup.politics": $('#politicsSelected').val()
+            , "affectedGroup.nation": $('#nationSelected').val()
+            , "affectedGroup.education": $('#educationSelected').val()
+            , "affectedGroup.nationality": $('#nationalitySelected').val()
         });
 
         form.on('submit(sub)', function (data) {
@@ -109,7 +109,8 @@
                             <label class="layui-form-label" for="affectedGroup.birthday"><em
                                     class="require-mark">*</em>出生日期</label>
                             <div class="layui-input-inline">
-                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday" value="#(affectedGroup.birthday)"
+                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday"
+                                       value="#(affectedGroup.birthday)"
                                        lay-verify="date"
                                        placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" required/>
                             </div>
@@ -118,7 +119,8 @@
                             <label class="layui-form-label" for="affectedGroup.nationality"><em
                                     class="require-mark">*</em>国籍</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="nationalitySelected" name="nationalitySelected" value="#(affectedGroup.nationalityID)" />
+                                <input type="hidden" id="nationalitySelected" name="nationalitySelected"
+                                       value="#(affectedGroup.nationalityID)"/>
                                 <select id="affectedGroup.nationality" name="affectedGroup.nationality"
                                         lay-verify="required">
                                     <option value=""></option>
@@ -130,7 +132,8 @@
                             <label class="layui-form-label" for="affectedGroup.nation"><em
                                     class="require-mark">*</em>民族</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="nationSelected" name="nationSelected" value="#(affectedGroup.nationID)" />
+                                <input type="hidden" id="nationSelected" name="nationSelected"
+                                       value="#(affectedGroup.nationID)"/>
                                 <select id="affectedGroup.nation" name="affectedGroup.nation" lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(nationStatus);
@@ -141,7 +144,8 @@
                             <label class="layui-form-label" for="affectedGroup.politics"><em
                                     class="require-mark">*</em>政治面貌</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="politicsSelected" name="politicsSelected" value="#(affectedGroup.politicsID)" />
+                                <input type="hidden" id="politicsSelected" name="politicsSelected"
+                                       value="#(affectedGroup.politicsID)"/>
                                 <select id="affectedGroup.politics" name="affectedGroup.politics" lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(politicalOpts);
@@ -152,8 +156,10 @@
                             <label class="layui-form-label" for="affectedGroup.education"><em
                                     class="require-mark">*</em>学历</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="educationSelected" name="educationSelected" value="#(affectedGroup.educationID)" />
-                                <select id="affectedGroup.education" name="affectedGroup.education" lay-verify="required">
+                                <input type="hidden" id="educationSelected" name="educationSelected"
+                                       value="#(affectedGroup.educationID)"/>
+                                <select id="affectedGroup.education" name="affectedGroup.education"
+                                        lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(educationalStatus);
                                 </select>
@@ -178,7 +184,8 @@
                             <label class="layui-form-label" for="affectedGroup.residence"><em
                                     class="require-mark">*</em>长期居住地址</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="affectedGroup.residence" name="affectedGroup.residence" value="#(affectedGroup.residence)" class="layui-input" required/>
+                                <input type="text" id="affectedGroup.residence" name="affectedGroup.residence"
+                                       value="#(affectedGroup.residence)" class="layui-input" required/>
                             </div>
                         </div>
                     </div>
@@ -186,7 +193,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="occupationSelected" name="occupationSelected" value="#(affectedGroup.occupationID)" />
+                                <input type="hidden" id="occupationSelected" name="occupationSelected"
+                                       value="#(affectedGroup.occupationID)"/>
                                 <select id="affectedGroup.occupation" name="affectedGroup.occupation"
                                         lay-verify="required">
                                     <option value=""></option>
@@ -197,7 +205,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.duty">职务</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="dutySelected" name="dutySelected" value="#(affectedGroup.dutyID)" />
+                                <input type="hidden" id="dutySelected" name="dutySelected"
+                                       value="#(affectedGroup.dutyID)"/>
                                 <select id="affectedGroup.duty" name="affectedGroup.duty"
                                         lay-verify="required">
                                     <option value=""></option>
@@ -209,7 +218,7 @@
                             <label class="layui-form-label" for="affectedGroup.resume">工作简历</label>
                             <div class="layui-input-block">
                             <textarea id="affectedGroup.resume" name="affectedGroup.resume"
-                                  placeholder="请输入内容" class="layui-textarea"></textarea>
+                                      placeholder="请输入内容" class="layui-textarea"></textarea>
                             </div>
                         </div>
                     </div>
@@ -232,7 +241,7 @@
                             <label class="layui-form-label" for="affectedGroup.children">子女情况</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.children" name="affectedGroup.children"
-                                       value="#(affectedGroup.children)" class="layui-input" />
+                                       value="#(affectedGroup.children)" class="layui-input"/>
                             </div>
                         </div>
                     </div>

@@ -22,8 +22,8 @@ import java.util.Date;
 
 /**
  * 商品管理
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/b2c/product")
 public class ProductController extends BaseController {

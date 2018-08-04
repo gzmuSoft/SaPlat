@@ -31,9 +31,10 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
      *
      * @param id
      * @return url
-     * */
-    public String findFileURLByFileId(long id){
-        return File.separator+"upload"+File.separator+"test.pdf";
+     */
+    @Override
+    public String findFileURLByFileId(long id) {
+        return File.separator + "upload" + File.separator + "test.pdf";
     }
 
     /**
@@ -42,6 +43,7 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
      * @param id project
      * @return List<ZTree>
      */
+    @Override
     public List<ZTree> findFileTreeByProject(long id) {
         List<ZTree> zTree = new ArrayList<ZTree>();
         FileProjectService fileProjectService = new FileProjectServiceImpl();
@@ -52,10 +54,10 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
             ProjectFileType projectFileType = projectFileTypeService.findById(item.getFileTypeID());
             if (null == item.getFileID()) {
                 //文件分类，没有对应的文件
-                zTree.add(new ZTree(projectFileType.getId(),projectFileType.getName(),projectFileType.getParentID()));
+                zTree.add(new ZTree(projectFileType.getId(), projectFileType.getName(), projectFileType.getParentID()));
             } else {
                 Files file = filesService.findById(item.getFileID());
-                zTree.add(new ZTree(Long.MAX_VALUE,file.getName(),projectFileType.getId(),"/upload/test.pdf"));
+                zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getId(), "/upload/test.pdf"));
             }
         }
         return zTree;
@@ -69,13 +71,13 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
      * @param projectId
      * @return ProAssReview model
      */
-    public List<ProAssReview> findByFileIdAndProjectId(long fileId,long projectId){
+    public List<ProAssReview> findByFileIdAndProjectId(long fileId, long projectId) {
         Columns columns = new Columns();
-        columns.eq("fileID",fileId);
-        columns.eq("projectID",projectId);
+        columns.eq("fileID", fileId);
+        columns.eq("projectID", projectId);
         List<ProAssReview> pars = DAO.findListByColumns(columns);
         System.out.print("#############################################start######################################################");
-        System.out.print("\n\n"+pars.size()+"\n\n");
+        System.out.print("\n\n" + pars.size() + "\n\n");
         System.out.print("#############################################end######################################################");
         return pars;
     }

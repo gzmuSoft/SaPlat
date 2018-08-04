@@ -22,21 +22,26 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
-            ,cellMinWidth: 80       //单元格最小宽度
+            , cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
-                ,{field:'id', title:'ID', width:80, unresize: true, sort: true}
-                ,{field: 'name', title: '名称', sort: true}
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: 'ID', width: 80, unresize: true, sort: true}
+                , {field: 'name', title: '名称', sort: true}
                 , {field: 'sort', title: '排序', sort: true}
                 , {field: 'remark', title: '备注'}
-                , {field: 'isEnable', title: '是否可用', sort: true, templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'}
+                , {
+                    field: 'isEnable',
+                    title: '是否可用',
+                    sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'
+                }
                 , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/country/tableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -46,16 +51,16 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/country/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -64,28 +69,28 @@
                         }
                     })
                 });
-            } else if(obj.event === 'edit'){
-                pop_show('编辑国家','#(ctxPath)/app/country/update?id=' + data.id,'445','315', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑国家', '#(ctxPath)/app/country/update?id=' + data.id, '445', '315', function () {
                     reloadTable($('#name').val());
                 });
-            } else if(obj.event === 'use'){
-                util.sendAjax ({
+            } else if (obj.event === 'use') {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/app/country/use',
-                    data: {id : data.id},
+                    data: {id: data.id},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         reloadTable($('#name').val());
                     }
                 });
-            } else if(obj.event === 'unuse'){
-                layer.confirm('确定禁用该国家吗', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'unuse') {
+                layer.confirm('确定禁用该国家吗', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/country/unuse',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -97,8 +102,8 @@
             }
         });
 
-        $("#add").click(function(){
-            pop_show('添加国家','#(ctxPath)/app/country/add','445','315', function(){
+        $("#add").click(function () {
+            pop_show('添加国家', '#(ctxPath)/app/country/add', '445', '315', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
@@ -106,11 +111,11 @@
         reloadTable = function (name, des) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/country/tableData'
-                ,where: {name: name, des: des} //设定异步数据接口的额外参数
+                , where: {name: name, des: des} //设定异步数据接口的额外参数
             });
         };
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.name, data.field.des);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -121,30 +126,31 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" action="" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" placeholder="国家名称" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="国家名称" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <div class="layui-btn-group">
-                #shiroHasPermission('/app/country/add')
-                <button id="add" class="layui-btn layui-btn-small">添加国家</button>
-                #end
-            </div>
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            #shiroHasPermission('/app/country/add')
+            <button id="add" class="layui-btn layui-btn-small">添加国家</button>
+            #end
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/country/update')

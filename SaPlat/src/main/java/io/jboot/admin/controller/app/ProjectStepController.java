@@ -29,7 +29,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/project_step")
-public class ProjectStepController extends BaseController{
+public class ProjectStepController extends BaseController {
 
     @JbootrpcService
     private ProjectStepService projectStepService;
@@ -40,6 +40,7 @@ public class ProjectStepController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -58,53 +59,54 @@ public class ProjectStepController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!projectStepService.deleteById(id)){
+        if (!projectStepService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         ProjectStep model = projectStepService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, ProjectStepValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         ProjectStep model = getBean(ProjectStep.class, "model");
-        if (projectStepService.isExisted(model.getName())){
+        if (projectStepService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!projectStepService.save(model)){
+        if (!projectStepService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, ProjectStepValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         ProjectStep model = getBean(ProjectStep.class, "model");
         ProjectStep byId = projectStepService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的项目阶段名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!projectStepService.update(model)){
+        if (!projectStepService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

@@ -11,13 +11,15 @@ import com.jfinal.template.io.Writer;
 
 /**
  * 状态下拉Option指令
- * @author Rlax
  *
+ * @author Rlax
  */
 @JFinalDirective("statusOption")
 public class OptionStatusDirective extends JbootDirectiveBase {
 
-    /** 状态类全路径 例如：com.AbcStatus */
+    /**
+     * 状态类全路径 例如：com.AbcStatus
+     */
     private BaseStatus status;
     private String value;
 
@@ -38,9 +40,9 @@ public class OptionStatusDirective extends JbootDirectiveBase {
 
         for (String key : status.all().keySet()) {
             if (value != null && key.equals(value)) {
-                write(writer, "<option selected value=\"" + key  + "\">" + status.desc(key) + "</option>");
+                write(writer, "<option selected value=\"" + key + "\">" + status.desc(key) + "</option>");
             } else {
-                write(writer, "<option value=\"" + key  + "\">" + status.desc(key) + "</option>");
+                write(writer, "<option value=\"" + key + "\">" + status.desc(key) + "</option>");
             }
         }
     }

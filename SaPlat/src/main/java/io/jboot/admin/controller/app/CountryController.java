@@ -27,7 +27,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/country")
-public class CountryController extends BaseController{
+public class CountryController extends BaseController {
 
     @JbootrpcService
     private CountryService countryService;
@@ -38,6 +38,7 @@ public class CountryController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -56,53 +57,54 @@ public class CountryController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!countryService.deleteById(id)){
+        if (!countryService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         Country model = countryService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, CountryValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         Country model = getBean(Country.class, "model");
-        if (countryService.isExisted(model.getName())){
+        if (countryService.isExisted(model.getName())) {
             throw new BusinessException("所指定的国家名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!countryService.save(model)){
+        if (!countryService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, CountryValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         Country model = getBean(Country.class, "model");
         Country byId = countryService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的国家名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!countryService.update(model)){
+        if (!countryService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

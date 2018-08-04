@@ -18,17 +18,17 @@ import java.util.List;
 public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType> implements ProjectFileTypeService {
     @Override
     public ProjectFileType findByName(String name) {
-        return DAO.findFirstByColumn(Column.create("name",name));
+        return DAO.findFirstByColumn(Column.create("name", name));
     }
 
     @Override
     public List<ProjectFileType> findListByParentId(Long parentId) {
-        return DAO.findListByColumn(Column.create("parentID",parentId));
+        return DAO.findListByColumn(Column.create("parentID", parentId));
     }
 
     @Override
     public List<ProjectFileType> findByParentId(Long parentId) {
-        return DAO.findListByColumn(Column.create("parentID",parentId));
+        return DAO.findListByColumn(Column.create("parentID", parentId));
     }
 
     @Override
@@ -37,8 +37,8 @@ public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType
         if (projectFileType.getName() != null) {
             columns.like("name", "%" + projectFileType.getName() + "%");
         }
-        if(projectFileType.getParentID()!=null){
-            columns.eq("parentID",projectFileType.getParentID());
+        if (projectFileType.getParentID() != null) {
+            columns.eq("parentID", projectFileType.getParentID());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
     }

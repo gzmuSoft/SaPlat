@@ -22,8 +22,8 @@ import java.util.List;
 
 /**
  * 管理端认证授权
- * @author Rlax
  *
+ * @author Rlax
  */
 public class LoginAuth implements MuitiAuthenticatied {
 

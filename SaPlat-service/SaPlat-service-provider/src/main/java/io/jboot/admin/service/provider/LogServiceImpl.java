@@ -26,13 +26,13 @@ public class LogServiceImpl extends JbootServiceBase<Log> implements LogService 
         Columns columns = Columns.create();
 
         if (StrKit.notBlank(log.getIp())) {
-            columns.like("ip", "%"+log.getIp()+"%");
+            columns.like("ip", "%" + log.getIp() + "%");
         }
         if (StrKit.notBlank(log.getUrl())) {
-            columns.like("url", "%"+log.getUrl()+"%");
+            columns.like("url", "%" + log.getUrl() + "%");
         }
         if (StrKit.notBlank(log.getLastUpdAcct())) {
-            columns.like("lastUpdAcct", "%"+log.getLastUpdAcct()+"%");
+            columns.like("lastUpdAcct", "%" + log.getLastUpdAcct() + "%");
         }
 
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");

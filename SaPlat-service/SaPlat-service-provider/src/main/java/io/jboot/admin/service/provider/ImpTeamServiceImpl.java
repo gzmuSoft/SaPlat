@@ -17,29 +17,30 @@ import java.util.List;
 @JbootrpcService
 public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements ImpTeamService {
     @Override
-    public List<ImpTeam> findByUserID(Long id){
+    public List<ImpTeam> findByUserID(Long id) {
         Columns columns = Columns.create();
-        columns.eq("createUserID",id);
+        columns.eq("createUserID", id);
         return DAO.findListByColumns(columns);
     }
+
     @Override
-    public ImpTeam findByUserIDAndProjectID(Long userId,Long projectId){
+    public ImpTeam findByUserIDAndProjectID(Long userId, Long projectId) {
         Columns columns = Columns.create();
-        columns.eq("createUserID",userId);
-        columns.eq("projectID",projectId);
+        columns.eq("createUserID", userId);
+        columns.eq("projectID", projectId);
         return DAO.findFirstByColumns(columns);
     }
 
     @Override
     public ImpTeam findByProjectId(Long id) {
-        return DAO.findFirstByColumn(Column.create("projectID",id));
+        return DAO.findFirstByColumn(Column.create("projectID", id));
     }
 
     @Override
     public List<ImpTeam> findByExpertGroup(ExpertGroup... expertGroups) {
         Columns columns = Columns.create();
         for (ExpertGroup expertGroup : expertGroups) {
-            columns.like("expertGroupIDs", "%" + expertGroup.getId() +"%");
+            columns.like("expertGroupIDs", "%" + expertGroup.getId() + "%");
         }
         return DAO.findListByColumns(columns);
     }

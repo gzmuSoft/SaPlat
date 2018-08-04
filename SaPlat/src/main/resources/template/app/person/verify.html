@@ -14,7 +14,7 @@
             , $ = layui.jquery
             , form = layui.form
             , laydate = layui.laydate
-            , upload = layui.upload ;
+            , upload = layui.upload;
         laydate.render({
             elem: '#expertGroup.worktime'
         });
@@ -22,22 +22,22 @@
             elem: '#expertGroup.birthday'
         });
 
-        var file1  = "";
-        var file2  = "";
+        var file1 = "";
+        var file2 = "";
         form.on('submit(sub)', function (data) {
             $('#uploadBtn1').click();
-            if (file1 == ""){
+            if (file1 == "") {
                 layer.msg("工作证件照片上传失败，请重新选择上传！");
                 return;
             }
-            if (file2 == ""){
+            if (file2 == "") {
                 layer.msg("专业资格证书上传失败，请重新选择上传！");
                 return;
             }
             data.field.file1 = file1;
             data.field.file2 = file2;
             console.log(data.field);
-            $.post("#(ctxPath)/app/person/expertGroupVerify",$.param(data.field),function (res) {
+            $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
                 layer.msg("成功！");
                 console.log(res);
             });
@@ -85,47 +85,46 @@
         });
 
 
-
         upload.render({
             elem: '#upload1'
-            ,url: '#(ctxPath)/app/person/upload'
-            ,accept: 'file'
+            , url: '#(ctxPath)/app/person/upload'
+            , accept: 'file'
             //,multiple: true
-            ,exts: 'doc|docx|pdf'
-            ,data:{
-                description :"工作证件照片"
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "工作证件照片"
             }
-            ,done: function(res){
+            , done: function (res) {
                 console.log(res);
-                if (res.code == 0){
+                if (res.code == 0) {
                     file1 = res.file;
-                }else if (res.code == 1){
+                } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
                 }
             }
-            ,error: function(index, upload){
+            , error: function (index, upload) {
                 alert("文件上传错误！请重新尝试！");
             }
         });
 
         upload.render({
             elem: '#upload2'
-            ,url: '#(ctxPath)/app/person/upload'
-            ,accept: 'file'
+            , url: '#(ctxPath)/app/person/upload'
+            , accept: 'file'
             //,multiple: true
-            ,exts: 'doc|docx|pdf'
-            ,data: {
-                description : "专业资格证书"
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "专业资格证书"
             }
-            ,done: function(res){
-                if (res.code == 0){
+            , done: function (res) {
+                if (res.code == 0) {
                     file2 = res.file;
                     console.log(res);
-                } else if (res.code == 1){
+                } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
                 }
             }
-            ,error: function(index, upload){
+            , error: function (index, upload) {
                 alert("文件上传错误！请重新尝试！");
             }
         });
@@ -213,7 +212,6 @@
         </div>
 
 
-
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label" for="expertGroup.profess">专业资格内容</label>
             <div class="layui-input-block">
@@ -235,8 +233,6 @@
                 </div>
             </div>
         </div>
-
-
 
 
         <div class="layui-form-item layui-form-text">

@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'name', title: '组织名称', width: 150}
                 , {field: 'spell', title: '名称全拼', width: 100}
@@ -41,7 +41,7 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -51,30 +51,30 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-           if(obj.event === 'edit'){
-                pop_show('编辑组织','#(ctxPath)/system/organization/update?id=' + data.id,'','', function(){
+            if (obj.event === 'edit') {
+                pop_show('编辑组织', '#(ctxPath)/system/organization/update?id=' + data.id, '', '', function () {
                     reloadTable($('#name').val());
                 });
-            } else if(obj.event === 'use'){
-                util.sendAjax ({
+            } else if (obj.event === 'use') {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/system/organization/use',
-                    data: {id : data.id},
+                    data: {id: data.id},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         reloadTable($('#name').val());
                     }
                 });
-            } else if(obj.event === 'unuse'){
-                layer.confirm('确定要锁定该组织', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'unuse') {
+                layer.confirm('确定要锁定该组织', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/organization/unuse',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -83,21 +83,21 @@
                         }
                     });
                 });
-            }else if(obj.event === 'certificate'){
-               pop_show('证书查看','#(ctxPath)/system/organization/certificate?id=' + data.id,'','', function(){
-                   reloadTable($('#name').val());
-               });
-           }
+            } else if (obj.event === 'certificate') {
+                pop_show('证书查看', '#(ctxPath)/system/organization/certificate?id=' + data.id, '', '', function () {
+                    reloadTable($('#name').val());
+                });
+            }
         });
 
         reloadTable = function (name) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/organization/tableData'
-                ,where: {name: name} //设定异步数据接口的额外参数
+                , where: {name: name} //设定异步数据接口的额外参数
             });
         }
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.name);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -109,7 +109,7 @@
 
 #define content()
 <div class="layui-fluid">
-    <form id="searchForm" class="layui-form x-center" action="" >
+    <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
                 <label class="layui-form-label">组织名称</label>
@@ -117,7 +117,8 @@
                     <input type="text" id="name" name="name" placeholder="组织名称" class="layui-input"/>
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
-                    <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
         </div>

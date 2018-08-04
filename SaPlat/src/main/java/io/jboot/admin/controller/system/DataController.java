@@ -17,8 +17,8 @@ import java.util.Date;
 
 /**
  * 数据字典管理
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/system/data")
 public class DataController extends BaseController {

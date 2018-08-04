@@ -65,6 +65,7 @@ public class ProjectUndertakeController extends BaseController {
 
     @JbootrpcService
     private ScheduledPlanService scheduledPlanService;
+
     /**
      * 跳转榜单页面
      */
@@ -306,7 +307,7 @@ public class ProjectUndertakeController extends BaseController {
         for (int i = 0; i < sub(string.toString()).length(); i++) {
             orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
         }
-        if (leaderGroup == null){
+        if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }
         setAttr("leaderGroup", leaderGroup).setAttr("project", project).setAttr("orgStructures", orgStructures).render("projectImpTeam.html");
@@ -325,15 +326,15 @@ public class ProjectUndertakeController extends BaseController {
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
-        if(getParaToBoolean("flag")){
+        if (getParaToBoolean("flag")) {
             ExpertGroup expertGroupModel;
             for (int i = 0; i < persons.size(); i++) {
                 expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
-                if (expertGroupModel != null){
+                if (expertGroupModel != null) {
                     expertGroups.add(expertGroupModel);
                 }
             }
-            json.put("expertGroups",expertGroups);
+            json.put("expertGroups", expertGroups);
         }
         renderJson(json);
     }
@@ -352,7 +353,7 @@ public class ProjectUndertakeController extends BaseController {
         impTeam.setLastAccessTime(new Date());
         impTeam.setCreateUserID(loginUser.getId());
         impTeam.setLastUpdateUserID(loginUser.getId());
-        if (!impTeamService.save(impTeam)){
+        if (!impTeamService.save(impTeam)) {
             renderJson(RestResult.buildError("保存失败"));
         }
 
@@ -363,9 +364,9 @@ public class ProjectUndertakeController extends BaseController {
         evaScheme.setCreateUserID(loginUser.getId());
         evaScheme.setLastUpdateUserID(loginUser.getId());
         evaScheme.setStatus("1");
-        if (!evaSchemeService.save(evaScheme)){
+        if (!evaSchemeService.save(evaScheme)) {
             renderJson(RestResult.buildError("保存失败"));
-        }else{
+        } else {
             evaScheme = evaSchemeService.findByProjectID(id);
         }
 
@@ -375,7 +376,7 @@ public class ProjectUndertakeController extends BaseController {
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
 
-        for (int i = 0; i<sName.length; i++) {
+        for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
             scheduledPlan.setEvaSchemeID(evaScheme.getId());//评估方案编号
             scheduledPlan.setName(sName[i]);
@@ -387,7 +388,7 @@ public class ProjectUndertakeController extends BaseController {
             scheduledPlan.setCreateUserID(loginUser.getId());
             scheduledPlan.setLastUpdateUserID(loginUser.getId());
 
-            if (!scheduledPlanService.save(scheduledPlan)){
+            if (!scheduledPlanService.save(scheduledPlan)) {
                 renderJson(RestResult.buildError("保存失败"));
             }
         }

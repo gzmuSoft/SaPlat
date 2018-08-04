@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'name', title: '名称', width: 100}
                 , {field: 'worktime', title: '工作时间', width: 200}
@@ -37,7 +37,7 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -47,16 +47,16 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/expert_group/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val(), $('#des').val());
                         },
@@ -65,28 +65,28 @@
                         }
                     })
                 });
-            } else if(obj.event === 'edit'){
-                pop_show('编辑专家团体','#(ctxPath)/app/expert_group/update?id=' + data.id,'','', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑专家团体', '#(ctxPath)/app/expert_group/update?id=' + data.id, '', '', function () {
                     reloadTable($('#name').val(), $('#des').val());
                 });
-            } else if(obj.event === 'use'){
-                util.sendAjax ({
+            } else if (obj.event === 'use') {
+                util.sendAjax({
                     type: 'POST',
                     url: '#(ctxPath)/app/expert_group/use',
-                    data: {id : data.id},
+                    data: {id: data.id},
                     loadFlag: true,
-                    success : function(data){
+                    success: function (data) {
                         reloadTable($('#name').val());
                     }
                 });
-            } else if(obj.event === 'unuse'){
-                layer.confirm('确定禁用该专家团体吗', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'unuse') {
+                layer.confirm('确定禁用该专家团体吗', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/expert_group/unuse',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -98,8 +98,8 @@
             }
         });
 
-        $("#add").click(function(){
-            pop_show('添加专家团体','#(ctxPath)/app/expert_group/add','','', function(){
+        $("#add").click(function () {
+            pop_show('添加专家团体', '#(ctxPath)/app/expert_group/add', '', '', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
@@ -107,11 +107,11 @@
         reloadTable = function (name, des) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/expert_group/tableData'
-                ,where: {name: name, des: des} //设定异步数据接口的额外参数
+                , where: {name: name, des: des} //设定异步数据接口的额外参数
             });
         };
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.name, data.field.des);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -122,30 +122,31 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" action="" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" placeholder="专家团体名称" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="专家团体名称" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <div class="layui-btn-group">
-                #shiroHasPermission('/app/expert_group/add')
-                <button id="add" class="layui-btn layui-btn-small">添加专家团体</button>
-                #end
-            </div>
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            #shiroHasPermission('/app/expert_group/add')
+            <button id="add" class="layui-btn layui-btn-small">添加专家团体</button>
+            #end
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/expert_group/update')

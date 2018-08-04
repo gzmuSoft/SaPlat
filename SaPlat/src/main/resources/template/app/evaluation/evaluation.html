@@ -1,4 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
+#include("/template/common/layout/_page_layout_all.html")
 #@layout()
 
 #define css()
@@ -7,18 +7,20 @@
         height: 100%;
         width: 100%;
     }
-    #next{
+
+    #next {
         height: 90%;
         width: 100%;
     }
-    body{
+
+    body {
         height: 100%;
     }
 </style>
 #end
 
 #define content()
-<h1 class="x-center">评估详情</h1>
+<h1 class="x-center">评估资料填写</h1>
 <hr class="layui-bg-red">
 <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="tip">
     <div class="layui-progress-bar layui-bg-red" id="bar" lay-percent="0%"></div>
@@ -28,35 +30,49 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element'], function() {
+    layui.use(['form', 'layer', 'element'], function () {
         var element = layui.element
-            ,$ = layui.jquery
-            ,layer = layui.layer
-            ,util = layui.util;
+            , $ = layui.jquery
+            , layer = layui.layer
+            , util = layui.util;
         var evaScheme = '#(evaScheme)';
         var project = '#(project)';
         var parent = 0;
         evaScheme = JSON.parse(evaScheme);
         project = JSON.parse(project);
-        if (typeof(evaScheme.status) === "undefined"){
-            $('#next').prop("src","#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
-        } else if (evaScheme.status === "1"){
+        if (typeof(evaScheme.status) === "undefined") {
+            $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+        } else if (evaScheme.status === "1") {
             $('#next').remove();
             layer.msg("您的项目正在审核中，请耐心等待。。。");
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
-        } else if (evaScheme.status === "2"){
+        } else if (evaScheme.status === "2") {
             layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
-            parent += 20;
-            element.progress('tip', parent + '%');
+            add(1,20);
             var siteSurveyExpertAdvice = '#(siteSurveyExpertAdvice)';
-            if (siteSurveyExpertAdvice === 'true'){
-                parent += 20;
-                element.progress('tip', parent + '%');
+            var diagnoses = '#(diagnoses)';
+            if (siteSurveyExpertAdvice === 'true') {
+                add(1,20);
             }
-            $('#next').prop("src","#(ctxPath)/app/information/edit?id=" + project.id);
-        } else if (evaScheme.status === "3"){
+            if (diagnoses === 'true'){
+                add(1,20);
+            }
+            $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id);
+
+        } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
-            $('#next').prop("src","#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+            $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+        }
+
+        function add(time,num) {
+            if (parent >= 100){
+                return;
+            }
+            time = time * 1000;
+            setTimeout(function () {
+                parent += num;
+                element.progress('tip', parent + '%');
+            },time);
         }
     });
 </script>

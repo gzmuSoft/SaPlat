@@ -26,8 +26,8 @@ public class AffectedGroupServiceImpl extends JbootServiceBase<AffectedGroup> im
     @Override
     public Page<AffectedGroup> findPage(AffectedGroup model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -44,7 +44,7 @@ public class AffectedGroupServiceImpl extends JbootServiceBase<AffectedGroup> im
 
     @Override
     public AffectedGroup findByPersonId(Long userID) {
-        return DAO.findFirstByColumn("personID",userID);
+        return DAO.findFirstByColumn("personID", userID);
     }
 
     @Override

@@ -10,7 +10,7 @@
 #define js()
 <script type="text/javascript">
     var cTime = null;
-    layui.use(['laydate','table', 'layer'], function () {
+    layui.use(['laydate', 'table', 'layer'], function () {
         var laydate = layui.laydate
             , table = layui.table
             , layer = layui.layer
@@ -19,10 +19,10 @@
         //日期时间范围
         laydate.render({
             elem: '#createTime'
-            ,type: 'datetime'
-            ,range: '/'
-            ,format: 'yyyy-MM-dd HH:mm:ss'
-            ,done: function(value){
+            , type: 'datetime'
+            , range: '/'
+            , format: 'yyyy-MM-dd HH:mm:ss'
+            , done: function (value) {
                 cTime = value;
             }
         });
@@ -35,21 +35,23 @@
             , height: 'full-150'    //容器高度
             , cellMinWidth: 60       //单元格最小宽度
             , cols: [[               //标题栏
-                {type:'numbers', title: '序号'}
-                ,{field: 'title', title: '新闻标题', sort: true}
-                ,{field: 'createUserID', title: '创建用户', sort: true}
-                ,{field: 'createTime', title: '创建时间', sort: true}
-                ,{field: 'lastUpdateUserID', title: '更新用户', sort: true}
-                ,{field: 'lastAccessTime', title: '访问日期', sort: true}
-                ,{field: 'isPublish', title: '是否公开', sort: true, templet:
-                        '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'}
-                ,{fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
+                {type: 'numbers', title: '序号'}
+                , {field: 'title', title: '新闻标题', sort: true}
+                , {field: 'createUserID', title: '创建用户', sort: true}
+                , {field: 'createTime', title: '创建时间', sort: true}
+                , {field: 'lastUpdateUserID', title: '更新用户', sort: true}
+                , {field: 'lastAccessTime', title: '访问日期', sort: true}
+                , {
+                    field: 'isPublish', title: '是否公开', sort: true, templet:
+                        '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'
+                }
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/news/tableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -59,16 +61,16 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/news/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -77,31 +79,33 @@
                         }
                     })
                 });
-            } else if(obj.event === 'edit'){
-                pop_show('编辑新闻','#(ctxPath)/app/news/update?id=' + data.id,'1200','700', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑新闻', '#(ctxPath)/app/news/update?id=' + data.id, '1200', '700', function () {
                     reloadTable($('#title').val());
                 });
             }
         });
 
-        $("#add").click(function(){
-            pop_show('添加新闻','#(ctxPath)/app/news/add','1200','700', function(){
+        $("#add").click(function () {
+            pop_show('添加新闻', '#(ctxPath)/app/news/add', '1200', '700', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });
 
-        form.on('submit(search)', function(data){
-            reloadTable(data.field.title,data.field.createUserID,data.field.lastUpdateUserID
-                ,cTime);
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field.title, data.field.createUserID, data.field.lastUpdateUserID
+                , cTime);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
-        reloadTable = function (title,createUserID,lastUpdateUserID,ctime,atime) {
+        reloadTable = function (title, createUserID, lastUpdateUserID, ctime, atime) {
             //alert(ctime+atime);
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/news/tableData'
-                ,where: {title:title, createUserID:createUserID,lastUpdateUserID:lastUpdateUserID,
-                    ctime:ctime} //设定异步数据接口的额外参数
+                , where: {
+                    title: title, createUserID: createUserID, lastUpdateUserID: lastUpdateUserID,
+                    ctime: ctime
+                } //设定异步数据接口的额外参数
             });
         };
     });
@@ -110,7 +114,7 @@
 
 #define content()
 <div class="layui-fluid">
-    <form id="searchForm" class="layui-form x-center" action="" >
+    <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
                 <label class="layui-form-label">标题</label>
@@ -123,14 +127,15 @@
                 </div>
                 <label class="layui-form-label">更新用户</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="lastUpdateUserID" name="lastUpdateUserID" placeholder="用户名称" class="layui-input"/>
+                    <input type="text" id="lastUpdateUserID" name="lastUpdateUserID" placeholder="用户名称"
+                           class="layui-input"/>
                 </div>
                 <label class="layui-form-label">创建日期</label>
                 <div class="layui-input-inline">
                     <input class="layui-input" id="createTime" name="createTime" placeholder=" - " type="text">
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
-                    <button class="layui-btn"  lay-submit lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                    <button class="layui-btn" lay-submit lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
                 </div>
             </div>
         </div>

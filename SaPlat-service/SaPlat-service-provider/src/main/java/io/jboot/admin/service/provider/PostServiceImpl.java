@@ -20,16 +20,17 @@ public class PostServiceImpl extends JbootServiceBase<Post> implements PostServi
 
     /**
      * find all model
+     *
      * @param model 职务
      * @return all <Post>
      */
-    public List<Post> findAll(Post model)
-    {
+    @Override
+    public List<Post> findAll(Post model) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.findListByColumns(columns);
@@ -38,8 +39,8 @@ public class PostServiceImpl extends JbootServiceBase<Post> implements PostServi
     @Override
     public Page<Post> findPage(Post model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }

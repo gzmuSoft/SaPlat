@@ -26,7 +26,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/expert_group")
-public class ExpertGroupController extends BaseController{
+public class ExpertGroupController extends BaseController {
 
     @JbootrpcService
     private ExpertGroupService expertGroupService;
@@ -44,6 +44,7 @@ public class ExpertGroupController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -62,47 +63,47 @@ public class ExpertGroupController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!expertGroupService.deleteById(id)){
+        if (!expertGroupService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         ExpertGroup model = expertGroupService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
-    public void postAdd(){
+    public void postAdd() {
         ExpertGroup model = getBean(ExpertGroup.class, "model");
-        if (expertGroupService.hasExpertGroup(model.getName())){
+        if (expertGroupService.hasExpertGroup(model.getName())) {
             throw new BusinessException("所指定的专家团体名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!expertGroupService.save(model)){
+        if (!expertGroupService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
-    public void postUpdate(){
+    public void postUpdate() {
         ExpertGroup model = getBean(ExpertGroup.class, "model");
         ExpertGroup byId = expertGroupService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的专家团体名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!expertGroupService.update(model)){
+        if (!expertGroupService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
