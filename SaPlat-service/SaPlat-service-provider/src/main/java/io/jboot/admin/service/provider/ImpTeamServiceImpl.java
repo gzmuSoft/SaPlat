@@ -1,14 +1,20 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.plugin.activerecord.Db;
+import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.ImpTeamService;
+import io.jboot.admin.service.entity.model.EvaScheme;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.ImpTeam;
+import io.jboot.admin.service.entity.model.ScheduledPlan;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -16,6 +22,9 @@ import java.util.List;
 @Singleton
 @JbootrpcService
 public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements ImpTeamService {
+    @Inject
+    private EvaSchemeService evaSchemeService;
+
     @Override
     public List<ImpTeam> findByUserID(Long id) {
         Columns columns = Columns.create();
@@ -44,4 +53,24 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
         }
         return DAO.findListByColumns(columns);
     }
+
+    @Override
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans) {
+        return Db.tx(() -> {
+            if (!evaScheme.save()) {
+                return false;
+            }
+            if (evaScheme.getProjectID() != null) {
+                System.out.println(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
+                for (ScheduledPlan scheduledPlan : scheduledPlans) {
+                    scheduledPlan.setEvaSchemeID(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
+                    if (!scheduledPlan.save()) {
+                        return false;
+                    }
+                }
+            }
+            return Db.tx(model::save);
+        });
+    }
+
 }

@@ -72,7 +72,7 @@
             <div class="layui-form-item">
                 <h2 style="margin-top: 70px;">简介:</h2>
                 <hr class="layui-bg-blue">
-                <textarea id="brief" name="project.brief"></textarea>
+                <label for="brief"></label><textarea id="brief" name="project.brief"></textarea>
             </div>
 
             <input type="button" id="nextPage1" name="next" class="next action-button site-demo-layedit" value="下一步"/>
@@ -83,18 +83,20 @@
             <div class="layui-form-item" style="margin-left:25%;">
                 <div>
                     <label for="LeaderGroup.leader">组长:</label>
-                    <input type="text" class="leaderGroup" id="leaderGroup.leader" name="leaderGroup.leader"/>
+                    <label for="leaderGroup.leader"></label><input type="text" class="leaderGroup"
+                                                                   id="leaderGroup.leader" name="leaderGroup.leader"/>
                 </div>
 
                 <div>
                     <label for="LeaderGroup.deputy">副组长:</label>
-                    <input type="text" class="leaderGroup" id="leaderGroup.deputy" name="leaderGroup.deputy"/>
+                    <label for="leaderGroup.deputy"></label><input type="text" class="leaderGroup"
+                                                                   id="leaderGroup.deputy" name="leaderGroup.deputy"/>
                 </div>
             </div>
 
             <div class="layui-form-item" style="margin-left:25%;">
                 <label>组员:</label>
-                <textarea id="crew" name="leaderGroup.crew" cols="47" rows="5"></textarea>
+                <label for="crew"></label><textarea id="crew" name="leaderGroup.crew" cols="47" rows="5"></textarea>
             </div>
             <input type="button" name="previous" id="previousPage2" class="previous action-button" value="上一步"/>
             <input type="button" name="next" id="nextPage2" class="next action-button " value="下一步"/>
@@ -105,8 +107,23 @@
                 <table id="dateTable" lay-filter="dateTable"></table>
             </div>
             <script type="text/html" id="barOption">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">上传</a>
+                #shiroHasPermission('/app/project/fileUploading')
+                #[[
+                {{#  if(!d.isUpLoad){ }}
+                ]]#
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传</a>
+
+                #[[
+                {{# } else if(d.isUpLoad){ }}
+                ]]#
+                <a class="layui-btn layui-btn-xs " lay-event="upload">√ 已上传</a>
+
+                #[[
+                {{#  } }}
+                ]]#
+                #end
             </script>
+
             <input type="button" name="previous" id="previousPage3" class="previous action-button" value="上一步"/>
             <input type="button" name="next" id="nextPage3" class="next action-button " value="下一步"/>
         </fieldset>
@@ -178,17 +195,19 @@
         });
 
         /**
-         * 文件上传页面
+         * 文件上传
          */
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
-            if (obj.event === 'edit') {
+            if (obj.event === 'upload') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
-                    $(btn).addClass("layui-disabled").removeClass("layui-btn-danger").addClass("layui-btn-normal")
-                        .removeAttr("lay-event").text("已上传");
+                    table.reload('dateTable', {
+                        url: '#(ctxPath)/app/project/fileTable?id=' + projectId
+                    });
                 });
             }
+
         });
 
         /**
@@ -239,10 +258,10 @@
             var valueArray = [];
             $(".project").each(function (key) {
                 valueArray[key] = $(this).val();
-                if (valueArray[key] == null || valueArray[key] == '')
+                if (valueArray[key] == null || valueArray[key] === '')
                     return false;
             });
-            if (layedit.getText(index) == null || layedit.getText(index) == '')
+            if (layedit.getText(index) == null || layedit.getText(index) === '')
                 return false;
             return true;
         }
@@ -254,10 +273,10 @@
             var valueArray = [];
             $(".leaderGroup").each(function (key) {
                 valueArray[key] = $(this).val();
-                if (valueArray[key] == null || valueArray[key] == '')
+                if (valueArray[key] == null || valueArray[key] === '')
                     return false;
             });
-            if ($("#crew").val() == null || $("#crew").val() == '')
+            if ($("#crew").val() == null || $("#crew").val() === '')
                 return false;
             return true;
         }
@@ -360,7 +379,17 @@
          * 自评、委评按钮事件
          */
         $('.submit').click(function () {
-            window.location.href = "#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile;
+            util.sendAjax({
+                type: 'GET',
+                url: "#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile,
+                loadFlag: true,
+                success: function (data) {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.log(data)
+                }
+            });
         });
     });
 
