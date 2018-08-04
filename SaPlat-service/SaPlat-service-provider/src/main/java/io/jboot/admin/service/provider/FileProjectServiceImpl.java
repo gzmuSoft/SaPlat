@@ -27,6 +27,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Inject
     private FilesService filesService;
 
+
     @Override
     public List<FileProject> findListById(Long id) {
         return DAO.findListByColumn(Column.create("parentID",id));
@@ -41,8 +42,9 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
 
     @Override
     public FileProject findByProjectID(Long projectId) {
-        return DAO.findFirstByColumn(Column.create("projectID",projectId));
+        return DAO.findFirstByColumn("projectID", projectId);
     }
+
 
     @Override
     public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID){
@@ -61,13 +63,14 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public Page<FileProject> findPage(FileProject fileProject, int pageNumber, int pageSize){
+    public Page<FileProject> findPage(FileProject model, int pageNumber, int pageSize) {
         Columns columns=Columns.create();
-        if(fileProject.getFileTypeID()!=null){
-            columns.eq("fileTypeID",fileProject.getFileTypeID());
+        if (model.getProjectID() != null && model.getFileTypeID() != null) {
+            columns.eq("projectID", model.getProjectID());
+            columns.eq("fileTypeID", model.getFileTypeID());
         }
-        if(fileProject.getProjectID()!=null){
-            columns.eq("projectID",fileProject.getProjectID());
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }

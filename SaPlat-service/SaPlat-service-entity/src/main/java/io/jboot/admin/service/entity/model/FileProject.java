@@ -8,5 +8,17 @@ import io.jboot.admin.service.entity.model.base.BaseFileProject;
  */
 @Table(tableName = "file_project", primaryKey = "id")
 public class FileProject extends BaseFileProject<FileProject> {
-	
+
+    private String createUserName;
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+
+
 }

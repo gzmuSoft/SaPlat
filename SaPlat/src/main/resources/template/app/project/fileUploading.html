@@ -12,6 +12,8 @@
     layui.use(['form', 'layer', 'upload'], function () {
         //操作对象
         var upload = layui.upload;
+        var id = "#(model.id)";
+        var projectId = "#(projectId)";
 
         //拖拽上传
         upload.render({
@@ -26,7 +28,7 @@
                 console.log(res.data);
                 if (res.code == 0) {
                     pop_close();
-                    $.post('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + $('#fileTypeId').val() + '&projectId=' + $('#projectId').val());
+                    $.post('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + id + '&projectId=' + projectId);
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
@@ -49,15 +51,6 @@
         <legend>文件上传</legend>
     </fieldset>
     <form id="person" class="layui-form x-center">
-
-        <!--隐藏fileTypeId-->
-        <input type="text" id="fileTypeId" name="fileTypeId"
-               class="layui-input layui-disabled layui-hide" value="#(model.id)" required/>
-
-        <!--隐藏projectId-->
-        <input type="text" id="projectId" name="projectId"
-               class="layui-input layui-disabled layui-hide" value="#(projectId)" required/>
-
         <div class="layui-form-pane">
             <div class="layui-form-item x-center">
                 <p id="modelName" style="font-size: 20px">#(model.name)</p>

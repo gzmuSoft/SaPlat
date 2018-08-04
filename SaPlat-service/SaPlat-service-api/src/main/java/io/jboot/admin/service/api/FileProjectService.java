@@ -7,6 +7,9 @@ import io.jboot.admin.service.entity.model.Files;
 
 import java.util.List;
 
+/**
+ * @author ASUS
+ */
 public interface FileProjectService  {
 
     /**
@@ -54,7 +57,7 @@ public interface FileProjectService  {
      * @param projectID 项目id
      * @return 文件列表
      */
-    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID);
+    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID, Long projectID);
 
     /**
      * find model By projectID And fileTypeID
@@ -64,6 +67,16 @@ public interface FileProjectService  {
      * @return
      */
     public FileProject findByProjectIDAndFileTypeID(Long projectID, Long fileTypeID);
+
+    /**
+     * find page
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param model
+     * @return
+     */
+    public Page<FileProject> findPage(FileProject model, int pageNumber, int pageSize);
 
     /**
      * delete model by primary key
@@ -97,6 +110,7 @@ public interface FileProjectService  {
      */
 
     public boolean saveFileProjectAndFiles(FileProject model);
+
     /**
      * save model to database
      *
@@ -126,8 +140,6 @@ public interface FileProjectService  {
     public boolean update(FileProject model, Files files);
 
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId);
-    public Page<FileProject> findPage(FileProject fileProject, int pageNumber, int pageSize);
-
 
     public void join(Page<? extends Model> page, String joinOnField);
 
