@@ -1,6 +1,8 @@
 package io.jboot.admin.controller.app;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.json.JFinalJson;
 import com.jfinal.plugin.activerecord.Page;
@@ -80,6 +82,15 @@ public class InformationController extends BaseController {
     @JbootrpcService
     private UserRoleService userRoleService;
 
+    @JbootrpcService
+    private FileProjectService fileProjectService;
+
+    @JbootrpcService
+    private FilesService filesService;
+
+    @JbootrpcService
+    private DiagnosesService diagnosesService;
+
     /**
      * 资料编辑页面
      */
@@ -121,6 +132,9 @@ public class InformationController extends BaseController {
 
     }
 
+    /**
+     * 通用表格页面渲染
+     */
     public void list() {
         String url = getPara("url");
         Long projectId = getParaToLong("id");
@@ -129,6 +143,9 @@ public class InformationController extends BaseController {
                 .render("tableView.html");
     }
 
+    /**
+     * 专家数据
+     */
     public void expertAdviceDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -137,21 +154,18 @@ public class InformationController extends BaseController {
         model.setProjectID(projectId);
         Page<SiteSurveyExpertAdvice> page = siteSurveyExpertAdviceService.findPage(model, pageNumber, pageSize);
         page.getList().forEach(p -> p.setRemark("专家：" + expertGroupService.findById(p.getExpertID()).getName()));
-//        if (page.getList().size() > 0) {
-//            page.getList().forEach(p -> {
-//            });
-//        }
+
         renderJson(new DataTable<SiteSurveyExpertAdvice>(page));
     }
 
     /**
      * 现场踏勘专家意见
      */
-    @NotNullPara("id")
+    @NotNullPara("projectID")
     public void expertAdvice() {
+        Long projectID = getParaToLong("projectID");
         Long id = getParaToLong("id");
-        Long expertID = getParaToLong("expertID");
-        Project project = projectService.findById(id);
+        Project project = projectService.findById(projectID);
         User user = AuthUtils.getLoginUser();
         List<ExpertGroup> expertGroups = expertGroupService.findAll();
         String assessmentMode = project.getAssessmentMode();
@@ -160,7 +174,7 @@ public class InformationController extends BaseController {
             Organization organization = organizationService.findById(userService.findById(project.getUserId()).getUserID());
             name = organization.getName();
         } else {
-            ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(id);
+            ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(projectID);
             //项目为承接时
             if (!ProjectUndertakeStatus.UNDERTAKE.equals(projectUndertake.getStatus().toString())) {
                 renderJson(RestResult.buildError("項目还不能填写资料"));
@@ -171,9 +185,9 @@ public class InformationController extends BaseController {
         }
         SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
         ExpertGroup expertGroup = null;
-        if (expertID != null) {
-            model = siteSurveyExpertAdviceService.findByColumns(new String[]{"projectID", "expertID"}, new String[]{id.toString(), expertID.toString()});
-            expertGroup = expertGroupService.findById(expertID);
+        if (id != null) {
+            model = siteSurveyExpertAdviceService.findById(id);
+            expertGroup = expertGroupService.findById(model.getExpertID());
         }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
         setAttr("expertGroups", expertGroups)
@@ -235,6 +249,84 @@ public class InformationController extends BaseController {
         }
         if (!siteSurveyExpertAdviceService.delete(model)) {
             throw new BusinessException("删除失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+
+    /**
+     * 调查分析
+     */
+    @Before(GET.class)
+    @NotNullPara("id")
+    public void diagnoses() {
+        Project project = projectService.findById(getParaToLong("id"));
+        if (project == null) {
+            throw new BusinessException("没有此项目");
+        }
+        setAttr("project", project);
+        FileProject fileProject = fileProjectService.findByProjectID(project.getId());
+        Files files = filesService.findById(fileProject.getFileID());
+        setAttr("files", files);
+        ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(AuthUtils.getLoginUser().getId(), project.getId());
+        String invTeamIDs = impTeam.getInvTeamIDs();
+        System.out.println(invTeamIDs);
+        List<String> invTeamIDList = java.util.Arrays.asList(invTeamIDs.split(","));
+        Map<String, String> invTeamMap = new ConcurrentHashMap<String, String>();
+        for (String invTeamID : invTeamIDList) {
+            Person person = personService.findById(invTeamID);
+            invTeamMap.put(invTeamID, person.getName());
+        }
+        setAttr("invTeamMap", invTeamMap);
+        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
+        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        setAttr("facagency", facAgency);
+        render("diagnose.html");
+    }
+
+    /**
+     * 调查分析数据表格
+     */
+    public void diagnosesDataTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        Diagnoses diagnoses = new Diagnoses();
+        diagnoses.setProject(projectId);
+        Page<Diagnoses> page = diagnosesService.findPage(diagnoses, pageNumber, pageSize);
+        page.getList().forEach(p -> p.setRemark("调查群体：" + p.getSurveyGroup()));
+        renderJson(new DataTable<Diagnoses>(page));
+    }
+
+    /**
+     * 调查分析保存
+     */
+    @Before(POST.class)
+    @NotNullPara({"staffArrangements", "surveyWays"})
+    public void diagnosesSave() {
+        Diagnoses diagnoses = getBean(Diagnoses.class, "diagnoses");
+        String[] idList = getParaValues("staffArrangements");
+        diagnoses.setStaffArrangements(StringUtils.join(idList, ","));
+        String[] surveyWayList = getParaValues("surveyWays");
+        diagnoses.setSurveyWay(StringUtils.join(surveyWayList, ","));
+        diagnoses.setCreateUserID(AuthUtils.getLoginUser().getId());
+        diagnoses.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+
+        if (!diagnosesService.save(diagnoses)) {
+            throw new BusinessException("保存失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    @NotNullPara("id")
+    public void diagnosesDelete(){
+        Long id = getParaToLong("id");
+        Diagnoses diagnoses = diagnosesService.findById(id);
+        if (diagnoses == null){
+            throw new BusinessException("删除失败");
+        }
+        if (!diagnoses.delete()){
+            throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }

@@ -1,0 +1,83 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {checkbox: false, sort: true, fixed: true, space: true}
+                , {field: 1, title: '用户ID', width: 100}
+                , {field: 2, title: '用户名称', width: 150}
+                , {field: 3, title: '所属架构', width: 100}
+                , {field: 4, title: '创建用户', width: 150}
+                , {field: 5, title: '创建时间', width: 170}
+                // , {field: 6, title: '状态', width: 100}
+                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
+            ]]
+            , url: '#(ctxPath)/app/OrgStructure/StructurePersonList?structureID=#(sid)'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+        table.on('tool(dateTable)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'delete') {
+                pop_show('移除人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id, '', '', function () {
+                });
+            }
+        });
+
+        // form.on('submit(search)', function(data){
+        //     reloadTable(data.field.name);
+        //     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        // });
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-btn-group">
+
+            <button id="add" class="layui-btn layui-btn-small">邀请</button>
+
+        </div>
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="option">操作</a>
+
+</script>
+#end

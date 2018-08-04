@@ -7,7 +7,16 @@ import io.jboot.admin.service.entity.model.OrgStructure;
 import java.util.List;
 
 public interface OrgStructureService {
-
+    /**
+     * 数据分页
+     * @param orgStructure
+     * @param pageNumber
+     * @param pageSize
+     * @param uid
+     * @param orgType
+     * @return
+     */
+    public Page<OrgStructure> findPage(OrgStructure orgStructure, int pageNumber, int pageSize,Long uid,int orgType);
     /**
      * find model by primary key
      *
