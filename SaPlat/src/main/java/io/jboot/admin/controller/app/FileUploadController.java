@@ -41,63 +41,64 @@ public class FileUploadController extends BaseController {
 
 
     @Before(GET.class)
-    @NotNullPara({"id", "projectID"})
+    @NotNullPara("id")
     public void index() {
-        Long projectID=getParaToLong("projectID");
+        Long projectID = getParaToLong("id");
 //        Project project=projectService.findById(projectID);
 //        if(!project.getUserId().equals(AuthUtils.getLoginUser().getId())){
 //            renderJson(RestResult.buildError());
 //        }
-        setAttr("projectID", getParaToLong("projectID"));
-        setAttr("parentID", getParaToLong("id"));
+        ProjectFileType projectFileType = projectFileTypeService.findByName("评估文件");
+        setAttr("projectID", getParaToLong("id"));
+        setAttr("parentID", projectFileType.getId());
         render("main.html");
     }
 
     @Before(GET.class)
-    @NotNullPara("parentID")
     public void tree() {
-        Long parentID = getParaToLong("parentID");
+        Long parentID = projectFileTypeService.findByName("评估文件").getId();
         List<ZTree> ztree = projectFileTypeService.findTreeOnUse(parentID);
 
         renderJson(RestResult.buildSuccess(ztree));
     }
 
     @Before(GET.class)
-    @NotNullPara({"fileTypeID","projectID","pageNumber", "pageSize"})
+    @NotNullPara({"fileTypeID", "projectID", "pageNumber", "pageSize"})
     public void tableData() {
-        Long fileTypeID=getParaToLong("fileTypeID");
-        Long projectID=getParaToLong("projectID");
-        FileProject fileProject=new FileProject();
+        Long fileTypeID = getParaToLong("fileTypeID");
+        Long projectID = getParaToLong("projectID");
+        FileProject fileProject = new FileProject();
         fileProject.setFileTypeID(fileTypeID);
         fileProject.setProjectID(projectID);
-        Integer pageNumber=getParaToInt("pageNumber");
-        Integer pageSize=getParaToInt("pageSize");
+        Integer pageNumber = getParaToInt("pageNumber");
+        Integer pageSize = getParaToInt("pageSize");
         Page<FileProject> page = fileProjectService.findPage(fileProject, pageNumber, pageSize);
         renderJson(new DataTable<FileProject>(page));
     }
 
 
-    public void save(){
-        FileProject fileProject=getBean(FileProject.class,"fileProject");
+    public void save() {
+        FileProject fileProject = getBean(FileProject.class, "fileProject");
 //        Project project=projectService.findById(fileProject.getProjectID());
 //        if(!project.getUserId().equals(AuthUtils.getLoginUser().getId())){
 //            renderJson(RestResult.buildError());
 //        }
-        ProjectFileType projectFileType=projectFileTypeService.findById(fileProject.getFileTypeID());
+        ProjectFileType projectFileType = projectFileTypeService.findById(fileProject.getFileTypeID());
         fileProject.setName(projectFileType.getName());
-        if(!fileProjectService.saveFileProjectAndFiles(fileProject)){
+        if (!fileProjectService.saveFileProjectAndFiles(fileProject)) {
             throw new BusinessException("保存失败,请重试");
         }
         renderJson(RestResult.buildSuccess());
     }
-    @NotNullPara({"id","projectID"})
+
+    @NotNullPara({"id", "projectID"})
     public void delete() {
 //        Project project=projectService.findById(getParaToLong("projectID"));
 //        if(!project.getUserId().equals(AuthUtils.getLoginUser().getId())){
 //            renderJson(RestResult.buildError());
 //        }
-        FileProject fileProject=fileProjectService.findById(getParaToLong("id"));
-        if(!fileProjectService.deleteFileProjectAndFiles(fileProject)){
+        FileProject fileProject = fileProjectService.findById(getParaToLong("id"));
+        if (!fileProjectService.deleteFileProjectAndFiles(fileProject)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

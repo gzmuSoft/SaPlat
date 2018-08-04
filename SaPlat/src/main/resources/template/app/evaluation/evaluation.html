@@ -40,6 +40,7 @@
         var parent = 0;
         evaScheme = JSON.parse(evaScheme);
         project = JSON.parse(project);
+        var flag = "true";
         if (typeof(evaScheme.status) === "undefined") {
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
         } else if (evaScheme.status === "1") {
@@ -48,31 +49,32 @@
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaScheme.status === "2") {
             layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
-            add(1,20);
-            var siteSurveyExpertAdvice = '#(siteSurveyExpertAdvice)';
-            var diagnoses = '#(diagnoses)';
-            if (siteSurveyExpertAdvice === 'true') {
-                add(1,20);
-            }
-            if (diagnoses === 'true'){
-                add(1,20);
-            }
+            add(flag, 1, 20);
+            add("#(siteSurveyExpertAdvice)", 1, 20);
+            add("#(diagnoses)", 1, 20);
+            add("#(fxqz)", 1, 12);
+            add("#(fxdj)", 1, 12);
+            add("#(pcfx)", 1, 12);
+            add("#(fxjl)", 1, 12);
+            add("#(sxfx)", 1, 12);
             $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id);
-
         } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
         }
 
-        function add(time,num) {
-            if (parent >= 100){
+        function add(name, time, num) {
+            if (name !== flag) {
+                return;
+            }
+            if (parent >= 100) {
                 return;
             }
             time = time * 1000;
             setTimeout(function () {
                 parent += num;
                 element.progress('tip', parent + '%');
-            },time);
+            }, time);
         }
     });
 </script>

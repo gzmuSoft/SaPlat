@@ -305,7 +305,7 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
-            if (fileProjectService.findByProjectIDAndProjectFileID(id, page.getList().get(i).getId()) != null) {
+            if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
                 page.getList().get(i).setIsUpLoad(true);
             } else {
                 page.getList().get(i).setIsUpLoad(false);
@@ -344,7 +344,7 @@ public class ProjectController extends BaseController {
         Project project = projectService.findById(id);
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         List<FileProject> fileProjects = fileProjectService.findAllByProjectID(id);
-        List<ProjectFileType> projectFileTypes = projectFileTypeService.findByParentId(1L);
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(1L);
         JSONObject json = new JSONObject();
         if (project != null && leaderGroup != null && projectFileTypes.size() == fileProjects.size()) {
             AuthProject authProject = new AuthProject();
@@ -378,7 +378,7 @@ public class ProjectController extends BaseController {
     @NotNullPara({"fileId", "projectId", "fileTypeId"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
-        FileProject model = fileProjectService.findByProjectIDAndProjectFileID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
+        FileProject model = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
         if (model == null) {
             model = new FileProject();
             model.setProjectID(getParaToLong("projectId"));
@@ -407,7 +407,7 @@ public class ProjectController extends BaseController {
      */
     public void judgeFile() {
         List<FileProject> fileProjects = fileProjectService.findAllByProjectID(getParaToLong("projectId"));
-        List<ProjectFileType> projectFileTypes = projectFileTypeService.findByParentId(1L);
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(1L);
         JSONObject json = new JSONObject();
         if (projectFileTypes.size() == fileProjects.size()) {
             json.put("judgeFile", true);
