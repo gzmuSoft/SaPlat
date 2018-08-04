@@ -97,8 +97,6 @@ public interface FileProjectService  {
 
     public boolean update(FileProject model, Files files);
 
-    public FileProject findByProjectID(Long id);
-
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId);
 
     public void join(Page<? extends Model> page, String joinOnField);

@@ -22,13 +22,6 @@ import java.util.List;
 public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implements FileProjectService {
 
     @Override
-    public FileProject findByProjectID(Long id) {
-        Columns columns = Columns.create();
-        columns.eq("projectID", id);
-        return DAO.findFirstByColumns(columns);
-    }
-
-    @Override
     public List<FileProject> findAllByProjectID(Long id) {
         Columns columns = Columns.create();
         columns.eq("projectID", id);

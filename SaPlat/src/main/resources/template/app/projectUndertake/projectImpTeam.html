@@ -634,7 +634,8 @@
                                 url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
                                 loadFlag: true,
                                 success: function (data) { //请求成功的回调函数
-                                    window.location.reload();
+                                    window.history.back();
+                                    location.reload();
                                     layer.msg("操作成功");
                                 },
                                 error: function (data) { //请求成功的回调函数

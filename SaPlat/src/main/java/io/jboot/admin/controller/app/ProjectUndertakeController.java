@@ -360,7 +360,7 @@ public class ProjectUndertakeController extends BaseController {
         evaScheme.setLastAccessTime(new Date());
         evaScheme.setCreateUserID(loginUser.getId());
         evaScheme.setLastUpdateUserID(loginUser.getId());
-
+        evaScheme.setStatus("1");
         ScheduledPlan scheduledPlan;
         String[] sName = getParaValues("ScheduledPlan.name");
         String[] sStartDate = getParaValues("ScheduledPlan.startDate");
