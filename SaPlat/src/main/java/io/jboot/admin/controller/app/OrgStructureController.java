@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.app;
 
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -204,13 +205,21 @@ public class OrgStructureController extends BaseController {
      * 个人群体-我的加入的架构
      */
     public void myStructure(){
-        User loginUser = AuthUtils.getLoginUser();
-        List<StructPersonLink> mylist = structPersonLinkService.findByPersonID(loginUser.getUserID());
+        render("myStructure.html");
     }
     /**
      * 个人群体-申请加入架构
      */
     public void joinStructure(){
+        render("joinStructure.html");
+    }
 
+    /**
+     * 查询已经加入的架构列表接口
+     */
+    public void MyStructureListApi(){
+        Long uid = AuthUtils.getLoginUser().getUserID();
+        Map<String,Object> list = structPersonLinkService.findStructureListByPersonID(uid);
+        renderJson(list);
     }
 }

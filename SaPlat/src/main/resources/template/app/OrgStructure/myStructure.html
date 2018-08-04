@@ -21,29 +21,19 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
+            , page: true
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {checkbox: false, sort: true, fixed: true, space: true}
-                , {field: 1, title: '用户ID', width: 100}
-                , {field: 2, title: '用户名称', width: 150}
-                , {field: 3, title: '所属架构', width: 100}
-                , {field: 4, title: '创建用户', width: 150}
-                , {field: 5, title: '创建时间', width: 170}
-                // , {field: 6, title: '状态', width: 100}
-                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'ID', title: 'ID', width: 100}
+                , {field: 'structID', title: '架构ID', width: 150}
+                , {field: 'name', title: '架构名称', width: 160}
+                , {field: 'createTime', title: '加入时间', width: 180}
+                , {fixed: 'right', title: '状态', width: 100,align: 'center', toolbar: '#status'}
+                // , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
             ]]
-            , url: '#(ctxPath)/app/OrgStructure/StructurePersonList?structureID=#(sid)'
-            , method: 'get'
-            , request: {
-                pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , page: true
-            , limits: [30, 60, 90, 150, 300]
-            , limit: 30 //默认采用30
-            , loading: true
-            , done: function (res, curr, count) {
-            }
+            , url: '#(ctxPath)/app/OrgStructure/MyStructureListApi'
+            , limit: 30
         });
 
     });
@@ -55,18 +45,30 @@
 #define content()
 <div class="layui-fluid">
     <div class="layui-row">
-        <div class="layui-btn-group">
-
-            <button id="add" class="layui-btn layui-btn-small">邀请</button>
-
-        </div>
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 </div>
 
-<script type="text/html" id="barOption">
+<!--<script type="text/html" id="barOption">-->
 
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="option">操作</a>
+    <!--<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="option">操作</a>-->
 
+<!--</script>-->
+<script type="text/html" id="status">
+    #[[
+    {{#  if(d.isEnable == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-danger">禁用</a>
+    #[[
+    {{# } }}
+    ]]#
+
+    #[[
+    {{#  if(d.isEnable == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs">可用</a>
+    #[[
+    {{# } }}
+    ]]#
 </script>
 #end
