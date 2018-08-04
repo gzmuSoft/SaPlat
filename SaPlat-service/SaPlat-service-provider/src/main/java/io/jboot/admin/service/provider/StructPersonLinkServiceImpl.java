@@ -32,7 +32,7 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
      */
     @Override
     public Map<String,Object> findByStructIdAndUsername(Long orgStructureId){
-        List<StructPersonLink> list = Db.query("SELECT person.ID,person.personID,user.name,person.structID,person.createUserID,person.createTime,person.isEnable FROM `struct_person_link` as person,`sys_user` as user where person.personID = user.id and person.structID = ?",orgStructureId);
+        List<Record> list = Db.find("SELECT person.ID,person.personID,user.name,person.structID,person.createUserID,person.createTime,person.isEnable FROM `struct_person_link` as person,`sys_user` as user where person.personID = user.id and person.structID = ?",orgStructureId);
         Map<String,Object> map = new ConcurrentHashMap<String, Object>();
         map.put("code","0");
         map.put("msg","");
