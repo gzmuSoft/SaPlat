@@ -79,7 +79,7 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara({"orgType"})
     public void management(){
-        Long uid = AuthUtils.getLoginUser().getUserID();
+        Long uid = AuthUtils.getLoginUser().getId();
         String orgType = getPara("orgType");
         setAttr("orgType",orgType)
                 .setAttr("uid",uid)
@@ -91,7 +91,7 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara({"orgType"})
     public void addStructure(){
-        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
+        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getId());
         String orgType = getPara("orgType");
         Long parentID = (getParaToLong("parentID") != null)?getParaToLong("parentID"):0;
         if(organization != null){
@@ -144,7 +144,7 @@ public class OrgStructureController extends BaseController {
     public void postAddStructure(){
         OrgStructure orgStructure = getBean(OrgStructure.class, "orgstructure");
         //获取用户uid
-        orgStructure.setCreateUserID(AuthUtils.getLoginUser().getUserID());
+        orgStructure.setCreateUserID(AuthUtils.getLoginUser().getId());
         if (!orgStructureService.save(orgStructure)){
             throw new BusinessException("保存失败");
         }
@@ -158,11 +158,11 @@ public class OrgStructureController extends BaseController {
     public void postAddPerson(){
         int orgType = getParaToInt("orgType");
         ApplyInvite applyInvite = getBean(ApplyInvite.class,"applyInvite");
-        applyInvite.setCreateUserID(AuthUtils.getLoginUser().getUserID());
+        applyInvite.setCreateUserID(AuthUtils.getLoginUser().getId());
         applyInvite.setCreateTime(new Date());
         applyInvite.setApplyOrInvite(1);
         applyInvite.setUserSource(orgType);
-        Long uid = applyInvite.getUserID();
+        Long uid = applyInvite.getId();
         User user = userService.findById(uid);
         if(user == null){
             throw new BusinessException("用户不存在无法邀请加入组织架构！");
@@ -182,7 +182,7 @@ public class OrgStructureController extends BaseController {
         int orgType = getParaToInt("orgType");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long uid = AuthUtils.getLoginUser().getUserID();
+        Long uid = AuthUtils.getLoginUser().getId();
         OrgStructure orgStructure = new OrgStructure();
         orgStructure.setName(getPara("name"));
 
@@ -226,7 +226,7 @@ public class OrgStructureController extends BaseController {
      * 查询已经加入的架构列表接口
      */
     public void MyStructureListApi(){
-        Long uid = AuthUtils.getLoginUser().getUserID();
+        Long uid = AuthUtils.getLoginUser().getId();
         Map<String,Object> list = structPersonLinkService.findStructureListByPersonID(uid);
         renderJson(list);
     }

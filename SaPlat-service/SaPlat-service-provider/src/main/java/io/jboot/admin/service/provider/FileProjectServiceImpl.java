@@ -27,7 +27,6 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Inject
     private FilesService filesService;
 
-
     @Override
     public List<FileProject> findListById(Long id) {
         return DAO.findListByColumn(Column.create("parentID",id));
@@ -44,7 +43,6 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     public FileProject findByProjectID(Long projectId) {
         return DAO.findFirstByColumn("projectID", projectId);
     }
-
 
     @Override
     public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID){
@@ -76,7 +74,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public boolean deleteFileProjectAndFiles(FileProject model){
+    public boolean deleteFileProjectAndFiles(FileProject model) {
         return Db.tx(() -> {
             if (!delete(model)) {
                 return false;
@@ -99,6 +97,18 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         });
     }
 
+    @Override
+    public boolean updateFileProjectAndFiles(FileProject model){
+        return Db.tx(() -> {
+            if (!update(model)) {
+                return false;
+            }
+            Files files = filesService.findById(model.getFileID());
+            files.setIsEnable(true);
+            return filesService.update(files);
+        });
+    }
+
 
     @Override
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId) {
@@ -111,5 +121,13 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Override
     public boolean update(FileProject model, Files files) {
         return Db.tx(() -> model.update() && files.update());
+    }
+
+    @Override
+    public FileProject saveAndGet(FileProject model){
+        if(!model.save()){
+            return null;
+        }
+        return model;
     }
 }
