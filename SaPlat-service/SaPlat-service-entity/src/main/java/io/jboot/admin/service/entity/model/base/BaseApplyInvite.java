@@ -49,6 +49,14 @@ public abstract class BaseApplyInvite<M extends BaseApplyInvite<M>> extends Jboo
 		return getLong("projectID");
 	}
 
+	public void setStructID(java.lang.Long structID) {
+		set("structID", structID);
+	}
+	
+	public java.lang.Long getStructID() {
+		return getLong("structID");
+	}
+
 	public void setUserID(java.lang.Long userID) {
 		set("userID", userID);
 	}
