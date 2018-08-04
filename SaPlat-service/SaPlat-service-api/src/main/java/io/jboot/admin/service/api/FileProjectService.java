@@ -33,6 +33,14 @@ public interface FileProjectService  {
      */
     public List<FileProject> findAllByProjectID(Long id);
 
+
+    /**
+     * 通过项目id 查询文件项目
+     * @param projectId  项目id
+     * @return 文件项目
+     */
+    public FileProject findByProjectID(Long projectId);
+
     /**
      * find model By projectID And fileTypeID
      *
@@ -102,4 +110,5 @@ public interface FileProjectService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }

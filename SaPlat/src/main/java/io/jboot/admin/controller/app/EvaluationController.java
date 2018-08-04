@@ -2,9 +2,11 @@ package io.jboot.admin.controller.app;
 
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.DiagnosesService;
 import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.SiteSurveyExpertAdviceService;
+import io.jboot.admin.service.entity.model.Diagnoses;
 import io.jboot.admin.service.entity.model.EvaScheme;
 import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.SiteSurveyExpertAdvice;
@@ -35,6 +37,8 @@ public class EvaluationController extends BaseController {
     @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
 
+    @JbootrpcService
+    private DiagnosesService diagnosesService;
     /**
      * 评估详情
      */
@@ -55,6 +59,12 @@ public class EvaluationController extends BaseController {
                 setAttr("siteSurveyExpertAdvice", "false");
             } else {
                 setAttr("siteSurveyExpertAdvice", "true");
+            }
+            List<Diagnoses> diagnoses =  diagnosesService.findListByProjectId(id);
+            if (diagnoses == null || diagnoses.size() == 0){
+                setAttr("diagnoses", "false");
+            } else {
+                setAttr("diagnoses", "true");
             }
         }
         setAttr("project", project.toJson())

@@ -24,6 +24,22 @@ public interface DiagnosesService  {
      */
     public List<Diagnoses> findAll();
 
+    /**
+     * 通过项目id查询
+     * @param projectId 项目id
+     * @return 列表
+     */
+    public List<Diagnoses> findListByProjectId(Long projectId);
+
+    /**
+     * 分页查询
+     * @param diagnoses 调查分析条件
+     * @param pageNumber 页码
+     * @param pageSize  页面大小
+     * @return 页
+     */
+    public Page<Diagnoses> findPage(Diagnoses diagnoses, int pageNumber, int pageSize);
+
 
     /**
      * delete model by primary key
@@ -85,4 +101,5 @@ public interface DiagnosesService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }

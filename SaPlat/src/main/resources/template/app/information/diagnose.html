@@ -19,13 +19,14 @@
             , layedit = layui.layedit;
         //监听提交
         form.on('submit(demo1)', function (data) {
-            postData += ('&diagnoses.sampleRate=' + layedit.getContent(index));
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/diagnoses/save',
+                url: '#(ctxPath)/app/information/diagnosesSave',
                 data: $('#Form').serialize(),
                 loadFlag: true,
                 success: function (data) {
+                    window.history.back();
+                    location.reload();
                 }
             });
         });
@@ -43,14 +44,14 @@
         form.verify({
             surveyDesignedit: function (vale) {
                 layedit.sync(surveyDesignedit); //同步编辑内容到textarea #10line
-                if (layedit.getText(surveyDesignedit).length == 0) {
+                if (layedit.getContent(surveyDesignedit).length == 0) {
                     return "问卷调查设计不能为空";
                 }
             },
 
             surveyGroupedit: function (vale) {
                 layedit.sync(surveyGroupedit); //同步编辑内容到textarea #10line
-                if (layedit.getText(surveyGroupedit).length == 0) {
+                if (layedit.getContent(surveyGroupedit).length == 0) {
                     return "调查群体不能为空";
                 }
             },
@@ -116,7 +117,7 @@
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off" placeholder="系统读取"
                                value="#(files.id)" class="layui-input layui-hide">
-                        <a class="media" href="#(pdfURL)" disabled="disabled"></a>
+                        <a class="media" href="#(files.path)" disabled="disabled"></a>
                         <a class="layui-btn" id="media">点击查看</a>
                         <button id="pdf"></button>
                     </div>
@@ -185,7 +186,7 @@
                 <br>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+                        <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
