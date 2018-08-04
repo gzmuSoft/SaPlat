@@ -65,12 +65,12 @@ public abstract class BaseFileForm<M extends BaseFileForm<M>> extends JbootModel
 		return getStr("fieldName");
 	}
 
-	public void setStatus(java.lang.Integer status) {
+	public void setStatus(java.lang.Boolean status) {
 		set("status", status);
 	}
 	
-	public java.lang.Integer getStatus() {
-		return getInt("status");
+	public java.lang.Boolean getStatus() {
+		return get("status");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
@@ -121,12 +121,12 @@ public abstract class BaseFileForm<M extends BaseFileForm<M>> extends JbootModel
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Integer isEnable) {
+	public void setIsEnable(java.lang.Boolean isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Integer getIsEnable() {
-		return getInt("isEnable");
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }
