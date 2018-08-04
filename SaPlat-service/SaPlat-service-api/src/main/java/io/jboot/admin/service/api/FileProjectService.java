@@ -70,6 +70,20 @@ public interface FileProjectService  {
 
 
     /**
+     * 删除fileProject 禁用files
+     * @param model
+     * @return
+     */
+    public boolean deleteFileProjectAndFiles(FileProject model);
+
+    /**
+     * 保存fileProject 启用files
+     * @param model
+     * @return
+     */
+
+    public boolean saveFileProjectAndFiles(FileProject model);
+    /**
      * save model to database
      *
      * @param model
@@ -98,6 +112,8 @@ public interface FileProjectService  {
     public boolean update(FileProject model, Files files);
 
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId);
+    public Page<FileProject> findPage(FileProject fileProject, int pageNumber, int pageSize);
+
 
     public void join(Page<? extends Model> page, String joinOnField);
 

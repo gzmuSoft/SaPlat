@@ -5,6 +5,7 @@ import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
+import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FilesService;
 import io.jboot.admin.service.entity.model.Files;
@@ -64,5 +65,15 @@ public class UtilController extends BaseController {
         map.put("fileId", files.getId());
         map.put("title", files.getName());
         renderJson(RestResult.buildSuccess(map));
+    }
+    @NotNullPara("fileID")
+    public void pdfView() {
+        Long fileID=getParaToLong("fileID");
+        Files files=filesService.findById(fileID);
+        if(files==null){
+            throw new BusinessException("文件不存在");
+        }
+        setAttr("files",files);
+        render("pdf.html");
     }
 }
