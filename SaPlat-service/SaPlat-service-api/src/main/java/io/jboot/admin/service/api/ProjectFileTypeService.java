@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.base.common.ZTree;
 import io.jboot.admin.service.entity.model.ProjectFileType;
 
 import java.util.List;
@@ -100,6 +101,14 @@ public interface ProjectFileTypeService  {
      * @return 页
      */
     public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize);
+
+
+    /**
+     * 查找projectfiletype树
+     * @param parentID
+     * @return
+     */
+    public List<ZTree> findTreeOnUse(Long parentID);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

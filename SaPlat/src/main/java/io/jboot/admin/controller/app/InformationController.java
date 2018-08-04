@@ -2,27 +2,24 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.json.JFinalJson;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
-import io.jboot.admin.base.common.ZTree;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
-import io.jboot.db.model.Column;
 import io.jboot.web.controller.annotation.RequestMapping;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -30,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author EchoLZY
  * @version 2.0
- * -----------------------------
+ *          -----------------------------
  * @date 16:35 2018/7/25
  */
 @RequestMapping("/app/information")
@@ -53,6 +50,12 @@ public class InformationController extends BaseController {
 
     @JbootrpcService
     private ProjectFileTypeService projectFileTypeService;
+
+    @JbootrpcService
+    private FilesService filesService;
+
+    @JbootrpcService
+    private FileProjectService fileProjectService;
 
     @JbootrpcService
     private RoleService roleService;
@@ -78,12 +81,10 @@ public class InformationController extends BaseController {
     @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
 
-    @JbootrpcService
-    private ProjectFileTypeService projectFileTypeService;
     /**
      * 项目信息页面
      */
-    public void index(){
+    public void index() {
         render("projects.html");
     }
 
@@ -250,36 +251,4 @@ public class InformationController extends BaseController {
     }
 
 
-
-
-
-
-
-
-    @NotNullPara({"id","projectID"})
-    public void fileIndex(){
-        setAttr("projectID",getParaToLong("projectID"));
-        setAttr("parentID",getParaToLong("id"));
-        render("filemain.html");
-    }
-
-    @NotNullPara("parentID")
-    public void fileTree(){
-        Long parentID=getParaToLong("parentID");
-        List<ZTree> ztree = projectFileTypeService.findTreeOnUse(parentID);
-
-        renderJson(RestResult.buildSuccess(ztree));
-    }
-
-    public void fileTableData(){
-
-    }
-
-    public void fileDel(){
-
-    }
-
-    public void fileSave(){
-
-    }
 }
