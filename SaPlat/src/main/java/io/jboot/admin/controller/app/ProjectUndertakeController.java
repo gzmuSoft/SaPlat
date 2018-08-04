@@ -348,52 +348,44 @@ public class ProjectUndertakeController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
-        impTeam.setProjectID(id);//当前项目id
+        impTeam.setProjectID(id);
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
         impTeam.setCreateUserID(loginUser.getId());
         impTeam.setLastUpdateUserID(loginUser.getId());
-        if (!impTeamService.save(impTeam)) {
-            renderJson(RestResult.buildError("保存失败"));
-        }
 
         EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");//评估方案
-        evaScheme.setProjectID(id);//当前项目id
+        evaScheme.setProjectID(id);
         evaScheme.setCreateTime(new Date());
         evaScheme.setLastAccessTime(new Date());
         evaScheme.setCreateUserID(loginUser.getId());
         evaScheme.setLastUpdateUserID(loginUser.getId());
         evaScheme.setStatus("1");
-        if (!evaSchemeService.save(evaScheme)) {
-            renderJson(RestResult.buildError("保存失败"));
-        } else {
-            evaScheme = evaSchemeService.findByProjectID(id);
-        }
-
-        ScheduledPlan scheduledPlan;//进度计划 (多个)
+        ScheduledPlan scheduledPlan;
         String[] sName = getParaValues("ScheduledPlan.name");
         String[] sStartDate = getParaValues("ScheduledPlan.startDate");
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
 
+        List<ScheduledPlan> scheduledPlans = new ArrayList<>();
         for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
-            scheduledPlan.setEvaSchemeID(evaScheme.getId());//评估方案编号
             scheduledPlan.setName(sName[i]);
-            scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));//起始时间
-            scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));//结束时间
-            scheduledPlan.setContent(sContent[i]);//工作内容
+            scheduledPlan.setStartDate(java.sql.Date.valueOf(sStartDate[i]));
+            scheduledPlan.setEndDate(java.sql.Date.valueOf(sEndDate[i]));
+            scheduledPlan.setContent(sContent[i]);
             scheduledPlan.setCreateTime(new Date());
             scheduledPlan.setLastAccessTime(new Date());
             scheduledPlan.setCreateUserID(loginUser.getId());
             scheduledPlan.setLastUpdateUserID(loginUser.getId());
-
-            if (!scheduledPlanService.save(scheduledPlan)) {
-                renderJson(RestResult.buildError("保存失败"));
-            }
+            scheduledPlans.add(scheduledPlan);
         }
-
-        renderJson(RestResult.buildSuccess());
+        if (impTeamService.save(impTeam, evaScheme, scheduledPlans)) {
+            renderJson(RestResult.buildSuccess("保存成功"));
+        } else {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        }
     }
 
     /**

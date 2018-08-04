@@ -1,0 +1,24 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    function pdf(element) {
+        element.media({
+            width: 800
+            , height: 600
+            , src: "../" + element.attr('href')
+        });
+    }
+    pdf($("a.media"));
+</script>
+#end
+
+#define content()
+<a class="media" href="#(files.path)"></a>
+#end
