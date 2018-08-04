@@ -137,10 +137,7 @@ public class InformationController extends BaseController {
         model.setProjectID(projectId);
         Page<SiteSurveyExpertAdvice> page = siteSurveyExpertAdviceService.findPage(model, pageNumber, pageSize);
         page.getList().forEach(p -> p.setRemark("专家：" + expertGroupService.findById(p.getExpertID()).getName()));
-//        if (page.getList().size() > 0) {
-//            page.getList().forEach(p -> {
-//            });
-//        }
+
         renderJson(new DataTable<SiteSurveyExpertAdvice>(page));
     }
 
