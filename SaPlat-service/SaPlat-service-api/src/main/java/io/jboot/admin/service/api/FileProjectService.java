@@ -96,6 +96,7 @@ public interface FileProjectService  {
      * @return
      */
 
+    public boolean updateFileProjectAndFiles(FileProject model);
     public boolean saveFileProjectAndFiles(FileProject model);
     /**
      * save model to database
@@ -122,6 +123,8 @@ public interface FileProjectService  {
      * @return
      */
     public boolean update(FileProject model);
+
+    public FileProject saveAndGet(FileProject model);
 
     public boolean update(FileProject model, Files files);
 
