@@ -26,7 +26,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/affected_group")
-public class AffectedGroupController extends BaseController{
+public class AffectedGroupController extends BaseController {
 
     @JbootrpcService
     private AffectedGroupService affectedGroupService;
@@ -44,6 +44,7 @@ public class AffectedGroupController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -62,26 +63,26 @@ public class AffectedGroupController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!affectedGroupService.deleteById(id)){
+        if (!affectedGroupService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         AffectedGroup model = affectedGroupService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
-    public void postAdd(){
+    public void postAdd() {
         AffectedGroup model = getBean(AffectedGroup.class, "model");
         //if (affectedGroupService.hasAffectedGroup(model.getName())){
         //    throw new BusinessException("所指定的影响群体名称已存在");
@@ -89,20 +90,20 @@ public class AffectedGroupController extends BaseController{
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!affectedGroupService.save(model)){
+        if (!affectedGroupService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
-    public void postUpdate(){
+    public void postUpdate() {
         AffectedGroup model = getBean(AffectedGroup.class, "model");
         AffectedGroup byId = affectedGroupService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的影响群体名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!affectedGroupService.update(model)){
+        if (!affectedGroupService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());

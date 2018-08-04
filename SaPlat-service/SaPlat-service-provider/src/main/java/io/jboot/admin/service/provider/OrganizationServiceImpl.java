@@ -25,16 +25,17 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
 
     /**
      * 分页查询
+     *
      * @param organization 组织
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @Override
-    public Page<Organization> findPage(Organization organization, int pageNumber, int pageSize){
+    public Page<Organization> findPage(Organization organization, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(organization.getName())){
-            columns.like("name", "%"+organization.getName()+"%");
+        if (StrKit.notBlank(organization.getName())) {
+            columns.like("name", "%" + organization.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -51,11 +52,11 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     @Override
     public boolean saveOrganization(Organization model, User user, Long[] roles) {
         return Db.tx(() -> {
-            if (!save(model)){
+            if (!save(model)) {
                 return false;
             }
             user.setUserID(findByName(model.getName()).getId());
-            return userService.saveUser(user,roles);
+            return userService.saveUser(user, roles);
         });
     }
 
@@ -66,7 +67,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
 
     @Override
     public Organization findByName(String name) {
-        return DAO.findFirstByColumn("name",name);
+        return DAO.findFirstByColumn("name", name);
     }
 
     @Override

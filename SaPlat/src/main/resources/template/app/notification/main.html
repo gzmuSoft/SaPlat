@@ -8,7 +8,6 @@
 #end
 
 
-
 #define js()
 <script type="text/javascript">
 
@@ -30,7 +29,7 @@
                 , {field: 'name', title: '标题', width: 150}
                 , {field: 'content', title: '内容', width: 200}
                 , {field: 'createTime', title: '发送时间', width: 150}
-                , {field: 'statusName', title: '状态', width: 100 , align: 'center', toolbar: '#barOption1'}
+                , {field: 'statusName', title: '状态', width: 100, align: 'center', toolbar: '#barOption1'}
                 , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/notification/tableData'
@@ -58,18 +57,18 @@
             var data = obj.data;
             if (obj.event === 'edit') {
                 pop_show('查看通知信息', '#(ctxPath)/app/notification/view?id=' + data.id, '500', '', function () {
-                    reloadTable(null,null);
+                    reloadTable(null, null);
                 });
-            }else if (obj.event == 'del') {
-                layer.confirm('真的删除通知信息么', function(index){
-                    util.sendAjax ({
+            } else if (obj.event == 'del') {
+                layer.confirm('真的删除通知信息么', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/app/notification/delete',
-                        data: {id : data.id},
+                        data: {id: data.id},
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
-                            reloadTable(null,null);
+                            reloadTable(null, null);
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -79,39 +78,39 @@
             }
         });
 
-        $("#haveRead").click(function(){
-            util.sendAjax ({
+        $("#haveRead").click(function () {
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/notification/haveRead',
                 loadFlag: true,
-                success: function(){
-                    reloadTable($('#name').val(),$('#content').val());
+                success: function () {
+                    reloadTable($('#name').val(), $('#content').val());
                 },
             })
         });
 
         $("#all").click(function () {
-            reloadTable(null,null,null);
+            reloadTable(null, null, null);
         })
 
-        $("#noRead").click(function(){
-            reloadTable(null,null,0);
+        $("#noRead").click(function () {
+            reloadTable(null, null, 0);
         });
 
         $("#read").click(function () {
-            reloadTable(null,null,1);
+            reloadTable(null, null, 1);
         })
 
 
-        reloadTable = function (name ,content ,status) {
+        reloadTable = function (name, content, status) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/notification/tableData'
-                , where: {name: name ,content:content ,status:status} //设定异步数据接口的额外参数
+                , where: {name: name, content: content, status: status} //设定异步数据接口的额外参数
             });
         }
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.name,data.field.content);
+            reloadTable(data.field.name, data.field.content);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });

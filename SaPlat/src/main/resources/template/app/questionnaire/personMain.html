@@ -12,337 +12,260 @@
 #end
 
 #define content()
-<!--content start-->
 <br>
 <h2 class="title" align="center">社会稳定风险评估调查问卷表（个人）</h2><br>
-<hr align="center" size="2" width="100%" />
 
-<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-    <ul class="layui-tab-title">
-        <li class="layui-this">项目基本信息</li>
-        <li>问卷基本信息</li>
-        <li>问卷对象基本情况</li>
-        <li>调查内容</li>
-    </ul>
-    <div class="layui-tab-content" style="height: 100px;">
-        <div class="layui-tab-item layui-show">
-            <form class="layui-form" action="">
-                <input type="hidden" name="project.id" value="#(project.id)">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">评估项目名称：</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="project.name" name="project.name" lay-verify="required" placeholder="请输入" value="#(project.name)" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">项目简介：</label>
-                    <div class="layui-input-block">
-                        <textarea id="brief" name="project.brief" style="display: none;" placeholder="请输入">#(project.brief)</textarea>
-                    </div>
-
-                </div>
-                <br>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button lay-filter="up" class="layui-btn" lay-submit="">提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                    </div>
-                </div>
-            </form>
+<form class="layui-form" action="">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
+        <legend>项目基本信息</legend>
+    </fieldset>
+    <input type="hidden" name="project.id" value="#(project.id)">
+    <input type="hidden" name="type" value="#(type)">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 150px">评估项目名称：</label>
+        <div class="layui-input-block">
+            <input style="width: 1000px;" type="text" id="project.name" name="project.name" value="#(project.name)"
+                   lay-verify="required" autocomplete="off"
+                   placeholder="请输入标题" class="layui-input">
         </div>
-        <div class="layui-tab-item">
-            <form class="layui-form" action="">
-                <input type="hidden" name="pid" value="#(project.id)">
-                <input type="hidden" name="type" value="#(type)">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">问卷信息所属部门：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="department" lay-verify="required" placeholder="请输入部门" value="#(questionnaire.department)" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">问卷调查结束时间：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="surveyTime" id="surveyTime" value="#(questionnaire.surveyTime)" lay-verify="surveyTime" placeholder="yyyy-MM-dd"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button class="layui-btn" lay-submit="" lay-filter="sub">提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                    </div>
-                </div>
-            </form>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label" style="width: 150px">项目简介：</label>
+        <div class="layui-input-block" style="width: 1000px;margin: 0 180px">
+            <textarea id="demo" name="project.brief" lay-verify="required"
+                      class="layui-textarea">#(project.brief)</textarea>
         </div>
-        <div class="layui-tab-item">
-            <form class="layui-form" action="">
-                <input type="hidden" name="pid" value="#(project.id)">
-                <input type="hidden" name="type" value="#(type)">
-                <div class="layui-row">
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">姓名：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" placeholder="请输入姓名" value="#(questionnaire.personName)"  autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">性别：</label>
-                            <div class="layui-input-block">
-                                #if(questionnaire.personGender == 1)
-                                <input type="radio" name="sex" value=1 title="男" checked="checked">
-                                <input type="radio" name="sex" value=2 title="女">
-                                #else
-                                <input type="radio" name="sex" value=1 title="男" >
-                                <input type="radio" name="sex" value=2 title="女" checked="checked">
-                                #end
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">民族：</label>
-                                <div class="layui-input-inline">
-                                    <select name="nationID" lay-verify="required" lay-search="">
-                                        <option value="#(questionnaire.nationID)">#(nationName)</option>
-                                        #statusOption(nationStatus);
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
+        <legend>问卷基本信息</legend>
+    </fieldset>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">问卷信息所属部门：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="department" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                           class="layui-input">
                 </div>
-
-                <div class="layui-row">
-                    <div class="layui-col-md4">
-
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">居住地址：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="addr" lay-verify="required" autocomplete="off" placeholder="请输入地址" value="#(questionnaire.addr)" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">联系电话：</label>
-                            <div class="layui-input-inline">
-                                <input type="tel" name="phone" lay-verify="required|phone"  placeholder="请输入电话号码" value="#(questionnaire.phone)" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="layui-row">
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">身份证号码：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="IDCard" lay-verify="identity" placeholder="请输入身份证号码" value="#(questionnaire.IDCard)" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">年龄：</label>
-                            <div class="layui-input-block">
-                                <input type="number" name="age" lay-verify="required" autocomplete="off" placeholder="请输入年龄" value="#(questionnaire.age)" class="layui-input">
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="layui-row">
-                    <div class="layui-col-md4">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">职业：</label>
-                            <div class="layui-input-inline">
-                                <select name="occupationID" lay-verify="required" lay-search="">
-                                    <option value="#(questionnaire.occupationID)">#(occupationName)</option>
-                                    #statusOption(occupationStatus);
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <label class="layui-form-label">学历：</label>
-                        <div class="layui-input-inline">
-                            <select name="degreeOfEducationID">
-                                <option value="#(questionnaire.degreeOfEducationID)">#(educationalName)</option>
-                                #statusOption(educationalStatus);
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-                <div class="layui-form-item">
-                    <div class="layui-input-block" align="center">
-                        <button class="layui-btn" lay-submit="" lay-filter="sub">提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-        <div class="layui-tab-item">
-            <form class="layui-form" action="">
-                <input type="hidden" id="pid"name="pid" value="#(project.id)">
-                <div class="layui-btn-group">
-                    <button id="add" class="layui-btn layui-btn-small"lay-submit="" lay-filter="add" >添加一条调查内容</button>
-                </div>
-            </form>
-            <div class="layui-row">
-
-                <table id="dateTable" lay-filter="dateTable"></table>
             </div>
         </div>
     </div>
-</div>
+    <div class="layui-row">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 200px">问卷调查时间：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="surveyTime" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
+        <legend>问卷对象基本情况</legend>
+    </fieldset>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" placeholder="请输入姓名" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">性别：</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value=1 title="男" checked="checked">
+                    <input type="radio" name="sex" value=2 title="女">
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script type="text/html" id="barOption">
-    #shiroHasPermission('/app/questionnaire/delete')
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    #end
-</script>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 200px">民族：</label>
+                    <div class="layui-input-inline">
+                        <select name="nationID" lay-verify="required" lay-search="">
+                            <option value="">直接选择或搜索选择</option>
+                            #statusOption(nationStatus);
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 200px">联系电话：</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">身份证号码：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="IDCard" lay-verify="identity" placeholder="" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">年龄：</label>
+                <div class="layui-input-block">
+                    <input type="number" name="age" lay-verify="required" autocomplete="off" placeholder="请输入年龄"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">职业：</label>
+                <div class="layui-input-inline">
+                    <select name="occupationID" lay-verify="required" lay-search="">
+                        <option value="">直接选择或搜索选择</option>
+                        #statusOption(occupationStatus);
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">文化程度：</label>
+                <div class="layui-input-inline">
+                    <select name="degreeOfEducationID" lay-verify="required" lay-search="">
+                        <option value="">直接选择或搜索选择</option>
+                        #statusOption(educationalStatus);
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 200px">居住地址：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="addr" lay-verify="required" autocomplete="off" placeholder="请输入居住地址"
+                           class="layui-input" style="width: 500px">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
+        <legend>调查内容</legend>
+    </fieldset>
+    <br>
+    <ol>
+        <li class="qwe">
+            <div class="layui-form-item">
+                <div class="layui-row">
+                    <div class="layui-col-md10">
+                        <label class="layui-form-label">调查内容：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="content" lay-verify="title" autocomplete="off"
+                                   placeholder="请输入调查内容"
+                                   class="layui-input" style="width: 1000px;">
+                        </div>
+                    </div>
+                    <div class="layui-col-md2">
+                        <button type="button" class="layui-btn" id="add">添加行</button>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ol>
+    <br>
+    <div class="layui-form-item" style="text-align: center">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" style="position:absolute;left:25%;">提交</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" class="layui-btn layui-btn-warm" style="position:absolute;right:35%;">重置</button>
+        </div>
+    </div>
+</form>
 #end
 
-<!--content end-->
-
-<!--js start-->
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'laydate','layedit','table'], function () {
+    layui.use(['form', 'layer', 'element', 'layedit', 'laydate'], function () {
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate
             , $ = layui.jquery
-            , element = layui.element
-            , table = layui.table;
-
-
-        var pid = document.getElementById("pid").value;
-        var layedit = layui.layedit;
-        //建立编辑器
-        var briefIndex = layedit.build('brief',{
+            , string = "?"
+            , layedit = layui.layedit;
+        var briefIndex = layedit.build('demo', {
             hideTool: ['link', 'unlink', 'face', 'image', 'help']
         });
         //日期
         laydate.render({
-            elem: '#surveyTime'
+            elem: '#date'
         });
 
         //监听提交
-
-        form.on('submit(sub)', function(data){
-            util.sendAjax ({
-                type: 'POST',
-                url: '#(ctxPath)/app/questionnaire/postSub',
-                data: $.param(data.field),
-                loadFlag: true,
-                success : function(data){
-                }
-            });
-            return false;
-        });
-        form.on('submit(up)',function (data) {
+        form.on('submit(demo1)', function (data) {
             data.field['project.brief'] = layedit.getContent(briefIndex);
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/questionnaire/updateProject',
+                url: '#(ctxPath)/app/questionnaire/add' + jointString(),
                 data: $.param(data.field),
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                 }
             });
             return false;
-        })
-        form.on('submit(add)',function (data) {
-            $.post('#(ctxPath)/app/questionnaire/addContent',$.param(data.field),function () {
-                reloadTable(data.pid);
-            })
-            return false;
-        })
-
-
-        table.on('tool(dateTable)', function (obj) {
-           var data = obj.data;
-           if (obj.event == 'del') {
-                layer.confirm('是否删除这条调查内容', function(index){
-                    util.sendAjax ({
-                        type: 'POST',
-                        url: '#(ctxPath)/app/questionnaire/delete',
-                        data: {id : data.id},
-                        loadFlag: true,
-                        success : function(data){
-                            layer.close(index);
-                            reloadTable(pid);
-                        },
-                        unSuccess: function (data) {
-                            layer.close(index);
-                        }
-                    })
-                });
-            }
         });
-        reloadTable = function (pid) {
-            table.reload('dateTable', {
-                url: '#(ctxPath)/app/questionnaire/tableData'
-                , where: {pid:pid} //设定异步数据接口的额外参数
+
+        function jointString() {
+            $(".content").each(function () {
+                string += "content" + "=" + $(this).val() + "&";
             });
+            return string;
         }
 
-
-        // 表格渲染
-        var tableIns = table.render({
-            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
-            , even: true //开启隔行背景
-            , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
-            , cellMinWidth: 100       //单元格最小宽度
-            , where:{pid:pid}
-            , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称',edit: 'text', align: 'center',width: 350}
-                , {field: 'content', title: '调查内容详情',edit: 'text', align: 'center',unresize: true}
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-            ]]
-            , url: '#(ctxPath)/app/questionnaire/tableData'
-            , method: 'get'
-            , request: {
-                pageName: 'pageNumber' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , page: true
-            , limits: [30, 60, 90, 150, 300]
-            , limit: 30 //默认采用30
-            , loading: true
-            , done: function (res, curr, count) {
-                var last = $('.layui-table-body').first().height();
-                $('.layui-table-body').first().height(last * 0.920);
-            }
+        //添加行
+        $(document).ready(function () {
+            $("#add").click(function () {
+                $("ol").append(" <li class='qwe'><div class=\"layui-form-item\">\n" +
+                    "        <div class=\"layui-row\" >\n" +
+                    "            <div class=\"layui-col-md10\">\n" +
+                    "                <label class=\"layui-form-label\">调查内容：</label>\n" +
+                    "                <div class=\"layui-input-block\">\n" +
+                    "                    <input type=\"text\" lay-verify=\"content\"  autocomplete=\"off\" placeholder=\"请输入调查内容\"\n" +
+                    "                           class=\"layui-input content\" style=\"width: 1000px;\">\n" +
+                    "                </div>\n" +
+                    "            </div>\n" +
+                    "            <div class=\"layui-col-md2\">\n" +
+                    "                <button type=\"button\" class=\"layui-btn layui-btn-danger \" id=\"del\"  >删除</button>\n" +
+                    "            </div>\n" +
+                    "        </div>\n" +
+                    "    </div>" +
+                    "</li>");
+                return false;
+            });
         });
 
-        //监听单元格编辑
-        table.on('edit(dateTable)', function(obj){
-            var value = obj.value //得到修改后的值
-                ,data = obj.data //得到所在行所有键值
-                ,field = obj.field; //得到字段
-            $.post('#(ctxPath)/app/questionnaire/updateTable',data,function () {
-                layer.msg("保存成功");
-            })
+
+        //删除行
+        $(document).on("click", "#del", function () {
+            layer.msg("删除！");
         });
+        $(document).on("click", "#del", function () {
+            $(this).parents("li").remove();
+        });
+
 
     });
 </script>
-<!--js end-->
 #end

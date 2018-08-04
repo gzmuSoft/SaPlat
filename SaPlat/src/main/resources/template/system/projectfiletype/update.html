@@ -15,14 +15,14 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
 
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/system/projectfiletype/postUpdate',
                 data: $.param(data.field),
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                     pop_close();
                 }
             });
@@ -40,7 +40,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
-                <input type="text" name="projectFileType.name" placeholder="名称" class="layui-input" value="#(projectFileType.name)" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="projectFileType.name" placeholder="名称" class="layui-input"
+                       value="#(projectFileType.name)" required lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
@@ -48,13 +49,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>顺序</label>
             <div class="layui-input-block">
-                <input type="number" name="projectFileType.sort" placeholder="顺序" class="layui-input" value="#(projectFileType.sort)" required  lay-verify="required" autocomplete="off"/>
+                <input type="number" name="projectFileType.sort" placeholder="顺序" class="layui-input"
+                       value="#(projectFileType.sort)" required lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
+            <button class="layui-btn" lay-filter="sub" lay-submit>
                 保存
             </button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>

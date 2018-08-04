@@ -20,16 +20,16 @@ public class RiskLevelServiceImpl extends JbootServiceBase<RiskLevel> implements
 
     /**
      * find all model
+     *
      * @param model 风险级别
      * @return all <RiskLevel>
      */
-    public List<RiskLevel> findAll(RiskLevel model)
-    {
+    public List<RiskLevel> findAll(RiskLevel model) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
-        if (StrKit.notNull(model.getIsEnable())){
+        if (StrKit.notNull(model.getIsEnable())) {
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.findListByColumns(columns);
@@ -38,8 +38,8 @@ public class RiskLevelServiceImpl extends JbootServiceBase<RiskLevel> implements
     @Override
     public Page<RiskLevel> findPage(RiskLevel model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (StrKit.notBlank(model.getName())){
-            columns.like("name", "%" + model.getName()+"%");
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }

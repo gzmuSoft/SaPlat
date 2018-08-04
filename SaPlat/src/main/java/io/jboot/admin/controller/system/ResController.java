@@ -30,8 +30,8 @@ import java.util.*;
 
 /**
  * 系统资源控制器
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/system/res")
 @Api(description = "资源管理接口文档", basePath = "/system/res", tags = "res")

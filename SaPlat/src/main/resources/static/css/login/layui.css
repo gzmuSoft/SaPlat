@@ -3827,7 +3827,8 @@ body .layui-table-tips .layui-layer-content {
 
 .layui-timeline-title {
     position: relative;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    color: #fff;
 }
 
 .layui-badge, .layui-badge-dot, .layui-badge-rim {

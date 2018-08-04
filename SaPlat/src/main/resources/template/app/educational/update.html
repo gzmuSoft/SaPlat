@@ -15,14 +15,14 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
-        form.on('submit(sub)', function(data){
+        form.on('submit(sub)', function (data) {
 
-            util.sendAjax ({
+            util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/educational/postUpdate',
                 data: $('#addForm').serialize(),
                 loadFlag: true,
-                success : function(data){
+                success: function (data) {
                     pop_close();
                 }
             });
@@ -40,25 +40,28 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
-                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="#(model.name)" required  lay-verify="required" autocomplete="off"/>
+                <input type="text" name="model.name" placeholder="名称" class="layui-input" value="#(model.name)" required
+                       lay-verify="required" autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>排序</label>
             <div class="layui-input-block">
-                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input" value="#(model.sort)" required  lay-verify="required" autocomplete="off"/>
+                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input"
+                       value="#(model.sort)" required lay-verify="required" autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
-                <input id="remark" type="text" name="model.remark" placeholder="备注" class="layui-input" value="#(model.remark)" autocomplete="off"/>
+                <input id="remark" type="text" name="model.remark" placeholder="备注" class="layui-input"
+                       value="#(model.remark)" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
-            <button  class="layui-btn" lay-filter="sub" lay-submit>
+            <button class="layui-btn" lay-filter="sub" lay-submit>
                 保存
             </button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>

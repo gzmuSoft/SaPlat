@@ -2,14 +2,18 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.json.JFinalJson;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.common.ZTree;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
+import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -48,7 +52,7 @@ public class InformationController extends BaseController {
     private ProjectService projectService;
 
     @JbootrpcService
-    private InformationFillService informationFillService;
+    private ProjectFileTypeService projectFileTypeService;
 
     @JbootrpcService
     private RoleService roleService;
@@ -83,117 +87,115 @@ public class InformationController extends BaseController {
         render("projects.html");
     }
 
-    /**
-     * 项目信息查看，查看当前已经加入的项目
-     */
-
-    public void tableData(){
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        List<ImpTeam> impTeams = impTeamService.findByExpertGroup(expertGroup);
-        List<Object> ids = Collections.synchronizedList(new ArrayList<Object>());
-        impTeams.forEach(impTeam -> ids.add(impTeam.getProjectID()));
-        List<Project> projects = projectService.findByIds(ids);
-        Map<String,Object> res = new ConcurrentHashMap<>();
-        res.put("code", ResultCode.SUCCESS);
-        res.put("data", projects);
-        res.put("msg","请求成功");
-        renderJson(res);
-    }
+    @JbootrpcService
+    private UserRoleService userRoleService;
 
     /**
      * 资料编辑页面
      */
     @NotNullPara("id")
-    public void edit(){
+    public void edit() {
         Long id = getParaToLong("id");
-        setAttr("projectId",id);
+        setAttr("projectId", id);
         render("edit.html");
     }
 
 
     /**
-     * 资料填写，加载当前可以填写的项目
+     * 个人资料填写，加载当前可以填写的项目
      */
-    public void editData(){
+    @NotNullPara("id")
+    public void editData() {
         Long id = getParaToLong("id");
         Project project = projectService.findById(id);
-        if (project == null){
+        if (project == null) {
             renderJson(RestResult.buildError("项目不存在"));
             throw new BusinessException("项目不存在");
         }
-        User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        ImpTeam impTeam = impTeamService.findByProjectId(project.getId());
-        if (!impTeam.getExpertGroupIDs().contains(String.valueOf(expertGroup.getId()))){
-            renderJson(RestResult.buildError("关系不对应"));
-            throw new BusinessException("关系不对应");
-        }
+//        User user = AuthUtils.getLoginUser();
+//        Person person = personService.findByUser(user);
+//        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
+//        ImpTeam impTeam = impTeamService.findByProjectId(project.getId());
+//        if (!impTeam.getExpertGroupIDs().contains(String.valueOf(expertGroup.getId()))){
+//            renderJson(RestResult.buildError("关系不对应"));
+//            throw new BusinessException("关系不对应");
+//        }
 //        List<InformationFill> informationFills = informationFillService.findByRoleId(roleService.findByName("专家团体").getId());
-        List<InformationFill> informationFills = informationFillService.findAll();
-        Map<String,Object> res = new ConcurrentHashMap<>();
-        res.put("list",informationFills);
-        res.put("code",ResultCode.SUCCESS);
-        res.put("projectId",project.getId());
+        Long parentId = projectFileTypeService.findByName("评估").getId();
+        List<ProjectFileType> projectFileTypeList = projectFileTypeService.findListByParentId(parentId);
+        Map<String, Object> res = new ConcurrentHashMap<>();
+        res.put("list", projectFileTypeList);
+        res.put("code", ResultCode.SUCCESS);
+        res.put("projectId", project.getId());
         renderJson(res);
-
-//        List<ImpTeam> impTeams = impTeamService.findByExpertGroup(expertGroup);
-//        List<Object> ids = Collections.synchronizedList(new ArrayList<Object>());
-//        impTeams.forEach(impTeam -> ids.add(impTeam.getProjectID()));
-//        List<Project> projects = projectService.findByIds(ids);
-//        setAttr("projects",projects);
 
     }
 
+    public void list() {
+        String url = getPara("url");
+        Long projectId = getParaToLong("id");
+        setAttr("url", url)
+                .setAttr("projectId", projectId)
+                .render("tableView.html");
+    }
+
+    public void expertAdviceDataTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
+        model.setProjectID(projectId);
+        Page<SiteSurveyExpertAdvice> page = siteSurveyExpertAdviceService.findPage(model, pageNumber, pageSize);
+        page.getList().forEach(p -> p.setRemark("专家：" + expertGroupService.findById(p.getExpertID()).getName()));
+//        if (page.getList().size() > 0) {
+//            page.getList().forEach(p -> {
+//            });
+//        }
+        renderJson(new DataTable<SiteSurveyExpertAdvice>(page));
+    }
 
     /**
      * 现场踏勘专家意见
      */
-    @RequiresRoles("专家团体")
     @NotNullPara("id")
-    public void expertAdvice(){
+    public void expertAdvice() {
         Long id = getParaToLong("id");
+        Long expertID = getParaToLong("expertID");
         Project project = projectService.findById(id);
         User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-
-        SiteSurveyExpertAdvice model = siteSurveyExpertAdviceService.findByColumn("expertID", expertGroup.getId().toString(), Column.LOGIC_EQUALS);
-        if (model == null){
-            model = new SiteSurveyExpertAdvice();
-        }
+        List<ExpertGroup> expertGroups = expertGroupService.findAll();
         String assessmentMode = project.getAssessmentMode();
         String name = null;
-        if ("自评".equals(assessmentMode)){
+        if ("自评".equals(assessmentMode)) {
             Organization organization = organizationService.findById(userService.findById(project.getUserId()).getUserID());
             name = organization.getName();
         } else {
             ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(id);
             //项目为承接时
-            if (!ProjectUndertakeStatus.UNDERTAKE.equals(projectUndertake.getStatus().toString())){
+            if (!ProjectUndertakeStatus.UNDERTAKE.equals(projectUndertake.getStatus().toString())) {
                 renderJson(RestResult.buildError("項目还不能填写资料"));
                 throw new BusinessException("項目还不能填写资料");
             }
             FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
             name = facAgency.getName();
         }
-        AffectedGroup affectedGroup = affectedGroupService.findById(expertGroup.getAffectedGroupID());
-        Occupation occupation = occupationService.findById(affectedGroup.getOccupationID());
-        Post post = postService.findById(affectedGroup.getPersonID());
+        SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
+        ExpertGroup expertGroup = null;
+        if (expertID != null) {
+            model = siteSurveyExpertAdviceService.findByColumns(new String[]{"projectID", "expertID"}, new String[]{id.toString(), expertID.toString()});
+            expertGroup = expertGroupService.findById(expertID);
+        }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-        setAttr("expertGroup",expertGroup)
-                .setAttr("phone",user.getPhone())
-                .setAttr("projectID",project.getId())
-                .setAttr("occupation",occupation.getName())
-                .setAttr("name",name)
-                .setAttr("post",post)
-                .setAttr("date",date)
-                .setAttr("model",model)
-                .setAttr("otherComments",model.getOtherComments())
-                .setAttr("resolving",model.getResolving())
-                .setAttr("riskFactor",model.getRiskFactor())
+        setAttr("expertGroups", expertGroups)
+                .setAttr("expertGroup", expertGroup)
+                .setAttr("phone", user.getPhone())
+                .setAttr("projectID", project.getId())
+                .setAttr("name", name)
+                .setAttr("date", date)
+                .setAttr("model", model)
+                .setAttr("otherComments", model.getOtherComments())
+                .setAttr("resolving", model.getResolving())
+                .setAttr("riskFactor", model.getRiskFactor())
                 .render("expertAdvice.html");
     }
 
@@ -202,23 +204,18 @@ public class InformationController extends BaseController {
      */
     @Before(POST.class)
     @NotNullPara("projectID")
-    public void expertAdvicePost(){
-        Long id = getParaToLong();
+    public void expertAdvicePost() {
+        Long id = getParaToLong("projectID");
+        Long expertGroupId = getParaToLong("expertGroupId");
         String riskFactor = getPara("riskFactor");
         String resolving = getPara("resolving");
         String content = getPara("content");
 
         User user = AuthUtils.getLoginUser();
-        Person person = personService.findByUser(user);
-        ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
-        SiteSurveyExpertAdvice model = siteSurveyExpertAdviceService.findByColumns(new String[]{"projectID", "expertID"}, new Object[]{id, expertGroup.getId()});
-        if (model != null){
-            renderJson(RestResult.buildError("您已经填写过此资料"));
-            throw new BusinessException("您已经填写过此资料");
-        }
-        model = new SiteSurveyExpertAdvice();
+        SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
+        model.setName("现场踏勘专家意见");
         model.setProjectID(id);
-        model.setExpertID(expertGroup.getId());
+        model.setExpertID(expertGroupId);
         model.setCreateTime(new Date());
         model.setIsEnable(true);
         model.setLastAccessTime(new Date());
@@ -228,9 +225,26 @@ public class InformationController extends BaseController {
         model.setResolving(resolving);
         model.setOtherComments(content);
         model.setSort(1);
-        if (!siteSurveyExpertAdviceService.save(model)){
+        if (!siteSurveyExpertAdviceService.save(model)) {
             renderJson(RestResult.buildError("啊哦，保存失败，请重新尝试！"));
             throw new BusinessException("啊哦，保存失败，请重新尝试！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 删除
+     */
+    @Before(POST.class)
+    @NotNullPara("id")
+    public void expertAdviceDelete() {
+        Long id = getParaToLong("id");
+        SiteSurveyExpertAdvice model = siteSurveyExpertAdviceService.findById(id);
+        if (model == null) {
+            throw new BusinessException("删除失败！");
+        }
+        if (!siteSurveyExpertAdviceService.delete(model)) {
+            throw new BusinessException("删除失败！");
         }
         renderJson(RestResult.buildSuccess());
     }

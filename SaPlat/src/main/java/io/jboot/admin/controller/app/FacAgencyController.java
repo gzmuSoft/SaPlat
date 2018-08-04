@@ -24,7 +24,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/fac_agency")
-public class FacAgencyController extends BaseController{
+public class FacAgencyController extends BaseController {
 
     @JbootrpcService
     private FacAgencyService facAgencyService;
@@ -35,6 +35,7 @@ public class FacAgencyController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -55,51 +56,52 @@ public class FacAgencyController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!facAgencyService.deleteById(id)){
+        if (!facAgencyService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         FacAgency model = facAgencyService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
-    public void postAdd(){
+    public void postAdd() {
         FacAgency model = getBean(FacAgency.class, "model");
-        if (facAgencyService.isExisted(model.getName())){
+        if (facAgencyService.isExisted(model.getName())) {
             throw new BusinessException("所指定的服务机构名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!facAgencyService.save(model)){
+        if (!facAgencyService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
-    public void postUpdate(){
+    public void postUpdate() {
         FacAgency model = getBean(FacAgency.class, "model");
         FacAgency byId = facAgencyService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的服务机构名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!facAgencyService.update(model)){
+        if (!facAgencyService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

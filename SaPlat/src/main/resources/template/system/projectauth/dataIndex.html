@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {type:'numbers', fixed: true, unresize: true}
+                {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'name', title: '申请人', width: 150}
                 , {field: 'roleId', title: '申请所用身份', width: 120, templet: '#statusTpl(roleStatus, "roleId")'}
@@ -69,19 +69,19 @@
                     reloadTable(null, null, null, null);
                 });
             } else if (obj.event === 'warning') {
-                layer.confirm('该认证已审核，确定要重新审核', function(index) {
+                layer.confirm('该认证已审核，确定要重新审核', function (index) {
                     pop_show('审核结果', '#(ctxPath)/system/projectauth/dataUpdate?id=' + data.id, '', '', function () {
                         reloadTable(null, null, null, null);
                         layer.close(index);
-                });
+                    });
                 });
             }
 
 
         });
 
-        $("#back").click(function(){
-            window.location.href='#(ctxPath)/system/projectauth/index';
+        $("#back").click(function () {
+            window.location.href = '#(ctxPath)/system/projectauth/index';
         });
 
 

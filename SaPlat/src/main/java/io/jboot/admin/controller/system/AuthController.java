@@ -92,9 +92,9 @@ public class AuthController extends BaseController {
         }
         User user = userService.findById(auth.getUserId());
         Person person = personService.findById(user.getUserID());
-        Organization organization= organizationService.findById(user.getUserID());
+        Organization organization = organizationService.findById(user.getUserID());
 
-        if (!(auth.getType().equals(TypeStatus.ORGANIZATION)||auth.getType().equals(TypeStatus.PERSON))) {
+        if (!(auth.getType().equals(TypeStatus.ORGANIZATION) || auth.getType().equals(TypeStatus.PERSON))) {
             throw new BusinessException("请求参数非法");
         }
 
@@ -163,7 +163,7 @@ public class AuthController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Auth auth = new Auth();
-        if(getParaToLong("userId")!=null) {
+        if (getParaToLong("userId") != null) {
             auth.setUserId(getParaToLong("userId"));
         }
         if (!"".equals(getPara("status"))) {

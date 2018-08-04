@@ -10,12 +10,12 @@ import io.jboot.web.controller.annotation.RequestMapping;
 
 /**
  * 日志管理
- * @author Rlax
  *
+ * @author Rlax
  */
 @RequestMapping("/system/log")
 public class LogController extends BaseController {
-    
+
     @JbootrpcService
     private LogService logService;
 
@@ -41,5 +41,5 @@ public class LogController extends BaseController {
         Page<Log> logPage = logService.findPage(log, pageNumber, pageSize);
         renderJson(new DataTable<Log>(logPage));
     }
-    
+
 }

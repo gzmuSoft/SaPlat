@@ -2,7 +2,6 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -74,6 +73,7 @@ public class PersonController extends BaseController {
 
     @JbootrpcService
     private PostService postService;
+
     /**
      * 初始化
      */
@@ -89,54 +89,60 @@ public class PersonController extends BaseController {
         Nation nmodel = new Nation();
         nmodel.setIsEnable(true);
         List<Nation> nations = nationService.findAll(nmodel);
-        BaseStatus nationStatus = new BaseStatus(){};
-        for(Nation nation : nations){
-            nationStatus.add(nation.getId().toString(),nation.getName());
+        BaseStatus nationStatus = new BaseStatus() {
+        };
+        for (Nation nation : nations) {
+            nationStatus.add(nation.getId().toString(), nation.getName());
         }
 
         //加载国籍
         Country cmodel = new Country();
         cmodel.setIsEnable(true);
-        List<Country>  contries= countryService.findAll(cmodel);
-        BaseStatus contryStatus = new BaseStatus(){};
-        for(Country contry : contries){
-            contryStatus.add(contry.getId().toString(),contry.getName());
+        List<Country> contries = countryService.findAll(cmodel);
+        BaseStatus contryStatus = new BaseStatus() {
+        };
+        for (Country contry : contries) {
+            contryStatus.add(contry.getId().toString(), contry.getName());
         }
 
         //加载学历
         Educational emodel = new Educational();
         emodel.setIsEnable(true);
-        List<Educational>  educationals= educationalService.findAll(emodel);
-        BaseStatus educationalStatus = new BaseStatus(){};
-        for(Educational educational : educationals){
-            educationalStatus.add(educational.getId().toString(),educational.getName());
+        List<Educational> educationals = educationalService.findAll(emodel);
+        BaseStatus educationalStatus = new BaseStatus() {
+        };
+        for (Educational educational : educationals) {
+            educationalStatus.add(educational.getId().toString(), educational.getName());
         }
 
         //加载政治面貌
         PoliticalStatus psmodel = new PoliticalStatus();
         psmodel.setIsEnable(true);
-        List<PoliticalStatus>  politicalStatuses= politicalStatusService.findAll(psmodel);
-        BaseStatus politicalOpts = new BaseStatus(){};
-        for(PoliticalStatus politicalStatus : politicalStatuses){
-            politicalOpts.add(politicalStatus.getId().toString(),politicalStatus.getName());
+        List<PoliticalStatus> politicalStatuses = politicalStatusService.findAll(psmodel);
+        BaseStatus politicalOpts = new BaseStatus() {
+        };
+        for (PoliticalStatus politicalStatus : politicalStatuses) {
+            politicalOpts.add(politicalStatus.getId().toString(), politicalStatus.getName());
         }
 
         //加载职业
         Occupation omodel = new Occupation();
         omodel.setIsEnable(true);
-        List<Occupation>  occupationStatuses= occupationService.findAll(omodel);
-        BaseStatus occupationOpts = new BaseStatus(){};
-        for(Occupation item : occupationStatuses){
-            occupationOpts.add(item.getId().toString(),item.getName());
+        List<Occupation> occupationStatuses = occupationService.findAll(omodel);
+        BaseStatus occupationOpts = new BaseStatus() {
+        };
+        for (Occupation item : occupationStatuses) {
+            occupationOpts.add(item.getId().toString(), item.getName());
         }
 
         //加载职务
         Post pmodel = new Post();
         pmodel.setIsEnable(true);
         List<Post> posts = postService.findAll(pmodel);
-        BaseStatus postStatus = new BaseStatus(){};
-        for(Post post : posts){
-            postStatus.add(post.getId().toString(),post.getName());
+        BaseStatus postStatus = new BaseStatus() {
+        };
+        for (Post post : posts) {
+            postStatus.add(post.getId().toString(), post.getName());
         }
 
         setAttr("user", loginUser).
@@ -148,14 +154,14 @@ public class PersonController extends BaseController {
                 setAttr("nationStatus", nationStatus).
                 setAttr("occupationOpts", occupationOpts).
                 setAttr("postStatus", postStatus).
-            render("main.html");
+                render("main.html");
     }
 
     /**
      * 注册页面
      */
     public void register() {
-        render("register.html");
+        render("template/register.html");
     }
 
     /**
@@ -279,12 +285,12 @@ public class PersonController extends BaseController {
         if (expertGroup == null) {
             expertGroup = new ExpertGroup();
         } else if (StringUtils.isNotBlank(expertGroup.getWorkpictrue())
-                && StringUtils.isNotBlank(expertGroup.getCertificate())){
+                && StringUtils.isNotBlank(expertGroup.getCertificate())) {
             Files file1 = filesService.findById(Integer.parseInt(expertGroup.getWorkpictrue()));
             Files file2 = filesService.findById(Integer.parseInt(expertGroup.getCertificate()));
             file1.setIsEnable(false);
             file2.setIsEnable(false);
-            if (!filesService.update(file1) || !filesService.update(file2)){
+            if (!filesService.update(file1) || !filesService.update(file2)) {
                 renderJson(RestResult.buildError("用户资料失败"));
                 throw new BusinessException("用户资料失败");
             }

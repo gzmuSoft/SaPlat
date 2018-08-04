@@ -25,38 +25,38 @@
 //            ,cellMinWidth: 30
             , cols: [[                  //标题栏
 //                {checkbox: false,  fixed: true, space: true}
-                 {field: 'id', title: 'ID',sort: true,width:60}
+                {field: 'id', title: 'ID', sort: true, width: 60}
 //                , {field: 'orgID', title: '组织机构ID',type:"space"}
-                , {field: 'name', title: '名称',width:100}
-                , {field: 'spell', title: '全拼',width:100}
-                , {field: 'address', title: '公司地址',width:100}
-                , {field: 'resume', title: '公司简历',width:100}
-                , {field: 'principal', title: '负责人',width:100}
-                , {field: 'type', title: '主体类型',width:150}
-                , {field: 'credit', title: '统一社会信用代码',width:100}
-                , {field: 'scope', title: '业务范围',width:100}
-                , {field: 'phone', title: '联系方式',width:150}
-                , {field: 'start', title: '创办日期',width:100}
-                , {field: 'person', title: '企业法人',width:100}
-                , {field: 'capital', title: '注册资本',width:100}
-                , {field: 'pictrue', title: '法人身份证照片',width:100}
-                , {field: 'website', title: '企业网站',width:100}
-                , {field: 'coordinate', title: '地址坐标',width:100}
-                , {field: 'landline', title: '座机电话',width:100}
-                , {field: 'scale', title: '人数',width:100}
+                , {field: 'name', title: '名称', width: 100}
+                , {field: 'spell', title: '全拼', width: 100}
+                , {field: 'address', title: '公司地址', width: 100}
+                , {field: 'resume', title: '公司简历', width: 100}
+                , {field: 'principal', title: '负责人', width: 100}
+                , {field: 'type', title: '主体类型', width: 150}
+                , {field: 'credit', title: '统一社会信用代码', width: 100}
+                , {field: 'scope', title: '业务范围', width: 100}
+                , {field: 'phone', title: '联系方式', width: 150}
+                , {field: 'start', title: '创办日期', width: 100}
+                , {field: 'person', title: '企业法人', width: 100}
+                , {field: 'capital', title: '注册资本', width: 100}
+                , {field: 'pictrue', title: '法人身份证照片', width: 100}
+                , {field: 'website', title: '企业网站', width: 100}
+                , {field: 'coordinate', title: '地址坐标', width: 100}
+                , {field: 'landline', title: '座机电话', width: 100}
+                , {field: 'scale', title: '人数', width: 100}
 //                ,{field: 'createUserID', title: '创建用户ID' ,sort: true}
 //                ,{field: 'createTime', title: '创建时间' ,sort: true}
 //                ,{field: 'lastUpdateUserID', title: '末次更新用户ID' ,sort: true}
 //                ,{field: 'lastAccessTime', title: '最后一次访问时间' ,sort: true}
 //                ,{field: 'isEnable', title: '状态' ,sort: true,width:100,templet: '#test-table-checkboxTpl', unresize: true}
 
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption',width:200} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width: 200} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/enterpriseTableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -66,17 +66,19 @@
             }
         });
 
-        table.on('tool(dateTable)', function(obj){
+        table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if(obj.event === 'unuse'){
-                layer.confirm('确定禁用此组织?', function(index){
-                    util.sendAjax ({
+            if (obj.event === 'unuse') {
+                layer.confirm('确定禁用此组织?', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/organizationrole/enterpriseEnable',
-                        data: {id : data.id,
-                        enable:false},
+                        data: {
+                            id: data.id,
+                            enable: false
+                        },
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -85,15 +87,17 @@
                         }
                     })
                 });
-            } else if(obj.event === 'use'){
-                layer.confirm('确定启用此组织?', function(index){
-                    util.sendAjax ({
+            } else if (obj.event === 'use') {
+                layer.confirm('确定启用此组织?', function (index) {
+                    util.sendAjax({
                         type: 'POST',
                         url: '#(ctxPath)/system/organizationrole/enterpriseEnable',
-                        data: {id : data.id,
-                            enable:true},
+                        data: {
+                            id: data.id,
+                            enable: true
+                        },
                         loadFlag: true,
-                        success : function(data){
+                        success: function (data) {
                             layer.close(index);
                             reloadTable($('#name').val());
                         },
@@ -102,13 +106,13 @@
                         }
                     });
                 });
-            } else if(obj.event === 'edit'){
-                    pop_show('编辑','#(ctxPath)/system/organizationrole/enterpriseUpdate?id=' + data.id,'','', function(){
+            } else if (obj.event === 'edit') {
+                pop_show('编辑', '#(ctxPath)/system/organizationrole/enterpriseUpdate?id=' + data.id, '', '', function () {
                     reloadTable(null);
                 });
-            }   else if (obj.event === 'pwd') {
-                layer.confirm('是否确认为该组织改密?', function(index) {
-                    pop_show('改密', '#(ctxPath)/system/organizationrole/changepwd?orgID='+data.orgID, '', '', function () {
+            } else if (obj.event === 'pwd') {
+                layer.confirm('是否确认为该组织改密?', function (index) {
+                    pop_show('改密', '#(ctxPath)/system/organizationrole/changepwd?orgID=' + data.orgID, '', '', function () {
                         layer.close(index);
                     });
                 });
@@ -118,16 +122,15 @@
         });
 
 
-
         reloadTable = function (_name) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/organizationrole/enterpriseTableData'
-                ,where: {name:_name} //设定异步数据接口的额外参数
+                , where: {name: _name} //设定异步数据接口的额外参数
             });
         };
 
 
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             reloadTable(data.field.name);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -138,36 +141,36 @@
 #end
 
 #define content()
-    <div class="layui-fluid">
-        <form id="searchForm" class="layui-form x-center" action="" >
-            <div class="layui-form-pane">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">机构名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="name" name="name" placeholder="机构名称" class="layui-input"/>
-                    </div>
-                    <div class="layui-input-inline" style="width : 80px">
-                        <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
-                    </div>
+<div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">机构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="机构名称" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
                 </div>
             </div>
-        </form>
-        <hr>
-        <div class="layui-row">
-            <!--<div class="layui-btn-group">-->
-                <!--<button id="person" class="layui-btn layui-btn-small">个人审核</button>-->
-                <!--<button id="organization" class="layui-btn layui-btn-small">团体审核</button>-->
-            <!--</div>-->
-            <table id="dateTable" lay-filter="dateTable"></table>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
+        <!--<div class="layui-btn-group">-->
+        <!--<button id="person" class="layui-btn layui-btn-small">个人审核</button>-->
+        <!--<button id="organization" class="layui-btn layui-btn-small">团体审核</button>-->
+        <!--</div>-->
+        <table id="dateTable" lay-filter="dateTable"></table>
     </div>
+</div>
 
 <script type="text/html" id="barOption">
 
     <!--#shiroHasPermission('/system/auth/view')-->
     <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
     <!--#end-->
-
 
 
     #shiroHasPermission('/system/auth/view')

@@ -22,6 +22,7 @@ public class ProjectAssTypeServiceImpl extends JbootServiceBase<ProjectAssType> 
      * @param model 项目评估类型
      * @return all <ProjectAssType>
      */
+    @Override
     public List<ProjectAssType> findAll(ProjectAssType model)
     {
         Columns columns = Columns.create();

@@ -12,6 +12,7 @@ public class AuthUtils {
 
     /**
      * 是否登录
+     *
      * @return
      */
     public static boolean isLogin() {
@@ -20,6 +21,7 @@ public class AuthUtils {
 
     /**
      * 获取平台登录用户
+     *
      * @return
      */
     public static User getLoginUser() {
@@ -32,8 +34,9 @@ public class AuthUtils {
 
     /**
      * 校验用户登录密码
-     * @param newPwd 新未加密的密码
-     * @param oldPwd 旧加密后的密码
+     *
+     * @param newPwd   新未加密的密码
+     * @param oldPwd   旧加密后的密码
      * @param oldSalt2 旧加密盐
      * @return true-校验一致 否则 false
      */

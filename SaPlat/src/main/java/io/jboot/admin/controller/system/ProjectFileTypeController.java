@@ -26,24 +26,24 @@ public class ProjectFileTypeController extends BaseController {
     private ProjectFileTypeService projectFileTypeService;
 
     @Before(GET.class)
-    public void index(){
+    public void index() {
         render("main.html");
     }
 
     @Before(GET.class)
     @NotNullPara("id")
-    public void file(){
-        ProjectFileType projectFileType=projectFileTypeService.findById(getParaToLong("id"));
-        setAttr("projectFileType",projectFileType);
+    public void file() {
+        ProjectFileType projectFileType = projectFileTypeService.findById(getParaToLong("id"));
+        setAttr("projectFileType", projectFileType);
         render("file.html");
     }
 
     @Before(GET.class)
-    @NotNullPara({"pageNumber", "pageSize","parentID"})
+    @NotNullPara({"pageNumber", "pageSize", "parentID"})
     public void tableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        ProjectFileType projectFileType=new ProjectFileType();
+        ProjectFileType projectFileType = new ProjectFileType();
         if (!"".equals(getPara("name"))) {
             projectFileType.setName(getPara("name"));
         }
@@ -55,12 +55,12 @@ public class ProjectFileTypeController extends BaseController {
 
     @Before(GET.class)
     @NotNullPara("id")
-    public void update(){
-        ProjectFileType projectFileType=projectFileTypeService.findById(getParaToLong("id"));
-        if (projectFileType==null){
+    public void update() {
+        ProjectFileType projectFileType = projectFileTypeService.findById(getParaToLong("id"));
+        if (projectFileType == null) {
             throw new BusinessException("没有此项目");
         }
-        setAttr("projectFileType",projectFileType);
+        setAttr("projectFileType", projectFileType);
         render("update.html");
     }
 
@@ -79,22 +79,20 @@ public class ProjectFileTypeController extends BaseController {
     @Before(GET.class)
     @NotNullPara("parentID")
     public void add() {
-        Long parentID=getParaToLong("parentID");
+        Long parentID = getParaToLong("parentID");
         ProjectFileType parentProjectProjectFileType;
-        if(parentID==-1){
-            parentProjectProjectFileType=new ProjectFileType();
+        if (parentID == -1) {
+            parentProjectProjectFileType = new ProjectFileType();
             parentProjectProjectFileType.setId((long) -1);
-        }
-        else {
+        } else {
             parentProjectProjectFileType = projectFileTypeService.findById(getParaToLong("parentID"));
         }
-        if (parentProjectProjectFileType==null){
+        if (parentProjectProjectFileType == null) {
             throw new BusinessException("没有此项目");
         }
-        setAttr("parentProjectProjectFileType",parentProjectProjectFileType);
+        setAttr("parentProjectProjectFileType", parentProjectProjectFileType);
         render("add.html");
     }
-
 
 
     @Before({POST.class, ProjectFileTypeValidator.class})
@@ -109,7 +107,6 @@ public class ProjectFileTypeController extends BaseController {
         }
         renderJson(RestResult.buildSuccess());
     }
-
 
 
     @Before(POST.class)

@@ -41,6 +41,22 @@ public abstract class BaseProjectFileType<M extends BaseProjectFileType<M>> exte
 		return getLong("parentID");
 	}
 
+	public void setUrl(java.lang.String url) {
+		set("url", url);
+	}
+	
+	public java.lang.String getUrl() {
+		return getStr("url");
+	}
+
+	public void setStatus(java.lang.Long status) {
+		set("status", status);
+	}
+	
+	public java.lang.Long getStatus() {
+		return getLong("status");
+	}
+
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
 	}

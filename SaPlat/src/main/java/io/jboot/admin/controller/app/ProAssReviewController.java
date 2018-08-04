@@ -29,7 +29,7 @@ import java.util.List;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/ass_review")
-public class ProAssReviewController extends BaseController{
+public class ProAssReviewController extends BaseController {
 
     @JbootrpcService
     private ProAssReviewService proAssReviewService;
@@ -38,16 +38,18 @@ public class ProAssReviewController extends BaseController{
      * index
      */
     public void index() {
-               render("main.html");
+        render("main.html");
     }
 
 
     //渲染文件目录
-    public void fileTree(){
+    public void fileTree() {
         renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));
     }
-    public void findProAssReviewByFileIdAndProjectId(){
-       List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L,28L);;
+
+    public void findProAssReviewByFileIdAndProjectId() {
+        List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L, 28L);
+        ;
         renderJson(RestResult.buildSuccess(proAssReviews));
     }
 
@@ -55,53 +57,54 @@ public class ProAssReviewController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!proAssReviewService.deleteById(id)){
+        if (!proAssReviewService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         ProAssReview model = proAssReviewService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, ProAssReviewValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         ProAssReview model = getBean(ProAssReview.class, "model");
-        if (proAssReviewService.isExisted(model.getName())){
+        if (proAssReviewService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(1);
-        if (!proAssReviewService.save(model)){
+        if (!proAssReviewService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, ProAssReviewValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         ProAssReview model = getBean(ProAssReview.class, "model");
         ProAssReview byId = proAssReviewService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的项目阶段名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!proAssReviewService.update(model)){
+        if (!proAssReviewService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

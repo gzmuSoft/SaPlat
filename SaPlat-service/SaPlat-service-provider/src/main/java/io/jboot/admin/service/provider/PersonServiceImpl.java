@@ -29,10 +29,10 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     private AffectedGroupService affectedGroupService;
 
     /*
-    *其中的if是用来做查询的
-    * 不满足即不查询
-    * 返回全部数据
-    */
+     *其中的if是用来做查询的
+     * 不满足即不查询
+     * 返回全部数据
+     */
     @Override
     public Page<Person> findPage(Person person, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
@@ -49,7 +49,7 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     @Override
     public boolean savePerson(Person model, User user, Long[] roles) {
         return Db.tx(() -> {
-            if (!save(model)){
+            if (!save(model)) {
                 return false;
             }
             Person person = findByName(model.getName());
@@ -65,7 +65,7 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     @Override
     public Person findByName(String name) {
-        return DAO.findFirstByColumn("name",name);
+        return DAO.findFirstByColumn("name", name);
     }
 
     @Override
@@ -74,10 +74,10 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     }
 
     @Override
-    public boolean update(Person person, User user,AffectedGroup affectedGroup) {
+    public boolean update(Person person, User user, AffectedGroup affectedGroup) {
         return Db.tx(() -> {
             AffectedGroup group = affectedGroupService.findByPersonId(person.getId());
-            if (group != null){
+            if (group != null) {
                 affectedGroup.setId(group.getId());
             }
             return update(person) && userService.update(user) && affectedGroupService.saveOrUpdate(affectedGroup);

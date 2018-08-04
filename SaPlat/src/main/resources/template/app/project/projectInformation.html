@@ -1,17 +1,11 @@
 <!doctype html>
 <html lang="zh">
-
-<style>
-    .buttonChange {
-        background: #009688;
-    }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet prefetch' href='/static/css/PilotStyle/reset.css'>
     #include("../../common/include/_css.html")
+    <link rel='stylesheet prefetch' href='/static/css/PilotStyle/reset.css'>
     <link rel="stylesheet" type="text/css" href="/static/css/PilotStyle/default.css">
     <link rel="stylesheet" type="text/css" href="/static/css/PilotStyle/styles.css">
     #include("../../common/include/_all_js.html")
@@ -21,27 +15,36 @@
 
 <body>
 <article class="htmleaf-content">
-    <form id="msform" class="layui-form x-center" method='post'>
+    <form id="msform" method='post'>
         <ul id="progressbar">
             <li class="active">项目主体资料填写</li>
             <li>稳评领导小组资料填写</li>
+            <li>文件上传</li>
             <li>自评/委评</li>
-            <li>保存提交</li>
         </ul>
 
         <fieldset>
             <h1 class="fs-title">请填写项目相关资料</h1>
 
             <div>
-                <label for="project.name">项目名称</label>
-                <input type="text" id="project.name" name="project.name" required
-                       lay-verify="required"/>
-
+                <label for="project.name">项目名称:</label>
+                <input type="text" id="project.name" class="project" name="project.name"/>
             </div>
 
             <div>
-                <label for="project.roleName">角色名称</label>
-                <select id="project.roleName" name="project.roleName">
+                <label for="project.amount">预计金额:</label>
+                <input type="number" id="project.amount" class="project" name="project.amount"/>
+            </div>
+
+            <div>
+                <label for="project.site">项目地址:</label>
+                <input type="text" id="project.site" class="project" name="project.site"/>
+            </div>
+            <br><br><br><br>
+
+            <div>
+                <label for="project.roleName">角色名称:</label>
+                <select id="project.roleName" class="project" name="project.roleName">
                     #for(List : roleNameList)
                     <option>#(List)</option>
                     #end
@@ -49,22 +52,8 @@
             </div>
 
             <div>
-                <label for="project.amount">预计金额</label>
-                <input type="number" id="project.amount" name="project.amount"/>
-            </div>
-
-            <div>
-                <label for="project.paTypeID">项目评估类型</label>
-                <select id="project.paTypeID" name="project.paTypeID">
-                    #for(List : PaTypeNameList)
-                    <option value="#(List.id)">#(List.name)</option>
-                    #end
-                </select>
-            </div>
-
-            <div>
-                <label for="project.pStepID">项目阶段</label>
-                <select id="project.pStepID" name="project.pStepID">
+                <label for="project.pStepID">项目阶段:</label>
+                <select id="project.pStepID" class="project" name="project.pStepID" lay-search>
                     #for(List : projectStepNameList)
                     <option value="#(List.id)">#(List.name)</option>
                     #end
@@ -72,192 +61,309 @@
             </div>
 
             <div>
-                <label for="project.site">地址</label>
-                <input type="text" id="project.site" name="project.site" required
-                       lay-verify="required"/>
+                <label for="project.paTypeID">项目评估类型:</label>
+                <select id="project.paTypeID" class="project" name="project.paTypeID" lay-search>
+                    #for(List : PaTypeNameList)
+                    <option value="#(List.id)">#(List.name)</option>
+                    #end
+                </select>
             </div>
 
-            <div>
-                <label for="project.brief">简介</label>
-                <input type="text" id="project.brief" name="project.brief" required
-                       lay-verify="required"/>
+            <div class="layui-form-item">
+                <h2 style="margin-top: 70px;">简介:</h2>
+                <hr class="layui-bg-blue">
+                <textarea id="brief" name="project.brief"></textarea>
             </div>
 
-            <div>
-                <label class="layui-form-label" for="project.approval">相关批文</label>
-                <input type="text" id="project.approval" name="project.approval"/>
-            </div>
-
-            <div>
-                <label class="layui-form-label" for="project.proposal">建议书</label>
-                <input type="text" id="project.proposal" name="project.proposal"/>
-            </div>
-            <input type="button" name="next" class="next action-button" value="下一步"/>
+            <input type="button" id="nextPage1" name="next" class="next action-button site-demo-layedit" value="下一步"/>
         </fieldset>
 
         <fieldset>
             <h1 class="fs-title">请填写领导小组相关资料</h1>
-            <div>
-                <label for="leaderGroup.name">小组名称</label>
-                <input type="text" id="leaderGroup.name" name="leaderGroup.name"/>
+            <div class="layui-form-item" style="margin-left:25%;">
+                <div>
+                    <label for="LeaderGroup.leader">组长:</label>
+                    <input type="text" class="leaderGroup" id="leaderGroup.leader" name="leaderGroup.leader"/>
+                </div>
+
+                <div>
+                    <label for="LeaderGroup.deputy">副组长:</label>
+                    <input type="text" class="leaderGroup" id="leaderGroup.deputy" name="leaderGroup.deputy"/>
+                </div>
             </div>
-            <div>
-                <label for="LeaderGroup.leader">组长</label>
-                <input type="text" id="leaderGroup.leader" name="leaderGroup.leader"/>
+
+            <div class="layui-form-item" style="margin-left:25%;">
+                <label>组员:</label>
+                <textarea id="crew" name="leaderGroup.crew" cols="47" rows="5"></textarea>
             </div>
-            <div>
-                <label for="LeaderGroup.deputy">副组长</label>
-                <input type="text" id="leaderGroup.deputy" name="leaderGroup.deputy"/>
+            <input type="button" name="previous" id="previousPage2" class="previous action-button" value="上一步"/>
+            <input type="button" name="next" id="nextPage2" class="next action-button " value="下一步"/>
+        </fieldset>
+
+        <fieldset>
+            <div class="layui-row">
+                <table id="dateTable" lay-filter="dateTable"></table>
             </div>
-            <div>
-                <label for="LeaderGroup.crew">组员</label>
-                <input type="text" id="leaderGroup.crew" name="leaderGroup.crew"/>
-            </div>
-            <input type="button" name="previous" class="previous action-button" value="上一步"/>
-            <input type="button" name="next" class="next action-button" value="下一步"/>
+            <script type="text/html" id="barOption">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">上传</a>
+            </script>
+            <input type="button" name="previous" id="previousPage3" class="previous action-button" value="上一步"/>
+            <input type="button" name="next" id="nextPage3" class="next action-button " value="下一步"/>
         </fieldset>
 
         <fieldset>
             <h1 class="fs-title">请选择评估方式</h1>
-            <input type="button" id="selfAssessment" value="自评"/>
-            <input type="button" id="othersAssessment" value="委评"/>
-            <input type="button" name="previous" class="previous action-button" value="上一步"/>
-            <input type="button" name="next" class="next action-button" value="下一步"/>
-        </fieldset>
-
-        <fieldset>
-            <h1 class="fs-title">是否确认提交？</h1>
-            <input type="button" name="previous" class="previous action-button" value="上一步"/>
-            <input type="submit" name="submit" id="submit" class="submit action-button" value="提交"/>
+            <input type="button" id="selfAssessment" name="project.assessmentMode" class="submit action-button"
+                   value="自评"/>
+            <input type="button" id="othersAssessment" name="project.assessmentMode" class="submit action-button"
+                   value="委评"/>
+            <br>
+            <input type="button" name="previous" id="previousPage4" class="previous action-button" value="上一步"/>
         </fieldset>
     </form>
 </article>
 
 <script>
-    var current_fs, next_fs, previous_fs;
+    var current_fs, next_fs;
     var left, opacity, scale;
     var animating;
+    var projectId = -1, judgeFile = false;
+    layui.use(['layedit', 'table'], function () {
+        /**
+         * 操作对象
+         */
+        var $ = layui.jquery
+            , layedit = layui.layedit
+            , table = layui.table
+            , saveOrUpdate = 1, maxPage = 1, presentPage = 1;
 
-    layui.use(['form', 'layer'], function () {
-        // 操作对象
-        var form = layui.form
-            , layer = layui.layer
-            , $ = layui.jquery;
-        layer.msg("初始化");
-    });
-    /**
-     * 下一步按钮事件
-     */
-    $('.next').click(function () {
-        if (animating)
-            return false;
-        animating = true;
-        current_fs = $(this).parent();
-        next_fs = $(this).parent().next();
-        $('#progressbar li').eq($('fieldset').index(next_fs)).addClass('active');
-        next_fs.show();
-        current_fs.animate({opacity: 0}, {
-            step: function (now, mx) {
-                scale = 1 - (1 - now) * 0.2;
-                left = now * 50 + '%';
-                opacity = 1 - now;
-                current_fs.css({'transform': 'scale(' + scale + ')'});
-                next_fs.css({
-                    'left': left,
-                    'opacity': opacity
+        /**
+         * 富文本编辑器
+         */
+        var index = layedit.build('brief', {
+            height: 100,
+            hideTool: ['link', 'unlink', 'face', 'image', 'help']
+        });
+
+        /**
+         * 文件表格
+         */
+
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[                  //标题栏
+                {field: 'id', title: '编号', align: 'center', width: 100}
+                , {field: 'name', title: '需上传的文件', align: 'center', width: 600}
+                , {title: '操作', width: 240, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/project/fileTable'
+            , method: 'post'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+                var last = $('.layui-table-body').first().height();
+                $('.layui-table-body').first().height(last * 0.920);
+            }
+        });
+
+        /**
+         * 文件上传页面
+         */
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
+            if (obj.event === 'edit') {
+                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
+                    $(btn).addClass("layui-disabled").removeClass("layui-btn-danger").addClass("layui-btn-normal")
+                        .removeAttr("lay-event").text("已上传");
                 });
-            },
-            duration: 800,
-            complete: function () {
-                current_fs.hide();
-                animating = false;
-            },
-            easing: 'easeInOutBack'
+            }
         });
-    });
 
-    /**
-     * 上一步按钮事件
-     */
-    $('.previous').click(function () {
-        if (animating)
-            return false;
-        animating = true;
-        current_fs = $(this).parent();
-        previous_fs = $(this).parent().prev();
-        $('#progressbar li').eq($('fieldset').index(current_fs)).removeClass('active');
-        previous_fs.show();
-        current_fs.animate({opacity: 0}, {
-            step: function (now, mx) {
-                scale = 0.8 + (1 - now) * 0.2;
-                left = (1 - now) * 50 + '%';
-                opacity = 1 - now;
-                current_fs.css({'left': left});
-                previous_fs.css({
-                    'transform': 'scale(' + scale + ')',
-                    'opacity': opacity
-                });
-            },
-            duration: 800,
-            complete: function () {
-                current_fs.hide();
-                animating = false;
-            },
-            easing: 'easeInOutBack'
+        /**
+         * 上一步按钮事件
+         */
+        $('.previous').click(function () {
+            if (this.id === "previousPage2") {
+                presentPage = 1;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            } else if (this.id === "previousPage3") {
+                presentPage = 2;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            } else if (this.id === "previousPage4") {
+                presentPage = 3;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            }
+            if (animating)
+                return false;
+            animating = true;
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+            $('#progressbar').find('li').eq($('fieldset').index(current_fs)).removeClass('active');
+            previous_fs.show();
+            current_fs.animate({opacity: 0}, {
+                step: function (now, mx) {
+                    scale = 0.8 + (1 - now) * 0.2;
+                    left = (1 - now) * 50 + '%';
+                    opacity = 1 - now;
+                    current_fs.css({'left': left});
+                    previous_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                easing: 'easeInOutBack'
+            });
         });
-    });
 
-    /**
-     * 自评按钮事件
-     */
-    $('#selfAssessment').click(function () {
-        $('#selfAssessment').attr("name", "project.assessmentMode");
-        $('#selfAssessment').addClass("buttonChange");
-        $('#othersAssessment').removeClass("buttonChange");
-        $('#othersAssessment').attr("name", null);
-    });
-
-    /**
-     * 委评按钮事件
-     */
-    $('#othersAssessment').click(function () {
-        $('#othersAssessment').attr("name", "project.assessmentMode");
-        $('#othersAssessment').addClass("buttonChange");
-        $('#selfAssessment').removeClass("buttonChange");
-        $('#selfAssessment').attr("name", null);
-    });
-
-    /**
-     * 数据的手动打包
-     */
-    function parame() {
-        var string = "?";
-        var valueArray = new Array();
-        var nameArray = new Array();
-        $("input").each(function (key) {
-            valueArray[key] = $(this).val();
-            nameArray[key] = $(this).attr('name');
-            string += nameArray[key] + "=" + valueArray[key] + "&";
-        });
-        $("select").each(function () {
-            string += $(this).attr('name') + "=" + $(this).val() + "&";
-        });
-        return string;
-    }
-
-    /**
-     * 提交按钮事件
-     */
-    $('#submit').click(function () {
-        if ($('#selfAssessment').attr('name') == null) {
-            var url = "#(ctxPath)/app/project/othersAssessment";
-            window.location.href = url + parame();
-        } else if ($('#othersAssessment').attr('name') == null) {
-            var url = "#(ctxPath)/app/project/selfAssessment";
-            window.location.href = url + parame();
+        /**
+         * 页面1判空
+         */
+        function notNull() {
+            var valueArray = [];
+            $(".project").each(function (key) {
+                valueArray[key] = $(this).val();
+                if (valueArray[key] == null || valueArray[key] == '')
+                    return false;
+            });
+            if (layedit.getText(index) == null || layedit.getText(index) == '')
+                return false;
+            return true;
         }
-        return false;
+
+        /**
+         * 页面2判空
+         */
+        function notNull_2() {
+            var valueArray = [];
+            $(".leaderGroup").each(function (key) {
+                valueArray[key] = $(this).val();
+                if (valueArray[key] == null || valueArray[key] == '')
+                    return false;
+            });
+            if ($("#crew").val() == null || $("#crew").val() == '')
+                return false;
+            return true;
+        }
+
+        /**
+         * 下一步按钮事件
+         */
+        $('.next').click(function () {
+            var not = true;
+            if (this.id === "nextPage1") {
+                if (notNull()) {
+                    not = true;
+                    var string = "?", valueArray = [], nameArray = [];
+                    if (maxPage < 2) maxPage = 2 , saveOrUpdate = 1;
+                    presentPage = 2;
+                    string += "saveOrUpdate=" + saveOrUpdate + "&";
+                    $(".project").each(function (key) {
+                        nameArray[key] = $(this).attr('name');
+                        valueArray[key] = $(this).val();
+                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                    });
+                    string += "project.brief=" + layedit.getContent(index);
+                    if (saveOrUpdate === 1) {
+                        $.getJSON(
+                            "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,
+                            function (data) {
+                                projectId = data.projectId;
+                            });
+                    } else if (saveOrUpdate === 0) {
+                        $.get("#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId + '&judgeFile=' + false);
+                    }
+                } else {
+                    not = false;
+                    layer.msg("数据不能为空！");
+                }
+            } else if (this.id === "nextPage2") {
+                if (notNull_2()) {
+                    not = true;
+                    var string = "?", valueArray = [], nameArray = [];
+                    if (maxPage < 3) maxPage = 3, saveOrUpdate = 1;
+                    presentPage = 3;
+                    string += "saveOrUpdate=" + saveOrUpdate + "&";
+                    $(".leaderGroup").each(function (key) {
+                        nameArray[key] = $(this).attr('name');
+                        valueArray[key] = $(this).val();
+                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                    });
+                    string += "leaderGroup.crew=" + $("#crew").val();
+                    $.get("#(ctxPath)/app/project/leaderGroupUploading" + string + '&projectId=' + projectId);
+                }
+                else {
+                    not = false;
+                    layer.msg("数据不能为空！");
+                }
+            } else if (this.id === "nextPage3") {
+                var string = "?", valueArray = [], nameArray = [];
+                if (maxPage < 4) maxPage = 4 , saveOrUpdate = 1;
+                presentPage = 4;
+                $.getJSON("#(ctxPath)/app/project/judgeFile?projectId=" + projectId,
+                    function (data) {
+                        judgeFile = data.judgeFile;
+                        if (judgeFile === true) {
+                            alert("您的所有文件都已上传完毕，点击确定继续…")
+                        } else if (judgeFile === false) {
+                            alert("您还有部分文件未上传，之后您可以前往“立项中的项目”进行完善，点击确定继续…")
+                        }
+                    });
+            }
+            if (not) {
+                if (animating)
+                    return false;
+                animating = true;
+                current_fs = $(this).parent();
+                next_fs = $(this).parent().next();
+                $('#progressbar').find('li').eq($('fieldset').index(next_fs)).addClass('active');
+                next_fs.show();
+                current_fs.animate({opacity: 0}, {
+                    step: function (now, mx) {
+                        scale = 1 - (1 - now) * 0.2;
+                        left = now * 50 + '%';
+                        opacity = 1 - now;
+                        current_fs.css({'transform': 'scale(' + scale + ')'});
+                        next_fs.css({
+                            'left': left,
+                            'opacity': opacity
+                        });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        animating = false;
+                    },
+                    easing: 'easeInOutBack'
+                });
+            }
+
+        });
+
+        /**
+         * 自评、委评按钮事件
+         */
+        $('.submit').click(function () {
+            window.location.href = "#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile;
+        });
     });
+
 </script>
 </body>
 </html>

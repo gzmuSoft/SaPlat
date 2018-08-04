@@ -28,7 +28,7 @@ import java.util.Date;
  * @date 10:05 2018/7/2
  */
 @RequestMapping("/app/educational")
-public class EducationalController extends BaseController{
+public class EducationalController extends BaseController {
 
     @JbootrpcService
     private EducationalService educationalService;
@@ -39,6 +39,7 @@ public class EducationalController extends BaseController{
     public void index() {
         render("main.html");
     }
+
     /**
      * res表格数据
      */
@@ -57,53 +58,54 @@ public class EducationalController extends BaseController{
     /**
      * delete
      */
-    public void delete(){
+    public void delete() {
         Long id = getParaToLong("id");
-        if (!educationalService.deleteById(id)){
+        if (!educationalService.deleteById(id)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara({"id"})
-    public void update(){
+    public void update() {
         Long id = getParaToLong("id");
         Educational model = educationalService.findById(id);
         setAttr("model", model).render("update.html");
     }
 
-    public void add(){
+    public void add() {
         render("add.html");
     }
 
     @Before({POST.class, EducationValidator.class})
-    public void postAdd(){
+    public void postAdd() {
         Educational model = getBean(Educational.class, "model");
-        if (educationalService.isExisted(model.getName())){
+        if (educationalService.isExisted(model.getName())) {
             throw new BusinessException("所指定的学历名称已存在");
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
-        if (!educationalService.save(model)){
+        if (!educationalService.save(model)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @Before({POST.class, EducationValidator.class})
-    public void postUpdate(){
+    public void postUpdate() {
         Educational model = getBean(Educational.class, "model");
         Educational byId = educationalService.findById(model.getId());
-        if (byId == null){
+        if (byId == null) {
             throw new BusinessException("所指定的学历名称不存在");
         }
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        if (!educationalService.update(model)){
+        if (!educationalService.update(model)) {
             throw new BusinessException("修改失败");
         }
         renderJson(RestResult.buildSuccess());
     }
+
     /**
      * 启用项目阶段
      */

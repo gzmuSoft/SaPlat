@@ -28,10 +28,10 @@ public class DataServiceImpl extends JbootServiceBase<Data> implements DataServi
         Columns columns = Columns.create();
 
         if (StrKit.notBlank(data.getType())) {
-            columns.like("type", "%"+data.getType()+"%");
+            columns.like("type", "%" + data.getType() + "%");
         }
         if (StrKit.notBlank(data.getTypeDesc())) {
-            columns.like("typeDesc", "%"+data.getTypeDesc()+"%");
+            columns.like("typeDesc", "%" + data.getTypeDesc() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "type asc ,orderNo asc");
     }

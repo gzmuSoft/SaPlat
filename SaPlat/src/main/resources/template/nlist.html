@@ -1,0 +1,83 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<!-- 加载编辑器的容器 -->
+<link rel="stylesheet" type="text/css" href="#(RESOURCE_HOST)/static/css/news/newslist.css">
+<link rel="stylesheet" type="text/css" href="#(RESOURCE_HOST)/static/css/news/page.css">
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/page.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript">
+    $(".zxf_pagediv").createPage({
+        pageNum: 20,
+        current: "#(current)",
+        backfun: function (data) {
+            var url = "/nlistPage";
+            var form = $("<form method='post'></form>");
+            form.attr({"action": url});
+            var input = $("<input type='hidden'>");
+            input.attr({"name": "pageNum"});
+            input.val(data.pageNum);
+            input.attr({"name": "current"});
+            input.val(data.current);
+            form.append(input);
+            $("html").append(form);
+            form.submit();
+        }
+    });
+
+    function nshow(id) {
+        var url = "/nshow";
+        var form = $("<form method='post'></form>");
+        form.attr({"action": url});
+        var input = $("<input type='hidden'>");
+        input.attr({"name": "id"});
+        input.val(id);
+        form.append(input);
+        $("html").append(form);
+        form.submit();
+    }
+</script>
+#end
+
+#define content()
+<div class="container">
+    <div class="news-list">
+        <ul class="news-list-left">
+            #for(model : newsList)
+            <li class="news-list-item">
+                <div class="author-time">
+                    <span>#(model.editer)</span> &nbsp;&nbsp;发表于 <span>#(model.createTime)</span>
+                </div>
+                <div class="news-des">
+                    <h3 class="news-title"><i></i>
+                        <a onclick="nshow('#(model.id)')">#(model.title)</a>
+                    </h3>
+                    <div class="news-content-des">#(model.newsletter)</div>
+                </div>
+            </li>
+            #end
+            <div class="zxf_pagediv"></div>
+        </ul>
+
+        <div class="news-list-right">
+            <div class="about">
+                <div class="about-des">
+                    <h4>关于我们</h4>
+                    <p>拥有双面的不仅是人生，还有 layui。一面极简，一面丰盈。极简是视觉所见的外在，是开发所念的简易。丰盈是倾情雕琢的内在，是信手拈来的承诺。一切本应如此，简而全，双重体验</p>
+                </div>
+            </div>
+        </div>
+        <footer class="copyright">
+            Copyright &nbsp; 2016 Gzmu.
+        </footer>
+    </div>
+</div>
+#end

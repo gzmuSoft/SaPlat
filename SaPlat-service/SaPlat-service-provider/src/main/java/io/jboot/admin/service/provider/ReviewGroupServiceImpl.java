@@ -38,9 +38,9 @@ public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implem
 
 
     @Override
-    public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize){
+    public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if(null!=reviewGroup.getName()){
+        if (null != reviewGroup.getName()) {
             columns.like("name", "%" + reviewGroup.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");

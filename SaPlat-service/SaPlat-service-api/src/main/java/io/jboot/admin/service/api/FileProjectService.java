@@ -26,6 +26,23 @@ public interface FileProjectService  {
 
 
     /**
+     * find All By ProjectID
+     *
+     * @param id
+     * @return
+     */
+    public List<FileProject> findAllByProjectID(Long id);
+
+    /**
+     * find model By projectID And fileTypeID
+     *
+     * @param projectID
+     * @param projectFileID
+     * @return
+     */
+    public FileProject findByProjectIDAndProjectFileID(Long projectID, Long projectFileID);
+
+    /**
      * delete model by primary key
      *
      * @param id
@@ -69,9 +86,6 @@ public interface FileProjectService  {
      */
     public boolean update(FileProject model);
 
-    public FileProject findByProjectID(Long id);
-
-    public List<FileProject> findAllByProjectID(long id);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

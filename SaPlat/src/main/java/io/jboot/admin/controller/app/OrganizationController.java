@@ -69,7 +69,7 @@ public class OrganizationController extends BaseController {
      * 跳转注册页面
      */
     public void register() {
-        render("register.html");
+        render("template/register.html");
     }
 
     /**
@@ -153,7 +153,7 @@ public class OrganizationController extends BaseController {
             auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
             if (auth != null) {
                 setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                        .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())//TODO 原先为getLastUpdateUserID
+                        .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())
                         .setAttr("auth", auth)
                         .render("proveing.html");
             } else if (auth1 != null) {
@@ -166,7 +166,7 @@ public class OrganizationController extends BaseController {
             }
         } else {
             setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())//TODO 原先为getLastUpdateUserID
+                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())
                     .setAttr("auth", auth)
                     .render("proveing.html");
         }

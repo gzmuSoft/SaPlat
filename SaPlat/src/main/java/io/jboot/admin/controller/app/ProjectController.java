@@ -1,5 +1,6 @@
 package io.jboot.admin.controller.app;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.plugin.activerecord.Page;
@@ -12,6 +13,7 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
+import io.jboot.admin.service.entity.status.system.ProjectTypeStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.ProjectValidator;
@@ -56,8 +58,17 @@ public class ProjectController extends BaseController {
     private LeaderGroupService leaderGroupService;
 
     @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
+
+    @JbootrpcService
     private FileProjectService fileProjectService;
 
+    @JbootrpcService
+    private FilesService filesService;
+
+
+    @JbootrpcService
+    private EvaSchemeService evaSchemeService;
 
     /**
      * 项目立项基本资料初始化至信息管理界面
@@ -75,81 +86,105 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 自评提交立项资料并进入已审核状态
+     * 立项文件上传页面
+     */
+    @NotNullPara({"id", "projectId"})
+    public void fileUploading() {
+        Long id = getParaToLong("id");
+        ProjectFileType model = projectFileTypeService.findById(id);
+        setAttr("projectId", getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
+    }
+
+    /**
+     * project资料上传
      */
     @Before({GET.class, ProjectValidator.class})
-    public void selfAssessment() {
+    public void projectUploading() {
         User loginUser = AuthUtils.getLoginUser();
         Project project = getBean(Project.class, "project");
+        project.setUserId(loginUser.getId());
         project.setCreateTime(new Date());
         project.setLastAccessTime(new Date());
-        project.setIsEnable(true);
-        project.setStatus(ProjectStatus.IS_VERIFY);
-        project.setUserId(loginUser.getId());
+        project.setStatus(ProjectStatus.BUILDING);
         project.setCreateUserID(loginUser.getId());
         project.setLastUpdateUserID(loginUser.getId());
-
-        LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
-        leaderGroup.setCreateTime(new Date());
-        leaderGroup.setLastAccessTime(new Date());
-        leaderGroup.setCreateUserID(loginUser.getId());
-        leaderGroup.setLastUpdateUserID(loginUser.getId());
-
-        AuthProject authProject = new AuthProject();
-        authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
-        authProject.setUserId(loginUser.getId());
-        authProject.setLastUpdTime(new Date());
-        authProject.setType(TypeStatus.PROJECT_VERIFY);
-        authProject.setStatus(AuthStatus.IS_VERIFY);
-        authProject.setName(loginUser.getName());
-        authProject.setLastUpdUser(loginUser.getName());
-        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
-            renderJson(RestResult.buildSuccess("立项成功"));
-            render("verfedSuccess.html");
-        } else {
-            renderJson(RestResult.buildError("立项失败"));
-            render("verfedDefeat.html");
-            throw new BusinessException("立项失败");
+        project.setIsEnable(true);
+        int saveOrUpdate = getParaToInt("saveOrUpdate");
+        if (saveOrUpdate == 1) {
+            Long projectId = projectService.saveProject(project);
+            JSONObject json = new JSONObject();
+            json.put("projectId", projectId);
+            if (projectId != -1L) {
+                renderJson(json);
+            } else {
+                renderJson(RestResult.buildError("项目资料上传失败"));
+                throw new BusinessException("项目资料上传失败");
+            }
+        } else if (saveOrUpdate == 0) {
+            if (getParaToBoolean("judgeFile")) {
+                AuthProject authProject = new AuthProject();
+                authProject.setUserId(loginUser.getId());
+                authProject.setRoleId(roleService.findByName(projectService.findById(getParaToLong("projectId")).getRoleName()).getId());
+                authProject.setProjectId(getParaToLong("projectId"));
+                authProject.setLastUpdTime(new Date());
+                authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+                authProject.setName(loginUser.getName());
+                authProject.setLastUpdUser(loginUser.getName());
+                if (project.getAssessmentMode().equals("自评")) {
+                    authProject.setStatus(ProjectStatus.IS_VERIFY);
+                    project.setStatus(ProjectStatus.IS_VERIFY);
+                } else if (project.getAssessmentMode().equals("委评")) {
+                    authProject.setStatus(ProjectStatus.VERIFIING);
+                    project.setStatus(ProjectStatus.VERIFIING);
+                }
+                if (authProjectService.save(authProject)) {
+                    renderJson(RestResult.buildSuccess("项目状态表上传成功"));
+                } else {
+                    renderJson(RestResult.buildError("项目状态表上传失败"));
+                    throw new BusinessException("项目状态表上传失败");
+                }
+            }
+            if (getParaToLong("projectId") != -1) {
+                project.setId(getParaToLong("projectId"));
+            }
+            if (projectService.update(project)) {
+                renderJson(RestResult.buildSuccess("项目资料更新成功"));
+            } else {
+                renderJson(RestResult.buildError("项目资料更新失败"));
+                throw new BusinessException("项目资料更新失败");
+            }
         }
     }
 
     /**
-     * 委评提交立项资料并进入待审核状态
+     * leaderGroup资料上传
      */
     @Before({GET.class, ProjectValidator.class})
-
-    public void othersAssessment() {
+    public void leaderGroupUploading() {
         User loginUser = AuthUtils.getLoginUser();
-        Project project = getBean(Project.class, "project");
-        project.setCreateTime(new Date());
-        project.setLastAccessTime(new Date());
-        project.setIsEnable(true);
-        project.setStatus(ProjectStatus.VERIFIING);
-        project.setUserId(loginUser.getId());
-        project.setCreateUserID(loginUser.getId());
-        project.setLastUpdateUserID(loginUser.getId());
-        project.setIsPublic(false);
-
         LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
         leaderGroup.setCreateTime(new Date());
         leaderGroup.setLastAccessTime(new Date());
         leaderGroup.setCreateUserID(loginUser.getId());
         leaderGroup.setLastUpdateUserID(loginUser.getId());
-
-        AuthProject authProject = new AuthProject();
-        authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
-        authProject.setUserId(loginUser.getId());
-        authProject.setLastUpdTime(new Date());
-        authProject.setType(TypeStatus.PROJECT_VERIFY);
-        authProject.setStatus(AuthStatus.VERIFYING);
-        authProject.setName(loginUser.getName());
-        authProject.setLastUpdUser(loginUser.getName());
-        if (projectService.saveOrUpdate(project, authProject, leaderGroup)) {
-            renderJson(RestResult.buildSuccess("提交立项资料成功，请等待审核"));
-            render("verfiing.html");
-        } else {
-            renderJson(RestResult.buildError("立项失败"));
-            throw new BusinessException("立项失败");
+        leaderGroup.setProjectID(getParaToLong("projectId"));
+        int saveOrUpdate = getParaToInt("saveOrUpdate");
+        if (saveOrUpdate == 1) {
+            if (leaderGroupService.save(leaderGroup)) {
+                renderJson(RestResult.buildError("稳评小组资料上传成功"));
+            } else {
+                renderJson(RestResult.buildError("稳评小组资料上传失败"));
+                throw new BusinessException("稳评小组资料上传失败");
+            }
+        } else if (saveOrUpdate == 0) {
+            LeaderGroup leaderGroup1 = leaderGroupService.findByProjectID(getParaToLong("projectId"));
+            leaderGroup.setId(leaderGroup1.getId());
+            if (leaderGroupService.update(leaderGroup)) {
+                renderJson(RestResult.buildSuccess("稳评小组资料更新成功"));
+            } else {
+                renderJson(RestResult.buildError("稳评小组资料更新失败"));
+                throw new BusinessException("稳评小组资料更新失败");
+            }
         }
     }
 
@@ -183,6 +218,7 @@ public class ProjectController extends BaseController {
         }
     }
 
+
     /**
      * 通往项目管理界面-立项中
      */
@@ -211,17 +247,176 @@ public class ProjectController extends BaseController {
     @NotNullPara({"id"})
     public void projectMessage() {
         Long id = getParaToLong("id");
+        User loginUser = AuthUtils.getLoginUser();
         Project project = projectService.findById(id);
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }
-        List<FileProject> fileProject = fileProjectService.findAllByProjectID(id);
-        if (fileProject == null) {
-            fileProject = new ArrayList<>();
+        List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
+        List<ProjectStep> projectStepList = projectStepService.findAll();
+        List<String> roleNameList = new ArrayList<>();
+        for (int i = 0; i < authList.size(); i++) {
+            roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        render("projectMessage.html");
+        String paTypeName = projectAssTypeService.findById(project.getPaTypeID()).getName();
+        String pStepName = projectStepService.findById(project.getPStepID()).getName();
+        int i = 0;
+        for (ProjectAssType p : PaTypeList) {
+            if (p.getName().equals(paTypeName)) {
+                PaTypeList.remove(i);
+                break;
+            }
+            i++;
+        }
+        i = 0;
+        for (ProjectStep p : projectStepList) {
+            if (p.getName().equals(pStepName)) {
+                projectStepList.remove(i);
+                break;
+            }
+            i++;
+        }
+        i = 0;
+        for (String p : roleNameList) {
+            if (p.equals(project.getRoleName())) {
+                roleNameList.remove(i);
+                break;
+            }
+            i++;
+        }
+        setAttr("paTypeName", paTypeName).setAttr("pStepName", pStepName)
+                .setAttr("paTypeId", project.getPaTypeID()).setAttr("pStepId", project.getPStepID())
+                .setAttr("projectID", id).setAttr("roleNameList", roleNameList)
+                .setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList)
+                .setAttr("project", project).setAttr("leaderGroup", leaderGroup)
+                .render("projectAssessmentInfor.html");
 
+    }
+
+    /**
+     * 立项中-文件列表表格渲染
+     */
+    public void fileTable() {
+        Long id = getParaToLong("id");
+        ProjectFileType projectFileType = new ProjectFileType();
+        projectFileType.setParentID(1L);
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            if (fileProjectService.findByProjectIDAndProjectFileID(id, page.getList().get(i).getId()) != null) {
+                page.getList().get(i).setIsUpLoad(true);
+            } else {
+                page.getList().get(i).setIsUpLoad(false);
+            }
+        }
+        renderJson(new DataTable<ProjectFileType>(page));
+    }
+
+    /**
+     * 立项中-保存
+     */
+    @NotNullPara({"id", "assessmentMode"})
+    public void saveProjectMessage() {
+        Long id = getParaToLong("id");
+        Project model = getBean(Project.class, "project");
+        model.setId(id);
+        model.setAssessmentMode(getPara("assessmentMode"));
+        LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
+        if (leaderGroupService.findByProjectID(id) != null) {
+            leaderGroup.setId(leaderGroupService.findByProjectID(id).getId());
+        }
+        if (!projectService.saveOrUpdate(model, leaderGroup)) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        }
+        renderJson(RestResult.buildSuccess("保存成功"));
+    }
+
+    /**
+     * 立项中-发起审核
+     */
+    @NotNullPara({"id"})
+    public void sendAssessment() {
+        Long id = getParaToLong("id");
+        User user = AuthUtils.getLoginUser();
+        Project project = projectService.findById(id);
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
+        List<FileProject> fileProjects = fileProjectService.findAllByProjectID(id);
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findByParentId(1L);
+        JSONObject json = new JSONObject();
+        if (project != null && leaderGroup != null && projectFileTypes.size() == fileProjects.size()) {
+            AuthProject authProject = new AuthProject();
+            authProject.setProjectId(id);
+            authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
+            authProject.setUserId(user.getId());
+            authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+            authProject.setName(userService.findById(user.getId()).getName());
+            if (project.getAssessmentMode().equals("委评")) {
+                authProject.setStatus(ProjectStatus.VERIFIING);
+                project.setStatus(ProjectStatus.VERIFIING);
+            } else if (project.getAssessmentMode().equals("自评")) {
+                authProject.setStatus(ProjectStatus.IS_VERIFY);
+                project.setStatus(ProjectStatus.IS_VERIFY);
+            }
+            if (!projectService.saveOrUpdate(project, authProject)) {
+                renderJson(RestResult.buildError("保存失败"));
+                throw new BusinessException("保存失败");
+            } else {
+                json.put("status", true);
+            }
+        } else {
+            json.put("status", false);
+        }
+        renderJson(json);
+    }
+
+    /**
+     * 项目文件关联
+     */
+    @NotNullPara({"fileId", "projectId", "fileTypeId"})
+    public void upFile() {
+        User user = AuthUtils.getLoginUser();
+        FileProject model = fileProjectService.findByProjectIDAndProjectFileID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
+        if (model == null) {
+            model = new FileProject();
+            model.setProjectID(getParaToLong("projectId"));
+            model.setFileTypeID(getParaToLong("fileTypeId"));
+
+        } else {
+            Files files = filesService.findById(model.getFileID());
+            if (files != null) {
+                files.setIsEnable(false);
+                filesService.update(files);
+            }
+        }
+        model.setFileID(getParaToLong("fileId"));
+        model.setCreateTime(new Date());
+        model.setLastAccessTime(new Date());
+        model.setCreateUserID(user.getId());
+        model.setLastUpdateUserID(user.getId());
+        if (!fileProjectService.saveOrUpdate(model)) {
+            renderJson(RestResult.buildError("上传失败"));
+            throw new BusinessException("上传失败");
+        }
+    }
+
+    /**
+     * 判断当前项目文件是否上传完毕
+     */
+    public void judgeFile() {
+        List<FileProject> fileProjects = fileProjectService.findAllByProjectID(getParaToLong("projectId"));
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findByParentId(1L);
+        JSONObject json = new JSONObject();
+        if (projectFileTypes.size() == fileProjects.size()) {
+            json.put("judgeFile", true);
+            renderJson(json);
+        } else {
+            json.put("judgeFile", false);
+            renderJson(json);
+        }
     }
 
     /**
@@ -299,14 +494,14 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-评估中
      */
-    public void toAssing() {
-        render("assing.html");
+    public void evaluation() {
+        render("evaluation.html");
     }
 
     /**
      * 项目管理界面-评估中-表格渲染
      */
-    public void assing() {
+    public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -321,15 +516,15 @@ public class ProjectController extends BaseController {
     /**
      * 通往项目管理界面-已评估
      */
-    public void toAssed() {
-        render("assed.html");
+    public void review() {
+        render("review.html");
 
     }
 
     /**
      * 项目管理界面-评估完成-表格渲染
      */
-    public void assed() {
+    public void reviewTable() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -436,6 +631,5 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<FacAgency>(page));
     }
-
 
 }

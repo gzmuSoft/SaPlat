@@ -28,8 +28,8 @@ import io.jboot.wechat.JbootWechatConfig;
 
 /**
  * jfinal config
- * @author Rlax
  *
+ * @author Rlax
  */
 public class JfinalConfigListener extends JbootAppListenerBase {
     @Override

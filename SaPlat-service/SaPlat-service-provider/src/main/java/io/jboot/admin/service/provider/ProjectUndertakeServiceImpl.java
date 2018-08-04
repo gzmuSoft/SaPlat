@@ -27,7 +27,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     @Override
     public boolean findIsInvite(Long facAgencyID, Long projectID) {
-        Columns columns = new Columns();
+        Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("facAgencyID", facAgencyID);
         columns.eq("applyOrInvite", true);
@@ -39,8 +39,16 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     }
 
     @Override
+    public List<ProjectUndertake> findListByFacAgencyIdAndStatus(Long facAgencyId, String status) {
+        Columns columns = Columns.create();
+        columns.eq("facAgencyID", facAgencyId);
+        columns.eq("status", status);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
     public boolean findIsReceive(Long projectID) {
-        Columns columns = new Columns();
+        Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("status", 2);
         if (DAO.findFirstByColumns(columns) != null) {
@@ -82,7 +90,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     @Override
     public ProjectUndertake findByProjectId(Long projectId) {
-        return DAO.findFirstByColumn(Column.create("projectID",projectId));
+        return DAO.findFirstByColumn(Column.create("projectID", projectId));
     }
 
     @Override
