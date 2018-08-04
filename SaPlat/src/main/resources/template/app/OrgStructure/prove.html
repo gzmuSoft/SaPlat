@@ -17,7 +17,7 @@
         //按钮点击事件
         form.on('submit(sub)', function (data) {
             var v = data.elem.value;
-            window.location.href = '#(ctxPath)/app/OrgStructure/management?orgName=' + v;
+            window.location.href = '#(ctxPath)/app/OrgStructure/management?orgType=' + v;
             return false;
         });
     });
@@ -33,7 +33,7 @@
         <div>
             <form action="" method="">
                 #for(list : nameList)
-                <button class="layui-btn layui-btn-lg layui-btn-normal layui-btn-radius" lay-submit lay-filter="sub" value="#(list)">#(list)</button>
+                <button class="layui-btn layui-btn-lg layui-btn-normal layui-btn-radius" lay-submit lay-filter="sub" value="#(list == '管理机构'?'0':list == '企业机构'?'1':list == '服务机构'?'2':list == '审查团体'?'3':list == '专业团体'?'4':'')">#(list)</button>
                 #end
             </form>
         </div>

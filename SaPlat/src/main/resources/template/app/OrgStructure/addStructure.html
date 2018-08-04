@@ -55,11 +55,11 @@
             <div class="layui-input-block">
                 <!--<input type="text" name="orgstructure.orgType" placeholder="" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>-->
                 <select name="orgstructure.orgType" readonly="readonly">
-                    <option value="0" #(orgName =='管理机构'?'selected':'disabled')>管理机构</option>
-                    <option value="1" #(orgName =='企业机构'?'selected':'disabled')>企业机构</option>
-                    <option value="2" #(orgName =='服务机构'?'selected':'disabled')>服务机构</option>
-                    <option value="3" #(orgName =='审查团体'?'selected':'disabled')>审查团体</option>
-                    <option value="4" #(orgName =='专业团体'?'selected':'disabled')>专业团体</option>
+                    <option value="0" #(orgType =='0'?'selected':'disabled')>管理机构</option>
+                    <option value="1" #(orgType =='1'?'selected':'disabled')>企业机构</option>
+                    <option value="2" #(orgType =='2'?'selected':'disabled')>服务机构</option>
+                    <option value="3" #(orgType =='3'?'selected':'disabled')>审查团体</option>
+                    <option value="4" #(orgType =='4'?'selected':'disabled')>专业团体</option>
                 </select>
             </div>
         </div>

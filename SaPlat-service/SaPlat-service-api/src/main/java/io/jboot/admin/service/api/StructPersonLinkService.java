@@ -32,6 +32,13 @@ public interface StructPersonLinkService {
     public List<StructPersonLink> findAll();
 
     /**
+     *根据用户名查询
+     * @param orgStructureId
+     * @return
+     */
+    public List<StructPersonLink> findByPersonID(Long personID);
+
+    /**
      * find List<model> by orgStructureId
      *
      * @param orgStructureId

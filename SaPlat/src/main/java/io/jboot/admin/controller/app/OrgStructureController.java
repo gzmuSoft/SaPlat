@@ -73,11 +73,11 @@ public class OrgStructureController extends BaseController {
     /**
      * 管理架构主界面
      */
-    @NotNullPara({"orgName"})
+    @NotNullPara({"orgType"})
     public void management(){
         Long uid = AuthUtils.getLoginUser().getUserID();
-        String orgName = getPara("orgName");
-        setAttr("orgName",orgName)
+        String orgType = getPara("orgType");
+        setAttr("orgType",orgType)
                 .setAttr("uid",uid)
                 .render("main.html");
     }
@@ -85,20 +85,17 @@ public class OrgStructureController extends BaseController {
     /**
      * 添加架构页面
      */
-    @NotNullPara({"orgName"})
+    @NotNullPara({"orgType"})
     public void addStructure(){
         Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
-        String orgName = getPara("orgName");
-        System.out.println(AuthUtils.getLoginUser().getUserSource());
+        String orgType = getPara("orgType");
         Long parentID = (getParaToLong("parentID") != null)?getParaToLong("parentID"):0;
         if(organization != null){
             setAttr("org",organization)
-                    .setAttr("orgName",orgName)
+                    .setAttr("orgType",orgType)
                     .setAttr("parentID",parentID)
                     .render("addStructure.html");
         }
-
-
     }
     /**
      * 添加架构人员页面
@@ -170,11 +167,10 @@ public class OrgStructureController extends BaseController {
     /**
      * 表格数据
      */
-    @NotNullPara("orgName")
+    @NotNullPara("orgType")
     public void tableData(){
-        List<String> list = Arrays.asList("管理机构","企业机构","服务机构","审查团体","专业团体");
-        String orgName = getPara("orgName");
-        int orgType = list.indexOf(orgName);
+        //List<String> list = Arrays.asList("管理机构","企业机构","服务机构","审查团体","专业团体");
+        int orgType = getParaToInt("orgType");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long uid = AuthUtils.getLoginUser().getUserID();
@@ -190,8 +186,8 @@ public class OrgStructureController extends BaseController {
     @NotNullPara({"structureID"})
     public void showPerson(){
         Long sid = getParaToLong("structureID");
-        setAttr("sid",sid).
-            render("showPerson.html");
+        setAttr("sid",sid)
+            .render("showPerson.html");
     }
 
     /**
@@ -202,5 +198,19 @@ public class OrgStructureController extends BaseController {
         Long sid = getParaToLong("structureID");
         Map<String,Object> structPersonLinkList = structPersonLinkService.findByStructIdAndUsername(sid);
         renderJson(structPersonLinkList);
+    }
+
+    /**
+     * 个人群体-我的加入的架构
+     */
+    public void myStructure(){
+        User loginUser = AuthUtils.getLoginUser();
+        List<StructPersonLink> mylist = structPersonLinkService.findByPersonID(loginUser.getUserID());
+    }
+    /**
+     * 个人群体-申请加入架构
+     */
+    public void joinStructure(){
+
     }
 }

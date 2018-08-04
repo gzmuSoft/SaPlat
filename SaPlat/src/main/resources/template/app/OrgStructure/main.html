@@ -34,10 +34,10 @@
                 , {field: 'createTime', title: '创建时间', width: 160}
                 , {field: 'lastAccessTime', title: '最后访问时间', width: 160}
                 , {field: 'remark', title: '备注', width: 100}
-                , {fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', width: 280, align: 'center', toolbar: '#barOption'}
 
             ]]
-            , url: '#(ctxPath)/app/OrgStructure/tableData?orgName=#(orgName)'
+            , url: '#(ctxPath)/app/OrgStructure/tableData?orgType=#(orgType)'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -60,7 +60,7 @@
                     reloadTable($('#name').val());
                 });
             }else if(obj.event === 'addStructure'){
-                pop_show('添加子架构','#(ctxPath)/app/OrgStructure/addStructure?orgName=#(orgName)&parentID=' + data.id, '','',function () {
+                pop_show('添加子架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)&parentID=' + data.id, '','',function () {
                     reloadTable($('#name').val());
                 });
             }else if (obj.event === 'showPerson') {
@@ -70,13 +70,13 @@
         });
         //添加架构
         $("#add").click(function(){
-            pop_show('添加根架构','#(ctxPath)/app/OrgStructure/addStructure?orgName=#(orgName)','','', function(){
+            pop_show('添加根架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)','','', function(){
                 reloadTable($('#name').val());
             });
         });
         reloadTable = function (name) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/OrgStructure/tableData?orgName=#(orgName)'
+                url: '#(ctxPath)/app/OrgStructure/tableData?orgType=#(orgType)'
                 ,where: {name: name} //设定异步数据接口的额外参数
             });
         }

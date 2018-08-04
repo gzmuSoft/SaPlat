@@ -9,6 +9,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +37,10 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         map.put("count",list.size());
         map.put("data",list);
         return map;
+    }
+    @Override
+    public List<StructPersonLink> findByPersonID(Long personID){
+        List<StructPersonLink> list = new LinkedList<StructPersonLink>();
+        return list;
     }
 }
