@@ -46,7 +46,7 @@ public interface ProjectFileTypeService  {
      * @param parentId
      * @return
      */
-    public List<ProjectFileType> findByParentId(Long parentId);
+    public ProjectFileType findByParentId(Long parentId);
 
 
     /**

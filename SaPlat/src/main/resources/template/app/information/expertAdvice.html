@@ -29,6 +29,22 @@
             layedit = layui.layedit,
             form = layui.form,
             layer = layui.layer;
+        var riskFactorText = "#(riskFactor)";
+        var resolvingText = "#(resolving)";
+        var otherCommentsText = "#(otherComments)";
+
+        if (riskFactorText !== "") {
+            var ris = $('#riskFactor');
+            ris.text(riskFactorText).css("display", "").removeClass("layui-hide");
+        }
+        if (resolvingText !== "") {
+            var res = $('#resolving');
+            res.text(resolvingText).css("display", "").removeClass("layui-hide");
+        }
+        if (otherCommentsText !== "") {
+            var oth = $('#otherComments');
+            oth.text(otherCommentsText).css("display", "").removeClass("layui-hide");
+        }
         var option = {
             tool: [
                 'strong'
@@ -69,7 +85,7 @@
         });
 
         $('#save').click(function (obj) {
-            if (select === "") {
+            if (select === "" && $('.layui-select-tips').length > 0) {
                 layer.msg("请选择专家！");
                 return false;
             } else {
@@ -80,20 +96,27 @@
                     projectID: "#(projectID)",
                     expertGroupId: select
                 };
-                // console.log(obj);
+                var id = "#(thisId)";
+                if (id !== null && id !== "") {
+                    data.id = id;
+                    data.expertGroupId = $('dd.layui-this').attr("lay-value");
+                }
                 $.post("#(ctxPath)/app/information/expertAdvicePost", data, function (e) {
-                    layer.msg("提交成功！");
-                    window.history.back();
-                    location.reload();
+                    layer.msg("提交成功！正在跳转...");
+                    setTimeout(function () {
+                        window.location.href = document.referrer;
+                    }, 2000);
                 });
-                // console.log(data);
                 return false;
             }
         });
 
+
         $('#back').click(function (obj) {
-            window.history.back();
-        })
+            window.location.href = document.referrer;
+        });
+
+
     });
 </script>
 #end
@@ -123,38 +146,30 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="select">请选择专家</label>
                 <div class="layui-input-inline">
-                    #if(expertGroup == null)
                     <select name="expertGroup" lay-filter="aihao" id="select">
+                        #if(expertGroup != null)
+                        <option value="#(expertGroup.id)" selected="selected">#(expertGroup.name)</option>
+                        #else
                         <option value="" selected="selected">请选择专家</option>
+                        #end
                         #for(e : expertGroups)
                         <option value="#(e.id)">#(e.name)</option>
                         #end
                     </select>
-                    #else
-                    <div>#(expertGroup.name)</div>
-                    #end
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="riskFactor">项目建设可能存在的风险因素</label>
                 <div class="layui-input-block">
-                    #if(riskFactor == null || riskFactor.equals("") )
                     <textarea id="riskFactor" style="display: none;"></textarea>
-                    #else
-                    <div>#(riskFactor)</div>
-                    #end
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="resolving">应采取的相应化解措施</label>
                 <div class="layui-input-block">
-                    #if( resolving == null || resolving.equals("") )
                     <textarea id="resolving" style="display: none;"></textarea>
-                    #else
-                    <div>#(resolving)</div>
-                    #end
                 </div>
             </div>
 
@@ -162,22 +177,14 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="otherComments">其它意见（建议）</label>
                 <div class="layui-input-block">
-                    #if(otherComments == null || otherComments.equals("") )
                     <textarea id="otherComments" style="display: none;"></textarea>
-                    #else
-                    <div>#(otherComments)</div>
-                    #end
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    #if(otherComments == null || otherComments.equals("") )
                     <button type="button" class="layui-btn" id="save">保存</button>
-                    <button type="button" class="layui-btn layui-btn-danger" id="reset">取消</button>
-                    #else
                     <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
-                    #end
                 </div>
             </div>
         </div>

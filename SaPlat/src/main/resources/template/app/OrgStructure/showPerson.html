@@ -23,12 +23,12 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {checkbox: false, sort: true, fixed: true, space: true}
-                , {field: 1, title: '用户ID', width: 100}
-                , {field: 2, title: '用户名称', width: 150}
-                , {field: 3, title: '所属架构', width: 100}
-                , {field: 4, title: '创建用户', width: 150}
-                , {field: 5, title: '创建时间', width: 170}
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'personID', title: '用户ID', width: 100}
+                , {field: 'name', title: '用户名称', width: 150}
+                , {field: 'structID', title: '所属架构', width: 100}
+                , {field: 'createUserID', title: '创建用户', width: 150}
+                , {field: 'createTime', title: '创建时间', width: 170}
                 // , {field: 6, title: '状态', width: 100}
                 , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
             ]]

@@ -23,7 +23,7 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {checkbox: false, sort: true, fixed: true, space: true}
+                {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'id', title: 'ID', width: 60}
                 , {field: 'name', title: '架构名称', width: 150}
                 , {field: 'spell', title: '名称全拼', width: 100}
@@ -53,7 +53,7 @@
         table.on('tool(dateTable)', function(obj) {
             var data = obj.data;
             if (obj.event === 'addPerson') {
-                pop_show('添加架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id, '', '', function () {
+                pop_show('添加架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id + '&orgType=#(orgType)', '', '', function () {
                 });
             }else if(obj.event === 'update'){
                 pop_show('修改架构信息', '#(ctxPath)/app/OrgStructure/updateStructure?id=' + data.id, '', '', function () {

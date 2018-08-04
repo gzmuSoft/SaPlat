@@ -84,7 +84,7 @@ public class ProAssReviewController extends BaseController {
         }
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!proAssReviewService.save(model)) {
             throw new BusinessException("保存失败");
         }

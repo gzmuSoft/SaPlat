@@ -105,12 +105,12 @@ public abstract class BaseOrgStructure<M extends BaseOrgStructure<M>> extends Jb
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Integer isEnable) {
+	public void setIsEnable(java.lang.Boolean isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Integer getIsEnable() {
-		return getInt("isEnable");
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }

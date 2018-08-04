@@ -49,6 +49,14 @@ public abstract class BaseApplyInvite<M extends BaseApplyInvite<M>> extends Jboo
 		return getLong("projectID");
 	}
 
+	public void setStructID(java.lang.Long structID) {
+		set("structID", structID);
+	}
+	
+	public java.lang.Long getStructID() {
+		return getLong("structID");
+	}
+
 	public void setUserID(java.lang.Long userID) {
 		set("userID", userID);
 	}
@@ -145,12 +153,12 @@ public abstract class BaseApplyInvite<M extends BaseApplyInvite<M>> extends Jboo
 		return getStr("remark");
 	}
 
-	public void setIsEnable(java.lang.Integer isEnable) {
+	public void setIsEnable(java.lang.Boolean isEnable) {
 		set("isEnable", isEnable);
 	}
 	
-	public java.lang.Integer getIsEnable() {
-		return getInt("isEnable");
+	public java.lang.Boolean getIsEnable() {
+		return get("isEnable");
 	}
 
 }

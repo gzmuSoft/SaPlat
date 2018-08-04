@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.app;
 
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -14,7 +15,10 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -98,13 +102,16 @@ public class OrgStructureController extends BaseController {
         }
     }
     /**
-     * 添加架构人员页面
+     * 邀请架构人员页面
      */
-    @NotNullPara({"id"})
+    @NotNullPara({"id","orgType"})
     public void addPerson(){
         //获取架构id
         Long id = getParaToLong("id");
-        setAttr("id",id).render("addPerson.html");
+        String orgType = getPara("orgType");
+        setAttr("id",id)
+                .setAttr("orgType",orgType)
+                .render("addPerson.html");
     }
     /**
      * 更新架构信息
@@ -144,15 +151,17 @@ public class OrgStructureController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
     /**
-     * 添加架构人员
+     * 邀请架构人员加入架构
      *
      */
+    @NotNullPara("orgType")
     public void postAddPerson(){
+        int orgType = getParaToInt("orgType");
         ApplyInvite applyInvite = getBean(ApplyInvite.class,"applyInvite");
         applyInvite.setCreateUserID(AuthUtils.getLoginUser().getUserID());
         applyInvite.setCreateTime(new Date());
         applyInvite.setApplyOrInvite(1);
-        applyInvite.setUserSource(0);
+        applyInvite.setUserSource(orgType);
         Long uid = applyInvite.getUserID();
         User user = userService.findById(uid);
         if(user == null){
@@ -165,7 +174,7 @@ public class OrgStructureController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
     /**
-     * 表格数据
+     * 组织架构main表格数据
      */
     @NotNullPara("orgType")
     public void tableData(){
@@ -204,13 +213,21 @@ public class OrgStructureController extends BaseController {
      * 个人群体-我的加入的架构
      */
     public void myStructure(){
-        User loginUser = AuthUtils.getLoginUser();
-        List<StructPersonLink> mylist = structPersonLinkService.findByPersonID(loginUser.getUserID());
+        render("myStructure.html");
     }
     /**
      * 个人群体-申请加入架构
      */
     public void joinStructure(){
+        render("joinStructure.html");
+    }
 
+    /**
+     * 查询已经加入的架构列表接口
+     */
+    public void MyStructureListApi(){
+        Long uid = AuthUtils.getLoginUser().getUserID();
+        Map<String,Object> list = structPersonLinkService.findStructureListByPersonID(uid);
+        renderJson(list);
     }
 }

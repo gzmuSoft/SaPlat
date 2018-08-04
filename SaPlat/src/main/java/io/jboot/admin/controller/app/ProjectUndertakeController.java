@@ -417,7 +417,7 @@ public class ProjectUndertakeController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
         model.setStatus(3);
-        model.setIsEnable(1);
+        model.setIsEnable(true);
         if (!initialRiskExpertiseService.save(model)) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");

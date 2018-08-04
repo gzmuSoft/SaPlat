@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 
 import java.util.List;
@@ -32,11 +33,12 @@ public interface StructPersonLinkService {
     public List<StructPersonLink> findAll();
 
     /**
-     *根据用户名查询
-     * @param orgStructureId
+     * 个人群体 - 我加入的架构
+     *根据用户id查询用户加入的架构
+     * @param personID
      * @return
      */
-    public List<StructPersonLink> findByPersonID(Long personID);
+    public Map<String,Object> findStructureListByPersonID(Long personID);
 
     /**
      * find List<model> by orgStructureId

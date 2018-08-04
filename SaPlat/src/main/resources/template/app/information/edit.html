@@ -51,8 +51,14 @@
         });
 
         $(document).on('click', '.htmlName', function (e) {
-            $('#content').prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")))
-                .css("display","");
+            var html = $(this).attr("data-htmlName");
+            var content = $('#content');
+            content.prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")));
+            if (html === "/app/fileupload"){
+                content.prop("src", "#(ctxPath)/app/fileupload/?id=#(projectId)");
+            }
+            content.css("display","");
+
         });
 
         util.fixbar({

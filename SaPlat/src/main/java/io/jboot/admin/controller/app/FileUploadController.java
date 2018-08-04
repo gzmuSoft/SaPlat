@@ -9,19 +9,19 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.*;
-import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.service.api.FileProjectService;
+import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.api.ProjectFileTypeService;
+import io.jboot.admin.service.api.ProjectService;
+import io.jboot.admin.service.entity.model.FileProject;
+import io.jboot.admin.service.entity.model.ProjectFileType;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.util.List;
 
 /**
- * @ Author     ：Rui
- * @ Date       ：Created in 20:39 2018/8/4
- * @ Description：玄学开发,最为致命,敌我不分。
- *   如果你看到这段话,建议别改代码,直接重构
+ * Created by Administrator on 2018/8/4.
  */
 
 @RequestMapping("app/fileupload")

@@ -138,6 +138,7 @@ public class InformationController extends BaseController {
     public void list() {
         String url = getPara("url");
         Long projectId = getParaToLong("id");
+
         setAttr("url", url)
                 .setAttr("projectId", projectId)
                 .render("tableView.html");
@@ -191,6 +192,7 @@ public class InformationController extends BaseController {
         }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
         setAttr("expertGroups", expertGroups)
+                .setAttr("thisId",id)
                 .setAttr("expertGroup", expertGroup)
                 .setAttr("phone", user.getPhone())
                 .setAttr("projectID", project.getId())
@@ -209,16 +211,16 @@ public class InformationController extends BaseController {
     @Before(POST.class)
     @NotNullPara("projectID")
     public void expertAdvicePost() {
-        Long id = getParaToLong("projectID");
+        Long projectID = getParaToLong("projectID");
         Long expertGroupId = getParaToLong("expertGroupId");
         String riskFactor = getPara("riskFactor");
         String resolving = getPara("resolving");
         String content = getPara("content");
-
+        Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
         SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
         model.setName("现场踏勘专家意见");
-        model.setProjectID(id);
+        model.setProjectID(projectID);
         model.setExpertID(expertGroupId);
         model.setCreateTime(new Date());
         model.setIsEnable(true);
@@ -229,7 +231,10 @@ public class InformationController extends BaseController {
         model.setResolving(resolving);
         model.setOtherComments(content);
         model.setSort(1);
-        if (!siteSurveyExpertAdviceService.save(model)) {
+        if (id != null){
+            model.setId(id);
+        }
+        if (!siteSurveyExpertAdviceService.saveOrUpdate(model)) {
             renderJson(RestResult.buildError("啊哦，保存失败，请重新尝试！"));
             throw new BusinessException("啊哦，保存失败，请重新尝试！");
         }

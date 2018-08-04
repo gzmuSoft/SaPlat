@@ -118,7 +118,7 @@ public class ProjectFileTypeController extends BaseController {
             throw new BusinessException("编号为" + id + "的项目文档不存在");
         }
         projectFileType.setRemark("启用项目文档");
-        projectFileType.setIsEnable(1);
+        projectFileType.setIsEnable(true);
         if (!projectFileTypeService.update(projectFileType)) {
             throw new BusinessException("启用失败");
         }
@@ -135,7 +135,7 @@ public class ProjectFileTypeController extends BaseController {
         if (projectFileType == null) {
             throw new BusinessException("编号为" + id + "的项目文档不存在");
         }
-        projectFileType.setIsEnable(0);
+        projectFileType.setIsEnable(false);
         projectFileType.setRemark("停用项目文档");
 
         if (!projectFileTypeService.update(projectFileType)) {
