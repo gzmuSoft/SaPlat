@@ -140,7 +140,7 @@ public interface ProjectService  {
      * @param model,authProject
      * @return
      */
-    public Long saveProject(Project model);
+    public Project saveProject(Project model);
 
     /**
      * save or update model

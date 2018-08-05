@@ -110,7 +110,11 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         int saveOrUpdate = getParaToInt("saveOrUpdate");
         if (saveOrUpdate == 1) {
-            Long projectId = projectService.saveProject(project);
+            Project model = projectService.saveProject(project);
+            Long projectId = -1L;
+            if (model != null) {
+                projectId = model.getId();
+            }
             JSONObject json = new JSONObject();
             json.put("projectId", projectId);
             if (projectId != -1L) {
@@ -297,6 +301,7 @@ public class ProjectController extends BaseController {
     /**
      * 立项中-文件列表表格渲染
      */
+    @NotNullPara({"id", "paTypeID"})
     public void fileTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);

@@ -357,7 +357,7 @@ public class ProjectUndertakeController extends BaseController {
         impTeam.setCreateUserID(loginUser.getId());
         impTeam.setLastUpdateUserID(loginUser.getId());
 
-        EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");//评估方案
+        EvaScheme evaScheme = getBean(EvaScheme.class, "EvaScheme");
         evaScheme.setProjectID(id);
         evaScheme.setCreateTime(new Date());
         evaScheme.setLastAccessTime(new Date());

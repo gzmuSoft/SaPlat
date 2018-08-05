@@ -102,5 +102,19 @@ public class TrackController extends BaseController {
         setAttr("flag", flag).setAttr("projectFileTypeID", projectFileTypeID)
                 .setAttr("projectID", projectID).render("trackingDataTransfer.html");
     }
+
+    /**
+     * 备案资料移交表-页面
+     */
+    public void toRecordData() {
+        Long projectID = 114L;
+        Long projectFileTypeID = projectFileTypeService.findByName("备案资料移交表").getId();
+        Boolean flag = false;
+        if (fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, projectID) != null) {
+            flag = true;
+        }
+        setAttr("flag", flag).setAttr("projectFileTypeID", projectFileTypeID)
+                .setAttr("projectID", projectID).render("recordDataTransfer.html");
+    }
 }
 

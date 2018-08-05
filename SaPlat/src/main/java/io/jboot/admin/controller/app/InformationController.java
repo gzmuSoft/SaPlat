@@ -96,9 +96,9 @@ public class InformationController extends BaseController {
      */
     @NotNullPara("id")
     public void edit() {
-        Long id = getParaToLong("id");
-        setAttr("projectId", id);
-        render("edit.html");
+        setAttr("projectId", getParaToLong("id"))
+                .setAttr("percent", getParaToLong("percent"))
+                .render("edit.html");
     }
 
 
@@ -192,7 +192,7 @@ public class InformationController extends BaseController {
         }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
         setAttr("expertGroups", expertGroups)
-                .setAttr("thisId",id)
+                .setAttr("thisId", id)
                 .setAttr("expertGroup", expertGroup)
                 .setAttr("phone", user.getPhone())
                 .setAttr("projectID", project.getId())
@@ -231,7 +231,7 @@ public class InformationController extends BaseController {
         model.setResolving(resolving);
         model.setOtherComments(content);
         model.setSort(1);
-        if (id != null){
+        if (id != null) {
             model.setId(id);
         }
         if (!siteSurveyExpertAdviceService.saveOrUpdate(model)) {
@@ -263,9 +263,9 @@ public class InformationController extends BaseController {
      * 调查分析
      */
     @Before(GET.class)
-    @NotNullPara("id")
+    @NotNullPara("projectID")
     public void diagnoses() {
-        Project project = projectService.findById(getParaToLong("id"));
+        Project project = projectService.findById(getParaToLong("projectID"));
         if (project == null) {
             throw new BusinessException("没有此项目");
         }
@@ -324,13 +324,13 @@ public class InformationController extends BaseController {
     }
 
     @NotNullPara("id")
-    public void diagnosesDelete(){
+    public void diagnosesDelete() {
         Long id = getParaToLong("id");
         Diagnoses diagnoses = diagnosesService.findById(id);
-        if (diagnoses == null){
+        if (diagnoses == null) {
             throw new BusinessException("删除失败");
         }
-        if (!diagnoses.delete()){
+        if (!diagnoses.delete()) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

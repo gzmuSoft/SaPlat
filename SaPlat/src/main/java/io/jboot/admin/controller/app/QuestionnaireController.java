@@ -15,6 +15,7 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class QuestionnaireController extends BaseController {
         pmodel.setIsEnable(true);
         //当前用户
         pmodel.setUserId(loginUser.getId());
+        //这个位置穿点开项目的Id
         Project project = projectService.findAll(pmodel).get(0);
 
         for (UserRole userRole : roles) {
@@ -112,54 +114,16 @@ public class QuestionnaireController extends BaseController {
      *提交保存调查问卷
      */
     public void add() {
-        //修改项目资料
+        User loginUser = AuthUtils.getLoginUser();
+        //项目资料
         Project project = getBean(Project.class, "project");
         project.setLastAccessTime(new Date());
-        if (!projectService.update(project)) {
-            throw new BusinessException("项目资料修改失败！");
-        }
-        //调查问卷的创建
-        if (!postAdd(project.getId())) {
-            throw new BusinessException("调查问卷保存失败！");
-        }
-        //调查内容的保存
-        String[] questionnaireContents = getParaValues("content");
-        Questionnaire questionnaire = questionnaireService.findByProjectID(project.getId());
-        QuestionnaireContent questionnaireContent;
-        QuestionnaireContentLink questionnaireContentLink;
-        for (int j = 0; j < questionnaireContents.length; j++) {
-            questionnaireContent = new QuestionnaireContent();
-            questionnaireContent.setContent(questionnaireContents[j]);
-            questionnaireContent.setCreateTime(new Date());
-            questionnaireContent.setLastAccessTime(new Date());
-            if (!questionnaireContentService.save(questionnaireContent)) {
-                throw new BusinessException("调查内容保存失败！");
-            }
-            questionnaireContent = questionnaireContentService.findByModel(questionnaireContent);//找到刚创建的内容
-            if (questionnaireContent != null) {
-                questionnaireContentLink = new QuestionnaireContentLink();
-                questionnaireContentLink.setQuestionnaireID(questionnaire.getId());
-                questionnaireContentLink.setQuestionnaireContentID(questionnaireContent.getId());
-                if (!questionnaireContentLinkService.save(questionnaireContentLink)) {
-                    throw new BusinessException("调查内容保存失败！");
-                }
-            } else {
-                throw new BusinessException("调查内容保存失败！");
-            }
-        }
-        renderJson(RestResult.buildSuccess());
-    }
-
-
-    /**
-     * 添加调查问卷
-     */
-    private boolean postAdd(Long id) {
-        User loginUser = AuthUtils.getLoginUser();
+        project.setLastUpdateUserID(loginUser.getId());
+        //调查问卷
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setLastAccessTime(new Date());
         questionnaire.setCreateTime(new Date());
-        questionnaire.setProjectID(id);
+        questionnaire.setProjectID(project.getId());
         questionnaire.setAge(getParaToInt("age"));
         questionnaire.setDepartment(getPara("department"));
         questionnaire.setSurveyTime(getParaToDate("surveyTime"));
@@ -176,9 +140,21 @@ public class QuestionnaireController extends BaseController {
         questionnaire.setDegreeOfEducationID(getParaToLong("degreeOfEducationID"));
         questionnaire.setOccupationID(getParaToLong("occupationID"));
         questionnaire.setCreateUserID(loginUser.getId());
-        if (!questionnaireService.save(questionnaire)) {
-            return false;
+        //调查内容
+        String[] questionnaireContents = getParaValues("content");
+        List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
+        QuestionnaireContent questionnaireContent;
+        for (int i = 0; i < questionnaireContents.length ; i++) {
+            questionnaireContent = new QuestionnaireContent();
+            questionnaireContent.setContent(questionnaireContents[i]);
+            questionnaireContent.setCreateTime(new Date());
+            questionnaireContent.setLastAccessTime(new Date());
+            questionnaireContent.setCreateUserID(loginUser.getId());
+            contents.add(i,questionnaireContent);
         }
-        return true;
+        if (!questionnaireService.saveQuestionnairen(questionnaire,contents,project)){
+            throw new BusinessException("保存失败");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 }
