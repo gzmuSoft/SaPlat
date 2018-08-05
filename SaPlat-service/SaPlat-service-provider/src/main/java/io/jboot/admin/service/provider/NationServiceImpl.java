@@ -2,11 +2,9 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.SqlPara;
-import io.jboot.admin.service.entity.model.Nation;
-import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.NationService;
 import io.jboot.admin.service.entity.model.Nation;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
@@ -25,6 +23,7 @@ public class NationServiceImpl extends JbootServiceBase<Nation> implements Natio
      * @param model 民族
      * @return all <Nation>
      */
+    @Override
     public List<Nation> findAll(Nation model) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {

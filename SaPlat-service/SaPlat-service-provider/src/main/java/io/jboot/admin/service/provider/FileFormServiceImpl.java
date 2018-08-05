@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.plugin.activerecord.Db;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.FileFormService;
 import io.jboot.admin.service.entity.model.FileForm;
@@ -12,5 +13,12 @@ import javax.inject.Singleton;
 @Singleton
 @JbootrpcService
 public class FileFormServiceImpl extends JbootServiceBase<FileForm> implements FileFormService {
+    @Override
+    public FileForm saveAndGet(FileForm model) {
+        if(!model.save()){
+            return null;
+        }
+        return model;
+    }
 
 }

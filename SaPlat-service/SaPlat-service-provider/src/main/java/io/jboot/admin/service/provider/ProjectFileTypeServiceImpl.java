@@ -29,11 +29,6 @@ public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType
     }
 
     @Override
-    public ProjectFileType findByParentId(Long parentId) {
-        return DAO.findFirstByColumn(Column.create("parentID", parentId));
-    }
-
-    @Override
     public Page<ProjectFileType> findPage(ProjectFileType projectFileType, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (projectFileType.getName() != null) {

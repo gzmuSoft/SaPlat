@@ -71,6 +71,7 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
      * @param projectId
      * @return ProAssReview model
      */
+    @Override
     public List<ProAssReview> findByFileIdAndProjectId(long fileId, long projectId) {
         Columns columns = new Columns();
         columns.eq("fileID", fileId);
@@ -89,6 +90,7 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
      * @param model 项目阶段
      * @return all <ProAssReview>
      */
+    @Override
     public List<ProAssReview> findAll(ProAssReview model) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {

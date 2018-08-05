@@ -8,7 +8,6 @@ import io.jboot.admin.service.entity.model.base.BaseProjectFileType;
  */
 @Table(tableName = "project_file_type", primaryKey = "id")
 public class ProjectFileType extends BaseProjectFileType<ProjectFileType> {
-
     boolean isUpLoad = false;
 
     public boolean getIsUpLoad() {
@@ -18,4 +17,5 @@ public class ProjectFileType extends BaseProjectFileType<ProjectFileType> {
     public void setIsUpLoad(boolean upLoad) {
         isUpLoad = upLoad;
     }
+
 }

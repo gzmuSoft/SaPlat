@@ -52,8 +52,7 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
             if (!save(model)) {
                 return false;
             }
-            Person person = findByName(model.getName());
-            user.setUserID(person.getId());
+            user.setUserID(model.getId());
             return userService.saveUser(user, roles);
         });
     }
