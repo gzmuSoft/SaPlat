@@ -41,15 +41,6 @@ public interface ProjectFileTypeService  {
     public List<ProjectFileType> findListByParentId(Long parentId);
 
     /**
-     * find List by parentId
-     *
-     * @param parentId
-     * @return
-     */
-    public ProjectFileType findByParentId(Long parentId);
-
-
-    /**
      * delete model by primary key
      *
      * @param id

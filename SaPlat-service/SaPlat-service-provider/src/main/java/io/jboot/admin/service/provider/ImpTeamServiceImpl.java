@@ -61,15 +61,14 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
                 return false;
             }
             if (evaScheme.getProjectID() != null) {
-                System.out.println(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
                 for (ScheduledPlan scheduledPlan : scheduledPlans) {
-                    scheduledPlan.setEvaSchemeID(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
+                    scheduledPlan.setEvaSchemeID(evaScheme.getId());
                     if (!scheduledPlan.save()) {
                         return false;
                     }
                 }
             }
-            return Db.tx(model::save);
+            return Db.tx(() -> model.save());
         });
     }
 

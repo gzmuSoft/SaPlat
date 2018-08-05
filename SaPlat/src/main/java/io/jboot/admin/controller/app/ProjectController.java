@@ -110,7 +110,11 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         int saveOrUpdate = getParaToInt("saveOrUpdate");
         if (saveOrUpdate == 1) {
-            Long projectId = projectService.saveProject(project);
+            Project model = projectService.saveProject(project);
+            Long projectId = -1L;
+            if (model != null) {
+                projectId = model.getId();
+            }
             JSONObject json = new JSONObject();
             json.put("projectId", projectId);
             if (projectId != -1L) {
@@ -297,14 +301,16 @@ public class ProjectController extends BaseController {
     /**
      * 立项中-文件列表表格渲染
      */
+    @NotNullPara({"id", "paTypeID"})
     public void fileTable() {
-        Long id = getParaToLong("id");
-        ProjectFileType projectFileType = new ProjectFileType();
-        projectFileType.setParentID(1L);
-        projectFileType.setIsEnable(true);
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
+        Long id = getParaToLong("id");
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        ProjectFileType childProjectFileType = new ProjectFileType();
+        childProjectFileType.setParentID(parentProjectFileType.getId());
+        Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
                 page.getList().get(i).setIsUpLoad(true);
@@ -314,6 +320,7 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<ProjectFileType>(page));
     }
+
 
     /**
      * 立项中-保存

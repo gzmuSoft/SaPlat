@@ -608,26 +608,6 @@
                 if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
                     if (tableNull()) {
                         if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
-
-                            // util.sendAjax({
-                            //     type: 'POST',
-                            //     timeout: 3000,
-                            //     url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
-                            //     loadFlag: true,
-                            //     success: function (data) {
-                            //         window.location.reload();
-                            //     },
-                            //     error: function (data) {
-                            //         string = "?";
-                            //     },
-                            //     complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
-                            //         if (status === 'timeout') {//超时,status还有success,error等值的情况
-                            //             string = "?";
-                            //             alert("超时");
-                            //         }
-                            //     }
-                            // });
-
                             var ajaxTimeoutTest = $.ajax({
                                 type: 'POST',
                                 timeout: 3000,

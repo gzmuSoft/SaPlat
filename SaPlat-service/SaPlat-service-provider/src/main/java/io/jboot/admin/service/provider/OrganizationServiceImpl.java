@@ -55,7 +55,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
             if (!save(model)) {
                 return false;
             }
-            user.setUserID(findByName(model.getName()).getId());
+            user.setUserID(model.getId());
             return userService.saveUser(user, roles);
         });
     }
