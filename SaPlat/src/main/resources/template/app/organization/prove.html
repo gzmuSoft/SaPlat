@@ -44,6 +44,10 @@
             return false;
         });
     });
+
+    $("#jump").click(function () {
+        window.location.href = '#(ctxPath)/app/organization/';
+    })
 </script>
 #end
 
@@ -53,6 +57,7 @@
         <legend>组织机构认证</legend>
     </fieldset>
 
+    #if(flag==true)
     <form id="person" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
@@ -74,6 +79,14 @@
             </div>
         </div>
     </form>
-    <hr>
+    #else if(flag==false)
+    <div class="layui-form-item x-center">
+        <div class="layui-input-block">
+            <h1 style="font-weight: 100">您的营业执照未上传，请将资料补充完整后再进行认证！</h1>
+            <br/>
+            <button class="layui-btn" id="jump" style="border-radius: 15px; height: 50px; width: 150px">去上传</button>
+        </div>
+    </div>
+    #end
 </div>
 #end

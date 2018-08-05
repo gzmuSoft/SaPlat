@@ -81,6 +81,15 @@
                 </div>
             </div>
 
+            <div class="layui-form-item">
+                <label class="layui-form-label x-center"><em class="require-mark">*</em>营业执照</label>
+                <div class="layui-input-inline layui-upload">
+                    <button type="button" class="layui-btn layui-disabled" disabled="disabled" name="upload"
+                            id="upload"><i class="layui-icon"></i>上传文件
+                    </button>
+                </div>
+            </div>
+
             <!--隐藏获取空值repwd作为更新验证器忽略密码字段验证的先决条件-->
             <input type="text" id="rePwd" name="rePwd"
                    class="layui-input layui-disabled layui-hide" required/>
@@ -102,11 +111,37 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
+    layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
+            , upload = layui.upload
             , form = layui.form;
 
+        upload.render({
+            elem: '#upload'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "组织机构营业执照"
+            }
+            , done: function (res) {
+                console.log(res.data);
+                if (res.code == 0) {
+                    pop_close();
+                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=organization&fieldName=营业执照', function () {
+                        layer.msg("上传成功");
+                    });
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
+                }
+            }
+            , error: function (index, upload) {
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
@@ -135,6 +170,7 @@
         $('#edit').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
+            $("#upload").removeClass("layui-disabled").removeProp("disabled");
             $(this).addClass("layui-hide");
             return false;
         });
@@ -146,5 +182,9 @@
             window.location.reload();
         });
     });
+
+    $("#upload").click(function () {
+
+    })
 </script>
 #end
