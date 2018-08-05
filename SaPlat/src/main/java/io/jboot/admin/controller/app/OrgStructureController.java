@@ -15,10 +15,7 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -91,7 +88,7 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara({"orgType"})
     public void addStructure(){
-        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getId());
+        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
         String orgType = getPara("orgType");
         Long parentID = (getParaToLong("parentID") != null)?getParaToLong("parentID"):0;
         if(organization != null){
@@ -223,11 +220,56 @@ public class OrgStructureController extends BaseController {
     }
 
     /**
-     * 查询已经加入的架构列表接口
+     * 查询已经个人群体加入的架构列表接口
      */
-    public void MyStructureListApi(){
+    public void myStructureListApi(){
         Long uid = AuthUtils.getLoginUser().getId();
         Map<String,Object> list = structPersonLinkService.findStructureListByPersonID(uid);
         renderJson(list);
+    }
+    /**
+     * 用户主动申请加入架构
+     */
+    @NotNullPara({"structID"})
+    public void joinStructureApi(){
+        Long structID = getParaToLong("structID");
+        Long uid = AuthUtils.getLoginUser().getId();
+        Date nowTime = new Date();
+        Calendar threeDaysLater = Calendar.getInstance();
+        //获取三天以后的日期作为申请的失效日期
+        threeDaysLater.setTime(nowTime);
+        threeDaysLater.add(Calendar.DATE, 3);
+        OrgStructure orgStructure = orgStructureService.findById(structID);
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setUserID(uid);
+        applyInvite.setCreateTime(new Date());
+        applyInvite.setUserSource(orgStructure.getOrgType());
+        applyInvite.setApplyOrInvite(0);
+        //申请或邀请发起模块标识（0：组织架构、1：项目评审）
+        applyInvite.setModule(0);
+        applyInvite.setName(orgStructure.getName());
+        applyInvite.setCreateUserID(uid);
+        applyInvite.setDeadTime(threeDaysLater.getTime());
+        applyInvite.setStructID(orgStructure.getId());
+        //设置状态标识：0待确认，1已拒绝，2已同意
+        applyInvite.setStatus(0);
+        if(!applyInviteService.save(applyInvite)){
+           throw new BusinessException("申请请求发送失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+    /**
+     * 查找架构
+     */
+    public void searchStructureApi(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long sid = getParaToLong("sid");
+        String name = getPara("name");
+        OrgStructure orgStructure = new OrgStructure();
+        orgStructure.setName(name);
+        orgStructure.setId(sid);
+        Page<OrgStructure> page = orgStructureService.searchStructure(orgStructure,pageNumber,pageSize);
+        renderJson(new DataTable<OrgStructure>(page));
     }
 }
