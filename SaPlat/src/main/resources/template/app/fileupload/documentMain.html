@@ -18,7 +18,13 @@
             , $ = layui.jquery
             , upload = layui.upload;
 
-
+        var percent = '#(percent)';
+        if (percent < 100) {
+            layer.msg("不可上传状态。请确保您已填写了所有资料以及上传了所有资料！");
+            $('#add').remove();
+        } else {
+            $('#add').removeClass("layui-hide");
+        }
         upload.render({
             elem: '#add'
             , url: '#(ctxPath)/util/uploadFile'
@@ -62,6 +68,7 @@
             }
         })
     }
+
     $("#sub").click(function () {
         util.sendAjax({
             type: 'POST',
@@ -91,20 +98,20 @@
         <legend class="x-center">预审报告</legend>
         #if(!fileProject.isEnable)
         <div class="x-center">
-                <h3>上传预审报告文件</h3>
-                <button id="add" class="layui-btn layui-btn-small">上传</button>
+            <h3>上传预审报告文件</h3>
+            <button id="add" class="layui-btn layui-btn-small layui-hide">上传</button>
         </div>
-            #if(fileProject.fileID!=null)
-                <div class="x-center">
-                        <h3>预览预审报告文件</h3>
-                        <button id="view" class="layui-btn layui-btn-small">预览</button>
-                </div>
+        #if(fileProject.fileID!=null)
+        <div class="x-center">
+            <h3>预览预审报告文件</h3>
+            <button id="view" class="layui-btn layui-btn-small">预览</button>
+        </div>
 
-                <div class="x-center">
-                        <h3>提交预审报告文件</h3>
-                        <button id="sub" class="layui-btn layui-btn-small">提交</button>
-                </div>
-            #end
+        <div class="x-center">
+            <h3>提交预审报告文件</h3>
+            <button id="sub" class="layui-btn layui-btn-small">提交</button>
+        </div>
+        #end
         #else
         <div class="x-center">
             <h1>你已提交文件</h1>
