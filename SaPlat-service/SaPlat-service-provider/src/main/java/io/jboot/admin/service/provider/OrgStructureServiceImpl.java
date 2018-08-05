@@ -25,4 +25,15 @@ public class OrgStructureServiceImpl extends JbootServiceBase<OrgStructure> impl
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
+    @Override
+    public Page<OrgStructure> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize){
+        Columns columns = Columns.create();
+        if(StrKit.notBlank(orgStructure.getName())){
+            columns.like("name","%" + orgStructure.getName() + "%");
+        }
+        if(orgStructure.getId() != null){
+            columns.eq("id",orgStructure.getId());
+        }
+        return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"id desc");
+    }
 }

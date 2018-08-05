@@ -2,6 +2,7 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.QuestionnaireContentLinkService;
 import io.jboot.admin.service.api.QuestionnaireContentService;
@@ -12,6 +13,7 @@ import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.QuestionnaireService;
 import io.jboot.admin.service.entity.model.Questionnaire;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
@@ -48,7 +50,7 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     }
 
     @Override
-    public boolean saveQuestionnairen(Questionnaire questionnaire,  List<QuestionnaireContent> contents, Project project) {
+    public boolean saveQuestionnair(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project) {
         return Db.tx(() -> {
             if (!projectService.update(project)){
                 return false;
@@ -72,6 +74,18 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
             }
             return true;
         });
+    }
+
+    @Override
+    public Page<Questionnaire> findPage(Questionnaire model, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        if (model.getProjectID() != null){
+            columns.eq("projectID",model.getProjectID());
+        }
+        if (model.getIsEnable() != null){
+            columns.eq("isEnable",model.getIsEnable());
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
     }
 
 }

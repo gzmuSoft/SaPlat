@@ -8,7 +8,15 @@ import java.util.List;
 
 public interface OrgStructureService {
     /**
-     * 数据分页
+     * 查找架构 - 个人主动加入
+     * @param orgStructure
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<OrgStructure> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize);
+    /**
+     * MAIN数据分页
      * @param orgStructure
      * @param pageNumber
      * @param pageSize

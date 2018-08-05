@@ -61,4 +61,12 @@ public class ProjectFileTypeServiceImpl extends JbootServiceBase<ProjectFileType
         }
         return zList;
     }
+
+    @Override
+    public ProjectFileType findByNameAndParentID(String name, Long parentID) {
+        Columns columns=Columns.create();
+        columns.eq("name",name);
+        columns.eq("parentID",parentID);
+        return DAO.findFirstByColumns(columns);
+    }
 }

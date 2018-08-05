@@ -23,16 +23,15 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
-                {checkbox: false, sort: true, fixed: true, space: true}
-                , {field: 1, title: '用户ID', width: 100}
-                , {field: 2, title: '用户名称', width: 150}
-                , {field: 3, title: '所属架构', width: 100}
-                , {field: 4, title: '创建用户', width: 150}
-                , {field: 5, title: '创建时间', width: 170}
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'id', title: '架构ID', width: 100}
+                , {field: 'name', title: '架构名称', width: 150}
+                , {field: 'createUserID', title: '创建用户', width: 150}
+                , {field: 'createTime', title: '创建时间', width: 170}
                 // , {field: 6, title: '状态', width: 100}
                 , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
             ]]
-            , url: '#(ctxPath)/app/OrgStructure/StructurePersonList?structureID=#(sid)'
+            , url: '#(ctxPath)/app/OrgStructure/searchStructureApi'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -47,16 +46,29 @@
         });
         table.on('tool(dateTable)', function(obj) {
             var data = obj.data;
-            if (obj.event === 'delete') {
-                pop_show('移除人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id, '', '', function () {
+            if (obj.event === 'add') {
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/OrgStructure/joinStructureApi',
+                    data: {structID: data.id},
+                    loadFlag: true,
+                    success: function (data) {
+                        reloadTable($('#name').val());
+                    }
                 });
             }
         });
-
-        // form.on('submit(search)', function(data){
-        //     reloadTable(data.field.name);
-        //     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-        // });
+        //查找数据 表格重载
+        reloadTable = function (name,sid) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/OrgStructure/searchStructureApi'
+                , where: {name: name,sid: sid} //设定异步数据接口的额外参数
+            });
+        }
+        form.on('submit(search)', function(data){
+             reloadTable(data.field.name,data.field.sid);
+             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+         });
     });
 
 
@@ -65,19 +77,32 @@
 
 #define content()
 <div class="layui-fluid">
-    <div class="layui-row">
-        <div class="layui-btn-group">
+    <form id="searchForm" class="layui-form x-center" action="" >
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">架构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="架构名称" class="layui-input"/>
+                </div>
 
-            <button id="add" class="layui-btn layui-btn-small">邀请</button>
+                <label class="layui-form-label">架构ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sid" name="sid" placeholder="架构ID" class="layui-input"/>
+                </div>
 
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn"  lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                </div>
+            </div>
         </div>
+    </form>
+    <hr>
+    <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 </div>
 
 <script type="text/html" id="barOption">
-
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="option">操作</a>
-
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">申请加入</a>
 </script>
 #end
