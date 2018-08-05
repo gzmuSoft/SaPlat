@@ -145,6 +145,7 @@
     var left, opacity, scale;
     var animating;
     var projectId = -1, judgeFile = false;
+    var paTypeID;
     layui.use(['layedit', 'table'], function () {
         /**
          * 操作对象
@@ -165,7 +166,6 @@
         /**
          * 文件表格
          */
-
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
             , id: 'dateTable'
@@ -178,7 +178,6 @@
                 , {field: 'name', title: '需上传的文件', align: 'center', width: 600}
                 , {title: '操作', width: 240, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/fileTable'
             , method: 'post'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -203,11 +202,10 @@
             if (obj.event === 'upload') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
                     table.reload('dateTable', {
-                        url: '#(ctxPath)/app/project/fileTable?id=' + projectId
+                        url: '#(ctxPath)/app/project/fileTable?id=' + projectId + '&paTypeID=' + paTypeID
                     });
                 });
             }
-
         });
 
         /**
@@ -290,6 +288,7 @@
                 if (notNull()) {
                     not = true;
                     var string = "?", valueArray = [], nameArray = [];
+                    paTypeID = $("#project\\.paTypeID").val();
                     if (maxPage < 2) maxPage = 2 , saveOrUpdate = 1;
                     presentPage = 2;
                     string += "saveOrUpdate=" + saveOrUpdate + "&";
@@ -312,6 +311,12 @@
                     not = false;
                     layer.msg("数据不能为空！");
                 }
+                /**
+                 * 加载文件列表
+                 */
+                table.reload('dateTable', {
+                    url: '#(ctxPath)/app/project/fileTable?paTypeID=' + paTypeID
+                });
             } else if (this.id === "nextPage2") {
                 if (notNull_2()) {
                     not = true;
@@ -335,7 +340,7 @@
                 var string = "?", valueArray = [], nameArray = [];
                 if (maxPage < 4) maxPage = 4 , saveOrUpdate = 1;
                 presentPage = 4;
-                $.getJSON("#(ctxPath)/app/project/judgeFile?projectId=" + projectId,
+                $.getJSON("#(ctxPath)/app/project/judgeFile?projectId=" + projectId + '&paTypeID=' + paTypeID,
                     function (data) {
                         judgeFile = data.judgeFile;
                         if (judgeFile === true) {

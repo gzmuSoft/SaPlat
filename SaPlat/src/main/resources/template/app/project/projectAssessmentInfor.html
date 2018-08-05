@@ -191,6 +191,7 @@
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
         var projectID = "#(projectID)";
+        var paTypeID = "#(paTypeID)"
 
         var layer = layui.layer,
             $ = layui.jquery,
@@ -242,7 +243,6 @@
                     data: $.param(data.field),
                     loadFlag: true,
                     success: function (data) {
-                        console.log("执行了success函数");
                         window.location.href = '#(ctxPath)/app/project/toBuildProject'
                     },
                     error: function (data) {
@@ -282,7 +282,7 @@
                 , {field: 'name', title: '需上传的文件', width: 600}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/fileTable?id=' + projectID
+            , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -301,7 +301,7 @@
             if (obj.event === 'upload') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectID, '500', '300', function () {
                     table.reload('dateTable', {
-                        url: '#(ctxPath)/app/project/fileTable?id=' + projectID
+                        url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
                     });
                 });
             }

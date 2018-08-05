@@ -110,7 +110,11 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         int saveOrUpdate = getParaToInt("saveOrUpdate");
         if (saveOrUpdate == 1) {
-            Long projectId = projectService.saveProject(project);
+            Project model = projectService.saveProject(project);
+            Long projectId = -1L;
+            if (model != null) {
+                projectId = model.getId();
+            }
             JSONObject json = new JSONObject();
             json.put("projectId", projectId);
             if (projectId != -1L) {
@@ -297,13 +301,16 @@ public class ProjectController extends BaseController {
     /**
      * 立项中-文件列表表格渲染
      */
+    @NotNullPara({"id", "paTypeID"})
     public void fileTable() {
-        Long id = getParaToLong("id");
-        ProjectFileType projectFileType = new ProjectFileType();
-        projectFileType.setParentID(1L);
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
+        Long id = getParaToLong("id");
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        ProjectFileType childProjectFileType = new ProjectFileType();
+        childProjectFileType.setParentID(parentProjectFileType.getId());
+        Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
                 page.getList().get(i).setIsUpLoad(true);
@@ -313,6 +320,7 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<ProjectFileType>(page));
     }
+
 
     /**
      * 立项中-保存
@@ -383,23 +391,52 @@ public class ProjectController extends BaseController {
             model = new FileProject();
             model.setProjectID(getParaToLong("projectId"));
             model.setFileTypeID(getParaToLong("fileTypeId"));
+            model.setCreateTime(new Date());
+            model.setCreateUserID(user.getId());
 
         } else {
             Files files = filesService.findById(model.getFileID());
             if (files != null) {
                 files.setIsEnable(false);
-                filesService.update(files);
+                if (!filesService.update(files)) {
+                    renderJson(RestResult.buildError("文件禁用失败"));
+                    throw new BusinessException("文件禁用失败");
+                }
             }
         }
         model.setFileID(getParaToLong("fileId"));
-        model.setCreateTime(new Date());
         model.setLastAccessTime(new Date());
-        model.setCreateUserID(user.getId());
         model.setLastUpdateUserID(user.getId());
-        if (!fileProjectService.saveOrUpdate(model)) {
-            renderJson(RestResult.buildError("上传失败"));
-            throw new BusinessException("上传失败");
+
+        if (model.getFileTypeID() == 35L) {
+            model.setId(null);
+            model.setCreateTime(new Date());
+            if (!fileProjectService.save(model)) {
+                renderJson(RestResult.buildError("上传失败"));
+                throw new BusinessException("上传失败");
+            } else {
+                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                files.setIsEnable(true);
+                if (!filesService.update(files)) {
+                    renderJson(RestResult.buildError("文件启用失败"));
+                    throw new BusinessException("文件启用失败");
+                }
+            }
+        } else {
+            if (!fileProjectService.saveOrUpdate(model)) {
+                renderJson(RestResult.buildError("上传失败"));
+                throw new BusinessException("上传失败");
+            } else {
+                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                files.setIsEnable(true);
+                if (!filesService.update(files)) {
+                    renderJson(RestResult.buildError("文件启用失败"));
+                    throw new BusinessException("文件启用失败");
+                }
+            }
         }
+        renderJson();
+
     }
 
     /**
@@ -407,9 +444,11 @@ public class ProjectController extends BaseController {
      */
     public void judgeFile() {
         List<FileProject> fileProjects = fileProjectService.findAllByProjectID(getParaToLong("projectId"));
-        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(1L);
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        List<ProjectFileType> childProjectFileType = projectFileTypeService.findListByParentId(parentProjectFileType.getId());
         JSONObject json = new JSONObject();
-        if (projectFileTypes.size() == fileProjects.size()) {
+        if (childProjectFileType.size() == fileProjects.size()) {
             json.put("judgeFile", true);
             renderJson(json);
         } else {

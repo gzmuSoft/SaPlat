@@ -2,10 +2,9 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Educational;
-import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.EducationalService;
 import io.jboot.admin.service.entity.model.Educational;
+import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
@@ -24,6 +23,7 @@ public class EducationalServiceImpl extends JbootServiceBase<Educational> implem
      * @param model 学历
      * @return all <Educational>
      */
+    @Override
     public List<Educational> findAll(Educational model) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {

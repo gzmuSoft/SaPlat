@@ -21,12 +21,14 @@ public class EvaSchemeServiceImpl extends JbootServiceBase<EvaScheme> implements
      */
     @Override
     public EvaScheme findByProjectID(Object id) {
-        if (id == null)
+        if (id == null) {
             return null;
+        }
         List<EvaScheme> list = DAO.findListByColumn("projectID", id);
         if (list.size() != 0) {
             return list.get(0);
-        } else
+        } else {
             return null;
+        }
     }
 }

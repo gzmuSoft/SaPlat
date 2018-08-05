@@ -261,6 +261,10 @@
 
         <div class="layui-form-item x-center" style="margin-top: 50px;">
             <div class="layui-input-block">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
+                #if(project.assessmentMode == "委评")
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
+                #end
                 <button type="button" class="layui-btn site-demo-layedit" data-type="content" lay-submit
                         lay-filter="sub" id="sub">
                     保存
@@ -277,18 +281,20 @@
 </script>
 
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table'], function () {
+    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table','upload'], function () {
         /**
          *  操作对象
          */
         var form = layui.form
             , table = layui.table
             , layer = layui.layer
+            , upload = layui.upload
             , $ = layui.jquery
             , layedit = layui.layedit
             , laydate = layui.laydate
             , string = "?"
-            , temp1 = [], temp2 = [], temp3 = [], temp4 = [];
+            , temp1 = [], temp2 = [], temp3 = [], temp4 = []
+            , fileFormId;
 
         /**
          * 建立日期
@@ -571,10 +577,39 @@
         }
 
         /**
+         * 文件上传
+         */
+        upload.render({
+            elem: '.upFile'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: $('#modelName').text()
+            }
+            , done: function (res) {
+                console.log(res.data);
+                if (res.code == 0) {
+                    $.getJSON(
+                        '#(ctxPath)/app/projectUndertake/upFile?fileId=' + res.data.fileId + '&fieldName='+$(this)[0].item.text(),
+                        function (data) {
+                            fileFormId = data.fileFormId;
+                        });
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
+                }
+            }, error: function (index, upload) {
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
+
+        /**
          * 数据打包
          */
         function dataString() {
-            string += "EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
+            string += "fileFormId=" + fileFormId + "&EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX > 0) {
                     string += "ScheduledPlan.name=" + value.name + "&ScheduledPlan.content=" + value.content + "&";
@@ -608,26 +643,6 @@
                 if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
                     if (tableNull()) {
                         if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
-
-                            // util.sendAjax({
-                            //     type: 'POST',
-                            //     timeout: 3000,
-                            //     url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
-                            //     loadFlag: true,
-                            //     success: function (data) {
-                            //         window.location.reload();
-                            //     },
-                            //     error: function (data) {
-                            //         string = "?";
-                            //     },
-                            //     complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
-                            //         if (status === 'timeout') {//超时,status还有success,error等值的情况
-                            //             string = "?";
-                            //             alert("超时");
-                            //         }
-                            //     }
-                            // });
-
                             var ajaxTimeoutTest = $.ajax({
                                 type: 'POST',
                                 timeout: 3000,

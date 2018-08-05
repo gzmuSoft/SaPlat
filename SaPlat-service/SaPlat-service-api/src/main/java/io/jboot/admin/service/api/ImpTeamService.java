@@ -2,10 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.EvaScheme;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.ImpTeam;
-import io.jboot.admin.service.entity.model.ScheduledPlan;
+import io.jboot.admin.service.entity.model.*;
 
 import java.util.List;
 
@@ -85,7 +82,7 @@ public interface ImpTeamService {
      * @param model,evaScheme
      * @return if save success
      */
-    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans);
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm);
 
 
     /**

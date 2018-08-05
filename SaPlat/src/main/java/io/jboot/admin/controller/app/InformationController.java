@@ -4,8 +4,8 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.json.JFinalJson;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
@@ -14,13 +14,10 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
-import io.jboot.db.model.Column;
 import io.jboot.web.controller.annotation.RequestMapping;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,14 +88,30 @@ public class InformationController extends BaseController {
     @JbootrpcService
     private DiagnosesService diagnosesService;
 
+    @JbootrpcService
+    private NationService nationService;
+
+    @JbootrpcService
+    private EducationalService educationalService;
+
+    @JbootrpcService
+    private QuestionnaireService questionnaireService;
+
+    @JbootrpcService
+    private QuestionnaireContentService questionnaireContentService;
+
+    @JbootrpcService
+    private QuestionnaireContentLinkService questionnaireContentLinkService;
+
+
     /**
      * 资料编辑页面
      */
     @NotNullPara("id")
     public void edit() {
-        Long id = getParaToLong("id");
-        setAttr("projectId", id);
-        render("edit.html");
+        setAttr("projectId", getParaToLong("id"))
+                .setAttr("percent", getParaToLong("percent"))
+                .render("edit.html");
     }
 
 
@@ -192,7 +205,7 @@ public class InformationController extends BaseController {
         }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
         setAttr("expertGroups", expertGroups)
-                .setAttr("thisId",id)
+                .setAttr("thisId", id)
                 .setAttr("expertGroup", expertGroup)
                 .setAttr("phone", user.getPhone())
                 .setAttr("projectID", project.getId())
@@ -231,7 +244,7 @@ public class InformationController extends BaseController {
         model.setResolving(resolving);
         model.setOtherComments(content);
         model.setSort(1);
-        if (id != null){
+        if (id != null) {
             model.setId(id);
         }
         if (!siteSurveyExpertAdviceService.saveOrUpdate(model)) {
@@ -263,9 +276,18 @@ public class InformationController extends BaseController {
      * 调查分析
      */
     @Before(GET.class)
-    @NotNullPara("id")
+    @NotNullPara("projectID")
     public void diagnoses() {
-        Project project = projectService.findById(getParaToLong("id"));
+        Long diagnosesID=getParaToLong("id");
+        Diagnoses diagnoses;
+        if(diagnosesID==null){
+            diagnoses=new Diagnoses();
+        }
+        else{
+            diagnoses=diagnosesService.findById(diagnosesID);
+        }
+        setAttr("diagnoses",diagnoses);
+        Project project = projectService.findById(getParaToLong("projectID"));
         if (project == null) {
             throw new BusinessException("没有此项目");
         }
@@ -317,21 +339,146 @@ public class InformationController extends BaseController {
         diagnoses.setCreateUserID(AuthUtils.getLoginUser().getId());
         diagnoses.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
 
-        if (!diagnosesService.save(diagnoses)) {
+        if (!diagnosesService.saveOrUpdate(diagnoses)) {
             throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara("id")
-    public void diagnosesDelete(){
+    public void diagnosesDelete() {
         Long id = getParaToLong("id");
         Diagnoses diagnoses = diagnosesService.findById(id);
-        if (diagnoses == null){
+        if (diagnoses == null) {
             throw new BusinessException("删除失败");
         }
-        if (!diagnoses.delete()){
+        if (!diagnoses.delete()) {
             throw new BusinessException("删除失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+
+    /**
+     * 调查问卷数据表格
+     */
+    public void questionnaireDataTable(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        Questionnaire questionnaire = new Questionnaire();
+        Page<Questionnaire> page = questionnaireService.findPage(questionnaire,pageNumber, pageSize);
+        page.getList().forEach(p -> {
+            StringBuilder sb = new StringBuilder();
+            if (p.getType() == 1){
+                sb.append("调查对象：单位");
+            } else {
+                sb.append("调查对象：个人");
+            }
+            p.setRemark(sb.toString());
+        });
+        renderJson(new DataTable<Questionnaire>(page));
+    }
+
+
+    /**
+     * questionnaire
+     */
+    @NotNullPara("projectID")
+    public void questionnaire() {
+        User loginUser = AuthUtils.getLoginUser();
+        //当前用户权限
+        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
+        Project project = projectService.findById(getParaToLong("projectID"));
+        for (UserRole userRole : roles) {
+            if (userRole.getRoleID() == 2) {
+                //加载民族
+                Nation nmodel = new Nation();
+                nmodel.setIsEnable(true);
+                List<Nation> nations = nationService.findAll(nmodel);
+                BaseStatus nationStatus = new BaseStatus() {
+                };
+                for (Nation nation : nations) {
+                    nationStatus.add(nation.getId().toString(), nation.getName());
+                }
+                //加载学历
+                Educational emodel = new Educational();
+                emodel.setIsEnable(true);
+                List<Educational> educationals = educationalService.findAll(emodel);
+                BaseStatus educationalStatus = new BaseStatus() {
+                };
+                for (Educational educational : educationals) {
+                    educationalStatus.add(educational.getId().toString(), educational.getName());
+                }
+                //加载职业
+                Occupation omodel = new Occupation();
+                omodel.setIsEnable(true);
+                List<Occupation> occupations = occupationService.findAll(omodel);
+                BaseStatus occupationStatus = new BaseStatus() {
+                };
+                for (Occupation item : occupations) {
+                    occupationStatus.add(item.getId().toString(), item.getName());
+                }
+                setAttr("type", 0).
+                        setAttr("project", project).
+                        setAttr("occupationStatus", occupationStatus).
+                        setAttr("educationalStatus", educationalStatus).
+                        setAttr("nationStatus", nationStatus).
+                        render("personMain.html");
+                break;
+            } else {
+                setAttr("type", 1).
+                        setAttr("project", project).
+                        render("organizationMain.html");
+                break;
+            }
+        }
+    }
+
+    /**
+     * 提交保存调查问卷
+     */
+    public void questionnaireAdd() {
+        User loginUser = AuthUtils.getLoginUser();
+        //项目资料
+        Project project = getBean(Project.class, "project");
+        project.setLastAccessTime(new Date());
+        project.setLastUpdateUserID(loginUser.getId());
+        //调查问卷
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setLastAccessTime(new Date());
+        questionnaire.setCreateTime(new Date());
+        questionnaire.setProjectID(project.getId());
+        questionnaire.setAge(getParaToInt("age"));
+        questionnaire.setDepartment(getPara("department"));
+        questionnaire.setSurveyTime(getParaToDate("surveyTime"));
+        questionnaire.setType(getParaToInt("type"));
+        questionnaire.setUnit(getPara("unit"));
+        questionnaire.setUnitAddress(getPara("unitAddress"));
+        questionnaire.setUnitTel(getPara("unitTel"));
+        questionnaire.setPersonName(getPara("name"));
+        questionnaire.setPersonGender(getParaToInt("sex"));
+        questionnaire.setAddr(getPara("addr"));
+        questionnaire.setIDCard(getPara("IDCard"));
+        questionnaire.setPhone(getPara("phone"));
+        questionnaire.setNationID(getParaToLong("nationID"));
+        questionnaire.setDegreeOfEducationID(getParaToLong("degreeOfEducationID"));
+        questionnaire.setOccupationID(getParaToLong("occupationID"));
+        questionnaire.setCreateUserID(loginUser.getId());
+        //调查内容
+        String[] questionnaireContents = getParaValues("content");
+        List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
+        QuestionnaireContent questionnaireContent;
+        for (int i = 0; i < questionnaireContents.length; i++) {
+            questionnaireContent = new QuestionnaireContent();
+            questionnaireContent.setContent(questionnaireContents[i]);
+            questionnaireContent.setCreateTime(new Date());
+            questionnaireContent.setLastAccessTime(new Date());
+            questionnaireContent.setCreateUserID(loginUser.getId());
+            contents.add(i, questionnaireContent);
+        }
+        if (!questionnaireService.saveQuestionnair(questionnaire, contents, project)) {
+            throw new BusinessException("保存失败");
         }
         renderJson(RestResult.buildSuccess());
     }

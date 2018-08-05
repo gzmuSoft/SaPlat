@@ -23,6 +23,7 @@ public class CountryServiceImpl extends JbootServiceBase<Country> implements Cou
      * @param model 国家
      * @return all <Country>
      */
+    @Override
     public List<Country> findAll(Country model) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {

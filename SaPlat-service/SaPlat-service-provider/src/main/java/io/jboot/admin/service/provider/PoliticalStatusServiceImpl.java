@@ -23,6 +23,7 @@ public class PoliticalStatusServiceImpl extends JbootServiceBase<PoliticalStatus
      * @param model 政治面貌
      * @return all <PoliticalStatus>
      */
+    @Override
     public List<PoliticalStatus> findAll(PoliticalStatus model) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {

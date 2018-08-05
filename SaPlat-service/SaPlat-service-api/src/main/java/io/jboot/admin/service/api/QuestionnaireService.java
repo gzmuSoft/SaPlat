@@ -2,7 +2,9 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.Questionnaire;
+import io.jboot.admin.service.entity.model.QuestionnaireContent;
 
 import java.util.List;
 
@@ -16,6 +18,10 @@ public interface QuestionnaireService  {
      */
     public Questionnaire findById(Object id);
 
+    /**
+     * 事物回滚
+     */
+    public boolean saveQuestionnair(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
 
     /**
      * find all model
@@ -23,6 +29,15 @@ public interface QuestionnaireService  {
      * @return all <Questionnaire
      */
     public List<Questionnaire> findAll();
+
+    /**
+     * 分页查询
+     * @param model 条件
+     * @param pageNumber 页码
+     * @param pageSize 页面大小
+     * @return 页
+     */
+    public Page<Questionnaire> findPage(Questionnaire model, int pageNumber, int pageSize);
 
     /**
      * 根据当前项目ID判断是否有对应的问卷
@@ -91,4 +106,5 @@ public interface QuestionnaireService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }

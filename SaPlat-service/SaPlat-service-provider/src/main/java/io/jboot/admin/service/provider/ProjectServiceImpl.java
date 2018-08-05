@@ -98,12 +98,8 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             if (!model.saveOrUpdate()) {
                 return false;
             }
-            if (model.getId() == null && model.getName() != null && model.getBrief() != null) {
-                Columns columns = new Columns();
-                columns.eq("name", model.getName());
-                columns.eq("brief", model.getBrief());
-                authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
-            }
+            authProject.setProjectId(model.getId());
+
             return authProject.saveOrUpdate();
         });
     }
@@ -138,13 +134,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             if (!model.saveOrUpdate()) {
                 return false;
             }
-            if (model.getId() == null && model.getName() != null && model.getBrief() != null) {
-                Columns columns = new Columns();
-                columns.eq("name", model.getName());
-                columns.eq("brief", model.getBrief());
-                leaderGroup.setProjectID(DAO.findFirstByColumns(columns).getId());
-                authProject.setProjectId(DAO.findFirstByColumns(columns).getId());
-            }
+            leaderGroup.setProjectID(model.getId());
+            authProject.setProjectId(model.getId());
+
             return Db.tx(() -> authProject.saveOrUpdate() && leaderGroup.saveOrUpdate());
         });
     }
@@ -155,20 +147,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
-    public Long saveProject(Project model) {
-        if (Db.tx(() -> {
-            if (!model.save()) {
-                return false;
-            } else {
-                return true;
-            }
-        })) {
-            Columns columns = new Columns();
-            columns.eq("name", model.getName());
-            columns.eq("brief", model.getBrief());
-            return DAO.findFirstByColumns(columns).getId();
+    public Project saveProject(Project model) {
+        if (!model.save()) {
+            return model;
         } else {
-            return -1L;
+            return null;
         }
     }
 
