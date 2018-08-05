@@ -101,6 +101,14 @@ public interface ProjectFileTypeService  {
      */
     public List<ZTree> findTreeOnUse(Long parentID);
 
+    /**
+     * 通过名字和父级ID查找
+     * @param name 名字
+     * @param parentID  父级ID
+     * @return <ProjectFileType >
+     */
+    public ProjectFileType findByNameAndParentID(String name,Long parentID);
+
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);

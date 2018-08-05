@@ -315,7 +315,7 @@
                  * 加载文件列表
                  */
                 table.reload('dateTable', {
-                    url: '#(ctxPath)/app/project/fileTable?paTypeID=' + paTypeID
+                    url: '#(ctxPath)/app/project/fileTable?paTypeID=' + paTypeID + '&id=' + projectId
                 });
             } else if (this.id === "nextPage2") {
                 if (notNull_2()) {
