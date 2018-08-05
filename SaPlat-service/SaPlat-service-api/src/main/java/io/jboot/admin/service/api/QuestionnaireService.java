@@ -2,7 +2,9 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.Questionnaire;
+import io.jboot.admin.service.entity.model.QuestionnaireContent;
 
 import java.util.List;
 
@@ -16,6 +18,10 @@ public interface QuestionnaireService  {
      */
     public Questionnaire findById(Object id);
 
+    /**
+     * 事物回滚
+     */
+    public boolean saveQuestionnairen(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
 
     /**
      * find all model
