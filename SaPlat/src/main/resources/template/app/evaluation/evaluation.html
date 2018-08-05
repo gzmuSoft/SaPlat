@@ -37,7 +37,7 @@
             , util = layui.util;
         var evaScheme = '#(evaScheme)';
         var project = '#(project)';
-        var parent = 0;
+        var percent = 0;
         evaScheme = JSON.parse(evaScheme);
         project = JSON.parse(project);
         var flag = "true";
@@ -50,31 +50,34 @@
         } else if (evaScheme.status === "2") {
             layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
             add(flag, 1, 20);
-            add("#(siteSurveyExpertAdvice)", 1, 20);
-            add("#(diagnoses)", 1, 20);
-            add("#(fxqz)", 1, 12);
-            add("#(fxdj)", 1, 12);
-            add("#(pcfx)", 1, 12);
-            add("#(fxjl)", 1, 12);
-            add("#(sxfx)", 1, 12);
-            $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id);
+            add("#(siteSurveyExpertAdvice)", 15);
+            add("#(diagnoses)", 15);
+            add("#(fxqz)", 10);
+            add("#(fxdj)", 10);
+            add("#(pcfx)", 10);
+            add("#(fxjl)", 10);
+            add("#(sxfx)", 10);
+            setTimeout(function () {
+                element.progress('tip', percent + '%');
+                $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent);
+            },1500);
         } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
         }
 
-        function add(name, time, num) {
+        function add(name, num) {
             if (name !== flag) {
                 return;
             }
-            if (parent >= 100) {
+            if (percent >= 100) {
                 return;
             }
-            time = time * 1000;
-            setTimeout(function () {
-                parent += num;
-                element.progress('tip', parent + '%');
-            }, time);
+            percent += num;
+            if (percent > 100){
+                percent = 100;
+            }
+
         }
     });
 </script>
