@@ -298,13 +298,14 @@ public class ProjectController extends BaseController {
      * 立项中-文件列表表格渲染
      */
     public void fileTable() {
-        Long id = getParaToLong("id");
-        ProjectFileType projectFileType = new ProjectFileType();
-        projectFileType.setParentID(1L);
-        projectFileType.setIsEnable(true);
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<ProjectFileType> page = projectFileTypeService.findPage(projectFileType, pageNumber, pageSize);
+        Long id = getParaToLong("id");
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        ProjectFileType childProjectFileType = new ProjectFileType();
+        childProjectFileType.setParentID(parentProjectFileType.getId());
+        Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
                 page.getList().get(i).setIsUpLoad(true);
@@ -314,6 +315,7 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<ProjectFileType>(page));
     }
+
 
     /**
      * 立项中-保存
@@ -437,9 +439,11 @@ public class ProjectController extends BaseController {
      */
     public void judgeFile() {
         List<FileProject> fileProjects = fileProjectService.findAllByProjectID(getParaToLong("projectId"));
-        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(1L);
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        List<ProjectFileType> childProjectFileType = projectFileTypeService.findListByParentId(parentProjectFileType.getId());
         JSONObject json = new JSONObject();
-        if (projectFileTypes.size() == fileProjects.size()) {
+        if (childProjectFileType.size() == fileProjects.size()) {
             json.put("judgeFile", true);
             renderJson(json);
         } else {

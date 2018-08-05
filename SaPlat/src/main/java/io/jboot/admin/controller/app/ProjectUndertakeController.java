@@ -66,6 +66,9 @@ public class ProjectUndertakeController extends BaseController {
     @JbootrpcService
     private ScheduledPlanService scheduledPlanService;
 
+    @JbootrpcService
+    private FileFormService fileFormService;
+
     /**
      * 跳转榜单页面
      */
@@ -367,6 +370,9 @@ public class ProjectUndertakeController extends BaseController {
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
 
+        FileForm fileForm = fileFormService.findById(getParaToLong("fileFormId"));
+        fileForm.setStatus(true);
+
         List<ScheduledPlan> scheduledPlans = new ArrayList<>();
         for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
@@ -380,11 +386,37 @@ public class ProjectUndertakeController extends BaseController {
             scheduledPlan.setLastUpdateUserID(loginUser.getId());
             scheduledPlans.add(scheduledPlan);
         }
-        if (impTeamService.save(impTeam, evaScheme, scheduledPlans)) {
+        if (impTeamService.save(impTeam, evaScheme, scheduledPlans,fileForm)) {
             renderJson(RestResult.buildSuccess("保存成功"));
         } else {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
+        }
+    }
+
+    /**
+     * 稳评表资料上传
+     */
+    @NotNullPara({"fileId", "fieldName"})
+    public void upFile() {
+        User user = AuthUtils.getLoginUser();
+        FileForm fileForm = new FileForm();
+        fileForm.setFileID(getParaToLong("fileId"));
+        fileForm.setTableName("稳评方案");
+        fileForm.setFieldName(getPara("fieldName"));
+        fileForm.setStatus(false);
+        fileForm.setCreateTime(new Date());
+        fileForm.setLastAccessTime(new Date());
+        fileForm.setCreateUserID(user.getId());
+        fileForm.setLastUpdateUserID(user.getId());
+        FileForm newFileForm = fileFormService.saveAndGet(fileForm);
+        if (newFileForm == null) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        } else {
+            JSONObject json = new JSONObject();
+            json.put("fileFormId", newFileForm.getId());
+            renderJson(json);
         }
     }
 

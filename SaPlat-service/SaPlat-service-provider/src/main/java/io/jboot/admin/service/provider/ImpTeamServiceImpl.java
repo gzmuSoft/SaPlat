@@ -3,10 +3,7 @@ package io.jboot.admin.service.provider;
 import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.ImpTeamService;
-import io.jboot.admin.service.entity.model.EvaScheme;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.ImpTeam;
-import io.jboot.admin.service.entity.model.ScheduledPlan;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Column;
@@ -22,8 +19,6 @@ import java.util.List;
 @Singleton
 @JbootrpcService
 public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements ImpTeamService {
-    @Inject
-    private EvaSchemeService evaSchemeService;
 
     @Override
     public List<ImpTeam> findByUserID(Long id) {
@@ -55,21 +50,21 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
     }
 
     @Override
-    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans) {
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm) {
         return Db.tx(() -> {
             if (!evaScheme.save()) {
                 return false;
             }
             if (evaScheme.getProjectID() != null) {
-                System.out.println(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
                 for (ScheduledPlan scheduledPlan : scheduledPlans) {
-                    scheduledPlan.setEvaSchemeID(evaSchemeService.findByProjectID(evaScheme.getProjectID()).getId());
+                    scheduledPlan.setEvaSchemeID(evaScheme.getId());
                     if (!scheduledPlan.save()) {
                         return false;
                     }
                 }
             }
-            return Db.tx(model::save);
+            fileForm.setRecordID(evaScheme.getId());
+            return Db.tx(() -> model.save() && fileForm.update());
         });
     }
 
