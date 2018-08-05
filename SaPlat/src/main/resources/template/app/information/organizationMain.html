@@ -147,10 +147,11 @@
             data.field['project.brief'] = layedit.getContent(briefIndex);
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/questionnaire/add' + jointString(),
+                url: '#(ctxPath)/app/information/questionnaireAdd' + jointString(),
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
+                    window.location.href = document.referrer;
                 }
             });
             return false;
