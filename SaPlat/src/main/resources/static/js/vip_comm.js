@@ -104,7 +104,7 @@ layui.use(['layer', 'element', 'util','vip_nav'], function () {
         // 添加tab方法
         //window.addTab(elem);
         var id=elem.children("a").attr("id");
-        var url = '/system/res/menuLeft?parentID='+id;
+        var url = '/system/res/menuLeft?pid='+id;
         vipNav.main(url,'side-main',true);
     });
 
