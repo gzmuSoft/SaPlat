@@ -64,6 +64,9 @@ public class AuthController extends BaseController {
     @JbootrpcService
     private ReviewGroupService reviewGroupService;
 
+    @JbootrpcService
+    private FileFormService fileFormService;
+
 
 //    @JbootrpcService
 //    private ExpertGroupService expertGroupService;
@@ -93,7 +96,6 @@ public class AuthController extends BaseController {
         User user = userService.findById(auth.getUserId());
         Person person = personService.findById(user.getUserID());
         Organization organization = organizationService.findById(user.getUserID());
-
         if (!(auth.getType().equals(TypeStatus.ORGANIZATION) || auth.getType().equals(TypeStatus.PERSON))) {
             throw new BusinessException("请求参数非法");
         }
@@ -102,21 +104,29 @@ public class AuthController extends BaseController {
         if ("expertGroup".equals(role.getRemark())) {
             ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
             setAttr("person", person).setAttr("expertGroup", expertGroup).render("expertGroup.html");
-        } else if ("fac_agency".equals(role.getRemark())) {
+        } else if ("facAgency".equals(role.getRemark())) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("fac_agency", facAgency).render("fac_agency.html");
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","法人身份证照片",facAgency.getId());
+            setAttr("pictrue",fileForm.getFileID());
+            fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","维稳备案文件照片",facAgency.getId());
+            setAttr("regDocsFilePath",fileForm.getFileID());
+            setAttr("organization", organization).setAttr("facAgency", facAgency).render("fac_agency.html");
         } else if ("management".equals(role.getRemark())) {
             Management management = managementService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("management", management).render("management.html");
         } else if ("enterprise".equals(role.getRemark())) {
             Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("enterprise","法人身份证照片",enterprise.getId());
+            setAttr("pictrue",fileForm.getFileID());
             setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterprise.html");
-        } else if ("review_group".equals(role.getRemark())) {
+        } else if ("reviewGroup".equals(role.getRemark())) {
             ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("review_group", reviewGroup).render("review_group.html");
-        } else if ("prof_group".equals(role.getRemark())) {
+            setAttr("organization", organization).setAttr("reviewGroup", reviewGroup).render("review_group.html");
+        } else if ("profGroup".equals(role.getRemark())) {
             ProfGroup profGroup = profGroupService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("prof_group", profGroup).render("review_group.html");
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("profGroup","管理员身份证照片",profGroup.getId());
+            setAttr("identity",fileForm.getFileID());
+            setAttr("organization", organization).setAttr("profGroup", profGroup).render("prof_group.html");
         } else {
             throw new BusinessException("请求参数非法");
         }
