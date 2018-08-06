@@ -68,6 +68,21 @@ public class ProjectAuthController extends BaseController {
     @JbootrpcService
     private ReviewGroupService reviewGroupService;
 
+    @JbootrpcService
+    private FileFormService fileFormService;
+
+    @JbootrpcService
+    private ProjectService projectService;
+
+    @JbootrpcService
+    private ProjectStepService projectStepService;
+
+    @JbootrpcService
+    private LeaderGroupService leaderGroupService;
+
+    @JbootrpcService
+    private ProjectAssTypeService projectAssTypeService;
+
     @Before(GET.class)
     public void index() {
         render("main.html");
@@ -230,28 +245,81 @@ public class ProjectAuthController extends BaseController {
         if ("expertGroup".equals(role.getRemark())) {
             ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
             setAttr("person", person).setAttr("expertGroup", expertGroup).render("expertGroup.html");
-        } else if ("fac_agency".equals(role.getRemark())) {
+        } else if ("facAgency".equals(role.getRemark())) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("fac_agency", facAgency).render("fac_agency.html");
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","法人身份证照片",facAgency.getId());
+            setAttr("pictrue",fileForm.getFileID());
+            fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","维稳备案文件照片",facAgency.getId());
+            setAttr("regDocsFilePath",fileForm.getFileID());
+            setAttr("organization", organization).setAttr("facAgency", facAgency).render("fac_agency.html");
         } else if ("management".equals(role.getRemark())) {
             Management management = managementService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("management", management).render("management.html");
         } else if ("enterprise".equals(role.getRemark())) {
             Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("enterprise","法人身份证照片",enterprise.getId());
+            setAttr("pictrue",fileForm.getFileID());
             setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterprise.html");
-        } else if ("review_group".equals(role.getRemark())) {
+        } else if ("reviewGroup".equals(role.getRemark())) {
             ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("review_group", reviewGroup).render("review_group.html");
-        } else if ("prof_group".equals(role.getRemark())) {
+            setAttr("organization", organization).setAttr("reviewGroup", reviewGroup).render("review_group.html");
+        } else if ("profGroup".equals(role.getRemark())) {
             ProfGroup profGroup = profGroupService.findByOrgId(organization.getId());
-            setAttr("organization", organization).setAttr("prof_group", profGroup).render("review_group.html");
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("profGroup","管理员身份证照片",profGroup.getId());
+            setAttr("identity",fileForm.getFileID());
+            setAttr("organization", organization).setAttr("profGroup", profGroup).render("prof_group.html");
         } else {
             throw new BusinessException("请求参数非法");
         }
     }
-//
-//    @Before(GET.class)
-//    @NotNullPara("id")
-//    public void dataView() {
-//    }
+
+    @Before(GET.class)
+    @NotNullPara("id")
+    public void dataView() {
+        Long id = getParaToLong("id");
+        Project project = projectService.findById(id);
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
+        if (leaderGroup == null) {
+            leaderGroup = new LeaderGroup();
+        }
+//        List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
+        List<ProjectStep> projectStepList = projectStepService.findAll();
+//        List<String> roleNameList = new ArrayList<>();
+//        for (int i = 0; i < authList.size(); i++) {
+//            roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
+//        }
+        String paTypeName = projectAssTypeService.findById(project.getPaTypeID()).getName();
+        String pStepName = projectStepService.findById(project.getPStepID()).getName();
+        int i = 0;
+        for (ProjectAssType p : PaTypeList) {
+            if (p.getName().equals(paTypeName)) {
+                PaTypeList.remove(i);
+                break;
+            }
+            i++;
+        }
+        i = 0;
+        for (ProjectStep p : projectStepList) {
+            if (p.getName().equals(pStepName)) {
+                projectStepList.remove(i);
+                break;
+            }
+            i++;
+        }
+//        i = 0;
+//        for (String p : roleNameList) {
+//            if (p.equals(project.getRoleName())) {
+//                roleNameList.remove(i);
+//                break;
+//            }
+//            i++;
+//        }
+        setAttr("paTypeName", paTypeName).setAttr("pStepName", pStepName)
+                .setAttr("paTypeId", project.getPaTypeID()).setAttr("pStepId", project.getPStepID())
+                .setAttr("projectID", id)
+                .setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList)
+                .setAttr("project", project).setAttr("leaderGroup", leaderGroup)
+                .render("project.html");
+    }
 }

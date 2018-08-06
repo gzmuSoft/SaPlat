@@ -11,6 +11,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -158,7 +159,8 @@ public class FileUploadController extends BaseController {
             throw new BusinessException("没有此项目权限");
         }
         fileProject.setIsEnable(true);
-        if (!fileProjectService.update(fileProject)) {
+        project.setStatus(ProjectStatus.REVIEW);
+        if (!fileProjectService.updateFileProjectAndProject(fileProject,project)) {
             throw new BusinessException("提交失败");
         }
         renderJson(RestResult.buildSuccess());

@@ -1,0 +1,117 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
+        <legend style="font-size: 20px;font-weight: 500;">服务机构认证</legend>
+    </fieldset>
+    <br/>
+
+    <form class="layui-form">
+        <h2>项目基本资料</h2>
+        <hr class="layui-bg-red">
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>项目名称：</label>
+                    <div class="layui-input-block">
+                        <p>#(project.name)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>预计金额：</label>
+                    <div class="layui-input-block">
+                        <p>#(project.amount)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>角色名称：</label>
+                    <div class="layui-input-block">
+                        <p>#(project.roleName)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>项目评估类型：</label>
+                    <div class="layui-input-block">
+                        <p>#(paTypeName)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>项目阶段：</label>
+                    <div class="layui-input-block">
+                        <p>#(pStepName)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>地 址：</label>
+                    <div class="layui-input-block">
+                        <p>#(project.site)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md8">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require-mark">*</em>评估方式：</label>
+                    <p>#(project.assessmentMode)</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><em class="require-mark">*</em>项目简介：</label>
+            <div class="layui-input-block">
+                <p>#(project.brief)</p>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+#end
+
+
+#define js()
+<script type="text/javascript">
+
+    layui.use(['table', 'layer','jquery','form'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        $("button").click(function () {
+            pop_show('查看图片', '#(ctxPath)/util/pdfView?fileID='+$(this).val(),'', '', function () {
+            });
+        })
+    });
+</script>
+#end

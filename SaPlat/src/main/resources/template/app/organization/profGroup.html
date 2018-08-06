@@ -161,16 +161,18 @@
         });
 
         form.on('submit(sub)', function (data) {
+            if(isNaN(parseInt(fileFromID))){
+                layer.msg("您的文件还没有上传,请上传后再提交");
+                return false;
+            }
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/organization/profGroupProve',
+                url: '#(ctxPath)/app/organization/profGroupProve?fileFromID=' + fileFromID,
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
-                    window.location.href = '#(ctxPath)/app/organization/prove?fileFromID=' + fileFromID;
-                    setTimeout(function () {
-                        return true;
-                    }, 3000);
+                    window.location.href = '#(ctxPath)/app/organization/prove';
+                    return true;
                 },
                 error: function (data) {
                     console.log(data);

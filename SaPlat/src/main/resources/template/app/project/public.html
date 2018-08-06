@@ -53,19 +53,19 @@
 
             <!--隐藏id-->
             <input type="text" id="id" name="id"
-                   class="layui-input layui-disabled layui-hide" value="#(id)" required/>
+                   class="layui-input layui-disabled layui-hide" value="#(id)"/>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">发起日期</label>
                 <div class="layui-input-inline">
-                    <input type="date" id="publicTime" name="publicTime" class="layui-input" required/>
+                    <input type="date" id="publicTime" name="publicTime" class="layui-input" lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">截止日期</label>
                 <div class="layui-input-inline">
-                    <input type="date" id="endTime" name="endTime" class="layui-input" required/>
+                    <input type="date" id="endTime" name="endTime" class="layui-input" lay-verify="required"/>
                 </div>
             </div>
 

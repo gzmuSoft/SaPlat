@@ -137,23 +137,32 @@ public class OrganizationController extends BaseController {
             }
             model.setStatus(false);
         } else if (tableName.equals("facAgency")) {
-            Long id = facAgencyService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            FacAgency facAgency=facAgencyService.findByOrgId(loginUser.getUserID());
+            if(facAgency!=null){
+                Long id =facAgency.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("enterprise")) {
-            Long id = enterpriseService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            Enterprise enterprise=enterpriseService.findByOrgId(loginUser.getUserID());
+            if(enterprise!=null){
+                Long id =enterprise.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("profGroup")) {
-            Long id = profGroupService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            ProfGroup profGroup=profGroupService.findByOrgId(loginUser.getUserID());
+            if(profGroup!=null){
+                Long id =profGroup.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
@@ -261,7 +270,7 @@ public class OrganizationController extends BaseController {
             model = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -333,7 +342,7 @@ public class OrganizationController extends BaseController {
             model = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -416,7 +425,7 @@ public class OrganizationController extends BaseController {
             model = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
                     .setAttr("flag", 0).render("facAgency.html");
         } else {
@@ -511,7 +520,7 @@ public class OrganizationController extends BaseController {
             model = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
                     .setAttr("flag", 0).render("profGroup.html");
         } else {
@@ -594,7 +603,7 @@ public class OrganizationController extends BaseController {
             model = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)
                     .setAttr("flag", 0).render("reviewGroup.html");
         } else {
