@@ -28,18 +28,21 @@
             $('#uploadBtn1').click();
             if (file1 == "") {
                 layer.msg("工作证件照片上传失败，请重新选择上传！");
-                return;
+                return false;
             }
             if (file2 == "") {
                 layer.msg("专业资格证书上传失败，请重新选择上传！");
-                return;
+                return false;
             }
-            data.field.file1 = file1;
-            data.field.file2 = file2;
+
+            data.field['expertGroup.workpictrue'] = file1;
+            data.field['expertGroup.certificate'] = file2;
             console.log(data.field);
             $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
                 layer.msg("成功！");
-                console.log(res);
+                setTimeout(function () {
+                    window.location.href = document.referrer;
+                },1000);
             });
             // console.log(data);
             // console.log(data.field);
@@ -81,13 +84,13 @@
         });
 
         $('#back').click(function () {
-            window.location.href = "#(ctxPath)/app/person/expertGroup"
+            window.location.href = document.referrer;
         });
 
 
         upload.render({
             elem: '#upload1'
-            , url: '#(ctxPath)/app/person/upload'
+            , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
             //,multiple: true
             , exts: 'pdf'
@@ -97,19 +100,20 @@
             , done: function (res) {
                 console.log(res);
                 if (res.code == 0) {
-                    file1 = res.file;
+                    layer.msg("工作证件照片上传成功");
+                    file1 = res.data.fileId;
                 } else if (res.code == 1) {
-                    layer.msg("文件上传失败，请重新选择上传！");
+                    layer.msg("工作证件照片文件上传错误，请重新选择上传！");
                 }
             }
             , error: function (index, upload) {
-                alert("文件上传错误！请重新尝试！");
+                alert("工作证件照片文件上传错误！请重新尝试！");
             }
         });
 
         upload.render({
             elem: '#upload2'
-            , url: '#(ctxPath)/app/person/upload'
+            , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
             //,multiple: true
             , exts: 'pdf'
@@ -118,18 +122,22 @@
             }
             , done: function (res) {
                 if (res.code == 0) {
-                    file2 = res.file;
-                    console.log(res);
+                    layer.msg("专业资格证书上传成功");
+                    file2 = res.data.fileId;
                 } else if (res.code == 1) {
-                    layer.msg("文件上传失败，请重新选择上传！");
+                    layer.msg("专业资格证书文件上传失败，请重新选择上传！");
                 }
             }
             , error: function (index, upload) {
-                alert("文件上传错误！请重新尝试！");
+                alert("专业资格证书文件上传错误！请重新尝试！");
             }
         });
 
 
+        var flag = "#(flag)";
+        if (flag === "true"){
+            $('#sub').remove();
+        }
     });
 
 
