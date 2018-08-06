@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.FileForm;
+import io.jboot.admin.service.entity.model.Files;
 
 import java.util.List;
 
@@ -24,6 +25,15 @@ public interface FileFormService {
      */
     public List<FileForm> findAll();
 
+    /**
+     * find  model by tableName and recordID and fieldName
+     *
+     * @param tableName
+     * @param fieldName
+     * @param recordID
+     * @return
+     */
+    public FileForm findFirstByTableNameAndRecordIDAndFileName(String tableName, String fieldName, Long recordID);
 
     /**
      * delete model by primary key
@@ -67,7 +77,14 @@ public interface FileFormService {
      */
     public boolean saveOrUpdate(FileForm model);
 
-
+    /**
+     * save or update model
+     *
+     * @param model
+     * @param files
+     * @return
+     */
+    public FileForm saveOrUpdateAndGet(FileForm model, Files files);
     /**
      * update data model
      *

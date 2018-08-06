@@ -22,22 +22,6 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="upload"><em class="require-mark">*</em>营业执照或相关文件</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload">
-                        <div class="layui-upload">
-                            <button type="button" class="layui-btn" name="upload" id="upload"><i
-                                    class="layui-icon"></i>上传文件
-                            </button>
-                            <label class="layui-hide" for="organization.certificate"></label>
-                            <input type="text" class="layui-hide" name="organization.certificate"
-                                   id="organization.certificate">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            z
-            <div class="layui-form-item">
                 <label class="layui-form-label" for="management.name">管理机构名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="management.name" name="management.name" value="#(organization.name)"
@@ -155,24 +139,10 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'upload'], function () {
+    layui.use(['form', 'layer'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , upload = layui.upload;
-
-
-        upload.render({ //允许上传的文件后缀
-            elem: '#upload'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'pdf' //只允许上传压缩文件
-            , done: function (res) {
-                $("#organization.certificate").text(res.path);
-                $("#organization.certificate").val(res.path);
-                $("#organization.certificate").html(res.path);
-            }
-        });
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
