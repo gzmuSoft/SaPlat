@@ -69,6 +69,10 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ProjectFileTypeService projectFileTypeService;
 
+    @JbootrpcService
+    private ExpertGroupService expertGroupService;
+
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -448,7 +452,7 @@ public class ProjectController extends BaseController {
         ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
         List<ProjectFileType> childProjectFileType = projectFileTypeService.findListByParentId(parentProjectFileType.getId());
         JSONObject json = new JSONObject();
-        if (childProjectFileType.size() == fileProjects.size()) {
+        if (childProjectFileType == null || childProjectFileType.size() == fileProjects.size()) {
             json.put("judgeFile", true);
             renderJson(json);
         } else {
@@ -552,7 +556,7 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 通往项目管理界面-已评估
+     * 通往项目管理界面-已评估（待审查）
      */
     public void review() {
         render("review.html");
@@ -560,7 +564,7 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 项目管理界面-评估完成-表格渲染
+     * 项目管理界面-待审查-表格渲染
      */
     public void reviewTable() {
         User loginUser = AuthUtils.getLoginUser();
@@ -671,4 +675,38 @@ public class ProjectController extends BaseController {
     }
 
 
+    /**
+     * 邀请审查
+     */
+    @NotNullPara({"id", "projectId"})
+    public void inviteReview() {
+        User user = AuthUtils.getLoginUser();
+        Notification notification = new Notification();
+        notification.setName("项目邀请审查通知");
+        notification.setSource("/app/project/inviteReview");
+        notification.setContent("您好, " + user.getName() + " 邀请您介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查，请及时处理！");
+        notification.setReceiverID(userService.findByUserIdAndUserSource(expertGroupService.findById(getParaToLong("id")).getPersonID(), 0L).getId().intValue());
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());
+        projectUndertake.setCreateUserID(user.getId());
+        projectUndertake.setProjectID(getParaToLong("projectId"));
+        projectUndertake.setFacAgencyID(getParaToLong("id"));
+        projectUndertake.setApplyOrInvite(true);
+        projectUndertake.setStatus(0);
+        projectUndertake.setCreateTime(new Date());
+        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndPublicTime());
+        projectUndertake.setLastAccessTime(new Date());
+        projectUndertake.setLastUpdateUserID(user.getId());
+        projectUndertake.setIsEnable(true);
+        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
+            throw new BusinessException("邀请失败");
+        }
+    }
 }
