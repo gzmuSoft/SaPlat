@@ -46,9 +46,11 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'edit') {
+            if (obj.event === 'editfile') {
+                window.location.href = '#(ctxPath)/system/projectfiletype/file?id=' + data.id;
+            }else if (obj.event === 'edit') {
                 pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
-                    reloadTable(null);
+                    window.location.reload();
                 });
             } else if (obj.event === 'use') {
                 util.sendAjax({
@@ -57,7 +59,7 @@
                     data: {id: data.id},
                     loadFlag: true,
                     success: function (data) {
-                        reloadTable($('#name').val());
+                        window.location.reload();
                     }
                 });
             } else if (obj.event === 'unuse') {
@@ -69,7 +71,7 @@
                         loadFlag: true,
                         success: function (data) {
                             layer.close(index);
-                            reloadTable(null);
+                            window.location.reload();
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -80,12 +82,13 @@
         });
         $("#add").click(function () {
             pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
-                reloadTable(null);
+                window.location.reload();
             });
         });
 
         $("#back").click(function () {
-            window.location.href = '#(ctxPath)/system/projectfiletype/index';
+//            window.location.href = '#(ctxPath)/system/projectfiletype/index';
+            history.go(-1);
         });
 
 
@@ -142,6 +145,10 @@
 <script type="text/html" id="barOption">
     #shiroHasPermission('/system/projectfiletype/update')
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    #end
+
+    #shiroHasPermission('/system/projectfiletype/file')
+    <a class="layui-btn layui-btn-xs" lay-event="editfile">设定文件列表</a>
     #end
 
     #[[
