@@ -50,7 +50,7 @@ public class UtilController extends BaseController {
         files.setCreateTime(new Date());
         files.setDescription(description);
         files.setCreateUserID(AuthUtils.getLoginUser().getId());
-        files.setIsEnable(true);
+        files.setIsEnable(false);
         files.setPath(fileUrl);
         files.setSize(file.length());
         files.setType(type);

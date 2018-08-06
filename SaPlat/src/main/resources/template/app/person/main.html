@@ -3,7 +3,10 @@
 
 #define css()
 <style>
-
+    .layui-input-inline p{
+        text-align: center;
+        line-height: 3;
+    }
 </style>
 #end
 
@@ -28,12 +31,12 @@
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/person/postUpdate',
-                data: $.param(data.field),
+                data: $('#person').serialize(),
                 loadFlag: true,
                 success: function (data) {
                     layer.msg('编辑成功');
                     $(".layui-btn").addClass("layui-hide");
-                    $("#edit").removeClass("layui-hide");
+                    $("#perfect").removeClass("layui-hide");
                     $(":input").addClass("layui-disabled").prop("disabled", "disabled");
                     setTimeout(function () {
                         return true;
@@ -48,14 +51,32 @@
 
 
         $('#reset').click(function () {
-            history.back(-1);
+            window.location.reload();
         });
 
+
+        $(".layui-btn").addClass("layui-hide");
+        $(":input").addClass("layui-disabled").prop("disabled", "disabled");
         $('#perfect').click(function () {
-            //$(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
+            $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
             return false;
+        }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled","");
+
+        // $(".layui-select-title").unbind();
+
+        form.verify({
+            duty: function(value, item){
+                if (value === "" || value.trim() === ""){
+                    return "请选择 工作信息 - 职务"
+                }
+            },
+            occupation: function (value, item) {
+                if (value === "" || value.trim() === ""){
+                    return "请选择 工作信息 - 职业"
+                }
+            }
         });
     });
 </script>
@@ -121,7 +142,7 @@
                             <div class="layui-input-inline">
                                 <input type="hidden" id="nationalitySelected" name="nationalitySelected"
                                        value="#(affectedGroup.nationalityID)"/>
-                                <select id="affectedGroup.nationality" name="affectedGroup.nationality"
+                                <select id="affectedGroup.nationality" name="affectedGroup.nationalityID"
                                         lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(contryStatus);
@@ -134,7 +155,7 @@
                             <div class="layui-input-inline">
                                 <input type="hidden" id="nationSelected" name="nationSelected"
                                        value="#(affectedGroup.nationID)"/>
-                                <select id="affectedGroup.nation" name="affectedGroup.nation" lay-verify="required">
+                                <select id="affectedGroup.nation" name="affectedGroup.nationID" lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(nationStatus);
                                 </select>
@@ -146,7 +167,7 @@
                             <div class="layui-input-inline">
                                 <input type="hidden" id="politicsSelected" name="politicsSelected"
                                        value="#(affectedGroup.politicsID)"/>
-                                <select id="affectedGroup.politics" name="affectedGroup.politics" lay-verify="required">
+                                <select id="affectedGroup.politics" name="affectedGroup.politicsID" lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(politicalOpts);
                                 </select>
@@ -158,7 +179,7 @@
                             <div class="layui-input-inline">
                                 <input type="hidden" id="educationSelected" name="educationSelected"
                                        value="#(affectedGroup.educationID)"/>
-                                <select id="affectedGroup.education" name="affectedGroup.education"
+                                <select id="affectedGroup.education" name="affectedGroup.educationID"
                                         lay-verify="required">
                                     <option value=""></option>
                                     #statusOption(educationalStatus);
@@ -193,10 +214,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="occupationSelected" name="occupationSelected"
-                                       value="#(affectedGroup.occupationID)"/>
                                 <select id="affectedGroup.occupation" name="affectedGroup.occupation"
-                                        lay-verify="required">
+                                        lay-verify="occupation">
                                     <option value=""></option>
                                     #statusOption(occupationOpts);
                                 </select>
@@ -205,10 +224,8 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.duty">职务</label>
                             <div class="layui-input-inline">
-                                <input type="hidden" id="dutySelected" name="dutySelected"
-                                       value="#(affectedGroup.dutyID)"/>
-                                <select id="affectedGroup.duty" name="affectedGroup.duty"
-                                        lay-verify="required">
+                                <select id="affectedGroup.duty" name="affectedGroup.dutyID"
+                                        lay-verify="duty">
                                     <option value=""></option>
                                     #statusOption(postStatus);
                                 </select>

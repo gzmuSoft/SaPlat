@@ -20,7 +20,10 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -188,9 +191,8 @@ public class InformationController extends BaseController {
             Organization organization = organizationService.findById(userService.findById(project.getUserId()).getUserID());
             name = organization.getName();
         } else {
-            ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(projectID);
-            //项目为承接时
-            if (!ProjectUndertakeStatus.UNDERTAKE.equals(projectUndertake.getStatus().toString())) {
+            ProjectUndertake projectUndertake = projectUndertakeService.findListByProjectAndStatus(projectID, ProjectUndertakeStatus.ACCEPT).get(0);
+            if (projectUndertake == null) {
                 renderJson(RestResult.buildError("項目还不能填写资料"));
                 throw new BusinessException("項目还不能填写资料");
             }
@@ -278,15 +280,14 @@ public class InformationController extends BaseController {
     @Before(GET.class)
     @NotNullPara("projectID")
     public void diagnoses() {
-        Long diagnosesID=getParaToLong("id");
+        Long diagnosesID = getParaToLong("id");
         Diagnoses diagnoses;
-        if(diagnosesID==null){
-            diagnoses=new Diagnoses();
+        if (diagnosesID == null) {
+            diagnoses = new Diagnoses();
+        } else {
+            diagnoses = diagnosesService.findById(diagnosesID);
         }
-        else{
-            diagnoses=diagnosesService.findById(diagnosesID);
-        }
-        setAttr("diagnoses",diagnoses);
+        setAttr("diagnoses", diagnoses);
         Project project = projectService.findById(getParaToLong("projectID"));
         if (project == null) {
             throw new BusinessException("没有此项目");
@@ -352,7 +353,7 @@ public class InformationController extends BaseController {
         if (diagnoses == null) {
             throw new BusinessException("删除失败");
         }
-        if (!diagnoses.delete()) {
+        if (!diagnosesService.delete(diagnoses)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -362,15 +363,15 @@ public class InformationController extends BaseController {
     /**
      * 调查问卷数据表格
      */
-    public void questionnaireDataTable(){
+    public void questionnaireDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long projectId = getParaToLong("id");
         Questionnaire questionnaire = new Questionnaire();
-        Page<Questionnaire> page = questionnaireService.findPage(questionnaire,pageNumber, pageSize);
+        Page<Questionnaire> page = questionnaireService.findPage(questionnaire, pageNumber, pageSize);
         page.getList().forEach(p -> {
             StringBuilder sb = new StringBuilder();
-            if (p.getType() == 1){
+            if (p.getType() == 1) {
                 sb.append("调查对象：单位");
             } else {
                 sb.append("调查对象：个人");

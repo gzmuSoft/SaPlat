@@ -158,13 +158,6 @@ public class PersonController extends BaseController {
     }
 
     /**
-     * 注册页面
-     */
-    public void register() {
-        render("template/register.html");
-    }
-
-    /**
      * 注册方法
      */
     @Before({POST.class, PersonRegisterValidator.class})
@@ -186,45 +179,6 @@ public class PersonController extends BaseController {
             throw new BusinessException("用户保存失败");
         }
         renderJson(RestResult.buildSuccess());
-    }
-
-    /**
-     * 文件上传
-     */
-    @Before(POST.class)
-    public void upload() {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-dd").format(new Date()));
-        String description = getPara("description");
-        File file = upload.getFile();
-        String oldName = file.getName();
-        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
-        String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        File newFile = new File(path + "\\" + UUID.randomUUID() + "." + type);
-        if (!file.renameTo(newFile)) {
-            if (file.delete()) {
-                renderJson(RestResult.buildError("文件上传失败，请重新尝试！501"));
-                throw new BusinessException("文件上传失败，请重新尝试！501");
-            }
-            renderJson(RestResult.buildError("文件上传失败，请重新尝试！502"));
-            throw new BusinessException("文件上传失败，请重新尝试！502");
-        }
-        Files files = new Files();
-        files.setName(oldName);
-        files.setCreateTime(new Date());
-        files.setDescription(description);
-        files.setCreateUserID(AuthUtils.getLoginUser().getId());
-        files.setIsEnable(false);
-        files.setPath(newFile.getName());
-        files.setSize(file.length());
-        files.setType(type);
-        if (!filesService.save(files)) {
-            renderJson(RestResult.buildError("文件上传失败，请重新尝试！503"));
-            throw new BusinessException("文件上传失败，请重新尝试！503");
-        }
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-        map.put("file", files.getPath());
-        map.put("code", ResultCode.SUCCESS);
-        renderJson(map);
     }
 
 
@@ -270,8 +224,11 @@ public class PersonController extends BaseController {
         if (expertGroup != null) {
             auth = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
         }
+        Person person = personService.findByUser(user);
+        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
         setAttr("auth", auth);
         setAttr("expertGroup", expertGroup);
+        setAttr("affectedGroup",affectedGroup);
         render("expertGroup.html");
     }
 
@@ -284,16 +241,9 @@ public class PersonController extends BaseController {
         ExpertGroup expertGroup = expertGroupService.findByPersonId(person.getId());
         if (expertGroup == null) {
             expertGroup = new ExpertGroup();
-        } else if (StringUtils.isNotBlank(expertGroup.getWorkpictrue())
-                && StringUtils.isNotBlank(expertGroup.getCertificate())) {
-            Files file1 = filesService.findById(Integer.parseInt(expertGroup.getWorkpictrue()));
-            Files file2 = filesService.findById(Integer.parseInt(expertGroup.getCertificate()));
-            file1.setIsEnable(false);
-            file2.setIsEnable(false);
-            if (!filesService.update(file1) || !filesService.update(file2)) {
-                renderJson(RestResult.buildError("用户资料失败"));
-                throw new BusinessException("用户资料失败");
-            }
+            setAttr("flag", "false");
+        } else {
+            setAttr("flag", "true");
         }
         setAttr("user", user)
                 .setAttr("person", person)
@@ -327,13 +277,15 @@ public class PersonController extends BaseController {
             }
             expertGroup.setId(name.getId());
         }
-        String file1Path = getPara("file1");
-        String file2Path = getPara("file2");
-
-        List<Files> files = filesService.findByPath(file1Path, file2Path);
-        files.forEach(file -> file.setIsEnable(true));
-        expertGroup.setCertificate(String.valueOf(files.get(0).getId()));
-        expertGroup.setWorkpictrue(String.valueOf(files.get(1).getId()));
+        int file1 = Integer.parseInt(expertGroup.getWorkpictrue());
+        int file2 = Integer.parseInt(expertGroup.getCertificate());
+        Files files1 = filesService.findById(file1);
+        Files files2 = filesService.findById(file2);
+        files1.setIsEnable(true);
+        files2.setIsEnable(true);
+        List<Files> files = Collections.synchronizedList(new ArrayList<>());
+        files.add(files1);
+        files.add(files2);
         Auth auth = new Auth();
         auth.setUserId(user.getId());
         auth.setName(user.getName());

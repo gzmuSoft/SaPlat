@@ -10,7 +10,7 @@ import io.jboot.admin.service.entity.model.base.BaseAffectedGroup;
 @Table(tableName = "affected_group", primaryKey = "id")
 public class AffectedGroup extends BaseAffectedGroup<AffectedGroup> {
     public void setStatus(java.lang.String status) {
-        if (status == DataStatus.USED) {
+        if (status.equals(DataStatus.USED)) {
             setIsEnable(true);
         } else {
             setIsEnable(false);
@@ -18,7 +18,7 @@ public class AffectedGroup extends BaseAffectedGroup<AffectedGroup> {
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if(this.getIsEnable())
             return DataStatus.USED;
         else
             return DataStatus.UNUSED;

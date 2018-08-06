@@ -44,7 +44,7 @@ public class FileUploadController extends BaseController {
 
 
     @Before(GET.class)
-    @NotNullPara({"id", "projectID"})
+    @NotNullPara({"projectID"})
     public void index() {
         Long projectID = getParaToLong("projectID");
         Project project = projectService.findById(projectID);
@@ -52,7 +52,8 @@ public class FileUploadController extends BaseController {
             throw new BusinessException("没有此项目权限");
         }
         setAttr("projectID", getParaToLong("projectID"));
-        setAttr("parentID", getParaToLong("id"));
+        ProjectFileType projectFileType = projectFileTypeService.findByNameAndParentID("评估文件", -1L);
+        setAttr("parentID", projectFileType.getId());
         render("main.html");
     }
 
