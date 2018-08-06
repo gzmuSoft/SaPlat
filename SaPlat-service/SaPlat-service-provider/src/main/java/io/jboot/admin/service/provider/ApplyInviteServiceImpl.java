@@ -42,6 +42,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     public Page<ApplyInvite> findApplyByUserIdOrName(int pageNumber,int pageSize,ApplyInvite applyInvite){
         Columns columns = Columns.create();
         columns.eq("belongToID",applyInvite.getBelongToID());
+        columns.eq("module",0);
         columns.eq("applyOrInvite",0);
         if(applyInvite.getUserID() != null){
             columns.eq("userID",applyInvite.getUserID());
