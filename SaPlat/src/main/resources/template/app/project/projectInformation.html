@@ -201,9 +201,10 @@
             var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
             if (obj.event === 'upload') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
-                    table.reload('dateTable', {
+                    setTimeout(function(){table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/fileTable?id=' + projectId + '&paTypeID=' + paTypeID
-                    });
+                    })},1000);
+
                 });
             }
         });
