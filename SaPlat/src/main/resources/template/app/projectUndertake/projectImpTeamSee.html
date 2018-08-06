@@ -1,0 +1,224 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+
+    h3 {
+        font-weight: bold;
+    }
+</style>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="impTeam" class="layui-form">
+        <h2>项目简介</h2>
+        <hr class="layui-bg-red">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <h3>项目名称:</h3>
+                <div>
+                    <span>#(project.name)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>角色名称:</h3>
+                <div>
+                    <span>#(project.roleName)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>预计金额:</h3>
+                <div>
+                    <span>#(project.amount)元</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>地址:</h3>
+                <div>
+                    <span>#(project.site)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>简介:</h3>
+                <div>
+                    <span>#(project.brief)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">委托第三方机构评估实施/自我评估实施</h2>
+        <hr class="layui-bg-orange">
+        <div class="layui-input-inline">
+            <h3>当前项目为：#(project.assessmentMode)</h3>
+        </div>
+
+        <h2 style="margin-top: 50px;">领导小组名单</h2>
+        <hr class="layui-bg-blue">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <h3>组长:</h3>
+                <div>
+                    <span>#(leaderGroup.leader)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>副组长:</h3>
+                <div>
+                    <span>#(leaderGroup.deputy)</span>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <h3>组员:</h3>
+                <div>
+                    <span>#(leaderGroup.crew)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">实施小组建立</h2>
+        <hr class="layui-bg-green">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名</label>
+                <div class="layui-input-inline">
+                    <p>#(project.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">小组名称</label>
+                <div class="layui-input-inline">
+                    <p>#(impTeam.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">组长</label>
+                <div class="layui-input-inline">
+                    <p>#(leader)</p>
+                </div>
+                <label class="layui-form-label">副组长</label>
+                <div class="layui-input-inline">
+                    <p>
+                        #for(asLeaderGroup : asLeaderGroups)
+                        #(asLeaderGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #end
+                    </p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">专家成员</label>
+                <div class="layui-input-inline">
+                    <p>
+                        #for(expertGroup : expertGroups)
+                        #(expertGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #end
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">现场调查成员</label>
+                <div class="layui-input-inline">
+                    <p>
+                        #for(invTeam : invTeams)
+                        #(invTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #end
+                    </p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">报告编制成员</label>
+                <div class="layui-input-inline">
+                    <p>
+                        #for(repTeam : repTeams)
+                        #(repTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #end
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 50px;">方案依据填写</h2>
+        <hr class="layui-bg-red">
+        <label for="gist"></label>
+        <textarea id="gist" name="EvaScheme.gist" style="display: none;">
+
+        </textarea>
+
+        <h2 style="margin-top: 50px;">风险评估工作拟采取的工作方式填写</h2>
+        <hr class="layui-bg-orange">
+        <label></label>
+        <p>#(evaScheme.method)</p>
+
+        <h2 style="margin-top: 50px;">工作要求填写</h2>
+        <hr class="layui-bg-blue">
+        <label></label>
+        <p>#(evaScheme.demand)</p>
+
+        <h2 style="margin-top: 50px;">具体措施填写</h2>
+        <hr class="layui-bg-green">
+        <label></label>
+        <p>#(evaScheme.measure)</p>
+
+        <h2 style="margin-top: 50px;">风险评估工作时间安排和进度计划表填写</h2>
+        <p class="layui-form-mid layui-word-aux">首行不可操作</p>
+        <hr class="layui-bg-black">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 100px">总开始时间：</label>
+            <div class="layui-input-inline">
+                <p>#(evaScheme.startDate)</p>
+            </div>
+
+            <label class="layui-form-label" style="width: 100px">总结束时间：</label>
+            <div class="layui-input-inline">
+                <p>#(evaScheme.endDate)</p>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item x-center" style="margin-top: 50px;">
+            <div class="layui-input-block">
+                #for(scheduledPlan : scheduledPlans)
+                <p>
+                    名称：#(scheduledPlan.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                    起始时间：#(scheduledPlan.startDate) &nbsp;&nbsp;&nbsp;&nbsp;
+                    结束时间：#(scheduledPlan.endDate) &nbsp;&nbsp;&nbsp;&nbsp;
+                    内容：#(scheduledPlan.content)
+                </p>
+                #end
+            </div>
+        </div>
+        <button type="button" class="layui-btn layui-icon" id="back">返回</button>
+    </form>
+</div>
+#end
+
+#define js()
+
+
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table', 'upload'], function () {
+        /**
+         *  操作对象
+         */
+        var layer = layui.layer;
+        $('#back').click(function () {
+            window.location.href = document.referrer;
+        })
+    });
+</script>
+#end

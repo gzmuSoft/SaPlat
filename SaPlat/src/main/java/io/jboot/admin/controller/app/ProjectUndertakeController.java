@@ -12,6 +12,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -19,9 +20,7 @@ import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @RequestMapping("/app/projectUndertake")
@@ -68,6 +67,9 @@ public class ProjectUndertakeController extends BaseController {
 
     @JbootrpcService
     private FileFormService fileFormService;
+
+    @JbootrpcService
+    private FilesService filesService;
 
     /**
      * 跳转榜单页面
@@ -386,7 +388,7 @@ public class ProjectUndertakeController extends BaseController {
             scheduledPlan.setLastUpdateUserID(loginUser.getId());
             scheduledPlans.add(scheduledPlan);
         }
-        if (impTeamService.save(impTeam, evaScheme, scheduledPlans,fileForm)) {
+        if (impTeamService.save(impTeam, evaScheme, scheduledPlans, fileForm)) {
             renderJson(RestResult.buildSuccess("保存成功"));
         } else {
             renderJson(RestResult.buildError("保存失败"));
@@ -455,4 +457,134 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("保存失败");
         }
     }
+
+
+    /**
+     * 管理机构对前期资料进行审核页面跳转
+     */
+    @RequiresRoles("管理机构")
+    public void managementReview() {
+        render("managementReview.html");
+    }
+
+    /**
+     * 管理就够对前期资料进行审核创建
+     */
+    @RequiresRoles("管理机构")
+    public void managementReviewTableData() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project = new Project();
+        project.setStatus(ProjectStatus.REVIEW);
+        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        if (page.getList() != null) {
+            page.getList().forEach(p -> {
+                EvaScheme evaScheme = evaSchemeService.findByProjectID(p.getId());
+                if (evaScheme != null) {
+                    p.setRemark(evaScheme.getStatus());
+                }
+            });
+        }
+        renderJson(new DataTable<Project>(page));
+    }
+
+    /**
+     * 管理就够对前期资料查看
+     */
+    @RequiresRoles("管理机构")
+    @NotNullPara("id")
+    public void managementReviewSee() {
+        Long id = getParaToLong("id");
+        Project project = projectService.findById(id);
+        ImpTeam impTeam = impTeamService.findByProjectId(id);
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
+        ScheduledPlan scheduledPlan = scheduledPlanService.findByEvaSchemeID(evaScheme.getId());
+        FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
+        FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
+
+        if (fileForm1.getFileID() != null) {
+            Files file1src = filesService.findById(fileForm1.getFileID());
+            setAttr("file1src", file1src);
+        }
+        if (fileForm2.getFileID() != null) {
+            Files file2src = filesService.findById(fileForm2.getFileID());
+            setAttr("file2src", file2src);
+        }
+
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(project.getId());
+        Person leader = personService.findById(impTeam.getLeaderID());
+        List<String> asLeaderIds = Arrays.asList(impTeam.getAssLeaderIDs().split(","));
+        List<LeaderGroup> asLeaderGroups = Collections.synchronizedList(new ArrayList<LeaderGroup>());
+        for (String asLeaderId : asLeaderIds) {
+            if (!"".equals(asLeaderId.trim())) {
+                asLeaderGroups.add(leaderGroupService.findById(asLeaderId));
+            }
+        }
+        String[] expertIds = impTeam.getExpertGroupIDs().split(",");
+        List<ExpertGroup> expertGroups = Collections.synchronizedList(new ArrayList<ExpertGroup>());
+        for (String expertId : expertIds) {
+            if (!"".equals(expertId.trim())) {
+                expertGroups.add(expertGroupService.findById(expertId));
+            }
+        }
+        String[] invTeamIds = impTeam.getInvTeamIDs().split(",");
+        List<Person> invTeams = Collections.synchronizedList(new ArrayList<Person>());
+        for (String invTeamId : invTeamIds) {
+            if (!"".equals(invTeamId.trim())) {
+                invTeams.add(personService.findById(invTeamId));
+            }
+        }
+        String[] repTeamIds = impTeam.getRepTeamIDs().split(",");
+        List<Person> repTeams = Collections.synchronizedList(new ArrayList<Person>());
+        for (String repTeamId : repTeamIds) {
+            if (!"".equals(repTeamId.trim())) {
+                repTeams.add(personService.findById(repTeamId));
+            }
+        }
+
+        List<ScheduledPlan> scheduledPlans = scheduledPlanService.findListByEvaSchemeID(evaScheme.getId());
+
+        setAttr("impTeam", impTeam)
+                .setAttr("asLeaderGroups", asLeaderGroups)
+                .setAttr("expertGroups", expertGroups)
+                .setAttr("invTeams", invTeams)
+                .setAttr("leader", leader)
+                .setAttr("repTeams", repTeams)
+                .setAttr("scheduledPlans", scheduledPlans)
+                .setAttr("leaderGroup", leaderGroup)
+                .setAttr("project", project)
+                .setAttr("evaScheme", evaScheme)
+                .setAttr("scheduledPlan", scheduledPlan)
+
+                .render("projectImpTeamSee.html");
+    }
+
+    /**
+     * 管理前期资料添加
+     */
+    @RequiresRoles("管理机构")
+    @NotNullPara("id")
+    public void managementReviewAccept() {
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        evaScheme.setStatus("2");
+        if (!evaSchemeService.update(evaScheme)) {
+            throw new BusinessException("更新失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 管理前期资料拒绝
+     */
+    @RequiresRoles("管理机构")
+    @NotNullPara("id")
+    public void managementReviewRefuse() {
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        evaScheme.setStatus("3");
+        if (!evaSchemeService.update(evaScheme)) {
+            throw new BusinessException("更新失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
 }
