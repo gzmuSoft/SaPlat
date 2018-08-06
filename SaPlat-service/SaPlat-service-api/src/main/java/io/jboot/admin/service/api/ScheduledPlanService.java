@@ -26,6 +26,22 @@ public interface ScheduledPlanService  {
 
 
     /**
+     *
+     * @param evaschemeID
+     * @return
+     */
+    public ScheduledPlan findByEvaSchemeID(Long evaschemeID);
+
+
+    /**
+     *
+     * @param evaschemeID
+     * @return
+     */
+    public List<ScheduledPlan> findListByEvaSchemeID(Long evaschemeID);
+
+
+    /**
      * delete model by primary key
      *
      * @param id

@@ -112,9 +112,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public Page<Project> findPage(Project project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (project.getUserId() != 0 && StrKit.notBlank(project.getStatus())) {
-            columns.like("status", "%" + project.getStatus() + "%");
+        if (project.getUserId() != null && project.getUserId() != 0) {
             columns.like("userId", "%" + project.getUserId() + "%");
+        }
+        if (StrKit.notBlank(project.getStatus())) {
+            columns.like("status", "%" + project.getStatus() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }

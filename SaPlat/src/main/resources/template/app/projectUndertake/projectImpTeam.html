@@ -107,7 +107,9 @@
                     <label>
                         <select lay-filter="clickOption1" lay-search>
                             #for(List : orgStructures)
+                            #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
+                            #end
                             #end
                         </select>
                     </label>
@@ -130,7 +132,9 @@
                     <label>
                         <select lay-filter="clickOption2" lay-search>
                             #for(List : orgStructures)
+                            #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
+                            #end
                             #end
                         </select>
                     </label>
@@ -153,7 +157,9 @@
                     <label>
                         <select lay-filter="clickOption3" lay-search>
                             #for(List : orgStructures)
+                            #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
+                            #end
                             #end
                         </select>
                     </label>
@@ -176,7 +182,9 @@
                     <label>
                         <select lay-filter="clickOption4" lay-search>
                             #for(List : orgStructures)
+                            #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
+                            #end
                             #end
                         </select>
                     </label>
@@ -199,7 +207,9 @@
                     <label>
                         <select lay-filter="clickOption5" lay-search>
                             #for(List : orgStructures)
+                            #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
+                            #end
                             #end
                         </select>
                     </label>
