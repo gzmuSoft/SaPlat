@@ -118,7 +118,7 @@
                     window.location.reload();
                 });
             } else if (obj.event === 'invite') {
-                pop_show('邀请介入', '#(ctxPath)/app/project/inviteChoose?id=' + data.id, '900', '', function () {
+                pop_show('邀请介入', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=0', '900', '', function () {
                     window.location.reload();
                 });
             }

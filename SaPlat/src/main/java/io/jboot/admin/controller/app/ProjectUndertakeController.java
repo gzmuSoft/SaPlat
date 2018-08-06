@@ -27,41 +27,29 @@ import java.util.*;
 public class ProjectUndertakeController extends BaseController {
 
     @JbootrpcService
+    InitialRiskExpertiseService initialRiskExpertiseService;
+    @JbootrpcService
     private ProjectService projectService;
-
     @JbootrpcService
     private ProjectUndertakeService projectUndertakeService;
-
     @JbootrpcService
     private FacAgencyService facAgencyService;
-
     @JbootrpcService
     private OrganizationService organizationService;
-
     @JbootrpcService
     private StructPersonLinkService structPersonLinkService;
-
     @JbootrpcService
     private PersonService personService;
-
     @JbootrpcService
     private OrgStructureService orgStructureService;
-
     @JbootrpcService
     private LeaderGroupService leaderGroupService;
-
     @JbootrpcService
     private ExpertGroupService expertGroupService;
-
     @JbootrpcService
     private EvaSchemeService evaSchemeService;
-
     @JbootrpcService
     private ImpTeamService impTeamService;
-
-    @JbootrpcService
-    InitialRiskExpertiseService initialRiskExpertiseService;
-
     @JbootrpcService
     private ScheduledPlanService scheduledPlanService;
 
@@ -70,6 +58,24 @@ public class ProjectUndertakeController extends BaseController {
 
     @JbootrpcService
     private FilesService filesService;
+
+    /**
+     * 去重
+     */
+    static String sub(String str) {
+        List list = new ArrayList();
+        StringBuffer sb = new StringBuffer(str);
+        int j = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (list.contains(str.charAt(i))) {
+                sb.deleteCharAt(i - j);
+                j++;
+            } else {
+                list.add(str.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
 
     /**
      * 跳转榜单页面
@@ -114,13 +120,14 @@ public class ProjectUndertakeController extends BaseController {
 
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId());
         Project project = projectService.findById(id);
+        System.out.println(projectUndertake);
         if (projectUndertake == null) {
             projectUndertake = new ProjectUndertake();
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
             projectUndertake.setFacAgencyID(facAgency.getId());
-        } else if (projectUndertake.getStatus() == 0) {
+        } else if (projectUndertake.getStatus() != 1) {
             renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
             throw new BusinessException("您已经申请过了，请不要重复申请！");
         }
@@ -234,10 +241,20 @@ public class ProjectUndertakeController extends BaseController {
             notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
+            Project project=projectService.findById(projectUndertake.getProjectID());
+            project.setStatus(ProjectStatus.REVIEW);
+            if (!projectService.update(project)){
+                throw new BusinessException("请求错误");
+            }
         } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
             notification.setName("申请介入同意通知");
             notification.setContent(user.getName() + "已接受您的申请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
+            Project project=projectService.findById(projectUndertake.getProjectID());
+            project.setStatus(ProjectStatus.REVIEW);
+            if (!projectService.update(project)){
+                throw new BusinessException("请求错误");
+            }
         }
 
         projectUndertake.setReply(reply);
@@ -275,24 +292,6 @@ public class ProjectUndertakeController extends BaseController {
             }
         }
         renderJson(RestResult.buildSuccess());
-    }
-
-    /**
-     * 去重
-     */
-    static String sub(String str) {
-        List list = new ArrayList();
-        StringBuffer sb = new StringBuffer(str);
-        int j = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (list.contains(str.charAt(i))) {
-                sb.deleteCharAt(i - j);
-                j++;
-            } else {
-                list.add(str.charAt(i));
-            }
-        }
-        return sb.toString();
     }
 
     /**

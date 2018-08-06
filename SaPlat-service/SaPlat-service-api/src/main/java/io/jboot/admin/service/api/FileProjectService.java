@@ -4,13 +4,14 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Project;
 
 import java.util.List;
 
 /**
  * @author ASUS
  */
-public interface FileProjectService  {
+public interface FileProjectService {
 
     /**
      * find model by primary key
@@ -30,6 +31,7 @@ public interface FileProjectService  {
 
     /**
      * 通過id查询列表
+     *
      * @param id id
      * @return 列表
      */
@@ -46,15 +48,17 @@ public interface FileProjectService  {
 
     /**
      * 通过项目id 查询文件项目
-     * @param projectId  项目id
+     *
+     * @param projectId 项目id
      * @return 文件项目
      */
     public FileProject findByProjectID(Long projectId);
 
     /**
      * 通过文件类型id和项目id查询列表
+     *
      * @param fileTypeID 文件类型id
-     * @param projectID 项目id
+     * @param projectID  项目id
      * @return 文件列表
      */
     public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID, Long projectID);
@@ -98,6 +102,7 @@ public interface FileProjectService  {
 
     /**
      * 删除fileProject 禁用files
+     *
      * @param model
      * @return
      */
@@ -105,11 +110,13 @@ public interface FileProjectService  {
 
     /**
      * 保存fileProject 启用files
+     *
      * @param model
      * @return
      */
 
     public boolean updateFileProjectAndFiles(FileProject model);
+
     public boolean saveFileProjectAndFiles(FileProject model);
 
     /**
@@ -128,6 +135,15 @@ public interface FileProjectService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(FileProject model);
+
+    /**
+     * 更新fileproject 更新project
+     *
+     * @param fileProject
+     * @param project
+     * @return
+     */
+    public boolean updateFileProjectAndProject(FileProject fileProject, Project project);
 
 
     /**

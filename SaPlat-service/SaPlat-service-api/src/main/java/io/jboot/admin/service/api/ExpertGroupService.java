@@ -30,6 +30,14 @@ public interface ExpertGroupService {
     public Page<ExpertGroup> findPage(ExpertGroup expert_group, int pageNumber, int pageSize);
 
     /**
+     * 分页查询系统 专家团体 信息
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<ExpertGroup> findPage(int pageNumber, int pageSize);
+    /**
      * 根据书名查询 专家团体 信息
      *
      * @param name

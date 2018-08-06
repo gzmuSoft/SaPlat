@@ -191,7 +191,7 @@
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
         var projectID = "#(projectID)";
-        var paTypeID = "#(paTypeID)"
+        var paTypeID = "#(paTypeId)";
 
         var layer = layui.layer,
             $ = layui.jquery,
@@ -308,7 +308,7 @@
         });
     });
     $("#res").click(function () {
-        window.location.href = '#(ctxPath)/app/project/toBuildProject'
+        history.go(-1);
     });
 
 

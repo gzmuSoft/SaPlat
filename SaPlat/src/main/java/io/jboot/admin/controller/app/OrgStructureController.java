@@ -49,6 +49,9 @@ public class OrgStructureController extends BaseController {
     @JbootrpcService
     private RoleService roleService;
 
+    @JbootrpcService
+    private PersonService personService;
+
     /**
      * index
      */
@@ -179,6 +182,9 @@ public class OrgStructureController extends BaseController {
             throw new BusinessException("用户不存在无法邀请加入组织架构！");
             //生成邀请注册页面
         }
+        if(!isPerson(user.getUserID())){
+            throw new BusinessException("该用户不是个人群体账户！");
+        }
         applyInvite.setUserID(user.getId());
         Notification notification =  sendMessage("邀请加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"组织架构（" + applyInvite.getName() + "）的管理员邀请你加入该架构，请前往组织架构 -> 通知消息 处理！","/app/OrgStructure/showMessage",user.getId(),AuthUtils.getLoginUser());
         if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
@@ -246,6 +252,9 @@ public class OrgStructureController extends BaseController {
         if(applyInvite == null){
             throw  new BusinessException("邀请信息不存在");
         }
+        if(!isPerson(AuthUtils.getLoginUser().getUserID())){
+            throw new BusinessException("该用户不是个人群体账户！");
+        }
         if(isStructPerson(applyInvite.getStructID(),uid)){
             throw new BusinessException("你已经加入了架构，无需重复加入架构");
         }
@@ -254,7 +263,7 @@ public class OrgStructureController extends BaseController {
         structPersonLink.setCreateTime(new Date());
         structPersonLink.setStructID(applyInvite.getStructID());
         structPersonLink.setCreateUserID(applyInvite.getCreateUserID());
-        structPersonLink.setPersonID(applyInvite.getUserID());
+        structPersonLink.setPersonID(AuthUtils.getLoginUser().getUserID());
         structPersonLink.setIsEnable(true);
         Notification notification =  sendMessage("邀请用户加入架构通知","你好！你邀请的用户" + AuthUtils.getLoginUser().getName() +"已经成功加入组织架构！","/app/OrgStructure/applyManage",applyInvite.getBelongToID(),AuthUtils.getLoginUser());
         if(!applyInviteService.saveAndUpdateAndSend(applyInvite,notification,structPersonLink)){
@@ -289,7 +298,7 @@ public class OrgStructureController extends BaseController {
      * 查询已经个人群体加入的架构列表接口
      */
     public void myStructureListApi(){
-        Long uid = AuthUtils.getLoginUser().getId();
+        Long uid = AuthUtils.getLoginUser().getUserID();
         Map<String,Object> list = structPersonLinkService.findStructureListByPersonID(uid);
         renderJson(list);
     }
@@ -308,6 +317,9 @@ public class OrgStructureController extends BaseController {
         OrgStructure orgStructure = orgStructureService.findById(structID);
         if(orgStructure == null){
             throw new BusinessException("你准备加入的架构不存在！");
+        }
+        if(!isPerson(AuthUtils.getLoginUser().getUserID())){
+            throw new BusinessException("该用户不是个人群体账户！");
         }
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setBelongToID(orgStructure.getCreateUserID());
@@ -396,6 +408,10 @@ public class OrgStructureController extends BaseController {
         if(applyInvite == null){
             throw  new BusinessException("申请信息不存在");
         }
+        User user = userService.findById(applyInvite.getUserID());
+        if(!isPerson(user.getUserID())){
+            throw new BusinessException("该用户不是个人群体账户！");
+        }
         if(isStructPerson(applyInvite.getStructID(),applyInvite.getUserID())){
             throw new BusinessException("该用户已经加入了架构，无需重复加入");
         }
@@ -404,7 +420,7 @@ public class OrgStructureController extends BaseController {
         structPersonLink.setCreateTime(new Date());
         structPersonLink.setStructID(applyInvite.getStructID());
         structPersonLink.setCreateUserID(applyInvite.getCreateUserID());
-        structPersonLink.setPersonID(applyInvite.getUserID());
+        structPersonLink.setPersonID(user.getUserID());
         structPersonLink.setIsEnable(true);
         Notification notification =  sendMessage("成功加入架构通知","你好！你申请加入的组织架构（" + applyInvite.getName() + "）已经加入成功！","/app/OrgStructure/showMessage",applyInvite.getUserID(),AuthUtils.getLoginUser());
         if(!applyInviteService.saveAndUpdateAndSend(applyInvite,notification,structPersonLink)){
@@ -437,9 +453,23 @@ public class OrgStructureController extends BaseController {
      * 私有方法 用于查询用户在是否已经是架构中的成员 避免架构人员关联表中数据存在重复
      * true存在 false 不存在
      */
-    private Boolean isStructPerson(Long structID,Long userID){
+    private boolean isStructPerson(Long structID,Long userID){
         List<StructPersonLink> structPersonLink = structPersonLinkService.findByStructIdAndUserID(structID,userID);
         if(structPersonLink.size() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 私有方法 查询是否是个人群体
+     * @param UserID
+     * @return
+     */
+    private  boolean isPerson(Long UserID){
+        Person person = personService.findById(UserID);
+        if (person != null){
             return true;
         }else{
             return false;

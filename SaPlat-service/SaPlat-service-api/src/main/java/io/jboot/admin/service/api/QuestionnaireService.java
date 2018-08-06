@@ -19,10 +19,15 @@ public interface QuestionnaireService  {
     public Questionnaire findById(Object id);
 
     /**
-     * 事物回滚
+     * 修改与保存的事物回滚
      */
-    public boolean saveQuestionnair(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
+    public boolean saveQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
+    public boolean updateQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
 
+    /**
+     * 删除的事物回滚
+     */
+    public boolean deleteQuestionnaire(Long questionnaireId, Long[] contentIds, Long[] linkIds);
     /**
      * find all model
      *

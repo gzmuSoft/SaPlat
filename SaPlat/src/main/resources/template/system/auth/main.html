@@ -9,7 +9,7 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer','jquery','form'], function () {
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
@@ -84,7 +84,7 @@
                 });
             } else if (obj.event === 'view') {
                 pop_show('认证信息', '#(ctxPath)/system/auth/view?id=' + data.id, '', '', function () {
-                    reloadTable(null, null, null, null);
+                    return false;
                 });
             } else if (obj.event === 'warning') {
                 layer.confirm('该认证已审核，确定要重新审核', function (index) {
