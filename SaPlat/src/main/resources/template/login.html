@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/login/layui.css" media="all">
-    <title>登录</title>
-    <style>
-        /*body {*/
-        /*background-image: url(images/background.jpg);*/
-        /*background-size: 100%;*/
-        /*background-widows:;*/
-        /*background-repeat: no-repeat;*/
-        /*background-attachment: fixed;*/
-        /*}*/
+    <meta charset="utf-8"/>
+    <title></title>
+    <link rel="stylesheet" href="../static/js/layui/css/layui.css"/>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/x-admin.css" type="text/css">
+    <link rel="stylesheet" href="../static/css/iconfont.css">
 
+    <!--css start-->
+    <style>
         .clear {
             clear: both
         }
-
         .login-ic {
             background: rgba(255, 255, 255, 0.32);
             margin-bottom: 1.5em;
@@ -24,7 +20,7 @@
         }
 
         .login-ic i {
-            background: url(../static/img/login/m.png) no-repeat 6px 6px;
+            background: url("../static/img/login/m.png") no-repeat 6px 6px;
             width: 38px;
             height: 38px;
             float: left;
@@ -32,7 +28,7 @@
         }
 
         .login-ic i.icon {
-            background: url(../static/img/login/l.png) no-repeat 6px 6px;
+            background: url("../static/img/login/l.png") no-repeat 6px 6px;
         }
 
         .login-ic input[type="text"], .login-ic input[type="password"] {
@@ -49,94 +45,92 @@
         }
 
         i.passcode {
-            background: url(../static/img/login/passcode.jpg) no-repeat 0px 6px;
+            background: url("../static/img/login/passcode.jpg") no-repeat 0px 6px;
             float: left;
         }
     </style>
+    <!--css end-->
     #include("/template/common/include/_css.html")
-
 </head>
-<body>
+
+<body >
+<!--content start-->
 <div class="bg" style="position:absolute;width: 100%;height: 100%;z-index: -1">
-    <img src="../static/img/login/background.jpg" height="100%" width="100%"/>
+    <img src="../static/img/bg-1.png" height="100%" width="100%"/>
 </div>
-<div class="layui-col-xs6 layui-col-md12" style="margin: 15% 20%;">
-    <div class="layui-col-md7" style="background:rgba(26,184,224,0.5);">
-        <div class="layui-row grid-demo grid-demo-bg1">
-            <div class="layui-col-md12" style="border-bottom: 1px solid #fff9ec">
-                <div class="grid-demo" style="color: #fff;margin: 0 50px"><br>
-                    <h3>Logo:#(APP.name)</h3><br></div>
-            </div>
-            <div class="layui-col-xs7 layui-hide-xs" style="border-right: 1px solid #fff9ec">
-                <div class="layui-row grid-demo grid-demo-bg2" style="margin: 10px 20px">
-                    <ul class="layui-timeline">
-                        #for(model : newsList)
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis"></i>
-                            <div class="layui-timeline-title layui-row" onclick="nshow('#(model.id)')">
-                                <div class="layui-col-md9">
-                                    <div class="layui-timeline-title" style="padding-left: 20px">#(model.title)</div>
-                                </div>
-                                <div class="layui-col-md3">
-                                    <div class="layui-timeline-title" style="text-align: right">#(model.createTime)
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        #end
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis"></i>
-                            <div class="layui-timeline-content layui-text" id="newsList">
-                                <div class="layui-timeline-title">更久前，测试资讯</div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="layui-col-xs5">
-                <div class="grid-demo grid-demo-bg3" style="margin: 0 10%;"><br>
-                    <form method="post" action="" id="form">
-                        <div class="login-ic " style="width: 300px;">
-                            <i></i>
-                            <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
-                                   autocomplete="on" maxlength="16" minlength="4"/>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="login-ic" style="width:300px">
-                            <i class="icon"></i>
-                            <input type="password" id="password" name="password" placeholder="请输入密码" required="required"
-                                   maxlength="16" minlength="6"/>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="login-ic" style="width:300px;position: relative">
-                            <i class="icon"></i>
-                            <input type="text" name="capval" lay-verify="required" placeholder="验证码" maxlength="4"
-                                   minlength="4" required="required" style="width: 120px"/>
-                            <img id="captchaImg" alt="验证码" src="#(ctxPath)/captcha"
-                                 onclick="this.src='#(ctxPath)/captcha?'+Math.random()">
-                            <div class="clear"></div>
-                        </div>
-                        <div class="log-bwn" style="text-align: center;width: 300px">
-                            <button class="layui-btn layui-btn-normal layui-btn-radius" style="width: 120px" lay-submit
-                                    lay-filter="sub">登&nbsp;&nbsp;&nbsp;录
-                            </button>
-                            <button class="layui-btn layui-btn-danger layui-btn-radius" style="width: 120px" id="reg">注&nbsp;&nbsp;&nbsp;册</button>
-                        </div>
-                    </form>
-                    <br><br></div>
-                <div class="clear"></div>
-            </div>
-        </div>
+<div class="header" style="height:180px ">
+<div class="header-title" style="background: rgba(219,219,219,0.1);height: 70px">
+    <br>
+    <div class="title" style="color: white;font-size: 24px;margin:0 200px;font-weight: 200;white-space:nowrap; ">社会稳定风险评估</div></div>
+</div>
+<div class="body" style="background:rgba(0,0,0,0.25);height:250px;" id="a">
+    <div class="body-text">
+        <br><br><br><br><br><br>
+        <h2 style="text-align: center;font-size: 30px;color: white;font-weight: 200">登录&nbsp;•&nbsp;注册</h2>
     </div>
 </div>
+<div class="body-hide" style="background:url(static/img/bg-1-1.png);background-size:100% 100%;height:400px;margin: -310px 0;width: 100%;
+     -webkit-box-shadow:0 0 20px #b1b6cb;transform-origin:center;" id="b">
+    <div class="login" style="text-align: center">
+        <form  method="post" action="" id="form" style="margin: 0 55%">
+           <br><br><br><br><br><br><br><br>
+            <div class="login-ic " style="width: 300px;">
+                <i></i>
+                <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
+                       autocomplete="on" maxlength="16" minlength="4"/>
+                <div class="clear"></div>
+            </div>
+            <div class="login-ic" style="width:300px">
+                <i class="icon"></i>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required="required"
+                       maxlength="16" minlength="6"/>
+                <div class="clear"></div>
+            </div>
+            <div class="login-ic" style="width:300px;position: relative">
+                <i class="icon"></i>
+                <input type="text" name="capval" lay-verify="required" placeholder="验证码" maxlength="4"
+                       minlength="4" required="required" style="width: 120px"/>
+                <img id="captchaImg" alt="验证码" src="#(ctxPath)/captcha"
+                     onclick="this.src='#(ctxPath)/captcha?'+Math.random()">
+                <div class="clear"></div>
+            </div>
+            <div class="log-bwn" style="text-align: center;width: 300px">
+                <button class="layui-btn  layui-btn-radius" style="background-color: #2470a0;width: 120px;border-radius: 4px" lay-submit
+                        lay-filter="sub">登&nbsp;&nbsp;&nbsp;录
+                </button>
+                <button class="layui-btn  layui-btn-radius" style="background-color:#c93d1b;width: 120px;border-radius: 4px;" id="reg">注&nbsp;&nbsp;&nbsp;册</button>
+            </div>
+        </form></div>
+</div>
 #include("/template/common/include/_js.html")
+<!--content end-->
+<script type="text/javascript" src="../static/js/layui/layui.js"></script>
+<script type="text/javascript" src="../static/js/comm_notbar.js"></script>
+<script type="text/javascript" src="../static/js/utils.js"></script>
+<script type="text/javascript" src="../static/js/ztree/jquery-1.4.4.min.js"></script>
+<!--js start-->
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
-        // 操作对象
+    layui.use(['form', 'layer', 'element'], function () {
         var form = layui.form
             , layer = layui.layer
-            , $ = layui.jquery;
+            , laydate = layui.laydate
+            , $ = layui.jquery
+            , table = layui.table;
+        $(function(){
+            $("#b").hide();
+        });
+        $("#a").mouseover(function(){ $("#b").show();$("h2").hide();});
 
+        $("#a").mouseout(function(){$("#b").hide().fadeIn(2000);$("h2").show();});
+        $("#b").mouseover(function(){
+            $("#b").show();
+            $("h2").hide();
+        });
+
+        $("#b").mouseout(function(){
+            $("#b").hide();
+            $("h2").show();
+        });
         $.fn.serializeJson = function () {
             var serializeObj = {};
             $(this.serializeArray()).each(function () {
@@ -144,8 +138,6 @@
             });
             return serializeObj;
         };
-
-        // 提交监听
         form.on('submit(sub)', function (data) {
             var all = $('#form').serializeJson();
             console.log(all);
@@ -165,7 +157,6 @@
 
             return false;
         });
-
         $(document).on('click', '#reg', function () {
             window.location.href = "/register";
         });
@@ -173,7 +164,6 @@
             window.location.href = "/nlist";
         });
     });
-
     function nshow(id) {
         var url = "/nshow";
         var form = $("<form method='post'></form>");
@@ -186,5 +176,6 @@
         form.submit();
     }
 </script>
+<!--js end-->
 </body>
 </html>
