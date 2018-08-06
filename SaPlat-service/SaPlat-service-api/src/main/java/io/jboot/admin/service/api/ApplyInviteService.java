@@ -3,11 +3,39 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.ApplyInvite;
+import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.StructPersonLink;
 
 import java.util.List;
 
 public interface ApplyInviteService  {
+    /**
+     * 保存或更新和发送站内信息
+     * @return
+     */
+    public boolean saveOrUpdateAndSend(ApplyInvite applyInvite,Notification notification);
+    /**
+     * 保存或更新和发送站内信息
+     * @return
+     */
+    public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink);
+    /**
+     * 通过用户id或架构名称查找申请列表
+     * @param pageNumber
+     * @param pageSize
+     * @param applyInvite
+     * @return
+     */
+    public Page<ApplyInvite> findApplyByUserIdOrName(int pageNumber, int pageSize, ApplyInvite applyInvite);
 
+    /**
+     * 通过用户id或架构名称查找
+     * @param pageNumber
+     * @param pageSize
+     * @param applyInvite
+     * @return
+     */
+    public Page<ApplyInvite> findListByUserIdOrUserName(int pageNumber, int pageSize, ApplyInvite applyInvite);
     /**
      * find model by primary key
      *

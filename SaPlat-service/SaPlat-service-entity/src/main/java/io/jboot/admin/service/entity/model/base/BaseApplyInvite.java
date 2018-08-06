@@ -57,6 +57,14 @@ public abstract class BaseApplyInvite<M extends BaseApplyInvite<M>> extends Jboo
 		return getLong("structID");
 	}
 
+	public void setBelongToID(java.lang.Long belongToID) {
+		set("belongToID", belongToID);
+	}
+	
+	public java.lang.Long getBelongToID() {
+		return getLong("belongToID");
+	}
+
 	public void setUserID(java.lang.Long userID) {
 		set("userID", userID);
 	}
