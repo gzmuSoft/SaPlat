@@ -19,7 +19,8 @@
         <legend>项目基本信息</legend>
     </fieldset>
     <input type="hidden" name="project.id" value="#(project.id)">
-    <input type="hidden" name="type" value="#(type)">
+    <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
+    <input type="hidden" name="questionnaire.id" value="#(questionnaire.id)">
     <div class="layui-form-item">
         <label class="layui-form-label" style="width: 150px">评估项目名称：</label>
         <div class="layui-input-block">
@@ -44,7 +45,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">问卷信息所属部门：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="department" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                    <input type="text" name="questionnaire.department" lay-verify="required" autocomplete="off" value="#(questionnaire.department)" placeholder="请输入标题"
                            class="layui-input">
                 </div>
             </div>
@@ -53,7 +54,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">问卷对象单位（盖章）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="unit" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                    <input type="text" name="questionnaire.unit" lay-verify="required" value="#(questionnaire.unit)" autocomplete="off" placeholder="请输入标题"
                            class="layui-input">
                 </div>
             </div>
@@ -64,7 +65,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width: 200px">问卷对象联系电话：</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="unitTel" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                    <input type="tel" name="questionnaire.unitTel" lay-verify="required|phone" value="#(questionnaire.unitTel)" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -72,7 +73,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">问卷对象单位地址：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="unit" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                    <input type="text" name="questionnaire.unitAddress" lay-verify="required" value="#(questionnaire.unitAddress)" autocomplete="off" placeholder="请输入标题"
                            class="layui-input">
                 </div>
             </div>
@@ -83,7 +84,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width: 200px">问卷调查时间：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="surveyTime" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                    <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
                            autocomplete="off" class="layui-input">
                 </div>
             </div>
@@ -102,7 +103,12 @@
                     <div class="layui-col-md10">
                         <label class="layui-form-label">调查内容：</label>
                         <div class="layui-input-block">
-                            <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入调查内容"
+                            #if(questionnaireContents != null)
+                            #set(content = questionnaireContents[0])
+                            #else
+                            #set(content = null)
+                            #end
+                            <input type="text" lay-verify="title" value="#(content)" autocomplete="off" placeholder="请输入调查内容"
                                    class="layui-input content" style="width: 1000px;">
                         </div>
                     </div>
@@ -122,6 +128,9 @@
             <button type="reset" class="layui-btn layui-btn-warm" style="position:absolute;right:35%;">重置</button>
         </div>
     </div>
+    #for(i = 1; i < contentsLength; i++)
+        <div class="contents layui-hide">#(questionnaireContents[i])</div>
+    #end
 </form>
 #end
 
@@ -137,6 +146,28 @@
         var briefIndex = layedit.build('demo', {
             hideTool: ['link', 'unlink', 'face', 'image', 'help']
         });
+        (function(){
+            var content;
+            $('.contents').each(function(){
+                content = $(this).text();
+                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
+                    "        <div class='layui-row' >\n" +
+                    "            <div class='layui-col-md10'>\n" +
+                    "                <label class='layui-form-label'>调查内容：</label>\n" +
+                    "                <div class='layui-input-block'>\n" +
+                    "                    <input type='text' lay-verify='title' value='"+content+"' autocomplete='off' placeholder='请输入调查内容'\n" +
+                    "                           class='layui-input content' style='width: 1000px;'>\n" +
+                    "                </div>\n" +
+                    "            </div>\n" +
+                    "            <div class='layui-col-md2'>\n" +
+                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
+                    "            </div>\n" +
+                    "        </div>\n" +
+                    "    </div>" +
+                    "</li>");
+            });
+        }());
+
         //日期
         laydate.render({
             elem: '#date'
@@ -167,17 +198,17 @@
         //添加行
         $(document).ready(function () {
             $("#add").click(function () {
-                $("ol").append(" <li class='qwe'><div class=\"layui-form-item\">\n" +
-                    "        <div class=\"layui-row\" >\n" +
-                    "            <div class=\"layui-col-md10\">\n" +
-                    "                <label class=\"layui-form-label\">调查内容：</label>\n" +
-                    "                <div class=\"layui-input-block\">\n" +
-                    "                    <input type=\"text\" lay-verify=\"title\"  autocomplete=\"off\" placeholder=\"请输入调查内容\"\n" +
-                    "                           class=\"layui-input content\" style=\"width: 1000px;\">\n" +
+                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
+                    "        <div class='layui-row' >\n" +
+                    "            <div class='layui-col-md10'>\n" +
+                    "                <label class='layui-form-label'>调查内容：</label>\n" +
+                    "                <div class='layui-input-block'>\n" +
+                    "                    <input type='text' lay-verify='title'  autocomplete='off' placeholder='请输入调查内容'\n" +
+                    "                           class='layui-input content' style='width: 1000px;'>\n" +
                     "                </div>\n" +
                     "            </div>\n" +
-                    "            <div class=\"layui-col-md2\">\n" +
-                    "                <button type=\"button\" class=\"layui-btn layui-btn-danger \" id=\"del\"  >删除</button>\n" +
+                    "            <div class='layui-col-md2'>\n" +
+                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
                     "    </div>" +

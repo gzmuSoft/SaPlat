@@ -20,7 +20,8 @@
         <legend>项目基本信息</legend>
     </fieldset>
     <input type="hidden" name="project.id" value="#(project.id)">
-    <input type="hidden" name="type" value="#(type)">
+    <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
+    <input type="hidden" name="questionnaire.id" value="#(questionnaire.id)">
     <div class="layui-form-item">
         <label class="layui-form-label" style="width: 150px">评估项目名称：</label>
         <div class="layui-input-block">
@@ -44,7 +45,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">问卷信息所属部门：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="department" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                    <input type="text" name="questionnaire.department" lay-verify="required" value="#(questionnaire.department)" autocomplete="off" placeholder="请输入标题"
                            class="layui-input">
                 </div>
             </div>
@@ -55,7 +56,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width: 200px">问卷调查时间：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="surveyTime" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                    <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
                            autocomplete="off" class="layui-input">
                 </div>
             </div>
@@ -69,7 +70,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">姓名：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" lay-verify="required" placeholder="请输入姓名" autocomplete="off"
+                    <input type="text" name="questionnaire.personName" lay-verify="required" value="#(questionnaire.personName)" placeholder="请输入姓名" autocomplete="off"
                            class="layui-input">
                 </div>
             </div>
@@ -78,8 +79,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">性别：</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="sex" value=1 title="男" checked="checked">
-                    <input type="radio" name="sex" value=2 title="女">
+                    #if(questionnaire.personGender == 2)
+                        <input type="radio" name="questionnaire.personGender" value=1 title="男">
+                        <input type="radio" name="questionnaire.personGender" value=2 title="女" checked="checked">
+                    #else
+                        <input type="radio" name="questionnaire.personGender" value=1 title="男" checked="checked">
+                        <input type="radio" name="questionnaire.personGender" value=2 title="女">
+                    #end
                 </div>
             </div>
         </div>
@@ -91,8 +97,12 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: 200px">民族：</label>
                     <div class="layui-input-inline">
-                        <select name="nationID" lay-verify="required" lay-search="">
-                            <option value="">直接选择或搜索选择</option>
+                        <select name="questionnaire.nationID" lay-verify="required" lay-search="">
+                            #if(nation != null)
+                                <option value="#(nation.id)">#(nation.name)</option>
+                            #else
+                                <option value="">直接选择或搜索选择</option>
+                            #end
                             #statusOption(nationStatus);
                         </select>
                     </div>
@@ -103,7 +113,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width: 200px">联系电话：</label>
                 <div class="layui-input-inline">
-                    <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                    <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -113,7 +123,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">身份证号码：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="IDCard" lay-verify="identity" placeholder="" autocomplete="off"
+                    <input type="text" name="questionnaire.IDCard" lay-verify="identity" value="#(questionnaire.IDCard)" placeholder="请输入身份证" autocomplete="off"
                            class="layui-input">
                 </div>
             </div>
@@ -122,7 +132,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">年龄：</label>
                 <div class="layui-input-block">
-                    <input type="number" name="age" lay-verify="required" autocomplete="off" placeholder="请输入年龄"
+                    <input type="number" name="questionnaire.age" lay-verify="required" value="#(questionnaire.age)" autocomplete="off" placeholder="请输入年龄"
                            class="layui-input">
                 </div>
             </div>
@@ -133,8 +143,12 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">职业：</label>
                 <div class="layui-input-inline">
-                    <select name="occupationID" lay-verify="required" lay-search="">
-                        <option value="">直接选择或搜索选择</option>
+                    <select name="questionnaire.occupationID" lay-verify="required" lay-search="">
+                        #if(occupation != null)
+                            <option value="#(occupation.id)">#(occupation.name)</option>
+                        #else
+                            <option value="">直接选择或搜索选择</option>
+                        #end
                         #statusOption(occupationStatus);
                     </select>
                 </div>
@@ -144,8 +158,12 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">文化程度：</label>
                 <div class="layui-input-inline">
-                    <select name="degreeOfEducationID" lay-verify="required" lay-search="">
-                        <option value="">直接选择或搜索选择</option>
+                    <select name="questionnaire.degreeOfEducationID" lay-verify="required" lay-search="">
+                        #if(educational != null)
+                            <option value="#(educational.id)">#(educational.name)</option>
+                        #else
+                            <option value="">直接选择或搜索选择</option>
+                        #end
                         #statusOption(educationalStatus);
                     </select>
                 </div>
@@ -155,7 +173,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 200px">居住地址：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="addr" lay-verify="required" autocomplete="off" placeholder="请输入居住地址"
+                    <input type="text" name="questionnaire.addr" lay-verify="required" value="#(questionnaire.addr)" autocomplete="off" placeholder="请输入居住地址"
                            class="layui-input" style="width: 500px">
                 </div>
             </div>
@@ -173,8 +191,12 @@
                     <div class="layui-col-md10">
                         <label class="layui-form-label">调查内容：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="content" lay-verify="title" autocomplete="off"
-                                   placeholder="请输入调查内容"
+                            #if(questionnaireContents != null)
+                            #set(content = questionnaireContents[0])
+                            #else
+                            #set(content = null)
+                            #end
+                            <input type="text" name="content" value="#(content)" lay-verify="title" autocomplete="off" placeholder="请输入调查内容"
                                    class="layui-input" style="width: 1000px;">
                         </div>
                     </div>
@@ -193,6 +215,9 @@
             <button type="reset" class="layui-btn layui-btn-warm" style="position:absolute;right:35%;">重置</button>
         </div>
     </div>
+    #for(i = 1; i < contentsLength; i++)
+    <div class="contents layui-hide">#(questionnaireContents[i])</div>
+    #end
 </form>
 #end
 
@@ -234,6 +259,28 @@
             });
             return string;
         }
+
+        (function(){
+            var content;
+            $('.contents').each(function(){
+                content = $(this).text();
+                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
+                    "        <div class='layui-row' >\n" +
+                    "            <div class='layui-col-md10'>\n" +
+                    "                <label class='layui-form-label'>调查内容：</label>\n" +
+                    "                <div class='layui-input-block'>\n" +
+                    "                    <input type='text' lay-verify='title' value='"+content+"' autocomplete='off' placeholder='请输入调查内容'\n" +
+                    "                           class='layui-input content' style='width: 1000px;'>\n" +
+                    "                </div>\n" +
+                    "            </div>\n" +
+                    "            <div class='layui-col-md2'>\n" +
+                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
+                    "            </div>\n" +
+                    "        </div>\n" +
+                    "    </div>" +
+                    "</li>");
+            });
+        }());
 
         //添加行
         $(document).ready(function () {
