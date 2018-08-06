@@ -52,6 +52,20 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         }
         return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"createTime desc");
     }
+
+    @Override
+    public boolean findIsInvite(Long expertGroupId, Long projectID) {
+        Columns columns = Columns.create();
+        columns.eq("projectID", projectID);
+        columns.eq("userID", expertGroupId);
+        columns.eq("module", 1);
+        if (DAO.findFirstByColumns(columns) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink){
         return Db.tx(()-> applyInvite.update() && notificationService.save(notification) && structPersonLinkService.save(structPersonLink));

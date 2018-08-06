@@ -45,6 +45,7 @@
             <div>
                 <label for="project.roleName">角色名称:</label>
                 <select id="project.roleName" class="project" name="project.roleName">
+                    <option value="">请选择角色名称</option>
                     #for(List : roleNameList)
                     <option>#(List)</option>
                     #end
@@ -53,7 +54,8 @@
 
             <div>
                 <label for="project.pStepID">项目阶段:</label>
-                <select id="project.pStepID" class="project" name="project.pStepID" lay-search>
+                <select id="project.pStepID" class="project" name="project.pStepID">
+                    <option value="">请选择项目阶段</option>
                     #for(List : projectStepNameList)
                     <option value="#(List.id)">#(List.name)</option>
                     #end
@@ -62,7 +64,8 @@
 
             <div>
                 <label for="project.paTypeID">项目评估类型:</label>
-                <select id="project.paTypeID" class="project" name="project.paTypeID" lay-search>
+                <select id="project.paTypeID" class="project" name="project.paTypeID">
+                    <option value="">请选择项目评估类型</option>
                     #for(List : PaTypeNameList)
                     <option value="#(List.id)">#(List.name)</option>
                     #end
@@ -255,14 +258,21 @@
          */
         function notNull() {
             var valueArray = [];
+            var flag = true;
+            var z = "^((-\\+)|(0+))$";
+            if (!isNaN($('#project.amount').val()))
+                flag = false;
             $(".project").each(function (key) {
                 valueArray[key] = $(this).val();
-                if (valueArray[key] == null || valueArray[key] === '')
+                if (valueArray[key] === null || valueArray[key].trim() === '') {
+                    flag = false;
                     return false;
+                }
             });
-            if (layedit.getText(index) == null || layedit.getText(index) === '')
-                return false;
-            return true;
+            if (layedit.getText(index) === null || layedit.getText(index) === '') {
+                flag = false;
+            }
+            return flag;
         }
 
         /**
@@ -270,14 +280,18 @@
          */
         function notNull_2() {
             var valueArray = [];
+            var flag = true;
+
             $(".leaderGroup").each(function (key) {
                 valueArray[key] = $(this).val();
-                if (valueArray[key] == null || valueArray[key] === '')
+                if (valueArray[key] === null || valueArray[key].trim() === '') {
+                    flag = false;
                     return false;
+                }
             });
-            if ($("#crew").val() == null || $("#crew").val() === '')
-                return false;
-            return true;
+            if ($("#crew").val() === null || $("#crew").val() === '')
+                flag = false;
+            return flag;
         }
 
         /**
@@ -299,6 +313,7 @@
                         string += nameArray[key] + "=" + valueArray[key] + "&";
                     });
                     string += "project.brief=" + layedit.getContent(index);
+                    console.log(string);
                     if (saveOrUpdate === 1) {
                         $.getJSON(
                             "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,
@@ -310,7 +325,7 @@
                     }
                 } else {
                     not = false;
-                    layer.msg("数据不能为空！");
+                    layer.msg("数据为空或格式不正确！");
                 }
                 /**
                  * 加载文件列表
@@ -335,7 +350,7 @@
                 }
                 else {
                     not = false;
-                    layer.msg("数据不能为空！");
+                    layer.msg("数据为空以及格式错误！");
                 }
             } else if (this.id === "nextPage3") {
                 var string = "?", valueArray = [], nameArray = [];

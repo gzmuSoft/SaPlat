@@ -21,6 +21,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +73,8 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ExpertGroupService expertGroupService;
 
+    @JbootrpcService
+    private ApplyInviteService applyInviteService;
 
     /**
      * 项目立项基本资料初始化至信息管理界面
@@ -647,12 +650,21 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 选择邀请的服务机构
+     * 选择邀请的机构
+     * 参数type
+     * type=0 邀请评估
+     * type=1 邀请审查
      */
-    @NotNullPara({"id"})
+    @NotNullPara({"id", "type"})
     public void inviteChoose() {
         Long id = getParaToLong("id");
-        setAttr("id", id).render("invite.html");
+        Long type = getParaToLong("type");
+        if (type == 0) {
+            setAttr("id", id).render("invite.html");
+        } else if (type == 1) {
+            setAttr("id", id).render("inviteExpertGroup.html");
+        }
+
     }
 
     /**
@@ -697,21 +709,44 @@ public class ProjectController extends BaseController {
         notification.setIsEnable(true);
         notification.setStatus(0);
 
-        ProjectUndertake projectUndertake = new ProjectUndertake();
-        projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());
-        projectUndertake.setCreateUserID(user.getId());
-        projectUndertake.setProjectID(getParaToLong("projectId"));
-        projectUndertake.setFacAgencyID(getParaToLong("id"));
-        projectUndertake.setApplyOrInvite(true);
-        projectUndertake.setStatus(0);
-        projectUndertake.setCreateTime(new Date());
-        projectUndertake.setDeadTime(projectService.findById(getParaToLong("projectId")).getEndPublicTime());
-        projectUndertake.setLastAccessTime(new Date());
-        projectUndertake.setLastUpdateUserID(user.getId());
-        projectUndertake.setIsEnable(true);
-        if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
+        Date nowTime = new Date();
+        Calendar time = Calendar.getInstance();
+        //获取七天以后的日期作为申请的失效日期
+        time.setTime(nowTime);
+        time.add(Calendar.DATE, 7);
+
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setName(projectService.findById(getParaToLong("projectId")).getName());
+        applyInvite.setModule(1);
+        applyInvite.setCreateUserID(user.getId());
+        applyInvite.setProjectID(getParaToLong("projectId"));
+        applyInvite.setUserID(notification.getReceiverID().longValue());
+        applyInvite.setApplyOrInvite(1);
+        applyInvite.setStatus(0);
+        applyInvite.setCreateTime(new Date());
+        applyInvite.setDeadTime(time.getTime());
+        applyInvite.setLastAccessTime(new Date());
+        applyInvite.setLastUpdateUserID(user.getId());
+        applyInvite.setIsEnable(true);
+        if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
             throw new BusinessException("邀请失败");
         }
+        renderJson();
+    }
+
+    /**
+     * 渲染专家团体表格数据
+     */
+    @NotNullPara({"id"})
+    public void expertGroupTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Page<ExpertGroup> page = expertGroupService.findPage(pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(expertGroupService.findById(page.getList().get(i).getId()).getPersonID(), 0L).getId(), getParaToLong("id")));
+            System.out.println("这个：" + page.getList().get(i).getIsInvite());
+        }
+        renderJson(new DataTable<ExpertGroup>(page));
     }
 
     @NotNullPara("id")

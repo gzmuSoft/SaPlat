@@ -18,7 +18,7 @@
 </div>
 
 <script type="text/html" id="barOption">
-    <a class="layui-btn layui-btn-xs" lay-event="invite">邀请</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invite">邀请审查</a>
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end
@@ -64,6 +64,10 @@
             var data = obj.data;
             if (obj.event === 'see') {
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+                });
+            } else if (obj.event === 'invite') {
+                pop_show('邀请审查', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', '900', '', function () {
+                    window.location.reload();
                 });
             }
         });
