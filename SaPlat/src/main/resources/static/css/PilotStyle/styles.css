@@ -6,119 +6,138 @@
     padding: 0;
 }
 
+/*背景图片*/
 html {
     height: 100%;
 }
-/*背景图片*/
 
-body {
-    font-family: "楷体";
-}
 /*身体全局*/
-
-#xieyin {
-    font-size: 40px;
-    color: #656765;
-
+body {
+    font-family: "Microsoft Yahei", serif;
 }
+
 /*大字标题*/
 /*form styles*/
+#msform h1 {
+    font-size: 20px;
+    color: #000000;
+    margin-bottom: 30px;
+}
 
+/*除大字标题全部*/
 #msform {
     width: 1000px;
     margin: 10px auto;
     text-align: center;
     position: relative;
     background: rgba(1, 1, 1, 0);
-    font-size: 20px;
+    font-size: 16px;
 }
-/*除大字标题全部*/
 
+/*文本框全局*/
+/*Hide all except first fieldset*/
 #msform fieldset {
     background: rgba(1, 1, 1, 0);
     padding: 20px 30px;
     box-sizing: border-box;
-    width: 35%;
-    margin: 0 32%;
-    /*stacking fieldsets above each other*/
+    width: 100%;
     position: absolute;
 }
-/*文本框全局*/
-/*Hide all except first fieldset*/
 
+/*inputs*/
 #msform fieldset:not(:first-of-type) {
     display: none;
 }
-/*inputs*/
 
-#msform input, #msform textarea ,#msform select{
-    padding: 5px;
-    border: 2px solid #8c8c8c;
-    margin-bottom: 5px;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: "Microsoft YaHei", montserrat;
-    color: rgb(32, 13, 41);
-    font-size: 15px;
-}
-/*文本框*/
+/*文本框,下拉框*/
 /*buttons*/
+.project, .leaderGroup {
+    padding: 5px;
+    width: 21%;
+    box-sizing: border-box;
+    color: rgb(32, 13, 41);
+    float: left;
+    margin-left: 3px;
+    margin-right: 30px;
+    border-radius: 3px;
+    border: 1px solid #bfbfbf;
+    font-family: "Microsoft YaHei", montserrat, serif;
+    font-size: 15px
+}
 
+/*input*/
+#msform input {
+    border: 1px solid #bfbfbf;
+    font-family: "Microsoft YaHei", montserrat, serif;
+    font-size: 15px
+}
+
+/*label*/
+#msform label {
+    width: 8%;
+    float: left;
+    text-align: left;
+}
+
+/*textarea*/
+#msform textarea{
+    float: left;
+    border-radius: 3px;
+}
+
+/* 上一步，下一步*/
+.previous, .next {
+    clear: left;
+}
+
+/*按钮*/
 #msform .action-button {
     width: 100px;
-    background: #66BAB7;
+    background: #009688;
     font-weight: bold;
     color: white;
     border: 0 none;
-    border-radius: 50px;
+    border-radius: 2px;
     cursor: pointer;
     padding: 5px 5px;
     margin: 10px 10px;
 }
-/*按钮*/
 
-#msform .action-button:hover, #msform .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
-}
 /*按钮边框*/
 /*headings*/
-
-.fs-title {
-    font-size: 25px;
-    text-transform: uppercase;
-    color: #376B6D;
-    margin-bottom: 15px;
+#msform .action-button:hover, #msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #43abae;
 }
+
 /*提示语*/
-
-.fs-subtitle {
-    font-weight: normal;
-    font-size: 13px;
-    color: #376B6D;
+.fs-title {
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #000000;
     margin-bottom: 15px;
 }
-/*二级提示语*/
-/*progressbar*/
 
+/*提示语上方空白*/
 #progressbar {
     margin-bottom: 10px;
     overflow: hidden;
     /*CSS counters to number the steps*/
     counter-reset: step;
 }
-/*提示语上方空白*/
 
+/*变动条下方文字*/
 #progressbar li {
     list-style-type: none;
-    color: #0089A5;
+    color: #000000;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 10px;
     width: 25%;
     float: left;
     position: relative;
 }
-/*变动条下方文字*/
 
+/*变动条*/
+/*progressbar connectors*/
 #progressbar li:before {
     content: counter(step);
     counter-increment: step;
@@ -131,9 +150,8 @@ body {
     border-radius: 10px;
     margin: 0 auto 5px auto;
 }
-/*变动条*/
-/*progressbar connectors*/
 
+/*变动线*/
 #progressbar li:after {
     content: '';
     width: 100%;
@@ -144,17 +162,17 @@ body {
     top: 10px;
     z-index: -1; /*put it behind the numbers*/
 }
-/*变动线*/
 
+/*connector not needed before the first step*/
 #progressbar li:first-child:after {
-    /*connector not needed before the first step*/
     content: none;
 }
 
+/*变动条内文字及其颜色*/
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
 #progressbar li.active:before, #progressbar li.active:after {
-    background: #66BAB7;
+    background: #00a89a;
     color: white;
 }
-/*变动条内文字及其颜色*/
+
