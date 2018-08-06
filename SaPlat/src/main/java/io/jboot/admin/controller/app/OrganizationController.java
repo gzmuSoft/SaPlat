@@ -270,7 +270,7 @@ public class OrganizationController extends BaseController {
             model = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -342,7 +342,7 @@ public class OrganizationController extends BaseController {
             model = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -425,7 +425,7 @@ public class OrganizationController extends BaseController {
             model = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
                     .setAttr("flag", 0).render("facAgency.html");
         } else {
@@ -520,7 +520,7 @@ public class OrganizationController extends BaseController {
             model = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
                     .setAttr("flag", 0).render("profGroup.html");
         } else {
@@ -603,7 +603,7 @@ public class OrganizationController extends BaseController {
             model = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)
                     .setAttr("flag", 0).render("reviewGroup.html");
         } else {
