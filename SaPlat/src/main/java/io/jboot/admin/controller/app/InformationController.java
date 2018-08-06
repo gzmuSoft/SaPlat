@@ -193,9 +193,8 @@ public class InformationController extends BaseController {
             Organization organization = organizationService.findById(userService.findById(project.getUserId()).getUserID());
             name = organization.getName();
         } else {
-            ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(projectID);
-            //项目为承接时
-            if (!ProjectUndertakeStatus.UNDERTAKE.equals(projectUndertake.getStatus().toString())) {
+            ProjectUndertake projectUndertake = projectUndertakeService.findListByProjectAndStatus(projectID, ProjectUndertakeStatus.ACCEPT).get(0);
+            if (projectUndertake == null) {
                 renderJson(RestResult.buildError("項目还不能填写资料"));
                 throw new BusinessException("項目还不能填写资料");
             }
@@ -356,7 +355,7 @@ public class InformationController extends BaseController {
         if (diagnoses == null) {
             throw new BusinessException("删除失败");
         }
-        if (!diagnoses.delete()) {
+        if (!diagnosesService.delete(diagnoses)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

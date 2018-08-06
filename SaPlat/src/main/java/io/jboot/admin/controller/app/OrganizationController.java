@@ -1,11 +1,11 @@
 package io.jboot.admin.controller.app;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.RestResult;
-import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
+import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
@@ -16,12 +16,10 @@ import io.jboot.admin.validator.app.OrganizationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * -----------------------------
@@ -64,6 +62,13 @@ public class OrganizationController extends BaseController {
     @JbootrpcService
     private AuthService authService;
 
+    @JbootrpcService
+    private FileFormService fileFormService;
+
+    @JbootrpcService
+    private FilesService filesService;
+
+
 
     /**
      * 跳转注册页面
@@ -90,7 +95,7 @@ public class OrganizationController extends BaseController {
         Long[] roles = new Long[]{roleService.findByName("组织机构").getId()};
         user.setPhone(organization.getContact());
         user.setOnlineStatus("0");
-        user.setUserSource(1);//设置对应的用户来源于“组织机构”的注册
+        user.setUserSource(1);
 
         if (!organizationService.saveOrganization(organization, user, roles)) {
             renderJson(RestResult.buildError("用户保存失败"));
@@ -109,14 +114,77 @@ public class OrganizationController extends BaseController {
     }
 
     /**
-     * 文件上传（未实现）
+     * 报表文件关联
      */
+    @NotNullPara({"tableName", "fieldName", "fileId"})
     public void upload() {
-        UploadFile upload = getFile("file", new SimpleDateFormat("YYYY-MM-DD").format(new Date()));
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-        map.put("path", upload.getFile().getAbsolutePath());
-        map.put("code", ResultCode.SUCCESS);
-        renderJson(map);
+        User loginUser = AuthUtils.getLoginUser();
+        String tableName = getPara("tableName");
+        String fieldName = getPara("fieldName");
+        Long fileId = getParaToLong("fileId");
+        FileForm model = new FileForm();
+        Files files = null;
+        if (tableName.equals("organization")) {
+            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, loginUser.getUserID());
+            if (model == null) {
+                model = new FileForm();
+                model.setRecordID(loginUser.getUserID());
+                model.setCreateTime(new Date());
+                files = filesService.findById(fileId);
+                if (files != null) {
+                    files.setIsEnable(true);
+                }
+            }
+            model.setStatus(false);
+        } else if (tableName.equals("facAgency")) {
+            Long id = facAgencyService.findByOrgId(loginUser.getUserID()).getId();
+            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            if (model == null) {
+                model = new FileForm();
+                model.setCreateTime(new Date());
+            }
+        } else if (tableName.equals("enterprise")) {
+            Long id = enterpriseService.findByOrgId(loginUser.getUserID()).getId();
+            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            if (model == null) {
+                model = new FileForm();
+                model.setCreateTime(new Date());
+            }
+        } else if (tableName.equals("profGroup")) {
+            Long id = profGroupService.findByOrgId(loginUser.getUserID()).getId();
+            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            if (model == null) {
+                model = new FileForm();
+                model.setCreateTime(new Date());
+            }
+        }
+        model.setTableName(tableName);
+        model.setFieldName(fieldName);
+        model.setFileID(fileId);
+
+        model.setLastAccessTime(new Date());
+        model.setLastUpdateUserID(loginUser.getId());
+        model.setCreateUserID(loginUser.getId());
+        if (model.getId() != null) {
+            files = filesService.findById(model.getFileID());
+            if (files != null) {
+                files.setIsEnable(false);
+                if (!filesService.update(files)) {
+                    renderJson(RestResult.buildError("文件禁用失败"));
+                    throw new BusinessException("文件禁用失败");
+                }
+            }
+        }
+        JSONObject json = new JSONObject();
+
+        model = fileFormService.saveOrUpdateAndGet(model, files);
+        if (model == null) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        } else {
+            json.put("fileFromID", model.getId());
+        }
+        renderJson(json);
     }
 
     /**
@@ -146,30 +214,38 @@ public class OrganizationController extends BaseController {
      */
     public void prove() {
         User loginUser = AuthUtils.getLoginUser();
-        Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION);
-        List<Auth> auth1 = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
-        List<String> list = new ArrayList<>();
-        if (auth == null) {
-            auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
-            if (auth != null) {
+        boolean flag = false;
+        if (fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", loginUser.getUserID()) == null) {
+            setAttr("flag", flag).render("prove.html");
+            return;
+        } else {
+            flag = true;
+            Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION);
+            List<Auth> auth1 = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
+            List<String> list = new ArrayList<>();
+            if (auth == null) {
+                auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
+                if (auth != null) {
+                    setAttr("name", roleService.findById(auth.getRoleId()).getName())
+                            .setAttr("Method", roleService.findById(auth.getRoleId()).getRemark())
+                            .setAttr("auth", auth)
+                            .render("proveing.html");
+                } else if (auth1 != null) {
+                    for (int i = 0; i < auth1.size(); i++) {
+                        list.add(roleService.findById(auth1.get(i).getRoleId()).getName());
+                    }
+                    setAttr("flag", flag).setAttr("nameList", list).render("prove.html");
+                } else {
+                    setAttr("flag", flag).render("prove.html");
+                }
+            } else {
                 setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                        .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())
+                        .setAttr("Method", roleService.findById(auth.getRoleId()).getRemark())
                         .setAttr("auth", auth)
                         .render("proveing.html");
-            } else if (auth1 != null) {
-                for (int i = 0; i < auth1.size(); i++) {
-                    list.add(roleService.findById(auth1.get(i).getRoleId()).getName());
-                }
-                setAttr("nameList", list).render("prove.html");
-            } else {
-                render("prove.html");
             }
-        } else {
-            setAttr("name", roleService.findById(auth.getRoleId()).getName())
-                    .setAttr("Method", roleService.findById(auth.getRoleId()).getLastUpdateUserID())
-                    .setAttr("auth", auth)
-                    .render("proveing.html");
         }
+
     }
 
     /**
@@ -270,6 +346,7 @@ public class OrganizationController extends BaseController {
      * 提交认证企业机构数据并进入待审核状态
      */
     @Before(POST.class)
+    @NotNullPara("fileFromID")
     public void enterpriseProve() {
         User loginUser = AuthUtils.getLoginUser();
         Enterprise model = getBean(Enterprise.class, "enterprise");
@@ -294,6 +371,16 @@ public class OrganizationController extends BaseController {
         auth.setStatus(AuthStatus.VERIFYING);
         if (enterpriseService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
+            FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
+            fileForm.setRecordID(enterpriseService.findByOrgId(loginUser.getUserID()).getId());
+            Files files = filesService.findById(fileForm.getFileID());
+            files.setIsEnable(true);
+            if (fileFormService.saveOrUpdateAndGet(fileForm, files) != null) {
+                renderJson(RestResult.buildSuccess("保存成功"));
+            } else {
+                renderJson(RestResult.buildSuccess("保存失败"));
+                throw new BusinessException("失败");
+            }
         } else {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");
@@ -342,6 +429,7 @@ public class OrganizationController extends BaseController {
      * 提交认证服务机构数据并进入待审核状态
      */
     @Before(POST.class)
+    @NotNullPara({"fileFromID", "fileFromID1"})
     public void facAgencyProve() {
         User loginUser = AuthUtils.getLoginUser();
         FacAgency model = getBean(FacAgency.class, "facAgency");
@@ -366,6 +454,27 @@ public class OrganizationController extends BaseController {
         auth.setStatus(AuthStatus.VERIFYING);
         if (facAgencyService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
+            Long recordId = loginUser.getUserID();
+            FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
+            fileForm.setRecordID(facAgencyService.findByOrgId(recordId).getId());
+            Files files = filesService.findById(fileForm.getFileID());
+            files.setIsEnable(true);
+            if (fileFormService.saveOrUpdateAndGet(fileForm, files) != null) {
+                renderJson(RestResult.buildSuccess("保存成功"));
+            } else {
+                renderJson(RestResult.buildSuccess("保存失败"));
+                throw new BusinessException("认证失败");
+            }
+            fileForm = fileFormService.findById(getParaToLong("fileFromID1"));
+            fileForm.setRecordID(facAgencyService.findByOrgId(recordId).getId());
+            files = filesService.findById(fileForm.getFileID());
+            files.setIsEnable(true);
+            if (fileFormService.saveOrUpdateAndGet(fileForm, files) != null) {
+                renderJson(RestResult.buildSuccess("保存成功"));
+            } else {
+                renderJson(RestResult.buildSuccess("保存失败"));
+                throw new BusinessException("认证失败");
+            }
         } else {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");
@@ -415,6 +524,7 @@ public class OrganizationController extends BaseController {
      * 提交认证审查团体数据并进入待审核状态
      */
     @Before(POST.class)
+    @NotNullPara("fileFromID")
     public void profGroupProve() {
         User loginUser = AuthUtils.getLoginUser();
         ProfGroup model = getBean(ProfGroup.class, "profGroup");
@@ -439,6 +549,16 @@ public class OrganizationController extends BaseController {
         auth.setStatus(AuthStatus.VERIFYING);
         if (profGroupService.saveOrUpdate(model, auth)) {
             renderJson(RestResult.buildSuccess("认证成功"));
+            FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
+            fileForm.setRecordID(profGroupService.findByOrgId(loginUser.getUserID()).getId());
+            Files files = filesService.findById(fileForm.getFileID());
+            files.setIsEnable(true);
+            if (fileFormService.saveOrUpdateAndGet(fileForm, files) != null) {
+                renderJson(RestResult.buildSuccess("保存成功"));
+            } else {
+                renderJson(RestResult.buildSuccess("保存失败"));
+                throw new BusinessException("保存失败");
+            }
         } else {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");

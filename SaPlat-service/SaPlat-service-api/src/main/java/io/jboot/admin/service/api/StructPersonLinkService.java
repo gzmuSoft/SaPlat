@@ -10,6 +10,12 @@ import java.util.Map;
 
 public interface StructPersonLinkService {
     /**
+     * 根据用户ID以及架构ID查询用户是否已经是架构成员
+     * 防止用户重复加入架构的情况
+     * @return
+     */
+    public List<StructPersonLink> findByStructIdAndUserID(Long structID, Long userID);
+    /**
      * 架构人员列表
      * @param orgStructureId
      * @return

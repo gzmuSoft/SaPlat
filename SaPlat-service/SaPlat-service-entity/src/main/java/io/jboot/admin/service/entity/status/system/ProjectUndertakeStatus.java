@@ -24,7 +24,7 @@ public class ProjectUndertakeStatus extends BaseStatus{
      */
     public final static String ACCEPT = "2";
     /**
-     * 已承接
+     * 已被他人承接
      */
     public final static String UNDERTAKE = "3";
 
@@ -32,7 +32,7 @@ public class ProjectUndertakeStatus extends BaseStatus{
         add(WAITING, "待确认");
         add(REFUSE, "已拒绝");
         add(ACCEPT, "已同意");
-        add(UNDERTAKE, "已被承接");
+        add(UNDERTAKE, "已被他人承接");
     }
     private static ProjectUndertakeStatus me;
 

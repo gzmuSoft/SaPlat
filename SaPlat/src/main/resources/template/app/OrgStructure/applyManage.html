@@ -1,0 +1,167 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+
+#define js()
+<script type="text/javascript">
+
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {title: '架构', width: 150, align: 'center', toolbar: '#structure'}
+                , {title: '内容', width: 500, align: 'center', toolbar: '#content'}
+                , {field: 'createTime', title: '创建时间', width: 150}
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/OrgStructure/showApplyApi'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'accept') {
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/OrgStructure/acceptApply',
+                    data: {id: data.id},
+                    loadFlag: true,
+                    success: function (data) {
+                        // layer.msg("加入组织架构成功");
+                        reloadTable(null);
+                    },
+                    unSuccess: function (data) {
+                    }
+                })
+            } else if (obj.event == 'reject') {
+                layer.prompt({
+                    formType: 2,
+                    value: '',
+                    title: '输入拒绝加入原因',
+                    area: ['300px', '150px'] //自定义文本域宽高
+                }, function(value, index, elem){
+
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/OrgStructure/rejectApply',
+                        data: {id: data.id,reply: value},
+                        loadFlag: true,
+                        success: function (data) {
+                            reloadTable(null);
+                        },
+                        unSuccess: function (data) {
+                        }
+                    })
+                    layer.close(index);
+                });
+            }
+        });
+
+
+        reloadTable = function (name) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/OrgStructure/showApplyApi'
+                , where: {name: name} //设定异步数据接口的额外参数
+            });
+        }
+
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field.name);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">架构名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="架构名称" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">用户ID</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="uid" name="uid" placeholder="用户ID" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr>
+
+    <div class="layui-row">
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+
+</div>
+<script type="text/html" id="structure">
+    #[[
+    {{ d.name }}
+    ]]#
+</script>
+<script type="text/html" id="content">
+    【#[[{{ d.name}}]]#】架构的管理员邀请你加入此架构，是否加入此架构？
+</script>
+<script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="accept">同意</a>
+
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reject">拒绝</a>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.status == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs">已拒绝</a>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.status == '2'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs">已加入</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#end

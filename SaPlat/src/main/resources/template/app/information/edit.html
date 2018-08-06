@@ -55,7 +55,7 @@
             var content = $('#content');
             content.prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")));
             if (html === "/app/fileupload"){
-                content.prop("src", "#(ctxPath)/app/fileupload/?id=#(projectId)");
+                content.prop("src", "#(ctxPath)/app/fileupload/?projectID=#(projectId)");
             } else if (html === "/app/fileupload/document"){
                 content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)");
             }

@@ -6,6 +6,7 @@ import io.jboot.admin.service.api.StructPersonLinkService;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
@@ -50,6 +51,13 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         map.put("count",list.size());
         map.put("data",list);
         return map;
+    }
+    @Override
+    public List<StructPersonLink> findByStructIdAndUserID(Long structID, Long userID){
+        Columns columns = Columns.create();
+        columns.eq("structID",structID);
+        columns.eq("personID",userID);
+        return DAO.findListByColumns(columns.getList());
     }
 }
 

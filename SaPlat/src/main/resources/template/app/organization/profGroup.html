@@ -23,23 +23,6 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="upload"><em class="require-mark">*</em>营业执照或相关文件</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload">
-                        <div class="layui-upload">
-                            <button type="button" class="layui-btn" name="upload" id="upload"><i
-                                    class="layui-icon"></i>上传文件
-                            </button>
-                            <label class="layui-hide" for="organization.certificate"></label><input type="text"
-                                                                                                    class="layui-hide"
-                                                                                                    name="organization.certificate"
-                                                                                                    id="organization.certificate">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.name">专业团体名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
@@ -117,19 +100,9 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="upload1"><em class="require-mark">*</em>管理员身份证照片</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload1">
-                        <div class="layui-upload1">
-                            <button type="button" class="layui-btn" name="upload1" id="upload1"><i
-                                    class="layui-icon"></i>上传文件
-                            </button>
-                            <label class="layui-hide" for="profGroup.identity"></label><input type="text"
-                                                                                              class="layui-hide"
-                                                                                              name="profGroup.identity"
-                                                                                              id="profGroup.identity">
-                        </div>
-                    </div>
+                <label class="layui-form-label x-center"><em class="require-mark">*</em>管理员身份证照片</label>
+                <div class="layui-input-inline layui-upload">
+                    <button type="button" class="layui-btn" id="upload"><i class="layui-icon"></i>上传文件</button>
                 </div>
             </div>
 
@@ -157,16 +130,35 @@
             , form = layui.form
             , upload = layui.upload;
 
-
-        upload.render({ //允许上传的文件后缀
+        var fileFromID;
+        upload.render({
             elem: '#upload'
-            , url: '#(ctxPath)/app/organization/upload'
-            , accept: 'file' //普通文件
-            , exts: 'doc|docx|pdf' //只允许上传压缩文件
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "管理员身份证照片"
+            }
             , done: function (res) {
+                console.log(res.data);
+                if (res.code == 0) {
+                    pop_close();
+                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=profGroup&fieldName=管理员身份证照片', function (data) {
+                        fileFromID = data.fileFromID;
+                        console.log(data);
+                        console.log(fileFromID);
+                        layer.msg("上传成功");
+                    });
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
+                }
+            }
+            , error: function (index, upload) {
+                alert("文件上传错误！请重新尝试！");
             }
         });
-
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
@@ -175,7 +167,7 @@
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
-                    window.location.href = '#(ctxPath)/app/organization/prove';
+                    window.location.href = '#(ctxPath)/app/organization/prove?fileFromID=' + fileFromID;
                     setTimeout(function () {
                         return true;
                     }, 3000);

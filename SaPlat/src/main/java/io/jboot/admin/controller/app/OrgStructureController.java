@@ -1,7 +1,6 @@
 package io.jboot.admin.controller.app;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -10,6 +9,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
+import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -148,25 +148,41 @@ public class OrgStructureController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
     /**
-     * 邀请架构人员加入架构
+     * 组织邀请个人群体加入架构
      *
      */
     @NotNullPara("orgType")
     public void postAddPerson(){
         int orgType = getParaToInt("orgType");
         ApplyInvite applyInvite = getBean(ApplyInvite.class,"applyInvite");
+        Date nowTime = new Date();
+        Calendar threeDaysLater = Calendar.getInstance();
+        //获取三天以后的日期作为申请的失效日期
+        threeDaysLater.setTime(nowTime);
+        threeDaysLater.add(Calendar.DATE, 3);
+
+        applyInvite.setDeadTime(threeDaysLater.getTime());
         applyInvite.setCreateUserID(AuthUtils.getLoginUser().getId());
         applyInvite.setCreateTime(new Date());
         applyInvite.setApplyOrInvite(1);
+        applyInvite.setModule(0);
+        applyInvite.setStatus(0);
         applyInvite.setUserSource(orgType);
-        Long uid = applyInvite.getId();
-        User user = userService.findById(uid);
+        applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
+        User user = userService.findByName(applyInvite.getName());
+        OrgStructure orgStructure = orgStructureService.findById(applyInvite.getStructID());
+        if(orgStructure == null){
+            throw new BusinessException("你不能邀请用户加入一个不存在的架构");
+        }
+        applyInvite.setName(orgStructure.getName());
         if(user == null){
             throw new BusinessException("用户不存在无法邀请加入组织架构！");
             //生成邀请注册页面
         }
-        if(!applyInviteService.save(applyInvite)){
-            throw new BusinessException("邀请信息已经发送，等待用户同意");
+        applyInvite.setUserID(user.getId());
+        Notification notification =  sendMessage("邀请加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"组织架构（" + applyInvite.getName() + "）的管理员邀请你加入该架构，请前往组织架构 -> 通知消息 处理！","/app/OrgStructure/showMessage",user.getId(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
+            throw new BusinessException("邀请请求发送失败！");
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -220,6 +236,56 @@ public class OrgStructureController extends BaseController {
     }
 
     /**
+     * 个人群体 - 同意加入架构
+     */
+    @NotNullPara("id")
+    public void acceptJoinStruct(){
+        Long id = getParaToLong("id");
+        Long uid = AuthUtils.getLoginUser().getId();
+        ApplyInvite applyInvite = applyInviteService.findById(id);
+        if(applyInvite == null){
+            throw  new BusinessException("邀请信息不存在");
+        }
+        if(isStructPerson(applyInvite.getStructID(),uid)){
+            throw new BusinessException("你已经加入了架构，无需重复加入架构");
+        }
+        applyInvite.setStatus(2);
+        StructPersonLink structPersonLink = new StructPersonLink();
+        structPersonLink.setCreateTime(new Date());
+        structPersonLink.setStructID(applyInvite.getStructID());
+        structPersonLink.setCreateUserID(applyInvite.getCreateUserID());
+        structPersonLink.setPersonID(applyInvite.getUserID());
+        structPersonLink.setIsEnable(true);
+        Notification notification =  sendMessage("邀请用户加入架构通知","你好！你邀请的用户" + AuthUtils.getLoginUser().getName() +"已经成功加入组织架构！","/app/OrgStructure/applyManage",applyInvite.getBelongToID(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveAndUpdateAndSend(applyInvite,notification,structPersonLink)){
+            renderJson(RestResult.buildError("同意申请处理失败！"));
+            throw new BusinessException("同意申请处理失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 个人群体 - 拒绝加入架构
+     */
+    @NotNullPara("id")
+    public void rejectJoinStruct(){
+        Long ApplyId = getParaToLong("id");
+        String reply = getPara("reply",null);
+        ApplyInvite applyInvite = applyInviteService.findById(ApplyId);
+        if(applyInvite == null){
+            throw  new BusinessException("邀请信息不存在");
+        }
+        applyInvite.setReply(reply);
+        applyInvite.setStatus(1);
+        Notification notification =  sendMessage("拒绝加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"拒绝了你的邀请（加入组织架构" + applyInvite.getName() + "），拒绝原因:" + reply + "。","/app/OrgStructure/applyManage",applyInvite.getBelongToID(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
+            renderJson(RestResult.buildError("拒绝用户申请失败！"));
+            throw new BusinessException("拒绝用户申请失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+
+    }
+    /**
      * 查询已经个人群体加入的架构列表接口
      */
     public void myStructureListApi(){
@@ -240,7 +306,11 @@ public class OrgStructureController extends BaseController {
         threeDaysLater.setTime(nowTime);
         threeDaysLater.add(Calendar.DATE, 3);
         OrgStructure orgStructure = orgStructureService.findById(structID);
+        if(orgStructure == null){
+            throw new BusinessException("你准备加入的架构不存在！");
+        }
         ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setBelongToID(orgStructure.getCreateUserID());
         applyInvite.setUserID(uid);
         applyInvite.setCreateTime(new Date());
         applyInvite.setUserSource(orgStructure.getOrgType());
@@ -253,7 +323,8 @@ public class OrgStructureController extends BaseController {
         applyInvite.setStructID(orgStructure.getId());
         //设置状态标识：0待确认，1已拒绝，2已同意
         applyInvite.setStatus(0);
-        if(!applyInviteService.save(applyInvite)){
+        Notification notification =  sendMessage("申请加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"申请加入组织架构（" + applyInvite.getName() + "），请前往组织架构->申请管理中心处理！","/app/OrgStructure/showMessage",applyInvite.getBelongToID(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
            throw new BusinessException("申请请求发送失败！");
         }
         renderJson(RestResult.buildSuccess());
@@ -272,4 +343,126 @@ public class OrgStructureController extends BaseController {
         Page<OrgStructure> page = orgStructureService.searchStructure(orgStructure,pageNumber,pageSize);
         renderJson(new DataTable<OrgStructure>(page));
     }
+
+    /**
+     * 查看架构邀请信息页面
+     */
+    public void showMessage(){
+        render("showMessage.html");
+    }
+    /**
+     * 查看架构邀请信息接口
+     */
+    public void showMessageApi(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long uid = AuthUtils.getLoginUser().getId();
+        String name = getPara("name");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setUserID(uid);
+        applyInvite.setName(name);
+        Page<ApplyInvite> list = applyInviteService.findListByUserIdOrUserName(pageNumber,pageSize,applyInvite);
+        renderJson(new DataTable<ApplyInvite>(list));
+    }
+    /**
+     * 管理机构 - 管理申请加入架构页面
+     */
+    public void applyManage(){
+        render("applyManage.html");
+    }
+
+    /**
+     * 管理组织 - 查看用户主动申请加入架构列表
+     */
+    public void showApplyApi(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        String name = getPara("name");
+        Long pid = getParaToLong("uid");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setUserID(pid);
+        applyInvite.setName(name);
+        applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
+        Page<ApplyInvite> list = applyInviteService.findApplyByUserIdOrName(pageNumber,pageSize,applyInvite);
+        renderJson(new DataTable<ApplyInvite>(list));
+    }
+    /**
+     * 组织 - 同意用户申请加入架构
+     */
+    @NotNullPara("id")
+    public void acceptApply(){
+        Long id = getParaToLong("id");
+        ApplyInvite applyInvite = applyInviteService.findById(id);
+        if(applyInvite == null){
+            throw  new BusinessException("申请信息不存在");
+        }
+        if(isStructPerson(applyInvite.getStructID(),applyInvite.getUserID())){
+            throw new BusinessException("该用户已经加入了架构，无需重复加入");
+        }
+        applyInvite.setStatus(2);
+        StructPersonLink structPersonLink = new StructPersonLink();
+        structPersonLink.setCreateTime(new Date());
+        structPersonLink.setStructID(applyInvite.getStructID());
+        structPersonLink.setCreateUserID(applyInvite.getCreateUserID());
+        structPersonLink.setPersonID(applyInvite.getUserID());
+        structPersonLink.setIsEnable(true);
+        Notification notification =  sendMessage("成功加入架构通知","你好！你申请加入的组织架构（" + applyInvite.getName() + "）已经加入成功！","/app/OrgStructure/showMessage",applyInvite.getUserID(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveAndUpdateAndSend(applyInvite,notification,structPersonLink)){
+            renderJson(RestResult.buildError("同意申请处理失败！"));
+            throw new BusinessException("同意申请处理失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+    /**
+     * 组织 - 拒绝用户申请加入架构
+     */
+    @NotNullPara("id")
+    public void rejectApply(){
+        Long id = getParaToLong("id");
+        String reply = getPara("reply",null);
+        ApplyInvite applyInvite = applyInviteService.findById(id);
+        if(applyInvite == null){
+            throw  new BusinessException("邀请信息不存在");
+        }
+        applyInvite.setReply(reply);
+        applyInvite.setStatus(1);
+        Notification notification =  sendMessage("被拒绝加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"你申请加入组织架构（" + applyInvite.getName() + "）被组织管理员拒绝，被拒绝原因:" + reply + "！","/app/OrgStructure/showMessage",applyInvite.getUserID(),AuthUtils.getLoginUser());
+        if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
+            renderJson(RestResult.buildError("拒绝用户申请失败！"));
+            throw new BusinessException("拒绝用户申请失败！");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+    /**
+     * 私有方法 用于查询用户在是否已经是架构中的成员 避免架构人员关联表中数据存在重复
+     * true存在 false 不存在
+     */
+    private Boolean isStructPerson(Long structID,Long userID){
+        List<StructPersonLink> structPersonLink = structPersonLinkService.findByStructIdAndUserID(structID,userID);
+        if(structPersonLink.size() > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /***
+     * 私有方法 用于发送站内通知信息
+     */
+    private Notification sendMessage(String title,String content,String source,Long ReceiverID,User user){
+        Notification notification = new Notification();
+        notification.setName(title);
+        notification.setSource(source);
+        notification.setContent(content);
+        //TODO 待处理接受模块路径
+        notification.setRecModule("");
+        notification.setReceiverID(Math.toIntExact(ReceiverID));
+        notification.setCreateTime(new Date());
+        notification.setCreateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setStatus(0);
+        notification.setIsEnable(true);
+        return notification;
+    }
+
 }

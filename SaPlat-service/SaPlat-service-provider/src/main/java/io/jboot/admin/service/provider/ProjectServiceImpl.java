@@ -149,9 +149,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public Project saveProject(Project model) {
         if (!model.save()) {
-            return model;
-        } else {
             return null;
+        } else {
+            return model;
         }
     }
 
