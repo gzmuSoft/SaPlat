@@ -39,7 +39,6 @@ public class FacAgencyController extends BaseController {
     /**
      * res表格数据
      */
-    @NotNullPara({"name"})
     public void tableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);

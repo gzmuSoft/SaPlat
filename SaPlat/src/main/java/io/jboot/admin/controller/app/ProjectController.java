@@ -354,9 +354,11 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
         Project project = projectService.findById(id);
+        ProjectAssType projectAssType = projectAssTypeService.findById(project.getPaTypeID());
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         List<FileProject> fileProjects = fileProjectService.findAllByProjectID(id);
-        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(1L);
+        ProjectFileType projectFileType = projectFileTypeService.findByName(projectAssType.getName());
+        List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(projectFileType.getId());
         JSONObject json = new JSONObject();
         if (project != null && leaderGroup != null && projectFileTypes.size() == fileProjects.size()) {
             AuthProject authProject = new AuthProject();
@@ -365,12 +367,14 @@ public class ProjectController extends BaseController {
             authProject.setUserId(user.getId());
             authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
             authProject.setName(userService.findById(user.getId()).getName());
-            if (project.getAssessmentMode().equals("委评")) {
+            if ("委评".equals(project.getAssessmentMode())) {
                 authProject.setStatus(ProjectStatus.VERIFIING);
                 project.setStatus(ProjectStatus.VERIFIING);
-            } else if (project.getAssessmentMode().equals("自评")) {
+            } else if ("自评".equals(project.getAssessmentMode())) {
                 authProject.setStatus(ProjectStatus.IS_VERIFY);
                 project.setStatus(ProjectStatus.IS_VERIFY);
+            } else {
+                json.put("status", false);
             }
             if (!projectService.saveOrUpdate(project, authProject)) {
                 renderJson(RestResult.buildError("保存失败"));
@@ -708,5 +712,16 @@ public class ProjectController extends BaseController {
         if (!projectUndertakeService.saveOrUpdateAndSend(projectUndertake, notification)) {
             throw new BusinessException("邀请失败");
         }
+    }
+
+    @NotNullPara("id")
+    public void updateStatus(){
+        Long id=getParaToLong("id");
+        AuthProject authProject=authProjectService.findByProjectId(id);
+        authProject.setStatus(ProjectStatus.VERIFIING);
+        if(!authProjectService.update(authProject)){
+            throw new BusinessException("请求错误");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 }

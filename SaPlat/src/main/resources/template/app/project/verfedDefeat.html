@@ -29,6 +29,11 @@
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end
+
+    #shiroHasPermission('/app/project/buildProject')
+    <a class="layui-btn layui-btn-xs" lay-event="build">补充资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="send">发起审核</a>
+    #end
 </script>
 #end
 
@@ -54,7 +59,7 @@
                 , {field: 'site', title: '地址', width: 100}
                 , {field: 'brief', title: '简介', width: 100}
                 , {field: 'reply', title: '审核未通过原因', width: 200}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/verfedDefeat'
             , method: 'get'
@@ -84,6 +89,24 @@
             var data = obj.data;
             if (obj.event === 'see') {
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+                });
+            } else             if (obj.event === 'build') {
+                window.location.href = '#(ctxPath)/app/project/projectMessage?id=' + data.id;
+            } else if (obj.event === 'send') {
+                layer.confirm('确定发起审核吗？(审核过程中不可编辑资料！)', function (index) {
+                    $.post('#(ctxPath)/app/project/updateStatus', {
+                        id: data.id
+                    }, function (res) {
+                        console.log(res.status);
+                        if (res.code == 0) {
+                            layer.msg("发起审核成功！");
+                            layer.close(index);
+                            window.location.reload();
+                        } else if (res.code == 1) {
+                            layer.msg("请先将项目相关资料补充完整！");
+                            layer.close(index);
+                        }
+                    });
                 });
             }
         });

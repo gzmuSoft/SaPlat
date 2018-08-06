@@ -345,9 +345,9 @@
                     function (data) {
                         judgeFile = data.judgeFile;
                         if (judgeFile === true) {
-                            alert("您的所有文件都已上传完毕，点击确定继续…")
+                            layer.msg("您的所有文件都已上传完毕")
                         } else if (judgeFile === false) {
-                            alert("您还有部分文件未上传，之后您可以前往“立项中的项目”进行完善，点击确定继续…")
+                            layer.msg("您还有部分文件未上传，之后您可以前往“立项中的项目”进行完善")
                         }
                     });
             }
