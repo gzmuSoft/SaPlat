@@ -137,23 +137,32 @@ public class OrganizationController extends BaseController {
             }
             model.setStatus(false);
         } else if (tableName.equals("facAgency")) {
-            Long id = facAgencyService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            FacAgency facAgency=facAgencyService.findByOrgId(loginUser.getUserID());
+            if(facAgency!=null){
+                Long id =facAgency.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("enterprise")) {
-            Long id = enterpriseService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            Enterprise enterprise=enterpriseService.findByOrgId(loginUser.getUserID());
+            if(enterprise!=null){
+                Long id =enterprise.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("profGroup")) {
-            Long id = profGroupService.findByOrgId(loginUser.getUserID()).getId();
-            model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
-            if (model == null) {
+            ProfGroup profGroup=profGroupService.findByOrgId(loginUser.getUserID());
+            if(profGroup!=null){
+                Long id =profGroup.getId();
+                model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
+            }
+            if(model==null){
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }

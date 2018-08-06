@@ -205,6 +205,10 @@
         });
 
         form.on('submit(sub)', function (data) {
+            if(isNaN(parseInt(fileFromID))){
+                layer.msg("您的文件还没有上传,请上传后再提交");
+                return false;
+            }
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/organization/enterpriseProve?fileFromID=' + fileFromID,
@@ -212,9 +216,7 @@
                 loadFlag: true,
                 success: function (data) {
                     window.location.href = '#(ctxPath)/app/organization/prove';
-                    setTimeout(function () {
-                        return true;
-                    }, 3000);
+                    return true;
                 },
                 error: function (data) {
                     console.log(data);

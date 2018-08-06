@@ -4,8 +4,10 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.FileProjectService;
 import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Column;
@@ -27,9 +29,12 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Inject
     private FilesService filesService;
 
+    @Inject
+    private ProjectService projectService;
+
     @Override
     public List<FileProject> findListById(Long id) {
-        return DAO.findListByColumn(Column.create("parentID",id));
+        return DAO.findListByColumn(Column.create("parentID", id));
     }
 
     @Override
@@ -45,10 +50,10 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID,Long projectID){
+    public List<FileProject> findListByFileTypeIDAndProjectID(Long fileTypeID, Long projectID) {
         Columns columns = Columns.create();
-        columns.eq("projectID",projectID);
-        columns.eq("fileTypeID",fileTypeID);
+        columns.eq("projectID", projectID);
+        columns.eq("fileTypeID", fileTypeID);
         return DAO.findListByColumns(columns);
     }
 
@@ -62,7 +67,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
 
     @Override
     public Page<FileProject> findPage(FileProject model, int pageNumber, int pageSize) {
-        Columns columns=Columns.create();
+        Columns columns = Columns.create();
         if (model.getProjectID() != null && model.getFileTypeID() != null) {
             columns.eq("projectID", model.getProjectID());
             columns.eq("fileTypeID", model.getFileTypeID());
@@ -98,7 +103,14 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public boolean updateFileProjectAndFiles(FileProject model){
+    public boolean updateFileProjectAndProject(FileProject fileProject, Project project) {
+        return Db.tx(() -> {
+            return !(!update(fileProject) || !projectService.update(project));
+        });
+    }
+
+    @Override
+    public boolean updateFileProjectAndFiles(FileProject model) {
         return Db.tx(() -> {
             if (!update(model)) {
                 return false;
@@ -124,8 +136,8 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public FileProject saveAndGet(FileProject model){
-        if(!model.save()){
+    public FileProject saveAndGet(FileProject model) {
+        if (!model.save()) {
             return null;
         }
         return model;
