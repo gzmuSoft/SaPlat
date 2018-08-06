@@ -4,13 +4,11 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.AuthService;
+import io.jboot.admin.service.api.ExpertGroupService;
 import io.jboot.admin.service.api.FilesService;
 import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.Files;
-import io.jboot.aop.annotation.Bean;
-import io.jboot.admin.service.api.ExpertGroupService;
-import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
+import io.jboot.admin.service.entity.model.Files;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -38,6 +36,11 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
             columns.like("name", "%" + model.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+    @Override
+    public Page<ExpertGroup> findPage(int pageNumber, int pageSize) {
+        return DAO.paginate(pageNumber, pageSize, "id desc");
     }
 
     @Override

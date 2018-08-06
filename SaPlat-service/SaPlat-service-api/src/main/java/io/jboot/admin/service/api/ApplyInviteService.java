@@ -44,6 +44,12 @@ public interface ApplyInviteService  {
      */
     public ApplyInvite findById(Object id);
 
+    /**
+     * @param facAgencyID
+     * @param projectID
+     * @return
+     */
+    public boolean findIsInvite(Long facAgencyID, Long projectID);
 
     /**
      * find all model
