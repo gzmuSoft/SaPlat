@@ -67,7 +67,7 @@ public interface FileFormService {
      * @param model
      * @return
      */
-    public FileForm saveAndGet(FileForm model);
+    public FileForm saveAndGet(FileForm model, Files files);
 
     /**
      * save or update model

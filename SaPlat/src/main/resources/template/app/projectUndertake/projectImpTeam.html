@@ -123,7 +123,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID1"></p>
-                <h class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID"></h>
+                <input class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID" lay-verify="required" >
             </div>
 
             <div class="layui-form-item">
@@ -148,7 +148,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.assLeaderIDs1"></p>
-                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs"></h>
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs" lay-verify="required" >
             </div>
 
             <div class="layui-form-item">
@@ -173,7 +173,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.expertGroupIDs1"></p>
-                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs"></h>
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs" lay-verify="required">
             </div>
 
             <div class="layui-form-item">
@@ -198,7 +198,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.invTeamIDs1"></p>
-                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.invTeamIDs"></h>
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.invTeamIDs" lay-verify="required">
             </div>
 
             <div class="layui-form-item">
@@ -223,7 +223,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.repTeamIDs1"></p>
-                <h class="layui-form-mid layui-word-aux layui-hide" id="impTeam.repTeamIDs"></h>
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.repTeamIDs" lay-verify="required">
             </div>
         </div>
 
@@ -244,7 +244,6 @@
         <label for="measure"></label><textarea id="measure" name="EvaScheme.measure" style="display: none;"></textarea>
 
         <h2 style="margin-top: 50px;">风险评估工作时间安排和进度计划表填写</h2>
-        <p class="layui-form-mid layui-word-aux">首行不可操作</p>
         <hr class="layui-bg-black">
 
 
@@ -287,11 +286,11 @@
 
 #define js()
 <script type="text/html" id="barDemo">
-    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled" lay-event="del" id="notDel" disabled=true>删除</a>
 </script>
 
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table','upload'], function () {
+    layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table', 'upload'], function () {
         /**
          *  操作对象
          */
@@ -352,10 +351,10 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[
                 {type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '计划名称', align: 'center', width: 250}
-                , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date'}
-                , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date'}
-                , {field: 'content', title: '工作内容', align: 'center', width: 400}
+                , {field: 'name', title: '计划名称', align: 'center', width: 250,edit: true}
+                , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date',edit: true}
+                , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date',edit: true}
+                , {field: 'content', title: '工作内容', align: 'center', width: 400,edit: true}
                 , {field: 'action', title: '操作', align: 'center', unresize: true, rowspan: 1, toolbar: '#barDemo'}
             ]]
             , loading: true
@@ -366,12 +365,10 @@
         /**
          * 表格添加事件
          */
-        var not = false;
+        var not = true;
         var index = table.cache.dateTable.length;
         $('#addTable').click(function () {
-            if (not) {
                 isNull();
-            }
             if (!not) {
                 var tr = $('<tr data-index="' + index + '"></tr>');
                 var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
@@ -406,19 +403,15 @@
          * 表格删除事件
          */
         $(document).on("click", "#del", function () {
-            not = false;
             var tr = $(this).parents("tr");
             var id = parseInt(tr.attr("data-index"));
-            if (id === 0) {
-                layer.msg("至少保留一项！");
-                return;
-            }
             tr.remove();
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX === id) {
                     value.LAY_TABLE_INDEX = -1;
                 }
             });
+            not = false;
         });
 
         /**
@@ -463,7 +456,7 @@
                     if (string !== "" && flag) {
                         $(id).html('<option value=""></option>' + string);
                     } else if (flag && string === "") {
-                        $(id).html('<option value="">无</option>');
+                        $(id).html('<option value=""></option>');
                     } else {
                         $(id).html('<option value=""></option>' + optionString);
                     }
@@ -479,7 +472,7 @@
          */
         form.on('select(clickOption11)', function (data) {
             $("#impTeam\\.leaderID1").text(data.elem[data.elem.selectedIndex].text);
-            $("#impTeam\\.leaderID").text(data.value);
+            $("#impTeam\\.leaderID").val(data.value);
         });
         form.on('select(clickOption21)', function (data) {
             judge("#impTeam\\.assLeaderIDs", "#impTeam\\.assLeaderIDs1", data, temp1)
@@ -509,7 +502,7 @@
                 temp.length++;
                 temp[temp.length - 1] = data.value;
                 $(id2).append(data.elem[data.elem.selectedIndex].text + " ");
-                $(id1).append(data.value + ",");
+                $(id1).val($(id1).val() + ",");
             }
         }
 
@@ -518,9 +511,9 @@
          */
         function isNull() {
             $.each(table.cache.dateTable, function notNull(index, value) {
-                if (value.LAY_TABLE_INDEX > 0) {
+                if (value.LAY_TABLE_INDEX >= 0) {
                     if (value.name != null) {
-                        not = value.content == null;
+                        not = (value.content == null||value.content=="")
                     } else
                         not = true;
                 }
@@ -572,7 +565,7 @@
         function tableNull() {
             var dte = false;
             $.each(table.cache.dateTable, function notNull(index, value) {
-                if (value.LAY_TABLE_INDEX > 0) {
+                if (value.LAY_TABLE_INDEX >= 0) {
                     if (value.name != null) {
                         dte = value.content != null;
                     } else
@@ -600,15 +593,30 @@
             , done: function (res) {
                 console.log(res.data);
                 if (res.code == 0) {
-                    $.getJSON(
-                        '#(ctxPath)/app/projectUndertake/upFile?fileId=' + res.data.fileId + '&fieldName='+$(this)[0].item.text(),
-                        function (data) {
-                            fileFormId = data.fileFormId;
-                        });
+                    var temp;
+                    util.sendAjax({
+                        type: 'GET',
+                        url: '#(ctxPath)/app/projectUndertake/upFile',
+                        async:false,
+                        data: {
+                            fileId:res.data.fileId,
+                            fieldName:$(this)[0].item.text()
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            if(data.code==0) {
+                                fileFormId = data.data.fileFormId;
+                                flag=true;
+
+                            }
+                        }
+                    });
+                    if(flag){
+                        $(this)[0].item.addClass("layui-btn-disabled");
+                        $(this)[0].item.attr("disabled",true);
+                    }
                 } else if (res.code == 1) {
-                    layer.msg("文件上传失败，请重新选择上传！");
-                    setTimeout(function () {
-                    }, 1000);
+                    return false;
                 }
             }, error: function (index, upload) {
                 alert("文件上传错误！请重新尝试！");
@@ -621,7 +629,7 @@
         function dataString() {
             string += "fileFormId=" + fileFormId + "&EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
             $.each(table.cache.dateTable, function (index, value) {
-                if (value.LAY_TABLE_INDEX > 0) {
+                if (value.LAY_TABLE_INDEX >= 0) {
                     string += "ScheduledPlan.name=" + value.name + "&ScheduledPlan.content=" + value.content + "&";
                 }
             });
@@ -635,8 +643,8 @@
                     temp++;
                 }
             });
-            $("h").each(function () {
-                string += $(this).attr('id') + "=" + $(this).text() + "&";
+            $("input.layui-hide").each(function () {
+                string += $(this).attr('id') + "=" + $(this).val() + "&";
             });
             string += $("#impTeamName").attr('name') + "=" + $("#impTeamName").val() + "&";
             string += $("#startDate").attr('name') + "=" + $("#startDate").val() + "&";
@@ -659,7 +667,9 @@
                                 url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
                                 loadFlag: true,
                                 success: function (data) { //请求成功的回调函数
-                                    window.location.href = document.referrer;
+                                    window.parent.location.reload();
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
                                     layer.msg("操作成功");
                                 },
                                 error: function (data) { //请求成功的回调函数
@@ -688,6 +698,15 @@
             }
             return false;
         });
+        $("tr[data-index=0]").children("td[data-field*=Date]").children("div").addClass("dateC");
+        $("tr[data-index=0]").children("td[data-field*=Date]").children("div").each(function () {
+            laydate.render({
+                elem: this
+                , position: 'fixed'
+                , format: 'yyyy-MM-dd'
+            });
+        })
     });
+
 </script>
 #end

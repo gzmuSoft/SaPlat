@@ -241,18 +241,18 @@ public class ProjectUndertakeController extends BaseController {
             notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project=projectService.findById(projectUndertake.getProjectID());
+            Project project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
             }
         } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
             notification.setName("申请介入同意通知");
             notification.setContent(user.getName() + "已接受您的申请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project=projectService.findById(projectUndertake.getProjectID());
+            Project project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
             }
         }
@@ -401,6 +401,10 @@ public class ProjectUndertakeController extends BaseController {
     @NotNullPara({"fileId", "fieldName"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
+        Files files = new Files();
+        files.setId(getParaToLong("fileId"));
+        files.setIsEnable(true);
+
         FileForm fileForm = new FileForm();
         fileForm.setFileID(getParaToLong("fileId"));
         fileForm.setTableName("稳评方案");
@@ -410,14 +414,15 @@ public class ProjectUndertakeController extends BaseController {
         fileForm.setLastAccessTime(new Date());
         fileForm.setCreateUserID(user.getId());
         fileForm.setLastUpdateUserID(user.getId());
-        FileForm newFileForm = fileFormService.saveAndGet(fileForm);
+        FileForm newFileForm = fileFormService.saveAndGet(fileForm,files);
         if (newFileForm == null) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
         } else {
-            JSONObject json = new JSONObject();
-            json.put("fileFormId", newFileForm.getId());
-            renderJson(json);
+            Map<String, Object> map = new HashMap<String, Object>();
+            //传递消息实体 data
+            map.put("fileFormId", newFileForm.getId());
+            renderJson(RestResult.buildSuccess(map));
         }
     }
 
