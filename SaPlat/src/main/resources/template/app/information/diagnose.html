@@ -35,16 +35,20 @@
         $("#surveyGroup").text(diagnoses.surveyGroup).css("display", "").removeClass("layui-hide");
         $("#surveyDesign").text(diagnoses.surveyDesign).css("display", "").removeClass("layui-hide");
         $("#surveyMethod").val(diagnoses.surveyMethod);
-        $("input[name='surveyWays']").each(function() {
-            if(diagnoses.surveyWay.indexOf($(this).val())!=-1){
-                $(this).prop("checked",true);
-            }
-        });
-        $("input[name='staffArrangements']").each(function() {
-            if(diagnoses.staffArrangements.indexOf($(this).val())!=-1){
-                $(this).prop("checked",true);
-            }
-        });
+        if(diagnoses.surveyWay!=null) {
+            $("input[name='surveyWays']").each(function () {
+                if (diagnoses.surveyWay.indexOf($(this).val()) != -1) {
+                    $(this).prop("checked", true);
+                }
+            });
+        }
+        if(diagnoses.staffArrangements!=null) {
+            $("input[name='staffArrangements']").each(function () {
+                if (diagnoses.staffArrangements.indexOf($(this).val()) != -1) {
+                    $(this).prop("checked", true);
+                }
+            });
+        }
         form.render('checkbox');
         form.render('select');
         //自定义工具栏
@@ -87,13 +91,17 @@
         element.media({
             width: 800
             , height: 600
-            , src: "../" + element.attr('href')
+            , src: element.attr('href')
         });
     }
 
     $("#media").click(function () {
         $(this).css('display', 'none');
         pdf($("a.media"));
+    });
+
+    $("#reset").click(function () {
+        history.go(-1);
     });
 </script>
 #end
@@ -178,8 +186,7 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">调查抽样率：</label>
                     <div class="layui-input-block">
-                        <input type="number" lay-verify="required|sampleRateNumber" placeholder="请填写"
-                               class="layui-input" name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)">
+                        <input type="number" lay-verify="required|sampleRateNumber" class="layui-input" name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)" min=0 max=100>
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
@@ -205,7 +212,7 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>
                     </div>
                 </div>
             </form>
