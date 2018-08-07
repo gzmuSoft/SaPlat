@@ -1,0 +1,150 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<style>
+    .pdfobject-container {
+        width: 50%;
+        height: 100%;
+        padding: 5em 0;
+    }
+    html,body{
+        height:100%;
+    }
+    ul{
+        padding:0px 10px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
+<script type="text/javascript">
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed("","#pdfviewer",options);
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick: zTreeOnClick
+        },
+        view:{
+            showTitle:true
+        }
+    };
+
+    function zTreeOnClick(event, treeId, treeNode) {
+        PDFObject.embed(treeNode.title,"#pdfviewer",options);
+        layui.use('flow', function(){
+          var $ = layui.jquery;
+          var flow = layui.flow;
+          flow.load({
+            elem: '#recomment'
+            ,done: function(page, next){
+              var lis = [];
+              $.get('#(ctxPath)/app/ass_review/findProAssReviewByFileIdAndProjectId', function(res){
+                layui.each(res.data, function(index, item){
+                if(item){
+                      if(item.recomment){
+
+                      }
+                  }
+                });
+                next(lis.join(''), page < res.pages);
+              });
+            }
+          });
+        });
+    }
+
+    function zTreeReload() {
+        util.sendAjax ({
+            url : '#(ctxPath)/app/filingfrom/fileTree',
+            notice: false,
+            success : function(data){
+                $.fn.zTree.init($("#tree"), setting, data.data);
+            }
+        });
+    }
+
+    layui.use('upload', function() {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //普通上传
+        var uploadInst = upload.render({
+            elem: '#filepath'
+            ,url: '#(ctxPath)/app/filingfrom/uploadFile'
+            ,auto: false
+            //,multiple: true
+            ,bindAction: '#upload'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "备案表"
+            }
+            , before: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#resText').attr('src', result);
+                });
+            }
+            , done: function (res) {
+                if (res.code > 0) {
+                    var demoText = $('#resText');
+                    demoText.html('<span style="color: #FF5722;">上传失败...</span> <a class="layui-btn demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }else if (res.code == 0){
+                    var demoText = $('#resText');
+                    zTreeReload();
+                    demoText.html('<span style="color: #5FB878;">上传成功...</span> ');
+                }
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#resText');
+                demoText.html('<span style="color: #FF5722;">上传失败...</span> <a class="layui-btn demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+
+
+    $(document).ready(function(){
+        zTreeReload();
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid" style="height:100%;">
+    <div class="layui-row" style="height:100%;">
+        <div class="layui-col-md3 layui-col-md-offset2" style="overflow:auto;height:100%">
+            <ul id="tree" class="ztree"></ul>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>上传审定（最终）报告</legend>
+            </fieldset>
+            <div class="layui-timeline-title layui-row layui-upload">
+                <input name="filepath" id="filepath" type="file">
+            </div>
+
+            <div class="layui-timeline-title layui-row">
+                <button type="button" class="layui-btn" id="upload">提交</button>
+                <div id="resText"></div>
+            </div>
+        </div>
+        <div id="pdfviewer" class="layui-col-md7" style="height:100%;"></div>
+    </div>
+</div>
+#end

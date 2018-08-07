@@ -57,7 +57,7 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
                 zTree.add(new ZTree(projectFileType.getId(), projectFileType.getName(), projectFileType.getParentID()));
             } else {
                 Files file = filesService.findById(item.getFileID());
-                zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getId(), "/upload/test.pdf"));
+                zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getId(), file.getPath()));
             }
         }
         return zTree;
