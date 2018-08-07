@@ -73,7 +73,7 @@
      -webkit-box-shadow:0 0 20px #b1b6cb;transform-origin:center;" id="b">
     <div class="login" style="text-align: center">
         <form  method="post" action="" id="form" style="margin: 0 55%">
-           <br><br><br><br><br><br><br><br>
+           <br><br><br>
             <div class="login-ic " style="width: 300px;">
                 <i></i>
                 <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
@@ -119,18 +119,11 @@
         $(function(){
             $("#b").hide();
         });
-        $("#a").mouseover(function(){ $("#b").show();$("h2").hide();});
+        $("#a").mouseover(function(){ $("#b").fadeIn(1500);$("h2").hide();});
+        $("#a").mouseout(function(){$("#b").hide();$("h2").show();});
+        $("#b").mouseover(function(){$("#b").show();$("h2").hide();});
+        $("#b").mouseout(function(){$("#b").fadeOut(1000);$("h2").fadeIn(1000);});
 
-        $("#a").mouseout(function(){$("#b").hide().fadeIn(2000);$("h2").show();});
-        $("#b").mouseover(function(){
-            $("#b").show();
-            $("h2").hide();
-        });
-
-        $("#b").mouseout(function(){
-            $("#b").hide();
-            $("h2").show();
-        });
         $.fn.serializeJson = function () {
             var serializeObj = {};
             $(this.serializeArray()).each(function () {
