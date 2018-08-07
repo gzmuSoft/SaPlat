@@ -313,7 +313,6 @@
                         string += nameArray[key] + "=" + valueArray[key] + "&";
                     });
                     string += "project.brief=" + layedit.getContent(index);
-                    console.log(string);
                     if (saveOrUpdate === 1) {
                         $.getJSON(
                             "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,

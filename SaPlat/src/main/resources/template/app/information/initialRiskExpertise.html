@@ -10,13 +10,23 @@
 <br>
 <h2 class="title" align="center" style="color: #00a89a">项目初始风险概率及影响程度专家意见统计表</h2><br>
 <hr align="center" size="2" width="100%"/>
-
 <div class="layui-row">
     <div class="layui-btn-group">
         <button id="add" class="layui-btn layui-btn-small">添加</button>
-        <button id="see" class="layui-btn layui-btn-small">点击在控制台查看表格json数据</button>
     </div>
-
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertId">专家团体</label>
+            <div class="layui-input-inline">
+                <select name="expertId" id="expertId">
+                    <option value="">请选择</option>
+                    #for(expertGroup : expertGroups)
+                    <option value="#(expertGroup.id)">#(expertGroup.name)</option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </form>
     <div class="layui-row">
         <table style="align-content: center;" id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -35,27 +45,21 @@
 #define js()
 <script type="text/javascript">
 
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer', 'form'], function () {
         var table = layui.table,
             layer = layui.layer,
-            $ = layui.jquery;
-        ;
+            $ = layui.jquery,
+            form = layui.form;
 
         // 审核通过的表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '400'    //容器高度
-            ,
-            contentType: 'application/json; charset=UTF-8'
-            ,
-            cols: [
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '400'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [
                 [                  //标题栏
                     {field: '0', title: '序号', align: 'center', width: 50, rowspan: 3, type: 'numbers', unresize: 'true'}
                     , {field: 'riskFactor', title: '风险因素', align: 'center', width: 150, rowspan: 3, edit: true}
@@ -79,7 +83,6 @@
                 }
                     , {field: 'action', title: '操作', width: 80, align: 'center', rowspan: 3, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
                 ],
-
                 [{title: '很高', width: 140, align: 'center'}
                     , {title: '较高', width: 140, align: 'center'}
                     , {title: '中等', width: 140, align: 'center'}
@@ -91,7 +94,6 @@
                     , {title: '较小', width: 140, align: 'center'}
                     , {title: '可忽略', width: 140, align: 'center'}
                 ],
-
                 [{field: 'riskExpertise', title: '常常会发生', width: 140, align: 'center', event: 'riskExpertise'}
                     , {field: 'riskExpertise', title: '较多情况下会发生', width: 140, align: 'center', event: 'riskExpertise'}
                     , {field: 'riskExpertise', title: '某些情况下发生', width: 140, align: 'center', event: 'riskExpertise'}
@@ -134,31 +136,23 @@
                 }
                 ]
             ]
-            ,
-            data: [{
+            , data: [{
                 riskFactor: "",
                 riskExpertise: "",
                 riskProbability: "",
                 incidenceExpertise: "",
                 incidenceProbability: ""
             }]// 默认存在第一行
-            ,
-            method: 'get'
-            ,
-            request: {
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: true
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 /**
                  * 解决多级表头带来的多余列问题
                  **/
@@ -259,6 +253,12 @@
             });
         });
 
+        var select = "";
+        form.on('select', function (data) {
+            select = data.value;
+            console.log(select);
+        });
+
         /**
          * 保存数据
          */
@@ -295,10 +295,17 @@
                 }
                 i--;
             });
+            var flag = true;
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX > -1) {
                     if (incidenceExpertise[index] === null || riskExpertise[index] === null || value.riskFactor === '' || value.riskProbability === '' || value.incidenceProbability === '') {
                         layer.msg('请将数据填写完整');
+                        flag = false;
+                        return false;
+                    }
+                    if (select.trim() === "") {
+                        layer.msg('请选择专家团体');
+                        flag = false;
                         return false;
                     }
                     var data = {
@@ -306,24 +313,30 @@
                         riskExpertise: riskExpertise[index],
                         riskProbability: value.riskProbability,
                         incidenceExpertise: incidenceExpertise[index],
-                        incidenceProbability: value.incidenceProbability
+                        incidenceProbability: value.incidenceProbability,
+                        projectId: '#(projectId)',
+                        expertId: select
                     };
                     $.ajax({
                         type: 'POST',
-                        url: '#(ctxPath)/app/projectUndertake/initialRiskExpertise',
+                        url: '#(ctxPath)/app/information/initialRiskExpertise',
                         loadFlag: true,
                         data: data,
                         error: function (data) {
+                            flag = false;
+                            layer.msg("保存失败");
                             console.log(data);
                         }
                     });
                 }
                 value.LAY_TABLE_INDEX = -1;
             });
-            setTimeout(function () {
+            if (flag) {
                 layer.msg("保存成功！");
-            }, 1000);
-            window.location.reload();
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            }
         });
 
         /**
@@ -343,21 +356,6 @@
                 $(this).children().first().text("√");
             }
         });
-
-        /**
-         * 查看数据
-         */
-        $('#see').click(function (e) {
-            var res = new Array();
-            $.each(table.cache.dateTable, function (index, value) {
-                if (value.LAY_TABLE_INDEX != -1) {
-                    res.push(value)
-                }
-            });
-            console.log(res);
-        });
-
-        $('')
     });
 </script>
 #end

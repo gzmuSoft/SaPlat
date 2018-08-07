@@ -426,41 +426,6 @@ public class ProjectUndertakeController extends BaseController {
         }
     }
 
-    /**
-     * 临时-项目风险因素影响程度及概率
-     */
-    public void toInitialRiskExpertise() {
-        render("initialRiskExpertise.html");
-    }
-
-    /**
-     * 项目风险因素影响程度及概率数据提交
-     */
-    @Before(POST.class)
-    public void initialRiskExpertise() {
-        User user = AuthUtils.getLoginUser();
-        InitialRiskExpertise model = new InitialRiskExpertise();
-        model.setProjectID(28L);
-        model.setExpertID(7L);
-        model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
-        model.setRiskExpertise(getParaToInt("riskExpertise"));
-        if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
-            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
-            model.setRiskProbability((float) getParaToLong("riskProbability"));
-            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
-        }
-        model.setRiskFactor(getPara("riskFactor"));
-        model.setCreateUserID(user.getId());
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
-        model.setLastUpdateUserID(user.getId());
-        model.setStatus(3);
-        model.setIsEnable(true);
-        if (!initialRiskExpertiseService.save(model)) {
-            renderJson(RestResult.buildError("保存失败"));
-            throw new BusinessException("保存失败");
-        }
-    }
 
 
     /**
@@ -506,11 +471,11 @@ public class ProjectUndertakeController extends BaseController {
         FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
         FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
 
-        if (fileForm1.getFileID() != null) {
+        if (fileForm1 != null && fileForm1.getFileID() != null) {
             Files file1src = filesService.findById(fileForm1.getFileID());
             setAttr("file1src", file1src);
         }
-        if (fileForm2.getFileID() != null) {
+        if (fileForm2 != null && fileForm2.getFileID() != null) {
             Files file2src = filesService.findById(fileForm2.getFileID());
             setAttr("file2src", file2src);
         }
