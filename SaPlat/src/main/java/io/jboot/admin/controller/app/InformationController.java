@@ -19,8 +19,6 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.text.DateFormat;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -300,7 +298,6 @@ public class InformationController extends BaseController {
         setAttr("files", files);
         ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(AuthUtils.getLoginUser().getId(), project.getId());
         String invTeamIDs = impTeam.getInvTeamIDs();
-        System.out.println(invTeamIDs);
         List<String> invTeamIDList = java.util.Arrays.asList(invTeamIDs.split(","));
         Map<String, String> invTeamMap = new ConcurrentHashMap<String, String>();
         for (String invTeamID : invTeamIDList) {
