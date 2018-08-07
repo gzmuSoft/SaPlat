@@ -119,10 +119,11 @@
         $(function(){
             $("#b").hide();
         });
-        $("#a").mouseover(function(){ $("#b").fadeIn(1500);$("h2").hide();});
+        var flog=true;
+        $("#a").mouseover(function() {$("#b").show();$("h2").hide();});
         $("#a").mouseout(function(){$("#b").hide();$("h2").show();});
         $("#b").mouseover(function(){$("#b").show();$("h2").hide();});
-        $("#b").mouseout(function(){$("#b").fadeOut(1000);$("h2").fadeIn(1000);});
+        $("#b").mouseout(function(){$("#b").hide();$("h2").show();});
 
         $.fn.serializeJson = function () {
             var serializeObj = {};
