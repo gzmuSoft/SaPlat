@@ -501,11 +501,11 @@ public class ProjectUndertakeController extends BaseController {
         FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
         FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
 
-        if (fileForm1.getFileID() != null) {
+        if (fileForm1 != null && fileForm1.getFileID() != null) {
             Files file1src = filesService.findById(fileForm1.getFileID());
             setAttr("file1src", file1src);
         }
-        if (fileForm2.getFileID() != null) {
+        if (fileForm2 != null && fileForm2.getFileID() != null) {
             Files file2src = filesService.findById(fileForm2.getFileID());
             setAttr("file2src", file2src);
         }

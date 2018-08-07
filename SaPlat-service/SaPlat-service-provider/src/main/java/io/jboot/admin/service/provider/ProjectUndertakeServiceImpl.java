@@ -89,6 +89,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     }
 
     @Override
+    public ProjectUndertake findByProjectIdAndStatus(Long projectId, String projectStatus) {
+        Columns columns = Columns.create();
+        columns.eq("projectID",projectId);
+        columns.eq("status",projectStatus);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
     public ProjectUndertake findByProjectId(Long projectId) {
         return DAO.findFirstByColumn(Column.create("projectID", projectId));
     }
