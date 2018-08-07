@@ -49,7 +49,9 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
         } else
             return null;
     }
+
     //删除
+    @Override
     public boolean deleteQuestionnaire(Long questionnaireId, Long[] contentIds, Long[] linkIds){
         return Db.tx(() -> {
             for (int i = 0; i < linkIds.length; i++) {

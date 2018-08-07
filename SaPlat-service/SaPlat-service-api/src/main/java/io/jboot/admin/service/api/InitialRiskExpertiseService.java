@@ -24,6 +24,21 @@ public interface InitialRiskExpertiseService {
      */
     public List<InitialRiskExpertise> findAll();
 
+    /**
+     * 分页查询
+     * @param model 条件
+     * @param pageNumber 页数
+     * @param pageSize 页码大小
+     * @return 页码
+     */
+    public Page<InitialRiskExpertise> findPage(InitialRiskExpertise model, int pageNumber, int pageSize);
+
+    /**
+     * 通过项目id查询列表
+     * @param projectId 项目id
+     * @return 结合
+     */
+    public List<InitialRiskExpertise> findByProjectId(Long projectId);
 
     /**
      * delete model by primary key
@@ -97,4 +112,5 @@ public interface InitialRiskExpertiseService {
     public void keep(Model model, String... attrs);
 
     public void keep(List<? extends Model> models, String... attrs);
+
 }

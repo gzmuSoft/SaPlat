@@ -134,7 +134,6 @@
         };
         form.on('submit(sub)', function (data) {
             var all = $('#form').serializeJson();
-            console.log(all);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/postLogin',
