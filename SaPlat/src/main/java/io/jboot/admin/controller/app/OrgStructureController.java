@@ -309,6 +309,7 @@ public class OrgStructureController extends BaseController {
     public void joinStructureApi(){
         Long structID = getParaToLong("structID");
         Long uid = AuthUtils.getLoginUser().getId();
+        Long UserId = AuthUtils.getLoginUser().getUserID();
         Date nowTime = new Date();
         Calendar threeDaysLater = Calendar.getInstance();
         //获取三天以后的日期作为申请的失效日期
@@ -320,6 +321,14 @@ public class OrgStructureController extends BaseController {
         }
         if(!isPerson(AuthUtils.getLoginUser().getUserID())){
             throw new BusinessException("该用户不是个人群体账户！");
+        }
+        if(isStructPerson(orgStructure.getId(),UserId)){
+            throw new BusinessException("你已经成功加入过此架构，无法重复加入!");
+        }
+        //判断用户在一定时间内不得重复申请、
+
+        if(isJoined(orgStructure.getId(),uid)){
+            throw new BusinessException("你已经申请加入过此架构，仍在处理中请耐心等待！");
         }
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setBelongToID(orgStructure.getCreateUserID());
@@ -415,6 +424,7 @@ public class OrgStructureController extends BaseController {
         if(isStructPerson(applyInvite.getStructID(),applyInvite.getUserID())){
             throw new BusinessException("该用户已经加入了架构，无需重复加入");
         }
+
         applyInvite.setStatus(2);
         StructPersonLink structPersonLink = new StructPersonLink();
         structPersonLink.setCreateTime(new Date());
@@ -493,6 +503,21 @@ public class OrgStructureController extends BaseController {
         notification.setStatus(0);
         notification.setIsEnable(true);
         return notification;
+    }
+
+    /**
+     * 私有方法 - 用于判断是否有待处理中的申请
+     * @param structID
+     * @param UserID
+     * @return
+     */
+    private boolean isJoined(Long structID, Long UserID){
+        ApplyInvite applyInvite= applyInviteService.findByStructIDAndUserID(structID, UserID);
+        if(applyInvite == null){
+            return false;
+        }else{
+            return true;
+        }
     }
 
 }

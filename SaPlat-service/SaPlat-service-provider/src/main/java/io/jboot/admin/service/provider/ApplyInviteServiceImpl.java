@@ -74,4 +74,9 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     public boolean saveOrUpdateAndSend(ApplyInvite applyInvite,Notification notification){
         return Db.tx(()->applyInvite.saveOrUpdate() && notificationService.save(notification));
     }
+    @Override
+    public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
+        ApplyInvite applyInvite = DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
+        return applyInvite;
+    }
 }
