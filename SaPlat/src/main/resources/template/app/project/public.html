@@ -19,23 +19,38 @@
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery;
-
+        
+        function sanityn() {
+            var publicTime = $('#publicTime').val();
+            var endTime = $('#endTime').val();
+            if (publicTime > endTime)
+                return "发布时间不能大于结束时间！";
+            if (publicTime < new Date() || endTime < new Date())
+                return "时间不能小于当前时间！";
+            return null;
+        }
+        
         form.on('submit(sub)', function (data) {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/app/project/isPublic?id=' + $('#id').val(),
-                data: $.param(data.field),
-                loadFlag: true,
-                success: function (data) {
-                    pop_close();
-                    setTimeout(function () {
-                        return true;
-                    }, 3000);
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
+            var msg;
+            if ((msg = sanityn()) == null){
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/project/isPublic?id=' + $('#id').val(),
+                    data: $.param(data.field),
+                    loadFlag: true,
+                    success: function (data) {
+                        pop_close();
+                        setTimeout(function () {
+                            return true;
+                        }, 3000);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
+            }else {
+                layer.msg(msg);
+            }
             return false;
         });
     });

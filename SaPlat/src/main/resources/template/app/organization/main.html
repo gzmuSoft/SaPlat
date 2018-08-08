@@ -126,7 +126,6 @@
                 description: "组织机构营业执照"
             }
             , done: function (res) {
-                console.log(res.data);
                 if (res.code == 0) {
                     pop_close();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=organization&fieldName=营业执照', function () {

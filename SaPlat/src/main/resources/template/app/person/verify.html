@@ -37,7 +37,6 @@
 
             data.field['expertGroup.workpictrue'] = file1;
             data.field['expertGroup.certificate'] = file2;
-            console.log(data.field);
             $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
                 layer.msg("成功！");
                 setTimeout(function () {
@@ -84,7 +83,7 @@
         });
 
         $('#back').click(function () {
-            window.location.href = document.referrer;
+            history.go(-1);
         });
 
 
@@ -98,7 +97,6 @@
                 description: "工作证件照片"
             }
             , done: function (res) {
-                console.log(res);
                 if (res.code == 0) {
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
