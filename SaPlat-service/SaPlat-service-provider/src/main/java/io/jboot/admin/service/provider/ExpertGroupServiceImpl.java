@@ -50,7 +50,10 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
 
     @Override
     public ExpertGroup findByPersonId(Long id) {
-        return DAO.findFirstByColumn("personID", id);
+        Columns columns = Columns.create();
+        columns.eq("personID", id);
+        columns.eq("isEnable",1);
+        return DAO.findFirstByColumns(columns);
     }
 
     @Override

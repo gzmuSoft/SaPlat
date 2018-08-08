@@ -16,6 +16,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -67,6 +68,53 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
 
     @Override
+    public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        if (model.getApplyOrInvite() != null) {
+            columns.eq("applyOrInvite", model.getApplyOrInvite());
+        }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getStatus() != null) {
+            columns.eq("status", "%" + model.getStatus() + "%");
+        }
+        if (model.getCreateUserID() != null) {
+            columns.eq("createUserID", "%" + model.getCreateUserID() + "%");
+        }
+        if (model.getModule() != null) {
+            columns.eq("module", "%" + model.getModule() + "%");
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", "%" + model.getUserID() + "%");
+        }
+        if (model.getRemark() != null) {
+            columns.eq("remark", model.getRemark());
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+
+
+    @Override
+    public List<ApplyInvite> findList(ApplyInvite model) {
+        Columns columns = Columns.create();
+        if (model.getProjectID() != null) {
+            columns.eq("projectID", model.getProjectID());
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", model.getUserID());
+        }
+        if (model.getModule() != null) {
+            columns.eq("module", model.getModule());
+        }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
     public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink){
         return Db.tx(()-> applyInvite.update() && notificationService.save(notification) && structPersonLinkService.save(structPersonLink));
     }
@@ -76,7 +124,6 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
     @Override
     public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
-        ApplyInvite applyInvite = DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
-        return applyInvite;
+        return DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
     }
 }

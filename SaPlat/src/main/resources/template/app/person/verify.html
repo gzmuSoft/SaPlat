@@ -38,10 +38,12 @@
             data.field['expertGroup.workpictrue'] = file1;
             data.field['expertGroup.certificate'] = file2;
             $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
-                layer.msg("成功！");
-                setTimeout(function () {
-                    window.location.href = document.referrer;
-                },1000);
+                layer.msg(res.msg);
+                if (res.code === '0'){
+                    setTimeout(function () {
+                        window.location.href = document.referrer;
+                    }, 1000);
+                }
             });
             // console.log(data);
             // console.log(data.field);
@@ -87,6 +89,7 @@
         });
 
 
+
         upload.render({
             elem: '#upload1'
             , url: '#(ctxPath)/util/uploadFile'
@@ -100,6 +103,7 @@
                 if (res.code == 0) {
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
+                    $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("工作证件照片文件上传错误，请重新选择上传！");
                 }
@@ -122,6 +126,7 @@
                 if (res.code == 0) {
                     layer.msg("专业资格证书上传成功");
                     file2 = res.data.fileId;
+                    $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("专业资格证书文件上传失败，请重新选择上传！");
                 }
@@ -133,8 +138,11 @@
 
 
         var flag = "#(flag)";
-        if (flag === "true"){
-            $('#sub').remove();
+        var auth = "#(auth)";
+        if (flag === "true") {
+            if (auth === "true"){
+                $('#sub').remove();
+            }
         }
     });
 
@@ -148,22 +156,13 @@
         <legend>专家团体</legend>
     </fieldset>
     <form class="layui-form layui-form-pane" action="" id="content" method="post">
-        <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.name">姓名</label>
-            <div class="layui-input-inline">
-                <input type="text" name="person.name" id="person.name" value="#(person.name)" required
-                       disabled="disabled" class="layui-input layui-disabled"
-                       lay-verify="required" placeholder="请输入姓名" autocomplete="off">
-            </div>
-        </div>
-
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.name">专家团体名称</label>
             <div class="layui-input-inline">
                 <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required"
-                       value="#(expertGroup.name)"
-                       placeholder="请输入专家团体名称" autocomplete="off" class="layui-input">
+                       value="#(person.name)" class="layui-input layui-disabled"
+                       placeholder="请输入专家团体名称" autocomplete="off"  disabled>
             </div>
         </div>
 
@@ -188,7 +187,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" for="expertGroup.worktime">工作时间</label>
                 <div class="layui-input-block">
-                    <input type="date" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
+                    <input type="text" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
                            value="#(expertGroup.worktime)" class="layui-input" lay-verify="required">
                 </div>
             </div>
