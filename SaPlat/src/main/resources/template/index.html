@@ -18,25 +18,36 @@
 <div class="layui-layout layui-layout-admin"> <!-- 添加skin-1类可手动修改主题为纯白，添加skin-2类可手动修改主题为蓝白 -->
     <!-- header -->
     <div class="layui-header my-header">
-        <a href="#(ctxPath)">
-            <div class="my-header-logo">#(APP.name)</div>
-        </a>
-        <div class="my-header-btn">
-            <button class="layui-btn layui-btn-small btn-nav"><i class="layui-icon">&#xe65f;</i></button>
-        </div>
+        <!--<a href="#(ctxPath)">-->
+            <!--<div class="my-header-logo">#(APP.name)</div>-->
+        <!--</a>-->
+        <!--<a href="javascript:;" layadmin-event="refresh" title="刷新">-->
+            <!--<i class="layui-icon layui-icon-refresh-3"></i>-->
+        <!--</a>-->
 
+        <a title="#(APP.name)" class="my-header-logo" href="">
+            <i class="layui-icon layui-icon-website"></i>
+            #(APP.name)
+        </a>
+        <a href="javascript:" title="侧边伸缩" class="btn-nav layui-nav-item layui-nav">
+            <i class="layui-icon layui-icon-shrink-right layui-nav-item"></i>
+        </a>
+        <a href="javascript:" id="refresh" title="刷新窗口" class="layui-nav-item layui-nav">
+            <i class="layui-icon layui-icon-refresh-3 layui-nav-item"></i>
+        </a>
         <!-- 顶部左侧添加选项卡监听 -->
         <ul class="layui-nav" lay-filter="side-top-left">
 
         </ul>
+
 
         <!-- 顶部右侧添加选项卡监听 -->
         <ul class="layui-nav my-header-user-nav" lay-filter="side-top-right">
 
             <li class="layui-nav-item" lay-unselect="">
                 <!-- 如果有新消息，则显示小圆点 -->
-                <a id="msg" class="layui-btn" layadmin-event="message" lay-text="消息中心">
-                    <i class="layui-icon layui-icon-notice"></i><span id="dot" class=""></span>
+                <a id="msg" href="javascript:;" layadmin-event="message" lay-text="消息中心">
+                    <i class="layui-icon layui-icon-notice"></i><span id="dot" class="" style="margin: -8px -1px 0"></span>
                 </a>
             </li>
 
@@ -136,12 +147,16 @@
 
         $("#msg").click(function () {
             pop_show('查看通知信息', '#(ctxPath)/view', '1000', '600', function () {
-                window.parent.location.reload();
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index)
+                reloadMessage();
             });
         });
-        $(function () {
+        
+        $("#refresh").click(function () {
+            ifr=$(".layui-tab-item.layui-show").children("iframe");
+            ifr.attr('src', ifr.attr('src'));
+        })
+
+        function reloadMessage() {
             $.post("#(ctxPath)/message", function (res) {
                 if (res != null) {
                     if (res['sta']) {
@@ -157,8 +172,13 @@
                     layer.msg("数据异常");
                 }
             })
-        });
+        }
+        reloadMessage();
+        setInterval(function () {
+            reloadMessage();
+        },1000000);
     });
+
 </script>
 </body>
 </html>
