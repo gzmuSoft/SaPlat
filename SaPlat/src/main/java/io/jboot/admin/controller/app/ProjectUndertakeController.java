@@ -241,18 +241,18 @@ public class ProjectUndertakeController extends BaseController {
             notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project=projectService.findById(projectUndertake.getProjectID());
+            Project project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
             }
         } else if (!flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
             notification.setName("申请介入同意通知");
             notification.setContent(user.getName() + "已接受您的申请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project=projectService.findById(projectUndertake.getProjectID());
+            Project project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
             }
         }
@@ -401,6 +401,10 @@ public class ProjectUndertakeController extends BaseController {
     @NotNullPara({"fileId", "fieldName"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
+        Files files = new Files();
+        files.setId(getParaToLong("fileId"));
+        files.setIsEnable(true);
+
         FileForm fileForm = new FileForm();
         fileForm.setFileID(getParaToLong("fileId"));
         fileForm.setTableName("稳评方案");
@@ -410,52 +414,18 @@ public class ProjectUndertakeController extends BaseController {
         fileForm.setLastAccessTime(new Date());
         fileForm.setCreateUserID(user.getId());
         fileForm.setLastUpdateUserID(user.getId());
-        FileForm newFileForm = fileFormService.saveAndGet(fileForm);
+        FileForm newFileForm = fileFormService.saveAndGet(fileForm,files);
         if (newFileForm == null) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
         } else {
-            JSONObject json = new JSONObject();
-            json.put("fileFormId", newFileForm.getId());
-            renderJson(json);
+            Map<String, Object> map = new HashMap<String, Object>();
+            //传递消息实体 data
+            map.put("fileFormId", newFileForm.getId());
+            renderJson(RestResult.buildSuccess(map));
         }
     }
 
-    /**
-     * 临时-项目风险因素影响程度及概率
-     */
-    public void toInitialRiskExpertise() {
-        render("initialRiskExpertise.html");
-    }
-
-    /**
-     * 项目风险因素影响程度及概率数据提交
-     */
-    @Before(POST.class)
-    public void initialRiskExpertise() {
-        User user = AuthUtils.getLoginUser();
-        InitialRiskExpertise model = new InitialRiskExpertise();
-        model.setProjectID(28L);
-        model.setExpertID(7L);
-        model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
-        model.setRiskExpertise(getParaToInt("riskExpertise"));
-        if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
-            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
-            model.setRiskProbability((float) getParaToLong("riskProbability"));
-            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
-        }
-        model.setRiskFactor(getPara("riskFactor"));
-        model.setCreateUserID(user.getId());
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
-        model.setLastUpdateUserID(user.getId());
-        model.setStatus(3);
-        model.setIsEnable(true);
-        if (!initialRiskExpertiseService.save(model)) {
-            renderJson(RestResult.buildError("保存失败"));
-            throw new BusinessException("保存失败");
-        }
-    }
 
 
     /**
@@ -501,11 +471,11 @@ public class ProjectUndertakeController extends BaseController {
         FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
         FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
 
-        if (fileForm1.getFileID() != null) {
+        if (fileForm1 != null && fileForm1.getFileID() != null) {
             Files file1src = filesService.findById(fileForm1.getFileID());
             setAttr("file1src", file1src);
         }
-        if (fileForm2.getFileID() != null) {
+        if (fileForm2 != null && fileForm2.getFileID() != null) {
             Files file2src = filesService.findById(fileForm2.getFileID());
             setAttr("file2src", file2src);
         }

@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author EchoLZY
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 16:35 2018/7/25
  */
 @RequestMapping("/app/information")
@@ -106,6 +106,8 @@ public class InformationController extends BaseController {
     @JbootrpcService
     private QuestionnaireContentLinkService questionnaireContentLinkService;
 
+    @JbootrpcService
+    private InitialRiskExpertiseService initialRiskExpertiseService;
 
     /**
      * 资料编辑页面
@@ -530,12 +532,15 @@ public class InformationController extends BaseController {
         questionnaire.setIDCard(getPara("questionnaire.IDCard"));
         //修改则有问卷id 创建则没有
         questionnaire.setLastAccessTime(new Date());
-        if (questionnaire.getCreateTime() == null)
+        if (questionnaire.getCreateTime() == null) {
             questionnaire.setCreateTime(new Date());
-        if (questionnaire.getProjectID() == null)
+        }
+        if (questionnaire.getProjectID() == null) {
             questionnaire.setProjectID(project.getId());
-        if (questionnaire.getCreateUserID() == null)
+        }
+        if (questionnaire.getCreateUserID() == null) {
             questionnaire.setCreateUserID(loginUser.getId());
+        }
         //调查内容
         String[] questionnaireContents = getParaValues("content");
         List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
@@ -572,10 +577,92 @@ public class InformationController extends BaseController {
             for (int i = 0; i < contentIds.length; i++) {
                 linkIds[i] = questionnaireContentLinkService.findIdByContentId(contentIds[i]);
             }
-            if (!questionnaireService.deleteQuestionnaire(questionnaire.getId(), contentIds, linkIds))
+            if (!questionnaireService.deleteQuestionnaire(questionnaire.getId(), contentIds, linkIds)) {
                 throw new BusinessException("删除失败!");
-        } else
+            }
+        } else {
             throw new BusinessException("删除的数据不存在!");
+        }
         renderJson(RestResult.buildSuccess());
     }
+
+
+    /**
+     * 临时-项目风险因素影响程度及概率
+     */
+    @NotNullPara("projectID")
+    public void toInitialRiskExpertise() {
+        Long projectId = getParaToLong("projectID");
+        setAttr("expertGroups", expertGroupService.findAll())
+                .setAttr("projectId", projectId)
+                .render("initialRiskExpertise.html");
+    }
+
+    /**
+     * 表格数据
+     */
+    public void toInitialRiskExpertiseDataTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        InitialRiskExpertise initialRiskExpertise = new InitialRiskExpertise();
+        initialRiskExpertise.setProjectID(projectId);
+        Page<InitialRiskExpertise> pages = initialRiskExpertiseService.findPage(initialRiskExpertise, pageNumber, pageSize);
+        pages.getList().forEach(model -> {
+            ExpertGroup expertGroup = expertGroupService.findById(model.getExpertID());
+            if (expertGroup != null) {
+                model.setRemark("专家名称：" + expertGroup.getName());
+            }
+        });
+        renderJson(new DataTable<InitialRiskExpertise>(pages));
+    }
+
+    /**
+     * 项目风险因素影响程度及概率数据提交
+     */
+    @Before(POST.class)
+    @NotNullPara({"projectId", "expertId"})
+    public void initialRiskExpertise() {
+        User user = AuthUtils.getLoginUser();
+        InitialRiskExpertise model = new InitialRiskExpertise();
+        ExpertGroup expertGroup = expertGroupService.findById(getParaToLong("expertId"));
+        if (expertGroup == null){
+            throw new BusinessException("专家团体不存在！");
+        }
+        model.setProjectID(getParaToLong("projectId"));
+        model.setExpertID(expertGroup.getId());
+        model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
+        model.setRiskExpertise(getParaToInt("riskExpertise"));
+        if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
+            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
+            model.setRiskProbability((float) getParaToLong("riskProbability"));
+            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
+        }
+        model.setRiskFactor(getPara("riskFactor"));
+        model.setCreateUserID(user.getId());
+        model.setCreateTime(new Date());
+        model.setLastAccessTime(new Date());
+        model.setLastUpdateUserID(user.getId());
+        model.setStatus(3);
+        model.setIsEnable(true);
+        if (!initialRiskExpertiseService.save(model)) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 项目风险因素影响程度及概率数据删除
+     */
+    @NotNullPara("id")
+    public void toInitialRiskExpertiseDelete(){
+        Long id = getParaToLong("id");
+        InitialRiskExpertise model = initialRiskExpertiseService.findById(id);
+        if (model == null || initialRiskExpertiseService.delete(model)){
+            throw new BusinessException("删除失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
 }

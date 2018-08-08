@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 
 import java.util.List;
 
@@ -76,7 +77,13 @@ public interface ProjectUndertakeService {
      */
     public ProjectUndertake findByProjectIdAndFacAgencyId(Long projectId,Long facAgencyId);
 
-
+    /**
+     *
+     * @param projectId
+     * @param projectStatus
+     * @return
+     */
+    public ProjectUndertake findByProjectIdAndStatus(Long projectId, String projectStatus);
 
 
     /**

@@ -52,13 +52,6 @@
             }
         });
 
-        // 获取选中行
-        table.on('checkbox(dateTable)', function (obj) {
-            console.log(obj.checked); //当前是否选中状态
-            console.log(obj.data); //选中行的相关数据
-            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
-        });
-
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
