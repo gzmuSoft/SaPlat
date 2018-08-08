@@ -22,18 +22,18 @@
             , height: 'full-150'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {field: 'name', title: '项目名称', width: 100, sort: true}
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'name', title: '项目名称', width: 200}
                 , {
                     field: 'status',
                     title: '状态',
                     width: 100,
-                    sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                 }
-                , {field: 'reply', title: '回复', width: 100}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                , {field: 'reply', title: '回复', width: 200}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
             ]]
-            , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
+            , url: '#(ctxPath)/app/project/reviewProjectTable'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -44,8 +44,7 @@
             , limit: 30 //默认采用30
             , loading: true
             , where: {
-                applyOrInvite: false,
-                flag: true
+                applyOrInvite: true, flag: true
             }
             , done: function (res, curr, count) {
             }
@@ -55,12 +54,9 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             console.log(obj);
-            if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
-                });
-            } else if (obj.event === 'agree') {
+            if (obj.event === 'agree') {
                 layer.confirm('确定接受嘛？(此操作不可逆！)', function (index) {
-                    $.post("#(ctxPath)/app/projectUndertake/invite", {
+                    $.post("#(ctxPath)/app/project/saveInviteReview", {
                         id: data.id,
                         invite: 2,
                         type: 1
@@ -68,6 +64,7 @@
                         layer.msg("同意成功！");
                         setTimeout(function () {
                         }, 1000);
+                        window.location.reload();
                     });
                 });
             } else if (obj.event === 'refuse') {
@@ -91,7 +88,7 @@
                         var btn = layero.find('.layui-layer-btn');
                         btn.find('.layui-layer-btn0').on('click', function () {
                             var textarea = layero.find('textarea')[0];
-                            $.post("#(ctxPath)/app/projectUndertake/invite", {
+                            $.post("#(ctxPath)/app/project/saveInviteReview", {
                                 id: data.id,
                                 reply: textarea.value,
                                 invite: 1,
@@ -100,6 +97,7 @@
                                 layer.msg("拒绝成功！");
                                 setTimeout(function () {
                                 }, 1000);
+                                window.location.reload();
                             });
                         });
                     }
@@ -107,14 +105,15 @@
 
             } else if (obj.event === 'pass') {
                 layer.confirm('确定通过吗？(此操作不可逆！)', function (index) {
-                    $.post("#(ctxPath)/app/projectUndertake/invite", {
+                    $.post("#(ctxPath)/app/project/saveInviteReview", {
                         id: data.id,
                         invite: 2,
-                        type: 2
+                        type: 0
                     }, function () {
                         layer.msg("审查完成！");
                         setTimeout(function () {
                         }, 1000);
+                        window.location.reload();
                     });
                 });
             } else if (obj.event === 'noPass') {
@@ -138,15 +137,16 @@
                         var btn = layero.find('.layui-layer-btn');
                         btn.find('.layui-layer-btn0').on('click', function () {
                             var textarea = layero.find('textarea')[0];
-                            $.post("#(ctxPath)/app/projectUndertake/invite", {
+                            $.post("#(ctxPath)/app/project/saveInviteReview", {
                                 id: data.id,
                                 reply: textarea.value,
                                 invite: 1,
-                                type: 2
+                                type: 0
                             }, function () {
                                 layer.msg("审查完成！");
                                 setTimeout(function () {
                                 }, 1000);
+                                window.location.reload();
                             });
                         });
                     }
@@ -160,16 +160,16 @@
                 url: '#(ctxPath)/app/project/reviewProjectTable'
                 , where: {applyOrInvite: true, flag: true} //设定异步数据接口的额外参数
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {type: 'numbers', fixed: true, unresize: 'true'}
+                    , {field: 'name', title: '项目名称', width: 200}
                     , {
                         field: 'status',
                         title: '状态',
                         width: 100,
-                        sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
-                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                    , {field: 'reply', title: '回复', width: 200}
+                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
                 ]]
             });
         });
@@ -178,16 +178,16 @@
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/project/reviewProjectTable'
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {type: 'numbers', fixed: true, unresize: 'true'}
+                    , {field: 'name', title: '项目名称', width: 200}
                     , {
                         field: 'status',
                         title: '状态',
                         width: 100,
-                        sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
-                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
+                    , {field: 'reply', title: '回复', width: 200}
+                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
                 ]]
                 , where: {applyOrInvite: true, flag: false} //设定异步数据接口的额外参数
             });
@@ -203,7 +203,7 @@
 
 <div class="reloadChoose">
     <button class="layui-btn" id="inviteStatus">查看邀请您审查的项目</button>
-    <button class="layui-btn" id="invite">查看您审查的项目</button>
+    <button class="layui-btn" id="invite">查看正在审查的项目</button>
 
 </div>
 
@@ -215,41 +215,36 @@
 
 <script type="text/html" id="barOption">
 
-    #shiroHasPermission('/app/project/saveInviteReview')
     #[[
-    {{#  if(d.status == '2'){ }}
+    {{#  if(d.status == 2){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pass">通过</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="noPass">不通过</a>
     #[[
-    {{# } else if((d.status == '3')){ }}
+    {{# } else if((d.status == 3)){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已审查</a>
     #[[
     {{#  } }}
     ]]#
-    #end
 </script>
 <script type="text/html" id="barOptionInvite">
-    #shiroHasPermission('/app/project/saveInviteReview')
-
     #[[
-    {{#  if(d.status == '0'){ }}
+    {{#  if(d.status == 0){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
     #[[
-    {{# } else if((d.status == '2')){ }}
+    {{# } else if((d.status == 2)){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已同意</a>
     #[[
-    {{# } else if((d.status == '1')){ }}
+    {{# } else if((d.status == 1)){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已拒绝</a>
     #[[
     {{#  } }}
     ]]#
-    #end
 </script>
 #end
 
