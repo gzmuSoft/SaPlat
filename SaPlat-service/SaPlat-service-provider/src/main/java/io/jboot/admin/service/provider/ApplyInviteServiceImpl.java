@@ -69,12 +69,47 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
 
     @Override
     public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize) {
-        return null;
+        Columns columns = Columns.create();
+        if (model.getApplyOrInvite() != null) {
+            columns.eq("applyOrInvite", model.getApplyOrInvite());
+        }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getStatus() != null) {
+            columns.eq("status", "%" + model.getStatus() + "%");
+        }
+        if (model.getCreateUserID() != null) {
+            columns.eq("createUserID", "%" + model.getCreateUserID() + "%");
+        }
+        if (model.getModule() != null) {
+            columns.eq("module", "%" + model.getModule() + "%");
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", "%" + model.getUserID() + "%");
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+
     }
+
+
 
     @Override
     public List<ApplyInvite> findList(ApplyInvite model) {
-        return null;
+        Columns columns = Columns.create();
+        if (model.getProjectID() != null) {
+            columns.eq("projectID", model.getProjectID());
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", model.getUserID());
+        }
+        if (model.getModule() != null) {
+            columns.eq("module", model.getModule());
+        }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        return DAO.findListByColumns(columns);
     }
 
     @Override
