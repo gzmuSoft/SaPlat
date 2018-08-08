@@ -184,13 +184,10 @@
                 description: "法人身份证照片"
             }
             , done: function (res) {
-                console.log(res.data);
                 if (res.code == 0) {
                     pop_close();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=enterprise&fieldName=法人身份证照片', function (data) {
                         fileFromID = data.fileFromID;
-                        console.log(data);
-                        console.log(fileFromID);
                         layer.msg("上传成功");
                     });
                 } else if (res.code == 1) {

@@ -54,7 +54,6 @@
             , form = layui.form;
         form.on('submit(sub)', function (data) {
             var method = data.elem.value;
-            console.log(method);
             window.location.href = '#(ctxPath)/app/organization/' + method;
             return false;
         });

@@ -97,7 +97,6 @@
                     $.post('#(ctxPath)/app/project/updateStatus', {
                         id: data.id
                     }, function (res) {
-                        console.log(res.status);
                         if (res.code == 0) {
                             layer.msg("发起审核成功！");
                             layer.close(index);
