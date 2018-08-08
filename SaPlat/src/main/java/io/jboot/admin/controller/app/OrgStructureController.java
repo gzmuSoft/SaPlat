@@ -185,6 +185,9 @@ public class OrgStructureController extends BaseController {
         if(!isPerson(user.getUserID())){
             throw new BusinessException("该用户不是个人群体账户！");
         }
+        if(isStructPerson(orgStructure.getId(),user.getUserID())){
+            throw new BusinessException("该用户已经加入了架构！");
+        }
         applyInvite.setUserID(user.getId());
         Notification notification =  sendMessage("邀请加入架构通知","你好！" + AuthUtils.getLoginUser().getName() +"组织架构（" + applyInvite.getName() + "）的管理员邀请你加入该架构，请前往组织架构 -> 通知消息 处理！","/app/OrgStructure/showMessage",user.getId(),AuthUtils.getLoginUser());
         if(!applyInviteService.saveOrUpdateAndSend(applyInvite,notification)){
@@ -247,7 +250,7 @@ public class OrgStructureController extends BaseController {
     @NotNullPara("id")
     public void acceptJoinStruct(){
         Long id = getParaToLong("id");
-        Long uid = AuthUtils.getLoginUser().getId();
+        Long UserId = AuthUtils.getLoginUser().getUserID();
         ApplyInvite applyInvite = applyInviteService.findById(id);
         if(applyInvite == null){
             throw  new BusinessException("邀请信息不存在");
@@ -255,7 +258,7 @@ public class OrgStructureController extends BaseController {
         if(!isPerson(AuthUtils.getLoginUser().getUserID())){
             throw new BusinessException("该用户不是个人群体账户！");
         }
-        if(isStructPerson(applyInvite.getStructID(),uid)){
+        if(isStructPerson(applyInvite.getStructID(),UserId)){
             throw new BusinessException("你已经加入了架构，无需重复加入架构");
         }
         applyInvite.setStatus(2);
@@ -421,7 +424,7 @@ public class OrgStructureController extends BaseController {
         if(!isPerson(user.getUserID())){
             throw new BusinessException("该用户不是个人群体账户！");
         }
-        if(isStructPerson(applyInvite.getStructID(),applyInvite.getUserID())){
+        if(isStructPerson(applyInvite.getStructID(),user.getUserID())){
             throw new BusinessException("该用户已经加入了架构，无需重复加入");
         }
 
