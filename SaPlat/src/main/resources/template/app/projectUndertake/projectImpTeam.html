@@ -351,10 +351,10 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[
                 {type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '计划名称', align: 'center', width: 250,edit: true}
+                , {field: 'name', title: '计划名称', align: 'center', width: 200,edit: true}
                 , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date',edit: true}
                 , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date',edit: true}
-                , {field: 'content', title: '工作内容', align: 'center', width: 400,edit: true}
+                , {field: 'content', title: '工作内容', align: 'center', width: 300,edit: true}
                 , {field: 'action', title: '操作', align: 'center', unresize: true, rowspan: 1, toolbar: '#barDemo'}
             ]]
             , loading: true
@@ -589,11 +589,13 @@
             , exts: 'pdf'
             , data: {
                 description: $('#modelName').text()
-            }
-            , done: function (res) {
-                console.log(res.data);
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
-                    var temp;
+                    $('.loading-bg').remove();
+                    var flag;
                     util.sendAjax({
                         type: 'GET',
                         url: '#(ctxPath)/app/projectUndertake/upFile',
@@ -619,7 +621,7 @@
                     return false;
                 }
             }, error: function (index, upload) {
-                alert("文件上传错误！请重新尝试！");
+                layer.msg("文件上传错误！请重新尝试！");
             }
         });
 

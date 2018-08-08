@@ -98,9 +98,12 @@
             , exts: 'pdf'
             , data: {
                 description: "工作证件照片"
-            }
-            , done: function (res) {
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
+                    $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
                     $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
@@ -121,9 +124,12 @@
             , exts: 'pdf'
             , data: {
                 description: "专业资格证书"
-            }
-            , done: function (res) {
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
+                    $('.loading-bg').remove();
                     layer.msg("专业资格证书上传成功");
                     file2 = res.data.fileId;
                     $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
