@@ -88,8 +88,10 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getUserID() != null) {
             columns.eq("userID", "%" + model.getUserID() + "%");
         }
+        if (model.getRemark() != null) {
+            columns.eq("remark", model.getRemark());
+        }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
-
     }
 
 

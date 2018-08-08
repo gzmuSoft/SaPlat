@@ -807,29 +807,33 @@ public class ProjectController extends BaseController {
     /**
      * 专家团体审查项目表格渲染
      * 参数flag
-     * true 查看邀请审查的项目
-     * false 查看已接收的审查项目
+     * 0 查看邀请审查的项目
+     * 1 查看正在审查的项目
+     * 2 查看审查完成的项目
      */
     @NotNullPara("flag")
     public void reviewProjectTable() {
         User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Boolean flag = getParaToBoolean("flag");
+        Integer flag = getParaToInt("flag");
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setIsEnable(true);
         applyInvite.setUserID(user.getId());
         applyInvite.setModule(1);
-        if (flag) {
+        if (flag == 0) {
             applyInvite.setStatus(0);
-        } else {
+        } else if (flag == 1) {
             applyInvite.setStatus(2);
+        } else if (flag == 2) {
+            applyInvite.setStatus(null);
+            applyInvite.setRemark("审查完成");
         }
         Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
         Project project;
         for (int i = 0; i < page.getList().size(); i++) {
             project = projectService.findById(page.getList().get(i).getProjectID());
-            if (project != null && page.getList().get(i).getDeadTime().before(new Date())) {
+            if (!page.getList().get(i).getRemark().equals("审查完成") && project != null && page.getList().get(i).getDeadTime().before(new Date())) {
                 float allNum, passNum, rate;
                 applyInvite = new ApplyInvite();
                 applyInvite.setModule(1);
@@ -869,6 +873,7 @@ public class ProjectController extends BaseController {
      * 0   通过/不通过
      * 1   同意/拒绝
      */
+    @NotNullPara({"id", "invite", "type"})
     public void saveInviteReview() {
         Integer invite = getParaToInt("invite");
         Long id = getParaToLong("id");
@@ -895,7 +900,8 @@ public class ProjectController extends BaseController {
             reply = getPara("reply");
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：不通过！ 原因是：" + reply);
-            applyInvite.setStatus(1);
+            applyInvite.setStatus(4);
+            applyInvite.setRemark("审查完成");
         } else if (type == 1 && invite == 2) {
             notification.setName("邀请审查通知");
             notification.setContent(user.getName() + "已接收您的项目审查邀请！");
@@ -903,13 +909,15 @@ public class ProjectController extends BaseController {
         } else if (type == 0 && invite == 2) {
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：通过！");
-            applyInvite.setStatus(2);
+            applyInvite.setStatus(3);
+            applyInvite.setRemark("审查完成");
         }
         Long projectID = applyInvite.getProjectID();
 
         applyInvite.setReply(reply);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setLastAccessTime(new Date());
+
 
         notification.setSource("/app/project/saveInviteReview");
         notification.setRecModule("");
