@@ -22,6 +22,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * -----------------------------
+ *
+ * @author LiuChuanjin
+ * @version 2.0
+ *          -----------------------------
+ * @date 12:04 2018/7/15
+ */
+
 @RequestMapping("/app/project")
 public class ProjectController extends BaseController {
 
@@ -795,6 +804,7 @@ public class ProjectController extends BaseController {
      * true 查看邀请审查的项目
      * false 查看已接收的审查项目
      */
+    @NotNullPara("flag")
     public void reviewProjectTable() {
         User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
@@ -809,8 +819,8 @@ public class ProjectController extends BaseController {
         } else {
             applyInvite.setStatus(2);
         }
-        Project project;
         Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
+        Project project;
         for (int i = 0; i < page.getList().size(); i++) {
             project = projectService.findById(page.getList().get(i).getProjectID());
             if (project != null && page.getList().get(i).getDeadTime().before(new Date())) {
@@ -850,8 +860,8 @@ public class ProjectController extends BaseController {
      * id：承接的 id
      * reply: 拒绝时回显
      * 参数type
+     * 0   通过/不通过
      * 1   同意/拒绝
-     * 2   通过/不通过
      */
     public void saveInviteReview() {
         Integer invite = getParaToInt("invite");
@@ -875,18 +885,16 @@ public class ProjectController extends BaseController {
             notification.setName("邀请审查通知");
             notification.setContent(user.getName() + "已拒绝您的项目审查邀请！");
             applyInvite.setStatus(1);
-        } else if (type == 2 && invite == 1) {
+        } else if (type == 0 && invite == 1) {
             reply = getPara("reply");
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：不通过！ 原因是：" + reply);
             applyInvite.setStatus(1);
-        }
-
-        if (type == 1 && invite == 2) {
+        } else if (type == 1 && invite == 2) {
             notification.setName("邀请审查通知");
             notification.setContent(user.getName() + "已接收您的项目审查邀请！");
             applyInvite.setStatus(2);
-        } else if (type == 2 && invite == 2) {
+        } else if (type == 0 && invite == 2) {
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：通过！");
             applyInvite.setStatus(2);
