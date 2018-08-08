@@ -39,7 +39,7 @@ layui.define(['layer', 'element'], function (exports) {
                                     }else{
                                         view += '<a href="javascript:;" href-url="' + vo.href + '">';
                                     }
-                                    view += '<i class="iconfont">' + vo.icon + '</i>' + vo.text + '</a></dd>';
+                                    view += '<i class="layui-icon" style="font-size: 14px!important;">' + vo.icon + '</i>' + vo.text + '</a></dd>';
                                 });
                                 view += '<dl>';
                             } else {
