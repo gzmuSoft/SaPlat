@@ -123,10 +123,12 @@
             , exts: 'pdf'
             , data: {
                 description: "文档文件"
-            }
-            , done: function (res) {
-                console.log(res);
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
+                    $('.loading-bg').remove();
                     postFileID(fileTypeID, res.data.fileId, projectID);
                     return true;
                 } else if (res.code == 1) {

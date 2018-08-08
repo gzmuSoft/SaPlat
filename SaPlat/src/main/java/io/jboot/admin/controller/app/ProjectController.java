@@ -314,24 +314,30 @@ public class ProjectController extends BaseController {
     /**
      * 立项中-文件列表表格渲染
      */
-    @NotNullPara({"id", "paTypeID"})
+    @NotNullPara({"id"})
     public void fileTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long id = getParaToLong("id");
         ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
-        ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
-        ProjectFileType childProjectFileType = new ProjectFileType();
-        childProjectFileType.setParentID(parentProjectFileType.getId());
-        Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
-        for (int i = 0; i < page.getList().size(); i++) {
-            if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
-                page.getList().get(i).setIsUpLoad(true);
-            } else {
-                page.getList().get(i).setIsUpLoad(false);
+        if (projectAssType!=null){
+            ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+            ProjectFileType childProjectFileType = new ProjectFileType();
+            childProjectFileType.setParentID(parentProjectFileType.getId());
+            Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
+            for (int i = 0; i < page.getList().size(); i++) {
+                if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
+                    page.getList().get(i).setIsUpLoad(true);
+                } else {
+                    page.getList().get(i).setIsUpLoad(false);
+                }
             }
+            renderJson(new DataTable<ProjectFileType>(page));
+        }else{
+
         }
-        renderJson(new DataTable<ProjectFileType>(page));
+
+
     }
 
 
