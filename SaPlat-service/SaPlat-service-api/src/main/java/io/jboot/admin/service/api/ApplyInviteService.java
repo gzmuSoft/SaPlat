@@ -9,6 +9,14 @@ import io.jboot.admin.service.entity.model.StructPersonLink;
 import java.util.List;
 
 public interface ApplyInviteService  {
+
+    /**
+     * 通过架构ID和用户id查询用户的主动申请信息
+     * @param structID
+     * @param UserID
+     * @return
+     */
+    public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID);
     /**
      * 保存或更新和发送站内信息
      * @return

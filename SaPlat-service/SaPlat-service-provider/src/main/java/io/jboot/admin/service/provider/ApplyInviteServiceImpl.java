@@ -3,13 +3,13 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.ApplyInviteService;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.StructPersonLinkService;
-import io.jboot.admin.service.entity.model.ApplyInvite;
 import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 import io.jboot.aop.annotation.Bean;
+import io.jboot.admin.service.api.ApplyInviteService;
+import io.jboot.admin.service.entity.model.ApplyInvite;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
@@ -68,15 +68,6 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
 
     @Override
-    public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink){
-        return Db.tx(()-> applyInvite.update() && notificationService.save(notification) && structPersonLinkService.save(structPersonLink));
-    }
-    @Override
-    public boolean saveOrUpdateAndSend(ApplyInvite applyInvite,Notification notification){
-        return Db.tx(()->applyInvite.saveOrUpdate() && notificationService.save(notification));
-    }
-
-    @Override
     public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (model.getApplyOrInvite() != null) {
@@ -86,22 +77,24 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
             columns.eq("isEnable", model.getIsEnable());
         }
         if (model.getStatus() != null) {
-            columns.eq("status", model.getStatus());
+            columns.eq("status", "%" + model.getStatus() + "%");
         }
         if (model.getCreateUserID() != null) {
-            columns.eq("createUserID", model.getCreateUserID());
+            columns.eq("createUserID", "%" + model.getCreateUserID() + "%");
         }
         if (model.getModule() != null) {
-            columns.eq("module", model.getModule());
+            columns.eq("module", "%" + model.getModule() + "%");
         }
         if (model.getUserID() != null) {
-            columns.eq("userID", model.getUserID());
+            columns.eq("userID", "%" + model.getUserID() + "%");
         }
         if (model.getRemark() != null) {
             columns.eq("remark", model.getRemark());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
+
+
 
     @Override
     public List<ApplyInvite> findList(ApplyInvite model) {
@@ -119,5 +112,18 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
             columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink){
+        return Db.tx(()-> applyInvite.update() && notificationService.save(notification) && structPersonLinkService.save(structPersonLink));
+    }
+    @Override
+    public boolean saveOrUpdateAndSend(ApplyInvite applyInvite,Notification notification){
+        return Db.tx(()->applyInvite.saveOrUpdate() && notificationService.save(notification));
+    }
+    @Override
+    public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
+        return DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
     }
 }

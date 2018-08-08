@@ -85,6 +85,8 @@ public class PersonController extends BaseController {
             affectedGroup = new AffectedGroup();
         }
 
+
+
         //加载民族
         Nation nmodel = new Nation();
         nmodel.setIsEnable(true);
@@ -145,6 +147,13 @@ public class PersonController extends BaseController {
             postStatus.add(post.getId().toString(), post.getName());
         }
 
+        PoliticalStatus thisPolitical = politicalStatusService.findById(affectedGroup.getPoliticsID());
+        Country thisCountry = countryService.findById(affectedGroup.getNationalityID());
+        Nation thisNation = nationService.findById(affectedGroup.getNationID());
+        Educational thisEducational = educationalService.findById(affectedGroup.getEducationID());
+        Post thisPost = postService.findById(affectedGroup.getDutyID());
+        Occupation thisOccupation = occupationService.findById(affectedGroup.getOccupationID());
+
         setAttr("user", loginUser).
                 setAttr("person", person).
                 setAttr("affectedGroup", affectedGroup).
@@ -154,6 +163,12 @@ public class PersonController extends BaseController {
                 setAttr("nationStatus", nationStatus).
                 setAttr("occupationOpts", occupationOpts).
                 setAttr("postStatus", postStatus).
+                setAttr("thisPolitical",thisPolitical).
+                setAttr("thisCountry",thisCountry).
+                setAttr("thisNation",thisNation).
+                setAttr("thisEducational",thisEducational).
+                setAttr("thisPost",thisPost).
+                setAttr("thisOccupation",thisOccupation).
                 render("main.html");
     }
 
@@ -244,6 +259,12 @@ public class PersonController extends BaseController {
             setAttr("flag", "false");
         } else {
             setAttr("flag", "true");
+            Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), AuthStatus.NOT_VERIFY, "0");
+            if (auth == null){
+                setAttr("auth","true");
+            } else {
+                setAttr("auth","false");
+            }
         }
         setAttr("user", user)
                 .setAttr("person", person)
@@ -260,21 +281,19 @@ public class PersonController extends BaseController {
         ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
-        if (affectedGroupService.findByPersonId(person.getId()) == null) {
+        AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
+        if (affectedGroup == null){
             renderJson(RestResult.buildError("请先在个人资料中完善您的个人信息"));
             throw new BusinessException("请先在个人资料中完善您的个人信息");
         }
-        expertGroup.setName(person.getName());
+        expertGroup.setAffectedGroupID(affectedGroup.getId());
         expertGroup.setCreateTime(new Date());
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
+        expertGroup.setName(person.getName());
         expertGroup.setIsEnable(true);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
         if (name != null) {
-            if (name.getIsEnable()) {
-                renderJson(RestResult.buildError("专家团体已存在"));
-                throw new BusinessException("专家团体已存在");
-            }
             expertGroup.setId(name.getId());
         }
         int file1 = Integer.parseInt(expertGroup.getWorkpictrue());

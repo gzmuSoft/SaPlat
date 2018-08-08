@@ -502,7 +502,7 @@
                 temp.length++;
                 temp[temp.length - 1] = data.value;
                 $(id2).append(data.elem[data.elem.selectedIndex].text + " ");
-                $(id1).val($(id1).val() + ",");
+                $(id1).val($(id1).val()+data.value + ",");
             }
         }
 
@@ -549,9 +549,9 @@
                     if (endDate < endDate1)
                         date = false;
                     temp++;
+                    if (startDate1 > endDate1)
+                        date = false;
                 }
-                if (startDate1 > endDate1)
-                    date = false;
             });
             if (startDate > endDate)
                 date = false;

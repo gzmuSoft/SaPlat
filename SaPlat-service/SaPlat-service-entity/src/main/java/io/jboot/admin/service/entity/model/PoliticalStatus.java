@@ -10,7 +10,7 @@ import io.jboot.admin.service.entity.model.base.BasePoliticalStatus;
 @Table(tableName = "political_status", primaryKey = "id")
 public class PoliticalStatus extends BasePoliticalStatus<PoliticalStatus> {
     public void setStatus(java.lang.String status) {
-        if (status == DataStatus.USED) {
+        if (status.equals(DataStatus.USED)) {
             setIsEnable(true);
         } else {
             setIsEnable(false);
@@ -18,7 +18,7 @@ public class PoliticalStatus extends BasePoliticalStatus<PoliticalStatus> {
     }
 
     public java.lang.String getStatus() {
-        if(this.getIsEnable() == true)
+        if(this.getIsEnable())
             return DataStatus.USED;
         else
             return DataStatus.UNUSED;
