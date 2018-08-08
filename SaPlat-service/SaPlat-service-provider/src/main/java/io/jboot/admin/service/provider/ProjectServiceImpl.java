@@ -4,6 +4,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ProjectService;
+import io.jboot.admin.service.entity.model.ApplyInvite;
 import io.jboot.admin.service.entity.model.AuthProject;
 import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
@@ -107,6 +108,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public boolean saveOrUpdate(Project model, LeaderGroup leaderGroup) {
         return Db.tx(() -> model.saveOrUpdate() && leaderGroup.saveOrUpdate());
+    }
+
+    @Override
+    public boolean update(Project model, ApplyInvite applyInvite) {
+        return Db.tx(() -> model.update() && applyInvite.update());
     }
 
     @Override
