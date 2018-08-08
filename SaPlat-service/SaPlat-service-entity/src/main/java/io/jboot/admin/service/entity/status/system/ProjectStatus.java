@@ -36,12 +36,10 @@ public class ProjectStatus extends BaseStatus {
      * 审查中
      */
     public final static String REVIEWED = "5";
-
     /**
      * 立项中
      */
     public final static String BUILDING = "6";
-
     /**
      * 审查完成
      */

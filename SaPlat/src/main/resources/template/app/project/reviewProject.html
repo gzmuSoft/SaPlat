@@ -158,7 +158,7 @@
         $('#inviteStatus').on('click', function () {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/project/reviewProjectTable'
-                , where: {applyOrInvite: true, flag: true} //设定异步数据接口的额外参数
+                , where: {applyOrInvite: true, flag: 0} //设定异步数据接口的额外参数
                 , cols: [[                  //标题栏
                     {type: 'numbers', fixed: true, unresize: 'true'}
                     , {field: 'name', title: '项目名称', width: 200}
@@ -189,7 +189,26 @@
                     , {field: 'reply', title: '回复', width: 200}
                     , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
                 ]]
-                , where: {applyOrInvite: true, flag: false} //设定异步数据接口的额外参数
+                , where: {applyOrInvite: true, flag: 1} //设定异步数据接口的额外参数
+            });
+        });
+
+        $('#reviewed').on('click', function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/project/reviewProjectTable'
+                , cols: [[                  //标题栏
+                    {type: 'numbers', fixed: true, unresize: 'true'}
+                    , {field: 'name', title: '项目名称', width: 200}
+                    , {
+                        field: 'status',
+                        title: '状态',
+                        width: 100,
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                    }
+                    , {field: 'reply', title: '回复', width: 200}
+                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                ]]
+                , where: {applyOrInvite: true, flag: 2} //设定异步数据接口的额外参数
             });
         });
 
@@ -204,7 +223,7 @@
 <div class="reloadChoose">
     <button class="layui-btn" id="inviteStatus">查看邀请您审查的项目</button>
     <button class="layui-btn" id="invite">查看正在审查的项目</button>
-
+    <button class="layui-btn" id="reviewed">查看审查完成的项目</button>
 </div>
 
 <div class="layui-fluid">
