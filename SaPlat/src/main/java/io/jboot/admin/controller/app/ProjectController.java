@@ -11,10 +11,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.ProjectStatus;
-import io.jboot.admin.service.entity.status.system.ProjectTypeStatus;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
+import io.jboot.admin.service.entity.status.system.*;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -374,8 +371,8 @@ public class ProjectController extends BaseController {
                 authProject.setStatus(ProjectStatus.VERIFIING);
                 project.setStatus(ProjectStatus.VERIFIING);
             } else if ("自评".equals(project.getAssessmentMode())) {
-                authProject.setStatus(ProjectStatus.IS_VERIFY);
-                project.setStatus(ProjectStatus.IS_VERIFY);
+                authProject.setStatus(ProjectStatus.REVIEW);
+                project.setStatus(ProjectStatus.REVIEW);
             } else {
                 json.put("status", false);
             }
@@ -586,6 +583,28 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * 通往项目管理界面-审查完成
+     */
+    public void toReviewed() {
+        render("reviewed.html");
+    }
+
+    /**
+     * 项目管理界面-审查完成-表格渲染
+     */
+    public void reviewed() {
+        User loginUser = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project = new Project();
+        project.setUserId(loginUser.getId());
+        project.setStatus(ProjectStatus.CHECKED);
+        project.setIsEnable(true);
+        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        renderJson(new DataTable<Project>(page));
+    }
+
+    /**
      * 项目公开-填写日期
      */
     @NotNullPara({"id"})
@@ -749,6 +768,9 @@ public class ProjectController extends BaseController {
         renderJson(new DataTable<ExpertGroup>(page));
     }
 
+    /**
+     * 更新狀態
+     */
     @NotNullPara("id")
     public void updateStatus(){
         Long id=getParaToLong("id");
@@ -757,6 +779,162 @@ public class ProjectController extends BaseController {
         if(!authProjectService.update(authProject)){
             throw new BusinessException("请求错误");
         }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 专家团体审查项目
+     */
+    public void reviewProject() {
+        render("reviewProject.html");
+    }
+
+    /**
+     * 专家团体审查项目表格渲染
+     * 参数flag
+     * true 查看邀请审查的项目
+     * false 查看已接收的审查项目
+     */
+    public void reviewProjectTable() {
+        User user = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Boolean flag = getParaToBoolean("flag");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setIsEnable(true);
+        applyInvite.setUserID(user.getId());
+        applyInvite.setModule(1);
+        if (flag) {
+            applyInvite.setStatus(0);
+        } else {
+            applyInvite.setStatus(2);
+        }
+        Project project;
+        Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            project = projectService.findById(page.getList().get(i).getProjectID());
+            if (project != null && page.getList().get(i).getDeadTime().before(new Date())) {
+                float allNum, passNum, rate;
+                applyInvite = new ApplyInvite();
+                applyInvite.setModule(1);
+                applyInvite.setProjectID(project.getId());
+                applyInvite.setUserID(user.getId());
+                applyInvite.setIsEnable(true);
+                List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+                allNum = list.size();
+                applyInvite.setStatus(2);
+                list = applyInviteService.findList(applyInvite);
+                passNum = list.size();
+                rate = passNum / allNum;
+                if (rate > 0.8) {
+                    project.setStatus(ProjectStatus.CHECKED);
+                } else {
+                    project.setStatus(ProjectStatus.REVIEW);
+                }
+                applyInvite = page.getList().remove(i);
+                applyInvite.setStatus(3);
+
+                if (!projectService.update(project, applyInvite)) {
+                    throw new BusinessException("更新失败！");
+                }
+            }
+        }
+        renderJson(new DataTable<ApplyInvite>(page));
+    }
+
+    /**
+     * 处理邀请/申请请求，
+     * 参数 invite：
+     * 1   拒绝
+     * 2   同意
+     * id：承接的 id
+     * reply: 拒绝时回显
+     * 参数type
+     * 1   同意/拒绝
+     * 2   通过/不通过
+     */
+    public void saveInviteReview() {
+        Integer invite = getParaToInt("invite");
+        Long id = getParaToLong("id");
+        Integer type = getParaToInt("type");
+        if (invite == null || id == null) {
+            renderJson(RestResult.buildError("请求参数错误"));
+            throw new BusinessException("请求参数错误");
+        }
+        ApplyInvite applyInvite = applyInviteService.findById(id);
+        if (applyInvite == null || !applyInvite.getIsEnable()) {
+            renderJson(RestResult.buildError("请求参数错误"));
+            throw new BusinessException("请求参数错误");
+        }
+        User user = AuthUtils.getLoginUser();
+        String reply = null;
+        Notification notification = new Notification();
+
+        if (type == 1 && invite == 1) {
+            reply = getPara("reply");
+            notification.setName("邀请审查通知");
+            notification.setContent(user.getName() + "已拒绝您的项目审查邀请！");
+            applyInvite.setStatus(1);
+        } else if (type == 2 && invite == 1) {
+            reply = getPara("reply");
+            notification.setName("审查结果通知");
+            notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：不通过！ 原因是：" + reply);
+            applyInvite.setStatus(1);
+        }
+
+        if (type == 1 && invite == 2) {
+            notification.setName("邀请审查通知");
+            notification.setContent(user.getName() + "已接收您的项目审查邀请！");
+            applyInvite.setStatus(2);
+        } else if (type == 2 && invite == 2) {
+            notification.setName("审查结果通知");
+            notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：通过！");
+            applyInvite.setStatus(2);
+        }
+        Long projectID = applyInvite.getProjectID();
+
+        applyInvite.setReply(reply);
+        applyInvite.setLastUpdateUserID(user.getId());
+        applyInvite.setLastAccessTime(new Date());
+
+        notification.setSource("/app/project/saveInviteReview");
+        notification.setRecModule("");
+        notification.setReceiverID(Math.toIntExact(projectService.findById(projectID).getUserId()));
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
+            renderJson(RestResult.buildError("请求失败，请重新尝试！"));
+            throw new BusinessException("请求失败，请重新尝试！");
+        }
+//        Project project = projectService.findById(projectID);
+//        if(project!=null&&project.getRemark().equals("邀请审查专家结束")){
+//            float allNum,passNum,rate;
+//            applyInvite = new ApplyInvite();
+//            applyInvite.setModule(1);
+//            applyInvite.setProjectID(projectID);
+//            applyInvite.setUserID(user.getId());
+//            applyInvite.setIsEnable(true);
+//            List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+//            allNum = list.size();
+//            applyInvite.setStatus(2);
+//            list = applyInviteService.findList(applyInvite);
+//            passNum = list.size();
+//            rate = passNum/allNum;
+//            if(rate>0.8){
+//                project.setStatus(ProjectStatus.CHECKED);
+//            }else{
+//                project.setStatus(ProjectStatus.REVIEW);
+//            }
+//            if(!projectService.update(project)){
+//                renderJson(RestResult.buildError("更新项目状态失败！"));
+//                throw new BusinessException("更新项目状态失败！");
+//            }
+//        }
         renderJson(RestResult.buildSuccess());
     }
 }

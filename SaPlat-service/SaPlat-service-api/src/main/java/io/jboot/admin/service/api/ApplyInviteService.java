@@ -58,6 +58,23 @@ public interface ApplyInviteService  {
      */
     public List<ApplyInvite> findAll();
 
+    /**
+     * find page
+     *
+     * @param model
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize);
+
+    /**
+     * find list
+     *
+     * @param model
+     * @return
+     */
+    public List<ApplyInvite> findList(ApplyInvite model);
 
     /**
      * delete model by primary key

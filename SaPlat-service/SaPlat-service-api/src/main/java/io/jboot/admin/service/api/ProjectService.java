@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.entity.model.ApplyInvite;
 import io.jboot.admin.service.entity.model.AuthProject;
 import io.jboot.admin.service.entity.model.LeaderGroup;
 import io.jboot.admin.service.entity.model.Project;
@@ -165,6 +166,15 @@ public interface ProjectService  {
      * @return
      */
     public boolean update(Project model);
+
+    /**
+     * update data
+     *
+     * @param model
+     * @param applyInvite
+     * @return
+     */
+    public boolean update(Project model, ApplyInvite applyInvite);
 
     public List<Project> findByIsPublic(boolean isPublic);
 
