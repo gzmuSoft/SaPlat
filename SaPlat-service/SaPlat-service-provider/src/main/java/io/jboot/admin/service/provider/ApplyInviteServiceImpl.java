@@ -16,6 +16,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -67,6 +68,16 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
 
     @Override
+    public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<ApplyInvite> findList(ApplyInvite model) {
+        return null;
+    }
+
+    @Override
     public boolean saveAndUpdateAndSend(ApplyInvite applyInvite, Notification notification, StructPersonLink structPersonLink){
         return Db.tx(()-> applyInvite.update() && notificationService.save(notification) && structPersonLinkService.save(structPersonLink));
     }
@@ -76,7 +87,6 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
     @Override
     public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
-        ApplyInvite applyInvite = DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
-        return applyInvite;
+        return DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
     }
 }

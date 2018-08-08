@@ -27,6 +27,7 @@
             , "affectedGroup.nationality": $('#nationalitySelected').val()
         });
 
+        var se = $(".layui-select-title");
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
@@ -54,17 +55,18 @@
             history.go(-1);
         });
 
-
+        se.removeClass("layui-select-title");
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled").prop("disabled", "disabled");
         $('#perfect').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
+            se.addClass("layui-select-title");
             return false;
         }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled", "");
 
-        // $(".layui-select-title").unbind();
+
 
         form.verify({
             duty: function (value, item) {
