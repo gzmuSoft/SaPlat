@@ -203,13 +203,13 @@ public class PersonController extends BaseController {
     @Before(POST.class)
     public void postUpdate() {
         User loginUser = AuthUtils.getLoginUser();
-        loginUser.setEmail(getPara("user.email"));
+        loginUser.setPhone(getPara("person.phone"));
         Person person = personService.findByUser(loginUser);
         person.setPhone(getPara("person.phone"));
+        person.setIdentity(getPara("person.identity"));
         person.setAge(DateTime.now().getYear() - DateTime.parse(getPara("affectedGroup.birthday")).getYear());
         person.setAddr(getPara("person.addr"));
         AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
-
         affectedGroup.setName(person.getName());
         affectedGroup.setPersonID(person.getId());
         affectedGroup.setMail(loginUser.getEmail());
@@ -220,6 +220,10 @@ public class PersonController extends BaseController {
         if (affectedGroup.getPhone() == null) {
             affectedGroup.setPhone(loginUser.getPhone());
 
+        }
+        AffectedGroup group = affectedGroupService.findByPersonId(person.getId());
+        if (group != null) {
+            affectedGroup.setId(group.getId());
         }
         if (!personService.update(person, loginUser, affectedGroup)) {
             renderJson(RestResult.buildError("用户更新失败"));

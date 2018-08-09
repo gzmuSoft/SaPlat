@@ -28,7 +28,7 @@
                     field: 'status',
                     title: '状态',
                     width: 100,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                 }
                 , {field: 'reply', title: '回复', width: 200}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
@@ -44,7 +44,7 @@
             , limit: 30 //默认采用30
             , loading: true
             , where: {
-                applyOrInvite: true, flag: true
+                applyOrInvite: true, flag: 0
             }
             , done: function (res, curr, count) {
             }
@@ -166,7 +166,7 @@
                         field: 'status',
                         title: '状态',
                         width: 100,
-                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                     }
                     , {field: 'reply', title: '回复', width: 200}
                     , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
@@ -184,7 +184,7 @@
                         field: 'status',
                         title: '状态',
                         width: 100,
-                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                     }
                     , {field: 'reply', title: '回复', width: 200}
                     , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
@@ -203,10 +203,10 @@
                         field: 'status',
                         title: '状态',
                         width: 100,
-                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                     }
                     , {field: 'reply', title: '回复', width: 200}
-                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                    , {title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
                 ]]
                 , where: {applyOrInvite: true, flag: 2} //设定异步数据接口的额外参数
             });
@@ -235,30 +235,34 @@
 <script type="text/html" id="barOption">
 
     #[[
-    {{#  if(d.status == 2){ }}
+    {{#  if(d.status == '2'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pass">通过</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="noPass">不通过</a>
     #[[
-    {{# } else if((d.status == 3)){ }}
+    {{# } else if((d.status == '3')){ }}
     ]]#
-    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已审查</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已通过</a>
+    #[[
+    {{# } else if((d.status == '4')){ }}
+    ]]#
+    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">不通过</a>
     #[[
     {{#  } }}
     ]]#
 </script>
 <script type="text/html" id="barOptionInvite">
     #[[
-    {{#  if(d.status == 0){ }}
+    {{#  if(d.status == '0'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
     #[[
-    {{# } else if((d.status == 2)){ }}
+    {{# } else if((d.status == '2')){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已同意</a>
     #[[
-    {{# } else if((d.status == 1)){ }}
+    {{# } else if((d.status == '1')){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已拒绝</a>
     #[[

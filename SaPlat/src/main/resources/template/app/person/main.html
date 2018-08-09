@@ -12,11 +12,13 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element'], function () {
+    layui.use(['form', 'layer', 'element', 'laydate', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , element = layui.element;
+            , element = layui.element
+            , laydate = layui.laydate
+            , upload = layui.upload;;
 
         form.val("formTest", {
             "affectedGroup.occupation": $('#occupationSelected').val()
@@ -25,6 +27,32 @@
             , "affectedGroup.nation": $('#nationSelected').val()
             , "affectedGroup.education": $('#educationSelected').val()
             , "affectedGroup.nationality": $('#nationalitySelected').val()
+        });
+
+
+        upload.render({
+            elem: '#upload'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf'
+            , data: {
+                description: "工作证件照片"
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
+                if (res.code == 0) {
+                    $('.loading-bg').remove();
+                    layer.msg("工作证件照片上传成功");
+                    $('#person\\.identity').val(res.data.fileId);
+                    $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
+                } else if (res.code == 1) {
+                    layer.msg("工作证件照片文件上传错误，请重新选择上传！");
+                }
+            }
+            , error: function (index, upload) {
+                alert("工作证件照片文件上传错误！请重新尝试！");
+            }
         });
 
         var se = $(".layui-select-title");
@@ -50,9 +78,12 @@
             return false;
         });
 
+        laydate.render({
+            elem: document.getElementById('affectedGroup.birthday')
+        });
 
         $('#reset').click(function () {
-            history.go(-1);
+            window.location.reload();
         });
 
         se.removeClass("layui-select-title");
@@ -65,7 +96,6 @@
             se.addClass("layui-select-title");
             return false;
         }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled", "");
-
 
 
         form.verify({
@@ -102,7 +132,6 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-
                         <div class="layui-form-item">
                             <label class="layui-form-label">账号(名称)</label>
                             <div class="layui-input-inline">
@@ -132,10 +161,24 @@
                             <label class="layui-form-label" for="affectedGroup.birthday"><em
                                     class="require-mark">*</em>出生日期</label>
                             <div class="layui-input-inline">
-                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday"
+                                <input type="text" id="affectedGroup.birthday" name="affectedGroup.birthday"
                                        value="#(affectedGroup.birthday)"
                                        lay-verify="date"
                                        placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" required/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="upload"><em class="require-mark">*</em>身份证证件照片</label>
+                            <div class="layui-input-block">
+                                <div class="layui-upload">
+                                    <div class="layui-upload">
+                                        <button type="button" class="layui-btn" name="upload" id="upload">
+                                            <i class="layui-icon"></i>上传文件
+                                        </button>
+                                        <button type="button" class="layui-hide" id="uploadBtn"></button>
+                                        <input class="layui-hide" type="text" id="person.identity" name="person.identity">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -211,7 +254,7 @@
                             <label class="layui-form-label"><em
                                     class="require-mark">*</em>电话号码</label>
                             <div class="layui-input-inline">
-                                <input value="#(user.phone)" class="layui-input layui-disabled" disabled>
+                                <input value="#(user.phone)" name="person.phone" class="layui-input layui-disabled" disabled>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -233,12 +276,11 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
-                                <select id="affectedGroup.occupation" name="affectedGroup.occupation"
+                                <select id="affectedGroup.occupation" name="affectedGroup.occupationID"
                                         lay-verify="occupation">
                                     <option value=""></option>
                                     #if(thisOccupation != null)
                                     <option value="#(thisOccupation.id)" selected>#(thisOccupation.name)</option>
-                                    occupation
                                     #end
                                     #statusOption(occupationOpts);
                                 </select>
@@ -261,7 +303,7 @@
                             <label class="layui-form-label" for="affectedGroup.resume">工作简历</label>
                             <div class="layui-input-block">
                             <textarea id="affectedGroup.resume" name="affectedGroup.resume"
-                                      placeholder="请输入内容" class="layui-textarea"></textarea>
+                                      placeholder="请输入内容" class="layui-textarea">#(affectedGroup.resume)</textarea>
                             </div>
                         </div>
                     </div>
