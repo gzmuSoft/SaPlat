@@ -163,9 +163,9 @@
 
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.workstate"style="width: 180px">在职状态</label>
-            <div class="layui-input-block">
-                <select name="expertGroup.workstate" id="expertGroup.workstate" style="width: 210px">
+            <label class="layui-form-label" for="expertGroup.workstate" style="width: 180px">在职状态</label>
+            <div class="layui-input-inline" style="width: 210px" >
+                <select name="expertGroup.workstate" id="expertGroup.workstate" >
                     <option value="">请选择</option>
                     #if(expertGroup.wokstate == 0)
                     <option value="在职">在职</option>
@@ -209,7 +209,7 @@
 
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.profess">专业资格内容</label>
+            <label class="layui-form-label" for="expertGroup.profess"><h style="margin: 0 30px">专业资格内容</h></label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
                           class="layui-textarea">#(expertGroup.profess)</textarea>
@@ -232,7 +232,7 @@
 
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.project">参与项目经历</label>
+            <label class="layui-form-label" for="expertGroup.project"><h style="margin: 0 30px">参与项目经历</h></label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.project" id="expertGroup.project"
                           class="layui-textarea">#(expertGroup.project)</textarea>
