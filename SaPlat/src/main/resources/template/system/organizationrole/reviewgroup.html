@@ -25,22 +25,22 @@
 //            ,cellMinWidth: 30
             , cols: [[                  //标题栏
 //                {checkbox: false,  fixed: true, space: true}
-                {field: 'id', title: 'ID', sort: true, width: 60}
+                {field: 'id', title: 'ID', sort: true, minWidth: 80}
 //                , {field: 'orgID', title: '组织机构ID',type:"space"}
-                , {field: 'name', title: '名称', width: 100}
-                , {field: 'scope', title: '服务范围', width: 100}
-                , {field: 'performance', title: '服务业绩', width: 100}
-                , {field: 'resume', title: '人员简历', width: 100}
-                , {field: 'content', title: '专业内容', width: 100}
-                , {field: 'administrator', title: '管理员姓名', width: 100}
-                , {field: 'contact', title: '管理员联系方式', width: 100}
+                , {field: 'name', title: '名称', minWidth: 150}
+                , {field: 'scope', title: '服务范围', minWidth: 150}
+                , {field: 'performance', title: '服务业绩', minWidth: 150}
+                , {field: 'resume', title: '人员简历', minWidth: 150}
+                , {field: 'content', title: '专业内容', minWidth: 150}
+                , {field: 'administrator', title: '管理员姓名', minWidth: 120}
+                , {field: 'contact', title: '管理员联系方式', minWidth: 150}
 //                ,{field: 'createUserID', title: '创建用户ID' ,sort: true}
 //                ,{field: 'createTime', title: '创建时间' ,sort: true}
 //                ,{field: 'lastUpdateUserID', title: '末次更新用户ID' ,sort: true}
 //                ,{field: 'lastAccessTime', title: '最后一次访问时间' ,sort: true}
 //                ,{field: 'isEnable', title: '状态' ,sort: true,width:100,templet: '#test-table-checkboxTpl', unresize: true}
 
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width: 200} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 200} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/reviewgroupTableData'
             , method: 'get'
