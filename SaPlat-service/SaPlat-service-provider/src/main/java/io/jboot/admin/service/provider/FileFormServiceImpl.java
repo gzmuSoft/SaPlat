@@ -17,10 +17,10 @@ import javax.inject.Singleton;
 public class FileFormServiceImpl extends JbootServiceBase<FileForm> implements FileFormService {
     @Override
     public FileForm saveAndGet(FileForm model, Files files) {
-        if(Db.tx(()->model.save() &&files.update())){
-            return model;
+        if (!model.save() && !files.update()) {
+            return null;
         }
-        return null;
+        return model;
     }
 
     @Override

@@ -15,7 +15,7 @@
         }
 
         .login-ic {
-            background: rgba(255, 255, 255, 0.32);
+            background: rgba(255, 255, 255, 0.25);
             margin-bottom: 1.5em;
             padding: 8px;
         }
@@ -66,8 +66,8 @@
             -khtml-opacity: 0;
         }
 
-        .body, .body-hide {
-            transition: opacity  2s;
+        .body, .body-hide, .body-blur {
+            transition: opacity 2s;
             -moz-transition: opacity 2s;
             -webkit-transition: opacity 2s;
             -o-transition: opacity 2s;
@@ -92,14 +92,30 @@
             filter: alpha(opacity=0);
             -moz-opacity: 0;
             -khtml-opacity: 0;
-            z-index: 100;
+            z-index: 1;
         }
 
-        .div-show{
+        .div-show {
             opacity: 1;
         }
-        .div-hide{
+
+        .div-hide {
             opacity: 0;
+        }
+
+        .body-blur {
+            position: absolute;
+            width: 380px;
+            height: 350px;
+            margin: 0 53%;
+            background: rgba(219, 219, 219, 0.25) center center fixed;
+            -webkit-filter: blur(5px);
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .layui-btn,.login-ic {
+            z-index:5;
         }
 
     </style>
@@ -120,27 +136,29 @@
 </div>
 <div class="body" id="a">
     <div class="body-text">
-        <br><br><br>
+        <br><br><br><br><br>
         <h2 style="text-align: center;font-size: 30px;color: white;font-weight: 200">登录&nbsp;•&nbsp;注册</h2>
     </div>
 </div>
 <div class="body-hide" style="" id="b">
-    <div class="login" style="text-align: center">
+    <div class="login" style="text-align: center;">
+        <br>
+        <div class="body-blur" style=" "></div>
         <form method="post" action="" id="form" style="margin: 0 55%">
             <br><br><br>
-            <div class="login-ic " style="width: 300px;">
+            <div class="login-ic " style="width: 300px;position: relative;border-radius: 4px">
                 <i></i>
                 <input type="text" id="loginName" name="loginName" placeholder="请输入用户名" required="required"
                        autocomplete="on" maxlength="16" minlength="4"/>
                 <div class="clear"></div>
             </div>
-            <div class="login-ic" style="width:300px">
+            <div class="login-ic" style="width:300px;position: relative;border-radius: 4px">
                 <i class="icon"></i>
                 <input type="password" id="password" name="password" placeholder="请输入密码" required="required"
                        maxlength="16" minlength="6"/>
                 <div class="clear"></div>
             </div>
-            <div class="login-ic" style="width:300px;position: relative">
+            <div class="login-ic" style="width:300px;position: relative;border-radius: 4px">
                 <i class="icon"></i>
                 <input type="text" name="capval" lay-verify="required" placeholder="验证码" maxlength="4"
                        minlength="4" required="required" style="width: 120px"/>
@@ -150,11 +168,11 @@
             </div>
             <div class="log-bwn" style="text-align: center;width: 300px">
                 <button class="layui-btn  layui-btn-radius"
-                        style="background-color: #2470a0;width: 120px;border-radius: 4px" lay-submit
+                        style="background:rgba(219,219,219,0.35);;position: relative;width: 120px;border-radius: 4px" lay-submit
                         lay-filter="sub">登&nbsp;&nbsp;&nbsp;录
                 </button>
                 <button class="layui-btn  layui-btn-radius"
-                        style="background-color:#c93d1b;width: 120px;border-radius: 4px;" id="reg">注&nbsp;&nbsp;&nbsp;册
+                        style="background-color:rgba(219,219,219,0.35);position: relative;width: 120px;border-radius: 4px;" id="reg">注&nbsp;&nbsp;&nbsp;册
                 </button>
             </div>
         </form>
@@ -186,16 +204,19 @@
         setInterval(function () {
             var b = $('#b');
             var a = $('#a');
+            var bg = $(' .body-blur');
             if (b.css("opacity") >= 0.5) {
                 a.css("opacity", "0");
+                bg.css("opacity", "1");
             } else {
                 a.css("opacity", "1");
+                bg.css("opacity", "0");
             }
         }, 100);
 
-        $(document).on("focus","input",function () {
+        $(document).on("focus", "input", function () {
             $('#b').addClass("div-show");
-        }).on("blur","input",function () {
+        }).on("blur", "input", function () {
             $('#b').removeClass("div-show");
         });
 

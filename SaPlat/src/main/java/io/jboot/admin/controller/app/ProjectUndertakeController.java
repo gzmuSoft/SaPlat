@@ -407,7 +407,7 @@ public class ProjectUndertakeController extends BaseController {
 
         FileForm fileForm = new FileForm();
         fileForm.setFileID(getParaToLong("fileId"));
-        fileForm.setTableName("稳评方案");
+        fileForm.setTableName("eva_scheme");
         fileForm.setFieldName(getPara("fieldName"));
         fileForm.setStatus(false);
         fileForm.setCreateTime(new Date());
