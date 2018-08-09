@@ -34,8 +34,9 @@
                 , {field: 'createUserID', title: '创建用户ID', width: 100}
                 , {field: 'createTime', title: '创建时间', width: 160}
                 , {field: 'lastAccessTime', title: '最后访问时间', width: 160}
-                , {field: 'remark', title: '备注', width: 100}
+//                , {field: 'remark', title: '备注', width: 100}
                 , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+
             ]]
             , url: '#(ctxPath)/system/organization/tableData'
             , method: 'get'
@@ -84,8 +85,12 @@
                     });
                 });
             } else if (obj.event === 'certificate') {
-                pop_show('证书查看', '#(ctxPath)/system/organization/certificate?id=' + data.id, '', '', function () {
-                    reloadTable($('#name').val());
+                if(data.remark=='not fileID') {
+                    layer.msg("该组织未上传营业执照");
+                    return false;
+                }
+                pop_show('证书查看', '#(ctxPath)/util/pdfView?fileID=' + data.remark, '', '', function () {
+
                 });
             }
         });

@@ -140,6 +140,9 @@ public class AuthController extends BaseController {
         if (auth == null) {
             throw new BusinessException("没有这个审核");
         }
+        if(auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)){
+            throw new BusinessException("用户已取消审核");
+        }
         BaseStatus authStatus = new BaseStatus() {
         };
         authStatus.add("2", "审核成功");

@@ -6,6 +6,7 @@ import io.jboot.Jboot;
 import io.jboot.admin.service.api.ResService;
 import io.jboot.admin.service.entity.model.Res;
 import io.jboot.admin.service.entity.status.system.ResStatus;
+import io.jboot.core.rpc.annotation.JbootrpcService;
 import org.apache.shiro.SecurityUtils;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ import java.util.List;
  * @author Rlax
  */
 public class AuthInterceptor implements Interceptor {
+
+    @JbootrpcService
+    private ResService resService;
 
     /**
      * 获取全部 需要控制的权限
