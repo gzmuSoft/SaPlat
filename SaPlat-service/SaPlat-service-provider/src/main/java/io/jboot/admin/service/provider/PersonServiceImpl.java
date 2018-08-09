@@ -7,6 +7,7 @@ import io.jboot.admin.service.api.AffectedGroupService;
 import io.jboot.admin.service.api.PersonService;
 import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.AffectedGroup;
+import io.jboot.admin.service.entity.model.Files;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.aop.annotation.Bean;
@@ -16,6 +17,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 
 @Bean
 @Singleton
@@ -73,8 +75,13 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     }
 
     @Override
-    public boolean update(Person person, User user, AffectedGroup affectedGroup) {
-        return Db.tx(() -> person.update() && user.update() && affectedGroupService.saveOrUpdate(affectedGroup));
+    public boolean update(Person person, User user, AffectedGroup affectedGroup, Files files, Files fileNow) {
+        return Db.tx(() -> {
+            if (files != null && !files.update()) {
+                return false;
+            }
+            return fileNow.update() && person.update() && user.update() && affectedGroupService.saveOrUpdate(affectedGroup);
+        });
     }
 
 

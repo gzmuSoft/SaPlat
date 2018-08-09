@@ -155,8 +155,9 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
                 </div>
             </div>
         </div>
@@ -204,7 +205,7 @@
         });
 
         form.on('submit(sub)', function (data) {
-            if(isNaN(parseInt(fileFromID))){
+            if (isNaN(parseInt(fileFromID))) {
                 layer.msg("您的文件还没有上传,请上传后再提交");
                 return false;
             }
@@ -229,9 +230,11 @@
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled");
         $(":input").attr("disabled", "disabled");
-
+        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled", "");
     }
 
-
+    $('#back').click(function () {
+        history.back();
+    })
 </script>
 #end

@@ -132,6 +132,7 @@
                     $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=organization&fieldName=营业执照', function () {
                         layer.msg("上传成功");
+                        $('#upload').text('已上传');
                     });
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");

@@ -73,7 +73,6 @@ public class OrganizationController extends BaseController {
     private FilesService filesService;
 
 
-
     /**
      * 跳转注册页面
      */
@@ -113,6 +112,7 @@ public class OrganizationController extends BaseController {
      */
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
+        loginUser = userService.findById(loginUser.getId());
         Organization organization = organizationService.findById(loginUser.getUserID());
         setAttr("organization", organization).setAttr("user", loginUser).render("main.html");
     }
@@ -141,32 +141,32 @@ public class OrganizationController extends BaseController {
             }
             model.setStatus(false);
         } else if (tableName.equals("facAgency")) {
-            FacAgency facAgency=facAgencyService.findByOrgId(loginUser.getUserID());
-            if(facAgency!=null){
-                Long id =facAgency.getId();
+            FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
+            if (facAgency != null) {
+                Long id = facAgency.getId();
                 model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
             }
-            if(model==null){
+            if (model == null) {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("enterprise")) {
-            Enterprise enterprise=enterpriseService.findByOrgId(loginUser.getUserID());
-            if(enterprise!=null){
-                Long id =enterprise.getId();
+            Enterprise enterprise = enterpriseService.findByOrgId(loginUser.getUserID());
+            if (enterprise != null) {
+                Long id = enterprise.getId();
                 model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
             }
-            if(model==null){
+            if (model == null) {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
         } else if (tableName.equals("profGroup")) {
-            ProfGroup profGroup=profGroupService.findByOrgId(loginUser.getUserID());
-            if(profGroup!=null){
-                Long id =profGroup.getId();
+            ProfGroup profGroup = profGroupService.findByOrgId(loginUser.getUserID());
+            if (profGroup != null) {
+                Long id = profGroup.getId();
                 model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, id);
             }
-            if(model==null){
+            if (model == null) {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
