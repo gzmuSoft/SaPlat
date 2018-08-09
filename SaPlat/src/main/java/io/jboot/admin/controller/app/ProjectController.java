@@ -691,6 +691,13 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * 通往邀请页面
+     */
+    public void projectAppleSOption() {
+        render("projectApplyView.html");
+    }
+
+    /**
      * 选择邀请的机构
      * 参数type
      * type=0 邀请评估
