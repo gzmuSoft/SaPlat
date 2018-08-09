@@ -12,11 +12,12 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element'], function () {
+    layui.use(['form', 'layer', 'element', 'laydate'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
-            , element = layui.element;
+            , element = layui.element
+            , laydate = layui.laydate;
 
         form.val("formTest", {
             "affectedGroup.occupation": $('#occupationSelected').val()
@@ -50,9 +51,12 @@
             return false;
         });
 
+        laydate.render({
+            elem: document.getElementById('affectedGroup.birthday')
+        });
 
         $('#reset').click(function () {
-            history.go(-1);
+            window.location.reload();
         });
 
         se.removeClass("layui-select-title");
@@ -102,7 +106,6 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-
                         <div class="layui-form-item">
                             <label class="layui-form-label">账号(名称)</label>
                             <div class="layui-input-inline">
@@ -132,7 +135,7 @@
                             <label class="layui-form-label" for="affectedGroup.birthday"><em
                                     class="require-mark">*</em>出生日期</label>
                             <div class="layui-input-inline">
-                                <input type="date" id="affectedGroup.birthday" name="affectedGroup.birthday"
+                                <input type="text" id="affectedGroup.birthday" name="affectedGroup.birthday"
                                        value="#(affectedGroup.birthday)"
                                        lay-verify="date"
                                        placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" required/>
@@ -233,12 +236,11 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label" for="affectedGroup.occupation">职业</label>
                             <div class="layui-input-inline">
-                                <select id="affectedGroup.occupation" name="affectedGroup.occupation"
+                                <select id="affectedGroup.occupation" name="affectedGroup.occupationID"
                                         lay-verify="occupation">
                                     <option value=""></option>
                                     #if(thisOccupation != null)
                                     <option value="#(thisOccupation.id)" selected>#(thisOccupation.name)</option>
-                                    occupation
                                     #end
                                     #statusOption(occupationOpts);
                                 </select>
@@ -261,7 +263,7 @@
                             <label class="layui-form-label" for="affectedGroup.resume">工作简历</label>
                             <div class="layui-input-block">
                             <textarea id="affectedGroup.resume" name="affectedGroup.resume"
-                                      placeholder="请输入内容" class="layui-textarea"></textarea>
+                                      placeholder="请输入内容" class="layui-textarea">#(affectedGroup.resume)</textarea>
                             </div>
                         </div>
                     </div>

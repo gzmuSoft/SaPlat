@@ -77,16 +77,16 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
             columns.eq("isEnable", model.getIsEnable());
         }
         if (model.getStatus() != null) {
-            columns.eq("status", "%" + model.getStatus() + "%");
+            columns.eq("status", model.getStatus());
         }
         if (model.getCreateUserID() != null) {
-            columns.eq("createUserID", "%" + model.getCreateUserID() + "%");
+            columns.eq("createUserID", model.getCreateUserID());
         }
         if (model.getModule() != null) {
-            columns.eq("module", "%" + model.getModule() + "%");
+            columns.eq("module", model.getModule());
         }
         if (model.getUserID() != null) {
-            columns.eq("userID", "%" + model.getUserID() + "%");
+            columns.eq("userID", model.getUserID());
         }
         if (model.getRemark() != null) {
             columns.eq("remark", model.getRemark());

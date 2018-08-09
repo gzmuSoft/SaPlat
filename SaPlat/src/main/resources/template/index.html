@@ -19,10 +19,10 @@
     <!-- header -->
     <div class="layui-header my-header">
         <!--<a href="#(ctxPath)">-->
-            <!--<div class="my-header-logo">#(APP.name)</div>-->
+        <!--<div class="my-header-logo">#(APP.name)</div>-->
         <!--</a>-->
         <!--<a href="javascript:;" layadmin-event="refresh" title="刷新">-->
-            <!--<i class="layui-icon layui-icon-refresh-3"></i>-->
+        <!--<i class="layui-icon layui-icon-refresh-3"></i>-->
         <!--</a>-->
 
         <a title="#(APP.name)" class="my-header-logo" href="">
@@ -47,7 +47,8 @@
             <li class="layui-nav-item" lay-unselect="">
                 <!-- 如果有新消息，则显示小圆点 -->
                 <a id="msg" href="javascript:;" layadmin-event="message" lay-text="消息中心">
-                    <i class="layui-icon layui-icon-notice"></i><span id="dot" class="" style="margin: -8px -1px 0"></span>
+                    <i class="layui-icon layui-icon-notice"></i><span id="dot" class=""
+                                                                      style="margin: -8px -1px 0"></span>
                 </a>
             </li>
 
@@ -150,11 +151,11 @@
                 reloadMessage();
             });
         });
-        
+
         $("#refresh").click(function () {
-            ifr=$(".layui-tab-item.layui-show").children("iframe");
+            ifr = $(".layui-tab-item.layui-show").children("iframe");
             ifr.attr('src', ifr.attr('src'));
-        })
+        });
 
         function reloadMessage() {
             $.post("#(ctxPath)/message", function (res) {
@@ -173,10 +174,11 @@
                 }
             })
         }
+
         reloadMessage();
         setInterval(function () {
             reloadMessage();
-        },1000000);
+        }, 1000000);
     });
 
 </script>
