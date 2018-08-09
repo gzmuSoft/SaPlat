@@ -3,22 +3,18 @@ package io.jboot.admin.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
-import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.OrganizationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -274,7 +270,7 @@ public class OrganizationController extends BaseController {
             model = new Management();
         }
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
                     .setAttr("flag", 0).render("management.html");
         } else {
@@ -346,7 +342,7 @@ public class OrganizationController extends BaseController {
             model = new Enterprise();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
                     .setAttr("flag", 0).render("enterprise.html");
         } else {
@@ -429,7 +425,7 @@ public class OrganizationController extends BaseController {
             model = new FacAgency();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
                     .setAttr("flag", 0).render("facAgency.html");
         } else {
@@ -524,7 +520,7 @@ public class OrganizationController extends BaseController {
             model = new ProfGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
                     .setAttr("flag", 0).render("profGroup.html");
         } else {
@@ -607,7 +603,7 @@ public class OrganizationController extends BaseController {
             model = new ReviewGroup();
         }
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
-        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null && authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION) == null) {
+        if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)
                     .setAttr("flag", 0).render("reviewGroup.html");
         } else {

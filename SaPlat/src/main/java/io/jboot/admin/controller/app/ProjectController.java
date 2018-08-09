@@ -792,7 +792,6 @@ public class ProjectController extends BaseController {
         Page<ExpertGroup> page = expertGroupService.findPage(pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(expertGroupService.findById(page.getList().get(i).getId()).getPersonID(), 0L).getId(), getParaToLong("id")));
-            System.out.println("这个：" + page.getList().get(i).getIsInvite());
         }
         renderJson(new DataTable<ExpertGroup>(page));
     }
