@@ -24,14 +24,14 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '名称', width: 100}
-                , {field: 'worktime', title: '工作时间', width: 200}
-                , {field: 'workstate', title: '在职状态', width: 200}
-                , {field: 'profess', title: '专业资格内容', width: 200}
-                , {field: 'politics', title: '政治面貌', width: 200}
-                , {field: 'nation', title: '民族', width: 200}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'id', title: 'ID', minWidth: 80}
+                , {field: 'name', title: '名称', minWidth: 150}
+                , {field: 'worktime', title: '工作时间', minWidth: 200}
+                , {field: 'workstate', title: '在职状态', minWidth: 150}
+                , {field: 'profess', title: '专业资格内容', minWidth: 200}
+                , {field: 'politics', title: '政治面貌', minWidth: 150}
+                , {field: 'nation', title: '民族', minWidth: 150}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/expert_group/tableData'
             , method: 'get'

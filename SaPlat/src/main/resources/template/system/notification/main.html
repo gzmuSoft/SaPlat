@@ -26,17 +26,17 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '标题', width: 150}
-                , {field: 'source', title: '来源模块的路径', width: 100}
-                , {field: 'content', title: '内容', width: 100}
-                , {field: 'recModule', title: '接收通知消息的模块路径', width: 100}
-                , {field: 'receiverID', title: '接收通知的用户编号', width: 60}
-                , {field: 'createUserID', title: '创建的用户编号', width: 60}
-                , {field: 'createTime', title: '发送时间', width: 150}
-                , {field: 'lastAccessTime', title: '最后一次访问时间', width: 150}
-                , {field: 'statusName', title: '状态', width: 60, align: 'center', toolbar: '#barOption1'}
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'id', title: 'ID', minWidth: 80}
+                , {field: 'name', title: '标题', minWidth: 180}
+                , {field: 'source', title: '来源模块的路径', minWidth: 180}
+                , {field: 'content', title: '内容', minWidth: 150}
+                , {field: 'recModule', title: '接收通知消息的模块路径', minWidth: 180}
+                , {field: 'receiverID', title: '接收通知的用户编号', minWidth:180}
+                , {field: 'createUserID', title: '创建的用户编号', minWidth: 80}
+                , {field: 'createTime', title: '发送时间', minWidth: 150}
+                , {field: 'lastAccessTime', title: '最后一次访问时间', minWidth: 150}
+                , {field: 'statusName', title: '状态', minWidth: 100, align: 'center', toolbar: '#barOption1'}
+                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/notification/tableData'
             , method: 'get'

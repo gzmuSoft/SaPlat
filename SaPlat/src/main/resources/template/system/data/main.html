@@ -24,17 +24,17 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'code', title: '代码', width: 60}
-                , {field: 'codeDesc', title: '代码描述', width: 120}
-                , {field: 'type', title: '类型代码', width: 180}
-                , {field: 'typeDesc', title: '类型描述', width: 180}
-                , {field: 'orderNo', title: '排序', width: 60}
-                , {field: 'createDate', title: '创建时间', width: 150}
-                , {field: 'lastUpdAcct', title: '最后更新人', width: 100}
-                , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
-                , {field: 'note', title: '备注', width: 150}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'id', title: 'ID', minWidth: 80}
+                , {field: 'code', title: '代码', minWidth: 180}
+                , {field: 'codeDesc', title: '代码描述', minWidth: 120}
+                , {field: 'type', title: '类型代码', minWidth: 180}
+                , {field: 'typeDesc', title: '类型描述', minWidth: 180}
+                , {field: 'orderNo', title: '排序', minWidth: 60}
+                , {field: 'createDate', title: '创建时间', minWidth: 150}
+                , {field: 'lastUpdAcct', title: '最后更新人', minWidth: 100}
+                , {field: 'lastUpdTime', title: '最后更新时间', minWidth: 150}
+                , {field: 'note', title: '备注', minWidth: 150}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/data/tableData'
             , method: 'get'

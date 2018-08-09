@@ -24,10 +24,10 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID'}
-                , {field: 'name', title: '名称'}
-                , {field: 'sort', title: '顺序'}
-                , {fixed: 'right', title: '操作', width: 250, align: 'center', toolbar: '#barOption'}
+                , {field: 'id', title: 'ID',minWidth: 80}
+                , {field: 'name', title: '名称',minWidth: 400}
+                , {field: 'sort', title: '顺序',minWidth: 400}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/system/projectfiletype/tableData?parentID=' + parentID
             , method: 'get'

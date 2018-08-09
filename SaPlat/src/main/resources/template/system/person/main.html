@@ -25,15 +25,15 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '个人群体名称', width: 130}
-                , {field: 'sex', title: '性别', width: 60}
-                , {field: 'phone', title: '电话号码', width: 150}
-                , {field: 'addr', title: '地址', width: 150}
-                , {field: 'identity', title: '身份证路径', width: 150}
-                , {field: 'lastAccessTime', title: '最后一次访问时间', width: 150}
-                , {field: 'power', title: '权限', width: 100}
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'id', title: 'ID', minWidth: 80}
+                , {field: 'name', title: '个人群体名称', minWidth: 150}
+                , {field: 'sex', title: '性别', minWidth: 60}
+                , {field: 'phone', title: '电话号码', minWidth: 120}
+                , {field: 'addr', title: '地址', minWidth: 120}
+                , {field: 'identity', title: '身份证路径', minWidth: 120}
+                , {field: 'lastAccessTime', title: '最后一次访问时间', minWidth: 150}
+                , {field: 'power', title: '权限', minWidth: 100}
+                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/person/tableData'
             , method: 'get'
