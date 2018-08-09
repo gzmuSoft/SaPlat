@@ -94,7 +94,14 @@ public class ProjectController extends BaseController {
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        setAttr("roleNameList", roleNameList).setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList).render("projectInformation.html");
+        if(roleNameList.size() != 0){
+            setAttr("roleNameList", roleNameList)
+                    .setAttr("PaTypeNameList", PaTypeList)
+                    .setAttr("projectStepNameList", projectStepList)
+                    .render("projectInformation.html");
+        }else {
+            render("notToProject.html");
+        }
     }
 
     /**
