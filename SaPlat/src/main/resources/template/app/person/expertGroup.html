@@ -55,11 +55,13 @@
         <button class="layui-btn layui-btn-normal go">点击查看</button>
         <button class="layui-btn layui-btn-normal" id="exit">取消认证</button>
     #else if(auth.status.equals("2"))
-        <h1>您好，您已经成功认证专家团体</h1>
+        <h2>您好，您已经成功认证专家团体</h2>
+        <br><br>
         <button class="layui-btn layui-btn-normal go">点击查看当前认证信息</button>
     #else if(auth.status.equals("1"))
-        <h1>认证失败</h1>
-        <h2>原因是：#(auth.reply)</h2>
+        <h2>认证失败</h2><br>
+        <h3>原因是：#(auth.reply)</h3>
+        <br><br>
         <button class="layui-btn layui-btn-normal go">点击重新认证</button>
     #else
         #if(affectedGroup == null)
