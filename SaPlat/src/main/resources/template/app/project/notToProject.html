@@ -1,0 +1,45 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    #title {
+        color: #009688;
+        font-weight: 700;
+        font-family: "微软雅黑";
+        text-align:center;
+        font-size:50px
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        $('#approval').click(function () {
+            setTimeout(function () {
+                layer.msg("一秒后自动跳转...")
+                window.location.href = "#(ctxPath)/app/organization/projectGet";
+            }),1500;
+        })
+
+
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-main" id="title" style="vertical-align: middle;display: table-cell;">
+    <br><br>
+    <div >
+        <p>您还不具有立项的资格！</p>
+    </div>
+    <hr>
+    <br>
+    <div style="text-align:center;"><button class="layui-btn layui-btn-lg layui-btn-radius" id="approval">前往申请立项资格</button></div>
+</div>
+#end
