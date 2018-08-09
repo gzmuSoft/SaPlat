@@ -496,7 +496,6 @@ public class OrgStructureController extends BaseController {
         notification.setName(title);
         notification.setSource(source);
         notification.setContent(content);
-        //TODO 待处理接受模块路径
         notification.setRecModule("");
         notification.setReceiverID(Math.toIntExact(ReceiverID));
         notification.setCreateTime(new Date());
