@@ -74,13 +74,7 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     @Override
     public boolean update(Person person, User user, AffectedGroup affectedGroup) {
-        return Db.tx(() -> {
-            AffectedGroup group = affectedGroupService.findByPersonId(person.getId());
-            if (group != null) {
-                affectedGroup.setId(group.getId());
-            }
-            return update(person) && userService.update(user) && affectedGroupService.saveOrUpdate(affectedGroup);
-        });
+        return Db.tx(() -> person.update() && user.update() && affectedGroupService.saveOrUpdate(affectedGroup));
     }
 
 
