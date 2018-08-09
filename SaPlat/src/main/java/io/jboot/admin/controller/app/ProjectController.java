@@ -750,7 +750,7 @@ public class ProjectController extends BaseController {
         applyInvite.setProjectID(getParaToLong("projectId"));
         applyInvite.setUserID(notification.getReceiverID().longValue());
         applyInvite.setApplyOrInvite(1);
-        applyInvite.setStatus(0);
+        applyInvite.setStatus(ApplyInviteStatus.WAITE);
         applyInvite.setCreateTime(new Date());
         applyInvite.setDeadTime(time.getTime());
         applyInvite.setLastAccessTime(new Date());
@@ -816,9 +816,9 @@ public class ProjectController extends BaseController {
         applyInvite.setUserID(user.getId());
         applyInvite.setModule(1);
         if (flag == 0) {
-            applyInvite.setStatus(0);
+            applyInvite.setStatus(ApplyInviteStatus.WAITE);
         } else if (flag == 1) {
-            applyInvite.setStatus(2);
+            applyInvite.setStatus(ApplyInviteStatus.AGREE);
         } else if (flag == 2) {
             applyInvite.setStatus(null);
             applyInvite.setRemark("审查完成");
@@ -836,7 +836,7 @@ public class ProjectController extends BaseController {
                 applyInvite.setIsEnable(true);
                 List<ApplyInvite> list = applyInviteService.findList(applyInvite);
                 allNum = list.size();
-                applyInvite.setStatus(2);
+                applyInvite.setStatus(ApplyInviteStatus.PASS);
                 list = applyInviteService.findList(applyInvite);
                 passNum = list.size();
                 rate = passNum / allNum;
@@ -846,7 +846,7 @@ public class ProjectController extends BaseController {
                     project.setStatus(ProjectStatus.REVIEW);
                 }
                 applyInvite = page.getList().remove(i);
-                applyInvite.setStatus(3);
+                applyInvite.setStatus(ApplyInviteStatus.PASS);
 
                 if (!projectService.update(project, applyInvite)) {
                     throw new BusinessException("更新失败！");
@@ -889,21 +889,21 @@ public class ProjectController extends BaseController {
             reply = getPara("reply");
             notification.setName("邀请审查通知");
             notification.setContent(user.getName() + "已拒绝您的项目审查邀请！");
-            applyInvite.setStatus(1);
+            applyInvite.setStatus(ApplyInviteStatus.REFUSE);
         } else if (type == 0 && invite == 1) {
             reply = getPara("reply");
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：不通过！ 原因是：" + reply);
-            applyInvite.setStatus(4);
+            applyInvite.setStatus(ApplyInviteStatus.NOPASS);
             applyInvite.setRemark("审查完成");
         } else if (type == 1 && invite == 2) {
             notification.setName("邀请审查通知");
             notification.setContent(user.getName() + "已接收您的项目审查邀请！");
-            applyInvite.setStatus(2);
+            applyInvite.setStatus(ApplyInviteStatus.AGREE);
         } else if (type == 0 && invite == 2) {
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：通过！");
-            applyInvite.setStatus(3);
+            applyInvite.setStatus(ApplyInviteStatus.PASS);
             applyInvite.setRemark("审查完成");
         }
         Long projectID = applyInvite.getProjectID();
