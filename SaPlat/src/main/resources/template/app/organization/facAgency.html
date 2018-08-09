@@ -192,10 +192,12 @@
             , exts: 'doc|docx|pdf'
             , data: {
                 description: "服务机构维稳备案文件照片"
-            }
-            , done: function (res) {
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
-                    pop_close();
+                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=维稳备案文件照片', function (data) {
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
@@ -218,11 +220,12 @@
             , exts: 'doc|docx|pdf'
             , data: {
                 description: "服务机构法人身份证照片"
-            }
-            , done: function (res) {
-                console.log(res.data);
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
-                    pop_close();
+                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=法人身份证照片', function (data) {
                         fileFromID1 = data.fileFromID;
                         layer.msg("上传成功");

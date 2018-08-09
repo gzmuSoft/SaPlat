@@ -23,11 +23,12 @@
             , exts: 'pdf'
             , data: {
                 description: $('#modelName').text()
-            }
-            , done: function (res) {
-                console.log(res.data);
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
                 if (res.code == 0) {
-                    pop_close();
+                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + id + '&projectId=' + projectId);
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");

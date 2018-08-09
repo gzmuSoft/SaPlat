@@ -3,7 +3,7 @@
 
 #define css()
 <style>
-    .layui-input-inline p{
+    .layui-input-inline p {
         text-align: center;
         line-height: 3;
     }
@@ -27,6 +27,7 @@
             , "affectedGroup.nationality": $('#nationalitySelected').val()
         });
 
+        var se = $(".layui-select-title");
         form.on('submit(sub)', function (data) {
             util.sendAjax({
                 type: 'POST',
@@ -51,29 +52,30 @@
 
 
         $('#reset').click(function () {
-            window.location.reload();
+            history.go(-1);
         });
 
-
+        se.removeClass("layui-select-title");
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled").prop("disabled", "disabled");
         $('#perfect').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
+            se.addClass("layui-select-title");
             return false;
-        }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled","");
+        }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled", "");
 
-        // $(".layui-select-title").unbind();
+
 
         form.verify({
-            duty: function(value, item){
-                if (value === "" || value.trim() === ""){
+            duty: function (value, item) {
+                if (value === "" || value.trim() === "") {
                     return "请选择 工作信息 - 职务"
                 }
             },
             occupation: function (value, item) {
-                if (value === "" || value.trim() === ""){
+                if (value === "" || value.trim() === "") {
                     return "请选择 工作信息 - 职业"
                 }
             }
@@ -144,7 +146,11 @@
                                        value="#(affectedGroup.nationalityID)"/>
                                 <select id="affectedGroup.nationality" name="affectedGroup.nationalityID"
                                         lay-verify="required">
+                                    #if(thisCountry != null)
+                                    <option value="#(thisCountry.id)" selected>#(thisCountry.name)</option>
+                                    #else
                                     <option value=""></option>
+                                    #end
                                     #statusOption(contryStatus);
                                 </select>
                             </div>
@@ -156,7 +162,11 @@
                                 <input type="hidden" id="nationSelected" name="nationSelected"
                                        value="#(affectedGroup.nationID)"/>
                                 <select id="affectedGroup.nation" name="affectedGroup.nationID" lay-verify="required">
+                                    #if(thisNation != null)
+                                    <option value="#(thisNation.id)" selected>#(thisNation.name)</option>
+                                    #else
                                     <option value=""></option>
+                                    #end
                                     #statusOption(nationStatus);
                                 </select>
                             </div>
@@ -167,8 +177,13 @@
                             <div class="layui-input-inline">
                                 <input type="hidden" id="politicsSelected" name="politicsSelected"
                                        value="#(affectedGroup.politicsID)"/>
-                                <select id="affectedGroup.politics" name="affectedGroup.politicsID" lay-verify="required">
+                                <select id="affectedGroup.politics" name="affectedGroup.politicsID"
+                                        lay-verify="required">
+                                    #if(thisPolitical != null)
+                                    <option value="#(thisPolitical.id)" selected>#(thisPolitical.name)</option>
+                                    #else
                                     <option value=""></option>
+                                    #end
                                     #statusOption(politicalOpts);
                                 </select>
                             </div>
@@ -181,7 +196,11 @@
                                        value="#(affectedGroup.educationID)"/>
                                 <select id="affectedGroup.education" name="affectedGroup.educationID"
                                         lay-verify="required">
+                                    #if(thisEducational != null)
+                                    <option value="#(thisEducational.id)" selected>#(thisEducational.name)</option>
+                                    #else
                                     <option value=""></option>
+                                    #end
                                     #statusOption(educationalStatus);
                                 </select>
                             </div>
@@ -217,6 +236,10 @@
                                 <select id="affectedGroup.occupation" name="affectedGroup.occupation"
                                         lay-verify="occupation">
                                     <option value=""></option>
+                                    #if(thisOccupation != null)
+                                    <option value="#(thisOccupation.id)" selected>#(thisOccupation.name)</option>
+                                    occupation
+                                    #end
                                     #statusOption(occupationOpts);
                                 </select>
                             </div>
@@ -227,6 +250,9 @@
                                 <select id="affectedGroup.duty" name="affectedGroup.dutyID"
                                         lay-verify="duty">
                                     <option value=""></option>
+                                    #if(thisPost != null)
+                                    <option value="#(thisPost.id)" selected>#(thisPost.name)</option>
+                                    #end
                                     #statusOption(postStatus);
                                 </select>
                             </div>
