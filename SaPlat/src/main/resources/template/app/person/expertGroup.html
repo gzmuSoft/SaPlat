@@ -45,25 +45,30 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>专家团体</legend>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
+        <legend style="font-size: 20px;font-weight: 500;">专家团体认证</legend>
     </fieldset>
+
     #if(auth.status.equals("3"))
-        <h1>您的认证信息正在审核中。。。</h1>
+        <h2>您的认证信息正在审核中......</h2>
+        <br><br>
         <button class="layui-btn layui-btn-normal go">点击查看</button>
         <button class="layui-btn layui-btn-normal" id="exit">取消认证</button>
     #else if(auth.status.equals("2"))
-        <h1>您好，您已经成功认证专家团体</h1>
+        <h2>您好，您已经成功认证专家团体</h2>
+        <br><br>
         <button class="layui-btn layui-btn-normal go">点击查看当前认证信息</button>
     #else if(auth.status.equals("1"))
-        <h1>认证失败</h1>
-        <h2>原因是：#(auth.reply)</h2>
+        <h2>认证失败</h2><br>
+        <h3>原因是：#(auth.reply)</h3>
+        <br><br>
         <button class="layui-btn layui-btn-normal go">点击重新认证</button>
     #else
         #if(affectedGroup == null)
-            <h1>请在个人资料中完善您的信息！</h1>
+            <h2>请在个人资料中完善您的信息！</h2>
         #else
-            <h1>您当前未认证专家团体</h1>
+            <h2>您当前未认证专家团体</h2>
+            <br><br>
             <button class="layui-btn layui-btn-normal go">点击认证</button>
         #end
     #end

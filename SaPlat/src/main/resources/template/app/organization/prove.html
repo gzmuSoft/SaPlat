@@ -52,9 +52,10 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>组织机构认证</legend>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
+        <legend style="font-size: 20px;font-weight: 500;">组织机构认证</legend>
     </fieldset>
+
 
     #if(flag==true)
     <form id="person" class="layui-form x-center" action="">
@@ -81,9 +82,9 @@
     #else if(flag==false)
     <div class="layui-form-item x-center">
         <div class="layui-input-block">
-            <h1 style="font-weight: 100">您的营业执照未上传，请将资料补充完整后再进行认证！</h1>
+            <h2 style="font-weight: 100">您的营业执照未上传，请将资料补充完整后再进行认证！</h2>
             <br/>
-            <button class="layui-btn" id="jump" style="border-radius: 15px; height: 50px; width: 150px">去上传</button>
+            <button class="layui-btn" id="jump" style="border-radius: 5px; height: 50px; width: 150px">去上传</button>
         </div>
     </div>
     #end

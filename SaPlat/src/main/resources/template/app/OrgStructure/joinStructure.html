@@ -24,12 +24,12 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'id', title: '架构ID', width: 100}
-                , {field: 'name', title: '架构名称', width: 150}
-                , {field: 'createUserID', title: '创建用户', width: 150}
-                , {field: 'createTime', title: '创建时间', width: 170}
+                , {field: 'id', title: '架构ID', minWidth: 100}
+                , {field: 'name', title: '架构名称', minWidth: 150}
+                , {field: 'createUserID', title: '创建用户', minWidth: 150}
+                , {field: 'createTime', title: '创建时间', minWidth: 180}
                 // , {field: 6, title: '状态', width: 100}
-                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', minWidth: 160, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/OrgStructure/searchStructureApi'
             , method: 'get'

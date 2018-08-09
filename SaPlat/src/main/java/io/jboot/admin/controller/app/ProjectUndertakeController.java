@@ -145,7 +145,6 @@ public class ProjectUndertakeController extends BaseController {
         notification.setName("项目承接通知");
         notification.setSource("/app/projectAndServiceOrg");
         notification.setContent("您好，" + organization.getName() + "希望承接您的项目委评，请及时处理！");
-        //TODO 待处理接受模块路径
         notification.setRecModule("");
         notification.setReceiverID(Math.toIntExact(project.getUserId()));
         notification.setCreateTime(new Date());
@@ -272,7 +271,6 @@ public class ProjectUndertakeController extends BaseController {
         }
 
         notification.setSource("/app/projectUndertake/invite");
-        //TODO 等待书写接受模块
         notification.setRecModule("");
         notification.setReceiverID(Math.toIntExact(receiverID));
         notification.setCreateUserID(user.getId());

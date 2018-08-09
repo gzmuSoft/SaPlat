@@ -26,11 +26,11 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '标题', width: 150}
-                , {field: 'content', title: '内容', width: 200}
-                , {field: 'createTime', title: '发送时间', width: 150}
-                , {field: 'statusName', title: '状态', width: 100, align: 'center', toolbar: '#barOption1'}
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '标题', minWidth: 200}
+                , {field: 'content', title: '内容', minWidth: 200}
+                , {field: 'createTime', title: '发送时间', minWidth: 150}
+                , {field: 'statusName', title: '状态', minWidth: 120, align: 'center', toolbar: '#barOption1'}
+                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/notification/tableData'
             , method: 'get'

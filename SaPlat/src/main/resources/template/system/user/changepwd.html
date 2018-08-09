@@ -53,14 +53,14 @@
     <form id="addForm" class="layui-form" action="">
         <input type="hidden" name="user.id" value="#(user.id)">
         <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>旧密码</label>
+            <label class="layui-form-label" ><em class="require-mark">*</em>旧密码</label>
             <div class="layui-input-block">
                 <input type="password" name="user.pwd" placeholder="" class="layui-input" value="" required
                        lay-verify="required|oldpwd" autocomplete="off" style="width: 200px"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 180px">新密码</label>
+            <label class="layui-form-label" >新密码</label>
             <div class="layui-input-block">
                 <input type="password" id="newPwd" name="newPwd" placeholder="" class="layui-input" lay-verify="newPwd"
                        autocomplete="off" style="width: 200px"/>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 180px">确认新密码</label>
+            <label class="layui-form-label" >确认新密码</label>
             <div class="layui-input-block">
                 <input type="password" name="rePwd" placeholder="" class="layui-input" lay-verify="rePwd"
                        autocomplete="off" style="width: 200px"/>
