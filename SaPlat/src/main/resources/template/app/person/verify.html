@@ -154,7 +154,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.name" style="width: 180px">专家团体名称</label>
-            <div class="layui-input-inline">
+            <div class="layui-input-block">
                 <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required"
                        value="#(person.name)" class="layui-input layui-disabled"
                        placeholder="请输入专家团体名称" autocomplete="off" style="width: 210px" disabled>
@@ -164,7 +164,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.workstate"style="width: 180px">在职状态</label>
-            <div class="layui-input-inline">
+            <div class="layui-input-block">
                 <select name="expertGroup.workstate" id="expertGroup.workstate" style="width: 210px">
                     <option value="">请选择</option>
                     #if(expertGroup.wokstate == 0)
@@ -179,26 +179,22 @@
         </div>
 
         <div class="layui-form-item">
-            <div class="layui-inline">
                 <label class="layui-form-label" for="expertGroup.worktime"style="width: 180px">工作时间</label>
                 <div class="layui-input-block">
                     <input type="text" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
-                           value="#(expertGroup.worktime)" class="layui-input" lay-verify="required"style="width: 210px">
+                           value="#(expertGroup.worktime)" class="layui-input" lay-verify="required" style="width: 210px">
                 </div>
-            </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-inline">
                 <label class="layui-form-label" for="expertGroup.department"style="width: 180px">部门名称</label>
                 <div class="layui-input-block">
                     <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
                            value="#(expertGroup.department)" class="layui-input"style="width: 210px">
                 </div>
-            </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload1"><em class="require-mark"style="width: 180px">*</em>工作证件照片</label>
+            <label class="layui-form-label" for="upload1"style="width: 180px"><em class="require-mark">*</em>工作证件照片</label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
@@ -221,7 +217,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload2"><em class="require-mark" style="width: 180px">*</em>专业资格证书</label>
+            <label class="layui-form-label" for="upload2" style="width: 180px"><em class="require-mark">*</em>专业资格证书</label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
