@@ -1,4 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
+#include("/template/common/layout/_page_layout_all.html")
 #@layout()
 
 #define css()
@@ -16,10 +16,10 @@
             , laydate = layui.laydate
             , upload = layui.upload;
         laydate.render({
-            elem: '#expertGroup.worktime'
+            elem: document.getElementById('expertGroup.worktime')
         });
         laydate.render({
-            elem: '#expertGroup.birthday'
+            elem: document.getElementById('expertGroup.birthday')
         });
 
         var file1 = "";
@@ -45,23 +45,6 @@
                     }, 1000);
                 }
             });
-            // console.log(data);
-            // console.log(data.field);
-
-            // util.sendAjax({
-            //     type: 'POST',
-            //     // url: '#(ctxPath)/app/person/expertGroupVerify',
-            //     url: '#(ctxPath)/app/person/datePost',
-            //     data: $.param(data.field),
-            //     loadFlag: true,
-            //     success: function (data) {
-            //         layer.msg('上传成功，请耐心等待审核！');
-            //         // window.location.reload();
-            //     },
-            //     error: function (data) {
-            //         console.log(data);
-            //     }
-            // });
             return false;
 
         });
@@ -94,7 +77,6 @@
             elem: '#upload1'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            //,multiple: true
             , exts: 'pdf'
             , data: {
                 description: "工作证件照片"
@@ -148,6 +130,11 @@
         if (flag === "true") {
             if (auth === "true"){
                 $('#sub').remove();
+                $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
+                $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
+                $('input').attr("disabled","disabled").addClass("layui-disabled");
+                $('textarea').attr("disabled","disabled").addClass("layui-disabled");
+                $('.layui-select-title').removeClass('layui-select-title')
             }
         }
     });
@@ -255,10 +242,10 @@
         </div>
 
         <div class="layui-form-item">
-            <button class="layui-btn" lay-filter="sub" lay-submit id="sub">
+            <button type="button" class="layui-btn" lay-filter="sub" lay-submit id="sub">
                 保存
             </button>
-            <button class="layui-btn" id="back">
+            <button type="button" class="layui-btn" id="back">
                 返回
             </button>
         </div>
