@@ -34,23 +34,25 @@
             <div>
                 <label for="project.amount">预计金额:</label>
                 <span>
-                <input type="number" id="project.amount" class="project" name="project.amount"/>
+                <input type="number" id="project.amount" class="project" name="project.amount"
+                       style="width: 14%;margin-right:  0px;"/>
                 </span>
+
+                <select id="units" name="units"
+                        style='box-sizing: border-box;color: rgb(32, 13, 41);margin-right: 30px;border-radius: 3px;border: 1px solid #bfbfbf;font-family: "Microsoft YaHei", montserrat, serif;font-size: 15px;height: 32px;float:  left;width: 66px;'>
+                    <option value="1">元</option>
+                    <option value="100">百元</option>
+                    <option value="1000">千元</option>
+                    <option value="10000">万元</option>
+                    <option value="1000000">百万元</option>
+                </select>
             </div>
 
             <div>
                 <label for="project.site">项目地址:</label>
                 <input type="text" id="project.site" class="project" name="project.site"/>
             </div>
-
-            <select id = "units" name = "units" style='box-sizing: border-box;color: rgb(32, 13, 41);margin-left: 160px;border-radius: 3px;border: 1px solid #bfbfbf;font-family: "Microsoft YaHei", montserrat, serif;font-size: 15px;'>
-                <option value="1">元</option>
-                <option value="100">百元</option>
-                <option value="1000">千元</option>
-                <option value="10000">万元</option>
-                <option value="1000000">百万元</option>
-            </select>
-            <br><br><br>
+            <br><br><br><br><br>
             <div>
                 <label for="project.roleName">立项机构:</label>
                 <select id="project.roleName" class="project" name="project.roleName">
