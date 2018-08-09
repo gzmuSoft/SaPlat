@@ -126,7 +126,7 @@ public class ProjectUndertakeController extends BaseController {
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
-            projectUndertake.setFacAgencyID(facAgency.getId());
+            projectUndertake.setFacAgencyID(projectService.findById(id).getUserId());
         } else if (projectUndertake.getStatus() != 1) {
             renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
             throw new BusinessException("您已经申请过了，请不要重复申请！");
@@ -188,8 +188,10 @@ public class ProjectUndertakeController extends BaseController {
         projectUndertake.setIsEnable(true);
         if (flag) {
             projectUndertake.setCreateUserID(user.getId());
+        } else if (flag && applyOrInvite) {
+            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(user.getUserID()).getId());
         } else {
-            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId()).getId());
+            projectUndertake.setFacAgencyID(user.getId());
         }
         Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<ProjectUndertake>(page));

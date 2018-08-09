@@ -24,25 +24,25 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '申请人', width: 150}
-                , {field: 'roleId', title: '申请所用身份', width: 120, templet: '#statusTpl(roleStatus, "roleId")'}
-                , {field: 'projectId', title: '项目ID', width: 200}
+                , {field: 'id', title: 'ID', minWidth: 80}
+                , {field: 'name', title: '申请人', minWidth: 150}
+                , {field: 'roleId', title: '申请所用身份', minWidth: 120, templet: '#statusTpl(roleStatus, "roleId")'}
+                , {field: 'projectId', title: '项目ID', minWidth: 200}
 //                , {
 //                    field: 'type',
 //                    title: '申请类型',
 //                    width: 150,
 //                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'}
-                , {field: 'lastUpdUser', title: '审核管理员', width: 100}
-                , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
-                , {field: 'reply', title: '回复信息', width: 150}
+                , {field: 'lastUpdUser', title: '审核管理员', minWidth: 100}
+                , {field: 'lastUpdTime', title: '最后更新时间', minWidth: 150}
+                , {field: 'reply', title: '回复信息', minWidth: 150}
                 , {
                     field: 'status',
                     title: '状态',
-                    width: 100,
+                    minWidth: 100,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/projectauth/dataTableData'
             , method: 'get'

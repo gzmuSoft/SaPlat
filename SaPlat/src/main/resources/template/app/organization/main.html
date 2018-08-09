@@ -9,15 +9,16 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>组织机构资料</legend>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
+        <legend style="font-size: 20px;font-weight: 500;">组织机构资料</legend>
     </fieldset>
+
 
     <form id="person" class="layui-form x-center" action="">
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label">登录账号</label>
+                <label class="layui-form-label"style="width: 180px">登录账号</label>
                 <div class="layui-input-inline">
                     <input type="text" id="user.name" name="user.name" value="#(user.name)"
                            class="layui-input layui-disabled layui-hide" required/>
@@ -26,7 +27,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">组织机构名称</label>
+                <label class="layui-form-label" style="width: 180px">组织机构名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
                            class="layui-input layui-disabled layui-hide" required/>
@@ -35,7 +36,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.code">组织机构代码</label>
+                <label class="layui-form-label" for="organization.code"style="width: 180px">组织机构代码</label>
                 <div class="layui-input-inline">
                     <input type="text" id="organization.code" name="organization.code" value="#(organization.code)"
                            class="layui-input layui-disabled layui-hide" required/>
@@ -44,7 +45,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.addr">组织机构地址</label>
+                <label class="layui-form-label" for="organization.addr"style="width: 180px">组织机构地址</label>
                 <div class="layui-input-inline">
                     <input type="text" id="organization.addr" name="organization.addr" value="#(organization.addr)"
                            class="layui-input layui-disabled" disabled="disabled" required
@@ -53,7 +54,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.principal">委办负责人名称</label>
+                <label class="layui-form-label" for="organization.principal"style="width: 180px">委办负责人名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="organization.principal" name="organization.principal"
                            value="#(organization.principal)"
@@ -63,7 +64,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.contact">委办负责人联系方式</label>
+                <label class="layui-form-label" for="organization.contact"style="width: 180px">委办负责人联系方式</label>
                 <div class="layui-input-inline">
                     <input type="tel" id="organization.contact" name="organization.contact"
                            value="#(organization.contact)"
@@ -73,7 +74,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="user.email">邮箱</label>
+                <label class="layui-form-label" for="user.email" style="width: 180px">邮箱</label>
                 <div class="layui-input-inline">
                     <input type="email" id="user.email" name="user.email" value="#(user.email)"
                            class="layui-input layui-disabled" disabled="disabled" required
@@ -82,7 +83,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label x-center"><em class="require-mark">*</em>营业执照</label>
+                <label class="layui-form-label x-center"style="width: 180px"><em class="require-mark">*</em>营业执照</label>
                 <div class="layui-input-inline layui-upload">
                     <button type="button" class="layui-btn layui-disabled" disabled="disabled" name="upload"
                             id="upload"><i class="layui-icon"></i>上传文件

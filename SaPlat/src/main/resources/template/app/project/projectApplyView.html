@@ -22,7 +22,7 @@
             , height: 'full-150'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {field: 'name', title: '项目名称', width: 100, sort: true}
+                {field: 'name', title: '项目名称', width: 200, sort: true}
                 , {
                     field: 'status',
                     title: '状态',
@@ -30,7 +30,7 @@
                     sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                 }
-                , {field: 'reply', title: '回复', width: 100}
+                , {field: 'reply', title: '回复', width: 300}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
@@ -44,8 +44,7 @@
             , limit: 30 //默认采用30
             , loading: true
             , where: {
-                applyOrInvite: false,
-                flag: true
+                applyOrInvite: true, flag: true
             }
             , done: function (res, curr, count) {
             }
@@ -55,7 +54,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.facAgencyID, '', '', function () {
                 });
             } else if (obj.event === 'agree') {
                 if (button == 1) {
@@ -128,12 +127,12 @@
         });
 
 
-        $('#applyStatus').on('click', function () {
+        $('#inviteStatus').on('click', function () {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
-                , where: {applyOrInvite: false, flag: true} //设定异步数据接口的额外参数
+                , where: {applyOrInvite: true, flag: true} //设定异步数据接口的额外参数
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {field: 'name', title: '项目名称', width: 200, sort: true}
                     , {
                         field: 'status',
                         title: '状态',
@@ -141,19 +140,18 @@
                         sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
+                    , {field: 'reply', title: '回复', width: 300}
                     , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
                 ]]
             });
         });
 
-
-        $('#invite').on('click', function () {
-            button = 1;
+        $('#apply').on('click', function () {
+            button = 2;
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {field: 'name', title: '项目名称', width: 200, sort: true}
                     , {
                         field: 'status',
                         title: '状态',
@@ -161,13 +159,12 @@
                         sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
+                    , {field: 'reply', title: '回复', width: 300}
                     , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
                 ]]
-                , where: {applyOrInvite: true, flag: false} //设定异步数据接口的额外参数
+                , where: {applyOrInvite: false, flag: false} //设定异步数据接口的额外参数
             });
         });
-
     });
 
 
@@ -177,10 +174,8 @@
 #define content()
 
 <div class="reloadChoose">
-
-    <button class="layui-btn" id="applyStatus">查看申请介入项目的状态</button>
-    <button class="layui-btn" id="invite">查看邀请您介入的项目</button>
-
+    <button class="layui-btn" id="inviteStatus">查看邀请第三方介入的状态</button>
+    <button class="layui-btn" id="apply">查看申请介入您项目的请求</button>
 </div>
 
 <div class="layui-fluid">
@@ -190,31 +185,16 @@
 </div>
 
 <script type="text/html" id="barOption">
-    #shiroHasPermission('/app/projectUndertake/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    <label>
-        <input class="layui-hide project-id" name="id" value="{{ d.id }}">
-    </label>
-    #end
-
 </script>
+
 <script type="text/html" id="barOptionInvite">
-    #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    <label>
-        <input class="layui-hide project-id" name="id" value="{{ d.id }}">
-    </label>
-
-
-    #end
-
+    <a class="layui-btn layui-btn-xs" lay-event="see">服务机构详细资料</a>
     #[[
     {{#  if(d.status == '0'){ }}
     ]]#
-    #shiroHasPermission('/app/projectUndertake/invite')
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
-    #end
     #[[
     {{#  } }}
     ]]#

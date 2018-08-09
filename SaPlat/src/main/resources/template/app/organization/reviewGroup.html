@@ -15,25 +15,25 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-        <legend>审查团体认证</legend>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px; color: #009688">
+        <legend style="font-size: 20px;font-weight: 500;">审查团体认证</legend>
     </fieldset>
 
-    <form id="person" class="layui-form x-center" action="">
+    <form id="person" class="layui-form" action="">
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.name">审查团体名称</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.name" style="width: 180px">审查团体名称</label>
+                <div class="layui-input-inline" style="margin: 0 180px">
                     <input type="text" id="reviewGroup.name" name="reviewGroup.name" value="#(organization.name)"
-                           class="layui-input layui-disabled layui-hide" required/>
+                           class="layui-input layui-disabled layui-hide" style="width: 500px" required/>
                     <p>#(organization.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.orgID">组织机构编号</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.orgID" style="width: 180px">组织机构编号</label>
+                <div class="layui-input-inline" style="margin: 0 180px">
                     <input type="number" id="reviewGroup.orgID" name="reviewGroup.orgID" value="#(organization.id)"
                            class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.id)</p>
@@ -41,64 +41,63 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.scope">服务范围</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.scope"style="width: 180px">服务范围</label>
+                <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="reviewGroup.scope" name="reviewGroup.scope"
-                           value="#(reviewGroup.scope)" class="layui-input" required/>
+                           value="#(reviewGroup.scope)" class="layui-input" style="width: 500px" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.performance">服务业绩</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.performance"style="width: 180px">服务业绩</label>
+                <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="reviewGroup.performance" name="reviewGroup.performance"
-                           value="#(reviewGroup.performance)" class="layui-input" required/>
+                           value="#(reviewGroup.performance)" class="layui-input"style="width: 500px" required/>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.resume">人员简历</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="reviewGroup.resume" name="reviewGroup.resume"
-                           value="#(reviewGroup.resume)" class="layui-input" required/>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" for="reviewGroup.resume" style="width: 680px;">
+                    <h style="margin: 0 50px">人员简历</h>
+                </label>
+                <div class="layui-input-block">
+					<textarea id="reviewGroup.resume" name="reviewGroup.resume" placeholder="" class="layui-textarea"
+                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(reviewGroup.resume)</textarea>
                 </div>
             </div>
-
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.content">专业内容</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.content"style="width: 180px">专业内容</label>
+                <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="reviewGroup.content" name="reviewGroup.content"
-                           value="#(reviewGroup.content)" class="layui-input" required/>
+                           value="#(reviewGroup.content)" class="layui-input" style="width: 500px" required/>
                 </div>
             </div>
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.administrator">管理员姓名</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.administrator"style="width: 180px">管理员姓名</label>
+                <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="reviewGroup.administrator" name="reviewGroup.administrator"
-                           value="#(reviewGroup.administrator)" class="layui-input" required/>
+                           value="#(reviewGroup.administrator)" class="layui-input" style="width: 500px" required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="reviewGroup.contact">管理员联系方式</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="reviewGroup.contact"style="width: 180px">管理员联系方式</label>
+                <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="reviewGroup.contact" name="reviewGroup.contact"
-                           value="#(reviewGroup.contact)" class="layui-input" required/>
+                           value="#(reviewGroup.contact)" class="layui-input" style="width: 500px" required/>
                 </div>
             </div>
 
             <!--隐藏flag作为界面是否禁用的方法-->
             <input type="text" id="flag" name="flag"
                    class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
-
+            <br>
             <div class="layui-form-item">
-                <div class="layui-input-block">
+                <div class="layui-input-block" style="margin: 0 180px">
                     <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
                     <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
                     <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
-
                 </div>
             </div>
         </div>
