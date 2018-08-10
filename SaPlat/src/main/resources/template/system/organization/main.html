@@ -84,8 +84,12 @@
                     });
                 });
             } else if (obj.event === 'certificate') {
-                pop_show('证书查看', '#(ctxPath)/system/organization/certificate?id=' + data.id, '', '', function () {
-                    reloadTable($('#name').val());
+                if(data.remark=='not fileID') {
+                    layer.msg("该组织未上传营业执照");
+                    return false;
+                }
+                pop_show('证书查看', '#(ctxPath)/util/pdfView?fileID=' + data.remark, '', '', function () {
+
                 });
             }
         });

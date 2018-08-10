@@ -8,16 +8,15 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.FileFormService;
 import io.jboot.admin.service.api.OrganizationService;
-import io.jboot.admin.service.entity.model.Data;
+import io.jboot.admin.service.entity.model.FileForm;
 import io.jboot.admin.service.entity.model.Organization;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.validator.system.OrganizationValidator;
-import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import javax.xml.transform.Result;
 import java.util.Date;
 
 /**
@@ -30,6 +29,9 @@ public class OrganizationController extends BaseController {
 
     @JbootrpcService
     private OrganizationService organizationService;
+
+    @JbootrpcService
+    private FileFormService fileFormService;
 
     /**
      * index
@@ -49,6 +51,15 @@ public class OrganizationController extends BaseController {
         organization.setName(getPara("name"));
 
         Page<Organization> page = organizationService.findPage(organization, pageNumber, pageSize);
+        for (Organization organization1 : page.getList()) {
+            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization","营业执照",organization1.getId());
+            if(fileForm!=null) {
+                organization1.setRemark(fileForm.getFileID().toString());
+            }
+            else {
+                organization1.setRemark("not fileID");
+            }
+        }
         renderJson(new DataTable<Organization>(page));
     }
 

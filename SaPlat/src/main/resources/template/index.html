@@ -30,7 +30,7 @@
             #(APP.name)
         </a>
         <a href="javascript:" title="侧边伸缩" class="btn-nav my-header-logo">
-            <i class="layui-icon layui-icon-shrink-right"></i>
+            <i class="layui-icon layui-icon-shrink-right layui-hide-xs" id="show-left"></i>
         </a>
         <a href="javascript:" id="refresh" title="刷新窗口" class="my-header-logo">
             <i class="layui-icon layui-icon-refresh-3"></i>
@@ -179,6 +179,15 @@
         setInterval(function () {
             reloadMessage();
         }, 1000000);
+
+        $(window).resize(function () {
+            var window_width = $(window).width();
+            if (window_width < 1020) {
+                $('#show-left').addClass("layui-hide");
+            } else {
+                $('#show-left').removeClass("layui-hide");
+            }
+        });
     });
 
 </script>

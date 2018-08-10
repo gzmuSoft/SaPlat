@@ -22,10 +22,10 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
+            , initSort: {field:'sort', type:'desc'}
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                // , {field: 'id', title: 'ID',minWidth: 80}
-                , {field: 'name', title: '名称',minWidth: 400, sort: true}
+                , {field: 'name', title: '名称',minWidth: 400}
                 , {field: 'sort', title: '顺序',minWidth: 400,sort:true}
                 , {field: 'createTime', title: '创建时间',minWidth: 150,sort:true}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
@@ -49,7 +49,7 @@
             if (obj.event === 'editfile') {
                 window.location.href = '#(ctxPath)/system/projectfiletype/file?id=' + data.id;
             } else if (obj.event === 'edit') {
-                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '460', '330', function () {
+                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
                     reloadTable(null);
                 });
             } else if (obj.event === 'use') {
@@ -81,7 +81,7 @@
             }
         });
         $("#add").click(function () {
-            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '460', '330', function () {
+            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
                 reloadTable(null);
             });
         });

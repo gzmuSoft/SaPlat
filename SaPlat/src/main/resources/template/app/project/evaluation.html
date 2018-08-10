@@ -39,22 +39,18 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '角色名称', minWidth: 120}
-                , {field: 'amount', title: '预计金额', minWidth: 120, sort: true}
+                , {field: 'name', title: '角色名称', minWidth: 100}
+                , {field: 'amount', title: '预计金额', minWidth: 100, sort: true}
                 , {field: 'site', title: '地址', minWidth: 150}
                 , {field: 'brief', title: '简介', minWidth: 150}
-                , {field: 'remark', title: '备注', minWidth: 150}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'assessmentMode', title: '评估方式', minWidth: 100}
+                , {field: 'remark', title: '备注', minWidth: 100}
+                , {field: 'createTime', title: '创建时间', minWidth: 200, sort: true}
+                , {fixed: 'right', title: '操作', minWidth: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/evaluationTable'
             , method: 'get'
-            , request: {
-                pageName: 'pageNumber' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , page: true
-            , limits: [30, 60, 90, 150, 300]
-            , limit: 30 //默认采用30
+            , page: false
             , loading: true
             , done: function (res, curr, count) {
             }

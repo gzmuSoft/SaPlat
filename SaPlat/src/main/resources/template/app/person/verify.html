@@ -88,7 +88,8 @@
                     $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
-                    $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
+                    $('#upload1').text('已认证');
+                    // $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("工作证件照片文件上传错误，请重新选择上传！");
                 }
@@ -114,7 +115,8 @@
                     $('.loading-bg').remove();
                     layer.msg("专业资格证书上传成功");
                     file2 = res.data.fileId;
-                    $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
+                    $('#upload2').text('已认证');
+                    // $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("专业资格证书文件上传失败，请重新选择上传！");
                 }

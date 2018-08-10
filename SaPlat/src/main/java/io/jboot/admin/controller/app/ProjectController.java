@@ -17,17 +17,14 @@ import io.jboot.admin.validator.app.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * -----------------------------
  *
  * @author LiuChuanjin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 12:04 2018/7/15
  */
 
@@ -65,6 +62,12 @@ public class ProjectController extends BaseController {
     private LeaderGroupService leaderGroupService;
 
     @JbootrpcService
+    private UserRoleService userRoleService;
+
+    @JbootrpcService
+    private OrganizationService organizationService;
+
+    @JbootrpcService
     private FileProjectService fileProjectService;
 
     @JbootrpcService
@@ -94,12 +97,12 @@ public class ProjectController extends BaseController {
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
-        if(roleNameList.size() != 0){
+        if (roleNameList.size() != 0) {
             setAttr("roleNameList", roleNameList)
                     .setAttr("PaTypeNameList", PaTypeList)
                     .setAttr("projectStepNameList", projectStepList)
                     .render("projectInformation.html");
-        }else {
+        } else {
             render("notToProject.html");
         }
     }
@@ -327,7 +330,7 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Long id = getParaToLong("id");
         ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
-        if (projectAssType!=null){
+        if (projectAssType != null) {
             ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
             ProjectFileType childProjectFileType = new ProjectFileType();
             childProjectFileType.setParentID(parentProjectFileType.getId());
@@ -340,7 +343,7 @@ public class ProjectController extends BaseController {
                 }
             }
             renderJson(new DataTable<ProjectFileType>(page));
-        }else{
+        } else {
 
         }
 
@@ -465,7 +468,7 @@ public class ProjectController extends BaseController {
                 }
             }
         }
-        renderJson();
+        renderJson(RestResult.buildSuccess());
 
     }
 
@@ -571,14 +574,43 @@ public class ProjectController extends BaseController {
      */
     public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
+        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
+        Role role = roleService.findByName("服务机构");
+        boolean flag = false;
+        for (UserRole userRole : roles) {
+            if (userRole.getRoleID().equals(role.getId())) {
+                flag = true;
+                break;
+            }
+        }
+        List<ProjectUndertake> projectUndertakeList = null;
+        if (flag) {
+            Organization organization = organizationService.findById(loginUser.getUserID());
+            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+            if (facAgency != null) {
+                projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
+            }
+        }
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEW);
         project.setIsEnable(true);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(page));
+        List<Project> projectList = null;
+        if (projectUndertakeList != null){
+            projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
+        }
+        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "assessmentMode", "isEnable"},
+                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "自评", "1"});
+        if (projectList == null) {
+            projectList = Collections.synchronizedList(new ArrayList<>());
+        }
+        if (projects == null) {
+            projects = Collections.synchronizedList(new ArrayList<>());
+        }
+        if (projectList.size() > 0 && !projects.addAll(projectList)) {
+            throw new BusinessException("数据加载失败。。。");
+        }
+        renderJson(RestResult.buildSuccess(projects));
     }
 
     /**
@@ -691,6 +723,13 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * 通往邀请页面
+     */
+    public void projectAppleSOption() {
+        render("projectApplyView.html");
+    }
+
+    /**
      * 选择邀请的机构
      * 参数type
      * type=0 邀请评估
@@ -785,7 +824,6 @@ public class ProjectController extends BaseController {
         Page<ExpertGroup> page = expertGroupService.findPage(pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(expertGroupService.findById(page.getList().get(i).getId()).getPersonID(), 0L).getId(), getParaToLong("id")));
-            System.out.println("这个：" + page.getList().get(i).getIsInvite());
         }
         renderJson(new DataTable<ExpertGroup>(page));
     }
@@ -794,11 +832,11 @@ public class ProjectController extends BaseController {
      * 更新狀態
      */
     @NotNullPara("id")
-    public void updateStatus(){
-        Long id=getParaToLong("id");
-        AuthProject authProject=authProjectService.findByProjectId(id);
+    public void updateStatus() {
+        Long id = getParaToLong("id");
+        AuthProject authProject = authProjectService.findByProjectId(id);
         authProject.setStatus(ProjectStatus.VERIFIING);
-        if(!authProjectService.update(authProject)){
+        if (!authProjectService.update(authProject)) {
             throw new BusinessException("请求错误");
         }
         renderJson(RestResult.buildSuccess());

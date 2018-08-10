@@ -120,16 +120,18 @@ public class ProjectUndertakeController extends BaseController {
 
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId());
         Project project = projectService.findById(id);
-        System.out.println(projectUndertake);
-        if (projectUndertake == null) {
+        if (projectUndertake != null && projectUndertake.getStatus() != 1) {
+            renderJson(RestResult.buildError("您已经被邀请了，无需再申请！"));
+            throw new BusinessException("您已经被邀请了，无需再申请！");
+        } else if (projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId()) != null && projectUndertake.getStatus() != 1) {
+            renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
+            throw new BusinessException("您已经申请过了，请不要重复申请！");
+        } else if (projectUndertake == null) {
             projectUndertake = new ProjectUndertake();
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
-            projectUndertake.setFacAgencyID(facAgency.getId());
-        } else if (projectUndertake.getStatus() != 1) {
-            renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
-            throw new BusinessException("您已经申请过了，请不要重复申请！");
+            projectUndertake.setFacAgencyID(projectService.findById(id).getUserId());
         }
         projectUndertake.setName(project.getName());
         projectUndertake.setDeadTime(project.getEndPublicTime());
@@ -188,8 +190,10 @@ public class ProjectUndertakeController extends BaseController {
         projectUndertake.setIsEnable(true);
         if (flag) {
             projectUndertake.setCreateUserID(user.getId());
+        } else if (!flag && applyOrInvite) {
+            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(user.getUserID()).getId());
         } else {
-            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId()).getId());
+            projectUndertake.setFacAgencyID(user.getId());
         }
         Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<ProjectUndertake>(page));

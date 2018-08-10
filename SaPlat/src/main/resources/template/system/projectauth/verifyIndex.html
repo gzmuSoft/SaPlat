@@ -24,15 +24,14 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'userId', title: '申请人ID', width: 60}
                 , {field: 'name', title: '申请人', width: 150}
                 , {field: 'roleId', title: '申请角色', width: 120, templet: '#statusTpl(roleStatus, "roleId")'}
                 , {
                     field: 'type',
                     title: '申请类型',
                     width: 150,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")',
+                    sort:true
                 }
                 , {field: 'lastUpdUser', title: '审核管理员', width: 100}
                 , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
@@ -41,7 +40,8 @@
                     field: 'status',
                     title: '状态',
                     width: 100,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")',
+                    sort:true
                 }
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]

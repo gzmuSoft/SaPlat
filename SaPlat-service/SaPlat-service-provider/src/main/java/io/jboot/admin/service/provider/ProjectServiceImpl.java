@@ -4,10 +4,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ProjectService;
-import io.jboot.admin.service.entity.model.ApplyInvite;
-import io.jboot.admin.service.entity.model.AuthProject;
-import io.jboot.admin.service.entity.model.LeaderGroup;
-import io.jboot.admin.service.entity.model.Project;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Column;
@@ -134,6 +131,18 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.eq("isPublic", project.getIsPublic());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+    @Override
+    public List<Project> findListByProjectUndertakeListAndStatus(List<ProjectUndertake> projectUndertakeList, String status) {
+        List<Project> list = Collections.synchronizedList(new ArrayList<Project>(projectUndertakeList.size()));
+        for (ProjectUndertake projectUndertake : projectUndertakeList) {
+            Columns columns = Columns.create();
+            columns.eq("status", status);
+            columns.eq("id", projectUndertake.getProjectID());
+            list.add(DAO.findFirstByColumns(columns));
+        }
+        return list;
     }
 
     @Override

@@ -86,7 +86,6 @@ public class PersonController extends BaseController {
         }
 
 
-
         //加载民族
         Nation nmodel = new Nation();
         nmodel.setIsEnable(true);
@@ -163,12 +162,12 @@ public class PersonController extends BaseController {
                 setAttr("nationStatus", nationStatus).
                 setAttr("occupationOpts", occupationOpts).
                 setAttr("postStatus", postStatus).
-                setAttr("thisPolitical",thisPolitical).
-                setAttr("thisCountry",thisCountry).
-                setAttr("thisNation",thisNation).
-                setAttr("thisEducational",thisEducational).
-                setAttr("thisPost",thisPost).
-                setAttr("thisOccupation",thisOccupation).
+                setAttr("thisPolitical", thisPolitical).
+                setAttr("thisCountry", thisCountry).
+                setAttr("thisNation", thisNation).
+                setAttr("thisEducational", thisEducational).
+                setAttr("thisPost", thisPost).
+                setAttr("thisOccupation", thisOccupation).
                 render("main.html");
     }
 
@@ -205,10 +204,18 @@ public class PersonController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         loginUser.setPhone(getPara("person.phone"));
         Person person = personService.findByUser(loginUser);
+        Long file = getParaToLong("person.identity");
         person.setPhone(getPara("person.phone"));
-        person.setIdentity(getPara("person.identity"));
         person.setAge(DateTime.now().getYear() - DateTime.parse(getPara("affectedGroup.birthday")).getYear());
         person.setAddr(getPara("person.addr"));
+        Files files = null;
+        Files fileNow = filesService.findById(file);
+        fileNow.setIsEnable(true);
+        if (StringUtils.isNotBlank(person.getIdentity())) {
+            files = filesService.findById(person.getIdentity());
+            files.setIsEnable(false);
+        }
+        person.setIdentity(file.toString());
         AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
         affectedGroup.setName(person.getName());
         affectedGroup.setPersonID(person.getId());
@@ -219,17 +226,17 @@ public class PersonController extends BaseController {
         }
         if (affectedGroup.getPhone() == null) {
             affectedGroup.setPhone(loginUser.getPhone());
-
         }
         AffectedGroup group = affectedGroupService.findByPersonId(person.getId());
         if (group != null) {
             affectedGroup.setId(group.getId());
         }
-        if (!personService.update(person, loginUser, affectedGroup)) {
+        if (personService.update(person, loginUser, affectedGroup, files,fileNow)) {
+            renderJson(RestResult.buildSuccess());
+        } else {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
         }
-        renderJson(RestResult.buildSuccess());
     }
 
     /**
@@ -247,7 +254,7 @@ public class PersonController extends BaseController {
         AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
         setAttr("auth", auth);
         setAttr("expertGroup", expertGroup);
-        setAttr("affectedGroup",affectedGroup);
+        setAttr("affectedGroup", affectedGroup);
         render("expertGroup.html");
     }
 
@@ -264,10 +271,10 @@ public class PersonController extends BaseController {
         } else {
             setAttr("flag", "true");
             Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), AuthStatus.NOT_VERIFY, "0");
-            if (auth == null){
-                setAttr("auth","true");
+            if (auth == null) {
+                setAttr("auth", "true");
             } else {
-                setAttr("auth","false");
+                setAttr("auth", "false");
             }
         }
         setAttr("user", user)
@@ -286,7 +293,7 @@ public class PersonController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Person person = personService.findByUser(user);
         AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
-        if (affectedGroup == null){
+        if (affectedGroup == null) {
             renderJson(RestResult.buildError("请先在个人资料中完善您的个人信息"));
             throw new BusinessException("请先在个人资料中完善您的个人信息");
         }
