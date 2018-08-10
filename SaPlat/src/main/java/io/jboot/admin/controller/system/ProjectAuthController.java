@@ -222,6 +222,9 @@ public class ProjectAuthController extends BaseController {
         }
         authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
         Page<AuthProject> page = authProjectService.findPage(authProject, pageNumber, pageSize);
+        for (int i = 0; i < page.getList().size(); i++) {
+            page.getList().get(i).setProjectName(projectService.findById(page.getList().get(i).getProjectId()).getName());
+        }
         renderJson(new DataTable<AuthProject>(page));
     }
 
