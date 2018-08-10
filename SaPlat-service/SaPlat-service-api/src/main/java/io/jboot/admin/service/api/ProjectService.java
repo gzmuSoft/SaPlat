@@ -2,10 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.ApplyInvite;
-import io.jboot.admin.service.entity.model.AuthProject;
-import io.jboot.admin.service.entity.model.LeaderGroup;
-import io.jboot.admin.service.entity.model.Project;
+import io.jboot.admin.service.entity.model.*;
 
 import java.util.List;
 
@@ -108,6 +105,12 @@ public interface ProjectService  {
      */
     public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize);
 
+    /**
+     *
+     * @param projectUndertakeList
+     * @return
+     */
+    List<Project> findListByProjectUndertakeListAndStatus(List<ProjectUndertake> projectUndertakeList,String status);
 
     /**
      * delete model by primary key
@@ -194,4 +197,5 @@ public interface ProjectService  {
 
     public void keep(Model model, String... attrs);
     public void keep(List<? extends Model> models, String... attrs);
+
 }

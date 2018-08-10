@@ -172,6 +172,9 @@
     }
     $('#back').click(function () {
         history.go(-1);
-    })
+    });
+    $('#reset').click(function () {
+        history.back();
+    });
 </script>
 #end

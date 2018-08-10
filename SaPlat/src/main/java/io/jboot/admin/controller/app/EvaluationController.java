@@ -71,10 +71,16 @@ public class EvaluationController extends BaseController {
             throw new BusinessException("当前项目不符合要求！");
         }
 
+        User u = AuthUtils.getLoginUser();
         if ("委评".equals(project.getAssessmentMode())) {
             ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
             if (projectUndertake == null) {
                 throw new BusinessException("当前项目无人承接！");
+            }
+            Role role = roleService.findByName("服务机构");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(u.getId(), role.getId());
+            if (userRole == null) {
+                throw new BusinessException("请先认证服务机构！");
             }
             User user = AuthUtils.getLoginUser();
             Organization organization = organizationService.findById(user.getUserID());
@@ -82,6 +88,8 @@ public class EvaluationController extends BaseController {
             if (facAgency == null || !projectUndertake.getFacAgencyID().equals(facAgency.getId())) {
                 throw new BusinessException("当前用户与项目承接人身份不对应！");
             }
+        } else if (!project.getUserId().equals(u.getId())) {
+            throw new BusinessException("这个不是你的项目哦~！");
         }
 
         if (evaScheme == null) {
@@ -108,12 +116,6 @@ public class EvaluationController extends BaseController {
             } else {
                 setAttr(p.getUrl(), "false");
             }
-        }
-        User u = AuthUtils.getLoginUser();
-        Role role = roleService.findByName("服务机构");
-        UserRole userRole = userRoleService.findByUserIdAndRoleId(u.getId(), role.getId());
-        if (userRole == null) {
-            throw new BusinessException("请先认证服务机构！");
         }
 
         setAttr("project", project.toJson())
