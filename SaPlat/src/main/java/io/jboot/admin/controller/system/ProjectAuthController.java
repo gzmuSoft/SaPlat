@@ -12,9 +12,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.RoleStatus;
-import io.jboot.admin.service.entity.status.system.TypeStatus;
+import io.jboot.admin.service.entity.status.system.*;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -222,7 +220,7 @@ public class ProjectAuthController extends BaseController {
         if (!"".equals(getPara("name"))) {
             authProject.setName(getPara("name"));
         }
-        authProject.setType(TypeStatus.PROJECT_VERIFY);
+        authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
         Page<AuthProject> page = authProjectService.findPage(authProject, pageNumber, pageSize);
         renderJson(new DataTable<AuthProject>(page));
     }
