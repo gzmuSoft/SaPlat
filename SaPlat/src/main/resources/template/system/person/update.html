@@ -42,7 +42,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>个人名称</label>
             <div class="layui-input-block">
                 <input type="text" name="person.name" placeholder="个人群体名称" class="layui-input" value="#(person.name)"
-                       required lay-verify="required" autocomplete="off"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
@@ -64,28 +64,28 @@
             <label class="layui-form-label"><em class="require-mark">*</em>电话号码</label>
             <div class="layui-input-block">
                 <input type="text" name="person.phone" placeholder="电话号码" class="layui-input" value="#(person.phone)"
-                       autocomplete="off"/>
+                       style="width: 500px"  autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>地址</label>
             <div class="layui-input-block">
                 <input type="text" name="person.addr" placeholder="地址" class="layui-input" value="#(person.addr)"
-                       autocomplete="off"/>
+                       style="width: 500px"  autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>身份证路径</label>
             <div class="layui-input-block">
                 <input type="text" name="person.identity" placeholder="身份证路径" class="layui-input"
-                       value="#(person.identity)" autocomplete="off"/>
+                       value="#(person.identity)" style="width: 500px"  autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block">
-                <select id='person' name="person.isEnable" lay-verify="required">
+            <div class="layui-input-block"style="width: 500px">
+                <select id='person' name="person.isEnable" lay-verify="required"  >
                     <option></option>
                     #if(person.isEnable == 1)
                     #statusOption(io.jboot.admin.service.entity.status.system.PersonStatus::me(), "1")

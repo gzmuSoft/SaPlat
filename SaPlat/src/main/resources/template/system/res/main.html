@@ -58,7 +58,7 @@
             , height: 'full-100'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', minWidth: 80, align: 'center'}
+                // , {field: 'id', title: 'ID', minWidth: 80, align: 'center'}
                 , {field: 'name', title: '资源名称', minWidth: 120, align: 'center'}
                 , {field: 'des', title: '资源描述', minWidth: 120, align: 'center'}
                 , {field: 'url', title: '资源URL', minWidth: 120, align: 'center'}
@@ -69,10 +69,11 @@
                     align: 'center',
                     templet: '<div><i class="iconfont">{{d.iconCls }}</i></div>'
                 }
-                , {field: 'sort', title: '资源顺序', minWidth: 100, align: 'center'}
-                , {field: 'type', title: '资源类型', minWidth: 100, align: 'center', templet: '#dataTpl("TYPE_SYSTEM_RES", "type")'}
-                , {field: 'lastUpdateUserID', title: '最后更新人', minWidth: 100, align: 'center'}
-                , {field: 'lastAccessTime', title: '最后更新时间', minWidth: 150, align: 'center'}
+                , {field: 'sort', title: '资源顺序', minWidth: 100, align: 'center',sort:true}
+                , {field: 'type', title: '资源类型', minWidth: 100, align: 'center', templet: '#dataTpl("TYPE_SYSTEM_RES", "type")', sort: true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150, align: 'center',sort:true}
+                , {field: 'lastUpdateUserID', title: '最后更新人', minWidth: 100, align: 'center', sort: true}
+                , {field: 'lastAccessTime', title: '最后更新时间', minWidth: 150, align: 'center',sort:true}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/res/resData'
