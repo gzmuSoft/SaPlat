@@ -160,4 +160,9 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
         columns.eq("userSource", userSource);
         return DAO.findFirstByColumns(columns);
     }
+
+    @Override
+    public List<User> findAll(){
+        return DAO.findAll();
+    }
 }

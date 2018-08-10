@@ -17,6 +17,12 @@ public interface ProjectService  {
     public Project findById(Object id);
 
     /**
+     *
+     * @param userId
+     * @return
+     */
+    public List<Project> findByUserId(Long userId);
+    /**
      * find all model
      * @param model 项目主体
      * @return all <Project>

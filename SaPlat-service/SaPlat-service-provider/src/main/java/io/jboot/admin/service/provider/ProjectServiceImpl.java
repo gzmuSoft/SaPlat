@@ -172,4 +172,8 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         }
     }
 
+    @Override
+    public List<Project> findByUserId(Long userId){
+        return DAO.findListByColumn("userId",userId);
+    }
 }
