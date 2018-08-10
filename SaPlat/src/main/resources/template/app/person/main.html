@@ -45,7 +45,7 @@
                     $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     $('#person\\.identity').val(res.data.fileId);
-                    $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
+                    $('#upload').text("已上传");
                 } else if (res.code == 1) {
                     layer.msg("工作证件照片文件上传错误，请重新选择上传！");
                 }
@@ -67,6 +67,7 @@
                     $(".layui-btn").addClass("layui-hide");
                     $("#perfect").removeClass("layui-hide");
                     $(":input").addClass("layui-disabled").prop("disabled", "disabled");
+                    $('#upload').text("已上传");
                     setTimeout(function () {
                         return true;
                     }, 3000);
@@ -254,7 +255,7 @@
                             <label class="layui-form-label" style="width: 160px"><em
                                     class="require-mark">*</em>电话号码</label>
                             <div class="layui-input-inline">
-                                <input value="#(user.phone)" name="person.phone" lay-verify="phone|required" class="layui-input layui-disabled" disabled>
+                                <input value="#(person.phone)" name="person.phone" lay-verify="phone|required" class="layui-input layui-disabled" disabled>
                             </div>
                         </div>
                         <div class="layui-form-item">

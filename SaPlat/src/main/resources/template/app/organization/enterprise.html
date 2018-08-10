@@ -51,10 +51,9 @@
                     <h style="margin: 0 50px">公司简介</h>
                 </label>
                 <div class="layui-input-block">
-					<textarea id="enterprise.resume" name="enterprise.resume" value="#(enterprise.resume)"
-                              required lay-verify="required" placeholder="" class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px"
-                              required/></textarea>
+					<textarea id="enterprise.resume" name="enterprise.resume" lay-verify="required" placeholder=""
+                              class="layui-textarea"
+                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(enterprise.resume)</textarea>
                 </div>
             </div>
 
@@ -156,11 +155,12 @@
             <!--隐藏flag作为界面是否禁用的方法-->
             <input type="text" id="flag" name="flag"
                    class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
-            <br>
+
             <div class="layui-form-item">
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
         });
 
         form.on('submit(sub)', function (data) {
-            if(isNaN(parseInt(fileFromID))){
+            if (isNaN(parseInt(fileFromID))) {
                 layer.msg("您的文件还没有上传,请上传后再提交");
                 return false;
             }
@@ -233,9 +233,11 @@
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled");
         $(":input").attr("disabled", "disabled");
-
+        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled", "");
     }
 
-
+    $('#back').click(function () {
+        history.back();
+    })
 </script>
 #end

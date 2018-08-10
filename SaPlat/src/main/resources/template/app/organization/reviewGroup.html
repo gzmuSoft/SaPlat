@@ -35,7 +35,7 @@
                 <label class="layui-form-label" for="reviewGroup.orgID" style="width: 180px">组织机构编号</label>
                 <div class="layui-input-inline" style="margin: 0 180px">
                     <input type="number" id="reviewGroup.orgID" name="reviewGroup.orgID" value="#(organization.id)"
-                           class="layui-input layui-disabled layui-hide"style="width: 500px"  required/>
+                           class="layui-input layui-disabled layui-hide" required/>
                     <p>#(organization.id)</p>
                 </div>
             </div>
@@ -60,10 +60,8 @@
                     <h style="margin: 0 50px">人员简历</h>
                 </label>
                 <div class="layui-input-block">
-					<textarea id="reviewGroup.resume" name="reviewGroup.resume" value="#(reviewGroup.resume)"
-                              required lay-verify="required" placeholder="" class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px"
-                              required/></textarea>
+					<textarea id="reviewGroup.resume" name="reviewGroup.resume" placeholder="" class="layui-textarea"
+                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(reviewGroup.resume)</textarea>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -97,8 +95,9 @@
             <br>
             <div class="layui-form-item">
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <button class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
+                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
                 </div>
             </div>
         </div>
@@ -139,6 +138,10 @@
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled");
         $(":input").attr("disabled", "disabled");
+        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled","");
     }
+    $('#back').click(function () {
+        history.back();
+    })
 </script>
 #end
