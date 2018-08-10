@@ -24,15 +24,14 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', minWidth: 80}
-                , {field: 'userId', title: '申请人ID', minWidth: 120}
-                , {field: 'name', title: '申请人', minWidth: 120}
+                , {field: 'name', title: '申请人', minWidth: 120,sort:true}
                 , {field: 'roleId', title: '申请角色', minWidth: 100, templet: '#statusTpl(roleStatus, "roleId")'}
                 , {
                     field: 'type',
                     title: '申请类型',
                     minWidth: 100,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")',
+                    sort:true
                 }
                 , {field: 'lastUpdUser', title: '审核管理员', minWidth: 100}
                 , {field: 'lastUpdTime', title: '最后更新时间', minWidth: 150}

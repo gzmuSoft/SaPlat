@@ -31,6 +31,9 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
         if (authProject.getStatus() != null) {
             columns.like("status", "%" + authProject.getStatus() + "%");
         }
+        else {
+            columns.le("status","3");
+        }
         if (authProject.getUserId() != null) {
             columns.eq("userId",authProject.getUserId());
         }
