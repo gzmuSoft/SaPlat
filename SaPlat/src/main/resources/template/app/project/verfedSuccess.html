@@ -75,14 +75,14 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '项目名称', width: 140}
-                , {field: 'roleName', title: '机构类型', width: 140}
-                , {field: 'amount', title: '预计金额', width: 100, sort: true}
-                , {field: 'brief', title: '简介', align: 'center', width: 250}
-                , {field: 'assessmentMode', title: '评估方式', width: 100}
-                , {field: 'remark', title: '备注', width: 150}
-                , {fixed: 'right', title: '发布状态', width: 170, align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '项目名称', minWidth: 140,sort: true}
+                , {field: 'roleName', title: '机构类型', minWidth: 140,sort: true}
+                , {field: 'amount', title: '预计金额', minWidth: 100, sort: true}
+                , {field: 'brief', title: '简介', align: 'center', minWidth: 250,sort: true}
+                , {field: 'assessmentMode', title: '评估方式', minWidth: 100,sort: true}
+                , {field: 'remark', title: '备注', minWidth: 150,sort: true}
+                , {fixed: 'right', title: '发布状态', minWidth: 170,sort: true, align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 150,sort: true, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/verfedSuccess'
             , method: 'get'
