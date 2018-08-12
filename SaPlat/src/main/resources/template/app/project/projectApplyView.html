@@ -54,7 +54,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.facAgencyID, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.createUserID, '', '', function () {
                 });
             } else if (obj.event === 'agree') {
                 if (button == 1) {

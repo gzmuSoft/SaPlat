@@ -752,7 +752,7 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void seeFacAgency() {
-        FacAgency facAgency = facAgencyService.findById(getParaToLong("id"));
+        FacAgency facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
         setAttr("facAgency", facAgency).render("facAgency.html");
     }
 
