@@ -3,6 +3,9 @@
 
 #define css()
 <style>
+    .layui-form-label{
+        width: 150px;
+    }
 
 </style>
 #end
@@ -26,7 +29,6 @@
                     pop_close();
                 }
             });
-
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -40,13 +42,6 @@
             <label class="layui-form-label"><em class="require-mark">*</em>架构名称</label>
             <div class="layui-input-block">
                 <input type="text" name="orgstructure.name" placeholder="" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>架构普全拼</label>
-            <div class="layui-input-block">
-                <input type="text" name="orgstructure.spell" placeholder="" class="layui-input" value="" required  lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
