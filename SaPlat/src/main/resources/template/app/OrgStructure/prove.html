@@ -28,12 +28,12 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend>组织架构管理</legend>
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;color: #009688">
+        <legend style="font-size: 20px;font-weight: 500;">组织架构管理</legend>
         <div>
             <form action="" method="">
                 #for(list : nameList)
-                <button class="layui-btn layui-btn-lg layui-btn-normal layui-btn-radius" lay-submit lay-filter="sub" value="#(list == '管理机构'?'0':list == '企业机构'?'1':list == '服务机构'?'2':list == '审查团体'?'3':list == '专业团体'?'4':'')">#(list)</button>
+                <button class="layui-btn layui-btn-lg layui-btn-normal " style="border-radius: 5px" lay-submit lay-filter="sub" value="#(list == '管理机构'?'0':list == '企业机构'?'1':list == '服务机构'?'2':list == '审查团体'?'3':list == '专业团体'?'4':'')">#(list)</button>
                 #end
             </form>
         </div>
