@@ -127,6 +127,10 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
+        if ((project.getMinAmount() != 0.0) || project.getMaxAmount() != 0.0) {
+            columns.ge("amount", project.getMinAmount());
+            columns.le("amount", project.getMaxAmount());
+        }
         if (project.getIsPublic()) {
             columns.eq("isPublic", project.getIsPublic());
         }
@@ -173,7 +177,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
-    public List<Project> findByUserId(Long userId){
-        return DAO.findListByColumn("userId",userId);
+    public List<Project> findByUserId(Long userId) {
+        return DAO.findListByColumn("userId", userId);
     }
 }

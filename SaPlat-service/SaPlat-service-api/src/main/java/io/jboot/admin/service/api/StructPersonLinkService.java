@@ -11,6 +11,14 @@ import java.util.Map;
 
 public interface StructPersonLinkService {
     /**
+     * 查询加入架构的用户列表
+     * 根据架构ID查询
+     * @param orgStructureId
+     * @return
+     */
+    public Page<Record> findPersonListByStructId(int pageNumber,int pageSize,Long orgStructureId);
+    /**
+     * 个人群体 - 我加入的架构
      * 根据用户personId查询用户已经加入的架构
      * @param pageNumber
      * @param pageSize

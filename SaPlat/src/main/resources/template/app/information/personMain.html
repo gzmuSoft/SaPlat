@@ -190,12 +190,16 @@
                         <label class="layui-form-label">调查内容：</label>
                         <div class="layui-input-block">
                             #if(questionnaireContents != null)
-                            #set(content = questionnaireContents[0])
+                            #set(name = questionnaireContents[0].name)
+                            #set(content = questionnaireContents[0].content)
                             #else
+                            #set(name = null)
                             #set(content = null)
                             #end
-                            <input type="text" name="content" value="#(content)" lay-verify="title" autocomplete="off" placeholder="请输入调查内容"
-                                   class="layui-input" style="width: 1000px;">
+                            <input type="text" lay-verify="title" value="#(name)" autocomplete="off" placeholder="请输入调查题目"
+                                   class="layui-input name" style="width: 900px;">
+                            <input type="text" lay-verify="title" value="#(content)" autocomplete="off" placeholder="请输入调查内容"
+                                   class="layui-input content" style="width: 900px;">
                         </div>
                     </div>
                     <div class="layui-col-md2">
@@ -214,7 +218,8 @@
         </div>
     </div>
     #for(i = 1; i < contentsLength; i++)
-    <div class="contents layui-hide">#(questionnaireContents[i])</div>
+    <div class="name layui-hide">#(questionnaireContents[i].name)</div>
+    <div class="contents layui-hide">#(questionnaireContents[i].content)</div>
     #end
 </form>
 #end
@@ -255,20 +260,26 @@
             $(".content").each(function () {
                 string += "content" + "=" + $(this).val() + "&";
             });
+            $(".name").each(function () {
+                string += "name" + "=" + $(this).val() + "&";
+            });
             return string;
         }
 
         (function(){
-            var content;
-            $('.contents').each(function(){
+            var content,name;
+            $('.contents').each(function(index){
                 content = $(this).text();
+                name = $('.name').get(index).text();
                 $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
                     "        <div class='layui-row' >\n" +
                     "            <div class='layui-col-md10'>\n" +
                     "                <label class='layui-form-label'>调查内容：</label>\n" +
                     "                <div class='layui-input-block'>\n" +
+                    "                    <input type='text' lay-verify='title' value='"+name+"' autocomplete='off' placeholder='请输入调查题目'\n" +
+                    "                           class='layui-input name' style='width: 900px;'>\n" +
                     "                    <input type='text' lay-verify='title' value='"+content+"' autocomplete='off' placeholder='请输入调查内容'\n" +
-                    "                           class='layui-input content' style='width: 1000px;'>\n" +
+                    "                           class='layui-input content' style='width: 900px;'>\n" +
                     "                </div>\n" +
                     "            </div>\n" +
                     "            <div class='layui-col-md2'>\n" +
@@ -283,17 +294,19 @@
         //添加行
         $(document).ready(function () {
             $("#add").click(function () {
-                $("ol").append(" <li class='qwe'><div class=\"layui-form-item\">\n" +
-                    "        <div class=\"layui-row\" >\n" +
-                    "            <div class=\"layui-col-md10\">\n" +
-                    "                <label class=\"layui-form-label\">调查内容：</label>\n" +
-                    "                <div class=\"layui-input-block\">\n" +
-                    "                    <input type=\"text\" lay-verify=\"content\"  autocomplete=\"off\" placeholder=\"请输入调查内容\"\n" +
-                    "                           class=\"layui-input content\" style=\"width: 1000px;\">\n" +
+                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
+                    "        <div class='layui-row' >\n" +
+                    "            <div class='layui-col-md10'>\n" +
+                    "                <label class='layui-form-label'>调查内容：</label>\n" +
+                    "                <div class='layui-input-block'>\n" +
+                    "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查题目'\n" +
+                    "                           class='layui-input name' style='width: 900px;'>\n" +
+                    "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查内容'\n" +
+                    "                           class='layui-input content' style='width: 900px;'>\n" +
                     "                </div>\n" +
                     "            </div>\n" +
-                    "            <div class=\"layui-col-md2\">\n" +
-                    "                <button type=\"button\" class=\"layui-btn layui-btn-danger \" id=\"del\"  >删除</button>\n" +
+                    "            <div class='layui-col-md2'>\n" +
+                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
                     "    </div>" +

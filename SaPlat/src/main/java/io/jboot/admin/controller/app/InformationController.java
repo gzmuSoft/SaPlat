@@ -461,12 +461,12 @@ public class InformationController extends BaseController {
         } else {
             //加载内容Ids
             Long[] contentIds = questionnaireContentLinkService.findContentIdByQuestionnaireId(questionnaire.getId());
-            String[] questionnaireContents = new String[contentIds.length];
+            QuestionnaireContent[] questionnaireContents = new QuestionnaireContent[contentIds.length];
             //内容条数
             int contentsLength = contentIds.length;
             //加载内容s
             for (int i = 0; i < contentIds.length; i++) {
-                questionnaireContents[i] = questionnaireContentService.findById(contentIds[i]).getContent();
+                questionnaireContents[i] = questionnaireContentService.findById(contentIds[i]);
             }
             //判断跳转的页面是哪一个
             if (questionnaire.getType() == 0) {
@@ -555,15 +555,19 @@ public class InformationController extends BaseController {
             questionnaire.setCreateUserID(loginUser.getId());
         }
         //调查内容
+        String[] questionnaireContentNames = getParaValues("name");
         String[] questionnaireContents = getParaValues("content");
         List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
+        int i = 0;
         for (String content : questionnaireContents) {
             QuestionnaireContent questionnaireContent = new QuestionnaireContent();
+            questionnaireContent.setName(questionnaireContentNames[i]);
             questionnaireContent.setContent(content);
             questionnaireContent.setCreateTime(new Date());
             questionnaireContent.setLastAccessTime(new Date());
             questionnaireContent.setCreateUserID(loginUser.getId());
             contents.add(questionnaireContent);
+            i++;
         }
         if (questionnaire.getId() != null) {
             if (!questionnaireService.updateQuestionnaire(questionnaire, contents, project)) {

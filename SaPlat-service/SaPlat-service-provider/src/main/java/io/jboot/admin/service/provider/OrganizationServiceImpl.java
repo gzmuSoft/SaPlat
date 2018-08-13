@@ -45,7 +45,6 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
         organization.setCreateTime(new Date());
         organization.setLastAccessTime(new Date());
         organization.setIsEnable(true);
-        organization.setCertificate("#/");
         return Db.tx(organization::save);
     }
 

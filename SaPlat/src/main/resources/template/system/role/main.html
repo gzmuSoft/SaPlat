@@ -78,7 +78,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑角色', '#(ctxPath)/system/role/update?id=' + data.id, '', '', function () {
+                pop_show('编辑角色', '#(ctxPath)/system/role/update?id=' + data.id, '700', '350', function () {
                     reloadTable($('#name').val());
                 });
             } else if (obj.event === 'auth') {
@@ -89,7 +89,7 @@
         });
 
         $("#add").click(function () {
-            pop_show('添加角色', '#(ctxPath)/system/role/add', '', '', function () {
+            pop_show('添加角色', '#(ctxPath)/system/role/add', '700', '350', function () {
                 reloadTable($('#name').val());
             });
         });

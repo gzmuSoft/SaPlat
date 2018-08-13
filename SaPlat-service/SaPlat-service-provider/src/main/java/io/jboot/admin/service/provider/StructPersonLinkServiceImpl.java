@@ -66,11 +66,34 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         return DAO.findListByColumns(columns.getList());
     }
 
+    /**
+     * 个人群体 - 我加入的架构列表
+     * @param pageNumber
+     * @param pageSize
+     * @param personID
+     * @return
+     */
     @Override
     public Page<Record> findStructListPageByPersonID(int pageNumber, int pageSize, Long personID) {
         SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.myStructure");
         //添加参数
         sqlPara.addPara(personID);
+        Page<Record> page = Db.paginate(pageNumber,pageSize,sqlPara);
+        return page;
+    }
+
+    /**
+     * 组织管理  -  架构人员列表
+     * @param pageNumber
+     * @param pageSize
+     * @param orgStructureId
+     * @return
+     */
+    @Override
+    public Page<Record> findPersonListByStructId(int pageNumber,int pageSize, Long orgStructureId){
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.StructurePersonList");
+        //添加参数
+        sqlPara.addPara(orgStructureId);
         Page<Record> page = Db.paginate(pageNumber,pageSize,sqlPara);
         return page;
     }

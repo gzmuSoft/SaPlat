@@ -24,12 +24,12 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'personID', title: '用户ID', minWidth: 100}
                 , {field: 'name', title: '用户名称', minWidth: 150,sort:true}
                 , {field: 'structID', title: '所属架构', minWidth: 100,sort:true}
-                , {field: 'createUserID', title: '创建用户', minWidth: 150,sort:true}
+                // , {field: 'createUserID', title: '创建用户', minWidth: 150,sort:true}
                 , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
-                // , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
+                , {field: 'status', title: '状态', minWidth: 100, toolbar: '#status'}
+                , {field: 'option', fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/OrgStructure/StructurePersonList?structureID=#(sid)'
             , method: 'get'
@@ -50,16 +50,43 @@
         });
         table.on('tool(dateTable)', function(obj) {
             var data = obj.data;
-            if (obj.event === 'delete') {
-                pop_show('移除人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id, '', '', function () {
+            if (obj.event === 'use') {
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/OrgStructure/personUse',
+                    data: {id: data.ID},
+                    loadFlag: true,
+                    success: function (data) {
+                        reloadTable();
+                    }
+                });
+            }else if(obj.event === 'unuse'){
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/OrgStructure/personUnuse',
+                    data: {id: data.ID},
+                    loadFlag: true,
+                    success: function (data) {
+                        reloadTable();
+                    }
                 });
             }
         });
-
+        reloadTable = function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/OrgStructure/StructurePersonList?structureID=#(sid)'
+                , where: {} //设定异步数据接口的额外参数
+            });
+        }
         // form.on('submit(search)', function(data){
         //     reloadTable(data.field.name);
         //     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         // });
+        $("#add").click(function () {
+            pop_show('邀请架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=#(sid)&orgType=#(orgType)', '', '', function () {
+                reloadTable();
+            });
+        });
     });
 
 
@@ -78,9 +105,43 @@
     </div>
 </div>
 
-<!--<script type="text/html" id="barOption">-->
+<script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.isEnable == '0'){ }}
+    ]]#
+        #shiroHasPermission('/app/OrgStructure/personUse')
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="use">启用</a>
+        #end
+    #[[
+    {{# } }}
+    ]]#
 
-    <!--<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="option">操作</a>-->
+    #[[
+    {{#  if(d.isEnable == '1'){ }}
+    ]]#
+        #shiroHasPermission('/app/OrgStructure/personUnuse')
+            <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="unuse">禁用</a>
+        #end
+    #[[
+    {{# } }}
+    ]]#
+</script>
+<script type="text/html" id="status">
 
-<!--</script>-->
+    #[[
+    {{#  if(d.isEnable == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs">禁用</a>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.isEnable == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs">启用</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
 #end
