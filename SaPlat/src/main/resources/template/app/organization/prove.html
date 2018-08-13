@@ -56,9 +56,6 @@
         });
     });
 
-    $("#jump").click(function () {
-        window.location.href = '#(ctxPath)/app/organization/';
-    })
 </script>
 #end
 
@@ -194,16 +191,12 @@
     </div>
 
     #for(list : nameList)
-                    <button class="nameList layui-hide" name="#(list)">对比按钮(隐藏)</button>
+    <button class="nameList layui-hide" name="#(list)">对比按钮(隐藏)</button>
                     #end
     #else if(flag==false)
-    <div class="layui-form-item x-center">
-        <div class="layui-input-block">
-            <h2 style="font-weight: 100">您的营业执照未上传，请将资料补充完整后再进行认证！</h2>
-            <br/>
-            <button class="layui-btn" id="jump" style="border-radius: 5px; height: 50px; width: 150px">去上传</button>
-        </div>
-    </div>
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=请上传营业执照&btn1=立即上传&url1=#(ctxPath)/app/organization/&icon=layui-icon-form&method1=new&title=组织机构信息";
+    </script>
     #end
 </div>
 #end
