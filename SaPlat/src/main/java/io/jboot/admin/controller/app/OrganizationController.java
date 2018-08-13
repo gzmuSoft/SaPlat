@@ -125,7 +125,7 @@ public class OrganizationController extends BaseController {
         Long fileId = getParaToLong("fileId");
         FileForm model = new FileForm();
         Files files = null;
-        if (tableName.equals("organization")) {
+        if ("organization".equals(tableName)) {
             model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, loginUser.getUserID());
             if (model == null) {
                 model = new FileForm();
@@ -137,7 +137,7 @@ public class OrganizationController extends BaseController {
                 }
             }
             model.setStatus(false);
-        } else if (tableName.equals("facAgency")) {
+        } else if ("facAgency".equals(tableName)) {
             FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
             if (facAgency != null) {
                 Long id = facAgency.getId();
@@ -147,7 +147,7 @@ public class OrganizationController extends BaseController {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
-        } else if (tableName.equals("enterprise")) {
+        } else if ("enterprise".equals(tableName)) {
             Enterprise enterprise = enterpriseService.findByOrgId(loginUser.getUserID());
             if (enterprise != null) {
                 Long id = enterprise.getId();
@@ -157,7 +157,7 @@ public class OrganizationController extends BaseController {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
-        } else if (tableName.equals("profGroup")) {
+        } else if ("profGroup".equals(tableName)) {
             ProfGroup profGroup = profGroupService.findByOrgId(loginUser.getUserID());
             if (profGroup != null) {
                 Long id = profGroup.getId();
