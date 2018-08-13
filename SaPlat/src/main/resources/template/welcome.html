@@ -1256,13 +1256,11 @@
         </div>
         <div class="layui-col-md8">
             <div class="layui-card">
-                <div class="layui-carousel" id="broadcast">
-                    <div carousel-item style="height:401px">
-                        <div><img src="/static/img/welcome/c20d39c41a.jpg"></div>
-                        <div><img src="/static/img/welcome/03781695770e1920000018c1bc257a0.jpg"></div>
-                        <div><img src="/static/img/welcome/52733d977e488.jpg"></div>
-                        <div><img src="/static/img/welcome/23229Y3826C6.jpg"></div>
-                        <div><img src="/static/img/welcome/1-130FPR232.jpg"></div>
+                <div class="layui-card-header">数据概览</div>
+                <div class="layui-card-body">
+                        <div id="echars1" style="width: 600px; height: 400px;"></div>
+                    <div id="echars2" style="width: 600px; height: 400px;"></div>
+                    <div id="echars3" style="width: 600px; height: 400px;"></div>
                     </div>
                 </div>
             </div>
@@ -1274,10 +1272,10 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form','carousel','layer', 'element'], function () {
+    layui.use(['form','carousel','layer', 'element','echarts'], function () {
         // 操作对象
         var layer = layui.layer
-            , $ = layui.jquery;
+            , $ = layui.jquery
 
         var carousel = layui.carousel;
         carousel.render({
@@ -1323,7 +1321,78 @@
                     }
                 });
             }
-        })
+        });
     });
 </script>
 #end
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/echarts.common.min.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart1 = echarts.init(document.getElementById('echars1'));
+    var myChart2=echarts.init(document.getElementById('echars2'));
+    var myChart3=echarts.init(document.getElementById('echars3'));
+    option1 = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一','周二','周三','周四','周五','周六','周日']
+        },
+        yAxis: {
+
+            type: 'value'
+        },
+        series: [
+            {
+                name:'邮件营销',
+                type:'line',
+                stack: '总量',
+                data:[120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name:'联盟广告',
+                type:'line',
+                stack: '总量',
+                data:[220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name:'视频广告',
+                type:'line',
+                stack: '总量',
+                data:[150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name:'直接访问',
+                type:'line',
+                stack: '总量',
+                data:[320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name:'搜索引擎',
+                type:'line',
+                stack: '总量',
+                data:[820, 932, 901, 934, 1290, 1330, 1320]
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart1.setOption(option1);
+    myChart2.setOption(option1);
+    myChart3.setOption(option1);
+</script>
