@@ -1,7 +1,6 @@
 package io.jboot.admin.controller.app;
 
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -545,12 +544,4 @@ public class OrgStructureController extends BaseController {
             return true;
         }
     }
-
-    public void test() {
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-        Long personID = getParaToLong("personID");
-        SqlPara sqlPara = structPersonLinkService.findStructIdPageByPersonID(pageNumber, pageSize, personID);
-    }
-
 }

@@ -441,7 +441,8 @@ public class ProjectController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
 
-        if (model.getFileTypeID() == 35L) {
+        Long q_fileTypeId = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
+        if (model.getFileTypeID().equals(q_fileTypeId)) {
             model.setId(null);
             model.setCreateTime(new Date());
             if (!fileProjectService.save(model)) {
