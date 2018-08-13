@@ -153,10 +153,6 @@
             });
         });
 
-        $("#refresh").click(function () {
-            ifr = $(".layui-tab-item.layui-show").children("iframe");
-            ifr.attr('src', ifr.attr('src'));
-        });
 
         function reloadMessage() {
             $.post("#(ctxPath)/message", function (res) {
@@ -191,6 +187,14 @@
         });
     });
 
+    $("#refresh").click(function () {
+        refresh();
+    });
+
+    function refresh() {
+        var ifr = $(".layui-tab-item.layui-show").children("iframe");
+        ifr.attr('src', ifr.attr('src'));
+    }
 </script>
 </body>
 </html>
