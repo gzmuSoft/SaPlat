@@ -116,6 +116,7 @@ public class InformationController extends BaseController {
     public void edit() {
         setAttr("projectId", getParaToLong("id"))
                 .setAttr("percent", getParaToLong("percent"))
+                .setAttr("flag", getPara("flag", "false"))
                 .render("edit.html");
     }
 
@@ -156,9 +157,10 @@ public class InformationController extends BaseController {
     public void list() {
         String url = getPara("url");
         Long projectId = getParaToLong("id");
-
+        String flag = getPara("flag");
         setAttr("url", url)
                 .setAttr("projectId", projectId)
+                .setAttr("flag", flag)
                 .render("tableView.html");
     }
 
@@ -208,7 +210,9 @@ public class InformationController extends BaseController {
             expertGroup = expertGroupService.findById(model.getExpertID());
         }
         String date = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        String para = getPara("flag", "false");
         setAttr("expertGroups", expertGroups)
+                .setAttr("flag", para)
                 .setAttr("thisId", id)
                 .setAttr("expertGroup", expertGroup)
                 .setAttr("phone", user.getPhone())
@@ -298,18 +302,21 @@ public class InformationController extends BaseController {
         FileProject fileProject = fileProjectService.findByProjectID(project.getId());
         Files files = filesService.findById(fileProject.getFileID());
         setAttr("files", files);
-        ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(AuthUtils.getLoginUser().getId(), project.getId());
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
+        FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+        Organization organization = organizationService.findById(facAgency.getOrgID());
+        User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+        ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(user.getId(), project.getId());
         String invTeamIDs = impTeam.getInvTeamIDs();
-        List<String> invTeamIDList = java.util.Arrays.asList(invTeamIDs.split(","));
+        String[] invTeamIDList = invTeamIDs.split(",");
         Map<String, String> invTeamMap = new ConcurrentHashMap<String, String>();
         for (String invTeamID : invTeamIDList) {
             Person person = personService.findById(invTeamID);
             invTeamMap.put(invTeamID, person.getName());
         }
         setAttr("invTeamMap", invTeamMap);
-        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
-        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-        setAttr("facagency", facAgency);
+        setAttr("facagency", facAgency)
+                .setAttr("flag", getPara("flag", "false"));
         render("diagnose.html");
     }
 
@@ -369,6 +376,7 @@ public class InformationController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Long projectId = getParaToLong("id");
         Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setProjectID(projectId);
         Page<Questionnaire> page = questionnaireService.findPage(questionnaire, pageNumber, pageSize);
         page.getList().forEach(p -> {
             StringBuilder sb = new StringBuilder();
@@ -392,6 +400,7 @@ public class InformationController extends BaseController {
         int contentsLength = 0;
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setType(getParaToInt("type"));
+        setAttr("flag", getPara("flag", "false"));
         //判断跳转的页面是哪一个
         if (questionnaire.getType() == 0) {
             //加载民族
@@ -444,6 +453,7 @@ public class InformationController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Project project = projectService.findById(getParaToLong("projectID"));
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
+        setAttr("flag", getPara("flag", "false"));
         //选择问卷为空则是创建
         if (questionnaire == null) {
             setAttr("projectId", project.getId()).
@@ -597,6 +607,7 @@ public class InformationController extends BaseController {
     public void toInitialRiskExpertise() {
         Long projectId = getParaToLong("projectID");
         setAttr("expertGroups", expertGroupService.findAll())
+                .setAttr("flag", getPara("flag", "false"))
                 .setAttr("projectId", projectId)
                 .render("initialRiskExpertise.html");
     }
@@ -629,7 +640,7 @@ public class InformationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         InitialRiskExpertise model = new InitialRiskExpertise();
         ExpertGroup expertGroup = expertGroupService.findById(getParaToLong("expertId"));
-        if (expertGroup == null){
+        if (expertGroup == null) {
             throw new BusinessException("专家团体不存在！");
         }
         model.setProjectID(getParaToLong("projectId"));
@@ -659,10 +670,10 @@ public class InformationController extends BaseController {
      * 项目风险因素影响程度及概率数据删除
      */
     @NotNullPara("id")
-    public void toInitialRiskExpertiseDelete(){
+    public void toInitialRiskExpertiseDelete() {
         Long id = getParaToLong("id");
         InitialRiskExpertise model = initialRiskExpertiseService.findById(id);
-        if (model == null || initialRiskExpertiseService.delete(model)){
+        if (model == null || initialRiskExpertiseService.delete(model)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

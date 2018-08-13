@@ -36,6 +36,10 @@
             $ = layui.jquery,
             util = layui.util;
         var ul;
+
+        /**
+         * 获取列表的数据
+         */
         $.get("#(ctxPath)/app/information/editData", {id: "#(projectId)"}, function (res) {
             var data = res.list;
             ul = $('<ul class="layui-timeline"></ul>');
@@ -50,22 +54,31 @@
             });
         });
 
+        /**
+         * 当点击的时候，获取当前的 src
+         */
         $(document).on('click', '.htmlName', function (e) {
             var html = $(this).attr("data-htmlName");
             var content = $('#content');
-            content.prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")));
+            content.prop("src", "#(ctxPath)/app/information/list?id=#(projectId)&url=" + encodeURIComponent($(this).attr("data-htmlName")) + "&flag=#(flag)");
             if (html === "/app/fileupload"){
-                content.prop("src", "#(ctxPath)/app/fileupload/?projectID=#(projectId)");
+                content.prop("src", "#(ctxPath)/app/fileupload/index?projectID=#(projectId)&flag=#(flag)");
             } else if (html === "/app/fileupload/document"){
-                content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)");
+                content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)&flag=#(flag)");
             }
             content.css("display","");
-
         });
 
+        /**
+         * 右下角固定
+         */
         util.fixbar({
             bar1: "&#xe60a;",
-            bar2: "&#xe604;",
+            bgcolor: '#1E9FFF',
+            css:{
+                right: 0,
+                bottom: 200
+            },
             click: function (type) {
                 if (type === 'bar1') {
                     layer.open({
@@ -81,12 +94,13 @@
                         resize: false,
                         area: ['20%', '100%']
                     });
-                } else if (type === 'bar2') {
-                    layer.msg("回到顶部");
                 }
             }
         });
 
+        /**
+         * 提示信息
+         */
         $(function (e) {
             // $('li[type="bar1"]').prop("id","bar1");
             // $('li[type="bar2"]').prop("id","bar2");
@@ -95,14 +109,7 @@
                 tipsMore: true,
                 time: 3000
             });
-            // layer.tips("点击这里回到顶部哈","#bar2");
-            layer.tips("点击这里回到顶部哈", 'li[lay-type="bar2"]', {
-                tipsMore: true,
-                time: 3000
-            });
         });
-
-
     });
 </script>
 #end

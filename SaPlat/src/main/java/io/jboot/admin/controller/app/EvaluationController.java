@@ -73,7 +73,7 @@ public class EvaluationController extends BaseController {
 
         User u = AuthUtils.getLoginUser();
         if ("委评".equals(project.getAssessmentMode())) {
-            if (project.getUserId() != u.getId()){
+            if (!project.getUserId().equals(u.getId())) {
                 ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
                 if (projectUndertake == null) {
                     throw new BusinessException("当前项目无人承接！");
@@ -89,9 +89,15 @@ public class EvaluationController extends BaseController {
                 if (facAgency == null || !projectUndertake.getFacAgencyID().equals(facAgency.getId())) {
                     throw new BusinessException("当前用户与项目承接人身份不对应！");
                 }
+                setAttr("isSelf", "false");
+            } else {
+                setAttr("isSelf", "true");
             }
+            setAttr("method","false");
         } else if (!project.getUserId().equals(u.getId())) {
             throw new BusinessException("这个不是你的项目哦~！");
+        } else if ("自评".equals(project.getAssessmentMode())){
+            setAttr("method","true");
         }
 
         if (evaScheme == null) {

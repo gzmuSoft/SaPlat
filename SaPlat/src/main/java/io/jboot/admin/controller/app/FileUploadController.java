@@ -49,13 +49,15 @@ public class FileUploadController extends BaseController {
     public void index() {
         Long projectID = getParaToLong("projectID");
         Project project = projectService.findById(projectID);
+        String flag = getPara("flag", "false");
         if (!hasPermission(project)) {
             throw new BusinessException("没有此项目权限");
         }
         setAttr("projectID", getParaToLong("projectID"));
         ProjectFileType projectFileType = projectFileTypeService.findByNameAndParentID("评估文件", -1L);
-        setAttr("parentID", projectFileType.getId());
-        render("main.html");
+        setAttr("parentID", projectFileType.getId())
+                .setAttr("flag", flag)
+                .render("main.html");
     }
 
     @Before(GET.class)
@@ -131,8 +133,9 @@ public class FileUploadController extends BaseController {
             fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
             fileProject = fileProjectService.saveAndGet(fileProject);
         }
-        setAttr("percent",percent);
+        setAttr("percent", percent);
         setAttr("fileProject", fileProject);
+        setAttr("flag", getPara("flag", "false"));
         render("documentMain.html");
     }
 
@@ -160,7 +163,7 @@ public class FileUploadController extends BaseController {
         }
         fileProject.setIsEnable(true);
         project.setStatus(ProjectStatus.REVIEW);
-        if (!fileProjectService.updateFileProjectAndProject(fileProject,project)) {
+        if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
             throw new BusinessException("提交失败");
         }
         renderJson(RestResult.buildSuccess());
@@ -170,16 +173,16 @@ public class FileUploadController extends BaseController {
     private boolean hasPermission(Project project) {
         User user = AuthUtils.getLoginUser();
         if ("自评".equals(project.getAssessmentMode())) {
-            if (project.getUserId().equals(user.getId())) {
-                return true;
-            }
+            return project.getUserId().equals(user.getId());
         } else if ("委评".equals(project.getAssessmentMode())) {
             //判断是否为组织机构
             if (user.getUserSource() == 1) {
                 FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
-                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(project.getId());
-                if (facAgency.getId().equals(projectUndertake.getFacAgencyID())) {
-                    return true;
+                if (facAgency == null) {
+                    return project.getUserId().equals(user.getId());
+                } else {
+                    ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(project.getId());
+                    return facAgency.getId().equals(projectUndertake.getFacAgencyID());
                 }
             }
         }

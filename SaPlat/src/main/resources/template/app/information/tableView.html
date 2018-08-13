@@ -44,6 +44,12 @@
             }
             , done: function (res, curr, count) {
                 $('[data-field="id"]').css("display", "none");
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('#add').remove();
+                    $('#del').remove();
+                    $('.del').remove();
+                }
             }
         });
 
@@ -51,7 +57,7 @@
             var data = obj.data;
             console.log(obj);
             if (obj.event === 'edit') {
-                window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&id=" + data.id;
+                window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&flag=#(flag)&id=" + data.id;
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除吗？', function (index) {
                     $.post("#(ctxPath)#(url)Delete", {id: data.id}, function (e) {
@@ -64,10 +70,16 @@
                 });
             }
         });
-
+        var flag = '#(flag)';
+        console.log("tableViewer" + flag);
+        if (flag === "true") {
+            $('#add').remove();
+            $('#del').remove();
+        }
         $('#add').click(function () {
             window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)";
         });
+
     });
 </script>
 #end
@@ -83,7 +95,7 @@
 
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="delete">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs del" lay-event="delete" id="del">删除</a>
 </script>
 
 #end

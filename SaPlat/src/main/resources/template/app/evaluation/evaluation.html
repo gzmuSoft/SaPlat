@@ -48,6 +48,8 @@
             layer.msg("您的项目正在审核中，请耐心等待。。。");
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaScheme.status === "2") {
+            var isSelf = "#(isSelf)";
+            var method = "#(method)";
             layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
             add(flag, 20);
             add("#(siteSurveyExpertAdvice)", 15);
@@ -57,10 +59,27 @@
             add("#(pcfx)", 10);
             add("#(fxjl)", 10);
             add("#(sxfx)", 10);
-            setTimeout(function () {
-                element.progress('tip', percent + '%');
-                $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent);
-            },500);
+            if (method === "false") {
+                if (isSelf === "true") {
+                    setTimeout(function () {
+                        element.progress('tip', percent + '%');
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=true");
+                    }, 500);
+                } else if (isSelf === "false") {
+                    setTimeout(function () {
+                        element.progress('tip', percent + '%');
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
+                    }, 500);
+                }
+            } else if (method === "true") {
+                setTimeout(function () {
+                    element.progress('tip', percent + '%');
+                    $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
+                }, 500);
+            }
+            console.log("isSelf" + isSelf);
+            console.log("method" + method);
+
         } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
@@ -74,7 +93,7 @@
                 return;
             }
             percent += num;
-            if (percent > 100){
+            if (percent > 100) {
                 percent = 100;
             }
 

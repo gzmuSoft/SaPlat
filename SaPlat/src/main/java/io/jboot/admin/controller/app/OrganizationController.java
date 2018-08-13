@@ -724,8 +724,8 @@ public class OrganizationController extends BaseController {
         Role role = roleService.findById(id);
         UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getParentID());
         if (userRole == null) {
-            renderJson(RestResult.buildError("亲，请先去认证成为当前组织再来申请哦~~~"));
-            throw new BusinessException("亲，请先去认证成为当前组织再来申请哦~~~");
+            renderJson(RestResult.buildError("亲，请先去认证成为" + role.getName().substring(0,4) + "再来申请哦~~~"));
+            throw new BusinessException("亲，请先去认证成为" + role.getName().substring(0,4) +  "再来申请哦~~~");
         }
         Auth auth = authService.findByUserAndRole(user, id);
         if (auth == null) {

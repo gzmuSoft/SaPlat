@@ -25,6 +25,12 @@
         $('#ret').click(function () {
             window.location.href = "#(ctxPath)/app/information/list?id=#(projectId)&url=/app/information/questionnaire";
         });
+        var flag = '#(flag)';
+        if (flag === "true") {
+            $('#person').remove();
+            $('#organization').remove();
+            $('input').addClass('layui-disabled').attr("disabled","disabled");
+        }
     });
 </script>
 #end

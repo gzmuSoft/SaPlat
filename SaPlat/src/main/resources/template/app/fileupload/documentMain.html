@@ -25,6 +25,12 @@
         } else {
             $('#add').removeClass("layui-hide");
         }
+        var flag = '#(flag)';
+        console.log(flag);
+        if (flag === "true") {
+            $('#add').remove();
+            $('#sub').remove();
+        }
         upload.render({
             elem: '#add'
             , url: '#(ctxPath)/util/uploadFile'

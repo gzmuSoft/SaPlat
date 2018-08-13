@@ -115,7 +115,12 @@
         $('#back').click(function (obj) {
             window.location.href = document.referrer;
         });
-
+        var flag = '#(flag)';
+        console.log(flag);
+        if (flag === "true") {
+            $('#save').remove();
+            $('input').addClass('layui-disabled').attr("disabled","disabled");
+        }
 
     });
 </script>

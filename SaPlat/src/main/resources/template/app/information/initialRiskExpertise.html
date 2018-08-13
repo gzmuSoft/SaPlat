@@ -168,6 +168,14 @@
                 });
 
 
+
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('#submit').remove();
+                    $('#del').remove();
+                    $('input').addClass('layui-disabled').attr("disabled","disabled");
+                }
+
                 /**
                  * 解决多级表头列的加载顺序恶心人的问题
                  **/
@@ -356,6 +364,13 @@
                 $(this).children().first().text("√");
             }
         });
+
+        var flag = '#(flag)';
+        if (flag === "true") {
+            $('#submit').remove();
+            $('#del').remove();
+            $('input').addClass('layui-disabled').attr("disabled","disabled");
+        }
     });
 </script>
 #end
