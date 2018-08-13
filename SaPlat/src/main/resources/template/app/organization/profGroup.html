@@ -33,8 +33,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="profGroup.orgID"style="width: 180px">组织机构编号</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.id)"
-                           class="layui-input "style="width: 500px" disabled/>
+                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.code)"
+                           class="layui-input " style="width: 500px" disabled/>
 
                 </div>
             </div>
@@ -93,8 +93,11 @@
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>管理员身份证照片</label>
-                <div class="layui-input-block layui-upload" style="margin: 0 180px">
-                    <button type="button" class="layui-btn" id="upload"style="margin: 0 200px"><i class="layui-icon" ></i>上传文件</button>
+                <div class="layui-input-block layui-upload" style="align-content: center;">
+                    <button type="button" class="layui-btn" id="upload" style="margin: 0 100px"><i
+                            class="layui-icon"></i>上传文件
+                    </button>
+                    <button type="button" class="layui-btn layui-hide " id="see">查看</button>
                 </div>
             </div>
 
@@ -125,13 +128,15 @@
 
 #define js()
 <script type="text/javascript">
+
+    var fileFromID, fileID;
+
     layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
             , upload = layui.upload;
 
-        var fileFromID;
         upload.render({
             elem: '#upload'
             , url: '#(ctxPath)/util/uploadFile'
@@ -148,6 +153,8 @@
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=profGroup&fieldName=管理员身份证照片', function (data) {
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
+                        fileID = res.data.fileId;
+                        $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
@@ -193,6 +200,10 @@
     });
     $('#reset').click(function () {
         history.back();
+    });
+    $("#see").click(function () {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
+        });
     });
 </script>
 #end

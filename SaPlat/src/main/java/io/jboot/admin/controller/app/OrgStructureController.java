@@ -1,8 +1,6 @@
 package io.jboot.admin.controller.app;
 
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -16,7 +14,6 @@ import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-import net.sf.ehcache.search.expression.Or;
 
 import java.util.*;
 
@@ -118,11 +115,8 @@ public class OrgStructureController extends BaseController {
     public void addPerson() {
         //获取架构id
         Long id = getParaToLong("id");
-        //获取架构
-        OrgStructure org = orgStructureService.findById(id);
         String orgType = getPara("orgType");
         setAttr("id", id)
-                .setAttr("orgStructName",org.getName())
                 .setAttr("orgType", orgType)
                 .render("addPerson.html");
     }
@@ -550,13 +544,4 @@ public class OrgStructureController extends BaseController {
             return true;
         }
     }
-
-//    public void test() {
-//        int pageNumber = getParaToInt("pageNumber", 1);
-//        int pageSize = getParaToInt("pageSize", 30);
-//        Long personID = getParaToLong("personID");
-//        SqlPara sqlPara = structPersonLinkService.findStructIdPageByPersonID(pageNumber, pageSize, personID);
-//        System.out.print(sqlPara);
-//    }
-
 }
