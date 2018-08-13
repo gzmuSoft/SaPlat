@@ -413,17 +413,21 @@
          * 自评、委评按钮事件
          */
         $('.submit').click(function () {
-            util.sendAjax({
-                type: 'GET',
-                url: "#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile,
-                loadFlag: true,
-                success: function (data) {
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.log(data)
+            $.getJSON("#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile,
+                function (data) {
+                    console.log(data);
+                    if (data.flag === 0) {
+                        parent.addTab('card', "评估中的项目", "#(ctxPath)/app/project/evaluation");
+                        parent.close();
+                    } else if (data.flag === 1) {
+                        parent.addTab('card', "审核中的项目", "#(ctxPath)/app/project/toVerfiing");
+                        parent.close();
+                    } else if (data.flag === 2) {
+                        parent.addTab('card', "立项中的项目", "#(ctxPath)/app/project/toBuildProject");
+                        parent.close();
+                    }
                 }
-            });
+            )
         });
     });
 

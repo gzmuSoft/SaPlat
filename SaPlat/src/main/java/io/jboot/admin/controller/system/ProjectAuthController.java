@@ -177,6 +177,7 @@ public class ProjectAuthController extends BaseController {
         model.setLastUpdUser(user.getName());
         model.setReply(authProject.getReply());
         model.setStatus(authProject.getStatus());
+        model.setRemark(user.getId().toString());
         if (!authProjectService.update(model)) {
             throw new BusinessException("审核失败");
         }
