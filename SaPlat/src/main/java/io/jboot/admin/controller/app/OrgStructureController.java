@@ -1,5 +1,6 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.base.common.RestResult;
@@ -550,11 +551,12 @@ public class OrgStructureController extends BaseController {
         }
     }
 
-    public void test() {
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-        Long personID = getParaToLong("personID");
-        SqlPara sqlPara = structPersonLinkService.findStructIdPageByPersonID(pageNumber, pageSize, personID);
-    }
+//    public void test() {
+//        int pageNumber = getParaToInt("pageNumber", 1);
+//        int pageSize = getParaToInt("pageSize", 30);
+//        Long personID = getParaToLong("personID");
+//        SqlPara sqlPara = structPersonLinkService.findStructIdPageByPersonID(pageNumber, pageSize, personID);
+//        System.out.print(sqlPara);
+//    }
 
 }
