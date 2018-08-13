@@ -11,6 +11,24 @@ public class Project extends BaseProject<Project> {
     private String typeName;
     private String reply;
     private boolean isReceive;
+    private double maxAmount;
+    private double minAmount;
+
+    public double getMaxAmount() {
+        return maxAmount;
+    }
+
+    public void setMaxAmount(double maxAmount) {
+        this.maxAmount = maxAmount;
+    }
+
+    public double getMinAmount() {
+        return minAmount;
+    }
+
+    public void setMinAmount(double minAmount) {
+        this.minAmount = minAmount;
+    }
 
     public boolean getIsReceive() {
         return isReceive;
