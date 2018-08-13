@@ -750,10 +750,19 @@ public class ProjectController extends BaseController {
 
     /**
      * 查看服务机构详细信息
+     * 参数flag
+     * true   邀请第三方介入时查看
+     * false  第三方申请介入时查看
      */
-    @NotNullPara({"id"})
+    @NotNullPara({"id", "flag"})
     public void seeFacAgency() {
-        FacAgency facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
+        FacAgency facAgency = null;
+        Boolean flag = getParaToBoolean("flag");
+        if (flag) {
+            facAgency = facAgencyService.findById(getParaToLong("id"));
+        } else {
+            facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
+        }
         setAttr("facAgency", facAgency).render("facAgency.html");
     }
 
