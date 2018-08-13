@@ -8,6 +8,7 @@ import io.jboot.admin.service.entity.model.ProjectUndertake;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectUndertakeService {
 
@@ -19,6 +20,12 @@ public interface ProjectUndertakeService {
      */
     public ProjectUndertake findById(Object id);
 
+    /**
+     * 返回已被承接数/用户的项目总数*100
+     * @param userId
+     * @return
+     */
+     public float findAllAndUndertakeByUserId(Long userId);
 
     /**
      * find all model
