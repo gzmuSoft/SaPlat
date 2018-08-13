@@ -63,6 +63,8 @@
                         var timeLineContentDivE = '</div>';
                         var liTagE = '</li>';
                         var liItem = '';
+                        $("ul#recomment").find("li").remove();
+                        $("div.layui-flow-more").remove();
                         layui.each(res.data, function (index, item) {
                             if (item) {
                                 if (item.recomment) {
@@ -84,11 +86,13 @@
                                     }
                                     liItem += timeLineContentDivE;
                                     liItem += liTagE;
+                                    $("ul#recomment").append(liItem);
                                     lis.push(liItem);
                                 }
                             }
                         });
-                        next(lis.join(''), page < res.pages);
+                         //$("ul#recomment").innerText = lis;
+                        //next(lis.join(''));
                     });
                 }
             });
@@ -109,19 +113,73 @@
         zTreeReload();
     });
 
+    layui.use('form', function(){
+         var form = layui.form ,layer = layui.layer,$ = layui.jquery;
+         form.render();
+         form.on('switch(switchS)', function(data){
+            $("input[name='model.isPass']").val(this.checked ? '1' : '0');
+          });
+    });
+
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(add)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/ass_review/postAdd',
+                data: $('#rec').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                }
+            });
+            alert($('#rec').serialize());
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
 </script>
 #end
 
 #define content()
 <div class="layui-fluid" style="height:100%;">
-    <div class="layui-row" style="height:100%;">
-        <div class="layui-col-md3" style="overflow:auto;height:100%;">
-            <ul id="tree" class="ztree" style="height:95%;"></ul>
+    <div class="layui-row" style="min-height:600px">
+        <div class="layui-col-md3">
+            <ul id="tree" class="ztree"></ul>
         </div>
-        <div id="pdfviewer" class="layui-col-md6" style="height:100%;"></div>
+        <div id="pdfviewer" class="layui-col-md9" style="min-height:500px"></div>
         <div class="layui-col-md3">
             <ul id="recomment"></ul>
-            <div style="width:100%;background:green">操作操作区域</div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div id="" class="layui-col-md12">
+            <form id="rec" class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否通过</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="isPassS" lay-skin="switch" lay-filter="switchS" lay-text="通过|不通过">
+                        <input class="layui-hide" type="text" value="0" name="model.isPass">
+                        <input class="layui-hide" type="text" value="test" name="model.name">
+                        <input class="layui-hide" type="text" value="6" name="model.sort">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">审查意见</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" class="layui-textarea" name="model.recomment"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="add">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

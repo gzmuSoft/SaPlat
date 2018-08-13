@@ -46,7 +46,6 @@ public class ProAssReviewController extends BaseController {
 
     public void findProAssReviewByFileIdAndProjectId() {
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(6L, 28L);
-        ;
         renderJson(RestResult.buildSuccess(proAssReviews));
     }
 
@@ -75,6 +74,7 @@ public class ProAssReviewController extends BaseController {
 
     @Before({POST.class, ProAssReviewValidator.class})
     public void postAdd() {
+        System.out.println("#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@");
         ProAssReview model = getBean(ProAssReview.class, "model");
         if (proAssReviewService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目阶段名称已存在");
