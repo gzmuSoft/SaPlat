@@ -8,7 +8,18 @@ import io.jboot.admin.service.entity.model.base.BaseProjectFileType;
  */
 @Table(tableName = "project_file_type", primaryKey = "id")
 public class ProjectFileType extends BaseProjectFileType<ProjectFileType> {
-    boolean isUpLoad = false;
+
+    Boolean isUpLoad = false;
+
+    Long fileID;
+
+    public Long getFileID() {
+        return fileID;
+    }
+
+    public void setFileID(Long fileID) {
+        this.fileID = fileID;
+    }
 
     public boolean getIsUpLoad() {
         return isUpLoad;

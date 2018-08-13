@@ -172,6 +172,7 @@
     {{# } else if(d.isUpLoad){ }}
     ]]#
     <a class="layui-btn layui-btn-xs " lay-event="upload">√ 已上传</a>
+    <a class="layui-btn layui-btn-xs " lay-event="view">查看</a>
 
     #[[
     {{#  } }}
@@ -297,11 +298,15 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
+            console.log(data);
             if (obj.event === 'upload') {
                 pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectID, '500', '300', function () {
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
                     });
+                });
+            } else if (obj.event === 'view') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
                 });
             }
         });
