@@ -336,7 +336,9 @@ public class ProjectController extends BaseController {
             childProjectFileType.setParentID(parentProjectFileType.getId());
             Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
-                if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
+                FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId());
+                if (fileProject != null) {
+                    page.getList().get(i).setFileID(fileProject.getFileID());
                     page.getList().get(i).setIsUpLoad(true);
                 } else {
                     page.getList().get(i).setIsUpLoad(false);
