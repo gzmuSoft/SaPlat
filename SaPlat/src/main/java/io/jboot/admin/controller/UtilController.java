@@ -84,12 +84,15 @@ public class UtilController extends BaseController {
      * @apiNote 跳转提示页面的通用方法，接受以下参数
      *   content 提示的显示内容
      *   btn1 提示是否有跳转连接文字
-     *   btn2 提示是否有跳转连接文字
-     *   data1 第一个 url 需要的数据
      *   url1 如果有，跳转链接
+     *   data1 第一个 url 需要的数据
      *   method1 页面显示方式，可选值
-     *        this  (默认)
-     *        new   当前页面内打开
+     *        this  当前页面打开(默认)
+     *        new   新页面内打开
+     *   type1 提交方式
+     *        href 跳转（默认）
+     *        ajax ajax 提交
+     *   btn2 提示是否有跳转连接文字
      *   url2 如果有，跳转链接
      *   data2 第二个 url 需要的数据
      *   method2 页面显示方式，可选值
@@ -104,10 +107,12 @@ public class UtilController extends BaseController {
         setAttr("content", getPara("content"))
                 .setAttr("btn1", getPara("btn1"))
                 .setAttr("btn2", getPara("btn2"))
+                .setAttr("type1", getPara("type1","href"))
                 .setAttr("url1", getPara("url1"))
                 .setAttr("data1", getPara("data1",""))
                 .setAttr("method1",getPara("method1","this"))
                 .setAttr("url2", getPara("url2"))
+                .setAttr("type2", getPara("type2","href"))
                 .setAttr("data2", getPara("data2",""))
                 .setAttr("method2",getPara("method2","this"))
                 .setAttr("icon", getPara("icon", "layui-icon-auz"))

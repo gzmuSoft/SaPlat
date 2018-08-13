@@ -77,7 +77,6 @@
             });
         } else {
             $('#btn1').click(function () {
-                console.log($(this).attr("data-href") + $(this).attr("data-data"));
                 window.location.href = $(this).attr("data-href") + $(this).attr("data-data");
             });
         }
@@ -92,10 +91,42 @@
             });
         }
 
+        var type1 = "#(type1)";
+        var type2 = "#(type2)";
+        if (type1 === "ajax") {
+            $('#btn1').unbind("click").click(function () {
+                var da = $(this).attr("data-data");
+                $.post($(this).attr("data-href"), da, function (res) {
+                    if (res.code === '0') {
+                        layer.msg("操作成功，正在刷新页面！");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                });
+            });
+        }
 
+        if (type2 === "ajax") {
+            $('#btn2').unbind("click").click(function () {
+                var da = $(this).attr("data-data");
+                $.post($(this).attr("data-href"), da, function (res) {
+                    if (res.code === '0') {
+                        layer.msg("操作成功，正在刷新页面！");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                });
+            });
+        }
 
         $('#refuse').click(function () {
-            window.location.reload();
+            window.parent.window.refresh();
         });
 
     });

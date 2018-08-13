@@ -21,7 +21,7 @@
 
     #if(auth.status.equals("3"))
     <script>
-        window.location.href = "#(ctxPath)/util/tip?content=您的认证信息正在审核中&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-log&btn2=取消认证&url2=#(ctxPath)/app/person/cancelExpertGroupAuth";
+        window.location.href = "#(ctxPath)/util/tip?content=您的认证信息正在审核中&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-log&btn2=取消认证&url2=#(ctxPath)/app/person/cancelExpertGroupAuth&type2=ajax";
     </script>
     #else if(auth.status.equals("2"))
     <script>
@@ -29,7 +29,7 @@
     </script>
     #else if(auth.status.equals("1"))
     <script>
-        window.location.href = "#(ctxPath)/util/tip?content=认证失败:#(auth.reply)&btn1=重新认证&url1=#(ctxPath)/app/person/verify&title=重新认证&icon=layui-icon-face-cry";
+        window.location.href = "#(ctxPath)/util/tip?content=认证失败:#(auth.reply)&btn1=重新认证&url1=#(ctxPath)/app/person/verify&icon=layui-icon-face-cry";
     </script>
     #else
     #if(affectedGroup == null)

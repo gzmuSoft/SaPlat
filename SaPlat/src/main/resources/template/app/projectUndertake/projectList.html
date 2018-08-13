@@ -9,6 +9,24 @@
 
 #define content()
 <div class="layui-fluid">
+    <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计金额</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="minAmount" class="layui-input" style="width: 100px;">
+                </div>
+                <div class="layui-input-inline">
+                    <input type="number" name="maxAmount" class="layui-input" style="width: 100px;">
+                </div>
+                <div class="layui-input-inline" style="width : 80px">
+                    <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -28,9 +46,10 @@
 #define js()
 <script type="text/javascript">
 
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer', 'form'], function () {
         var table = layui.table
-            , $ = layui.jquery;
+            , $ = layui.jquery
+            , form = layui.form;
         // 表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
@@ -45,7 +64,7 @@
                 , {field: 'amount', title: '预计金额', minWidth: 100, sort: true}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
-                , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {field: 'remark', title: '备注', minWidth: 100}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
@@ -57,7 +76,7 @@
             }
             , initSort: {
                 field: 'createTime'//按照时间进行默认排序
-                ,type: 'desc'
+                , type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
@@ -83,6 +102,23 @@
                 });
             }
         });
+
+        form.on('submit(search)', function (data) {
+            console.log(data);
+            reloadTable(data.field.minAmount, data.field.maxAmount);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        reloadTable = function (minAmount, maxAmount) {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/projectUndertake/projectList'
+                , where: {
+                    minAmount: minAmount,
+                    maxAmount: maxAmount
+                } //设定异步数据接口的额外参数
+            });
+        };
+
     });
 
 

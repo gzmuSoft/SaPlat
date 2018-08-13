@@ -92,6 +92,10 @@ public class ProjectUndertakeController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setIsPublic(true);
+        if (getPara("maxAmount") != null || getPara("maxAmount") != null) {
+            project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
+            project.setMinAmount(Double.parseDouble(getPara("minAmount")));
+        }
         Page<Project> page = projectService.findPageByIsPublic(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -450,7 +454,7 @@ public class ProjectUndertakeController extends BaseController {
         if (page.getList() != null) {
             page.getList().forEach(p -> {
                 EvaScheme evaScheme = evaSchemeService.findByProjectID(p.getId());
-                if (evaScheme != null){
+                if (evaScheme != null) {
                     if ("1".equals(evaScheme.getStatus())) {
                         p.setRemark("待审核");
                         p.setSpell("3");
@@ -483,11 +487,11 @@ public class ProjectUndertakeController extends BaseController {
         Long id = getParaToLong("id");
         Project project = projectService.findById(id);
         ImpTeam impTeam = impTeamService.findByProjectId(id);
-        if (impTeam == null){
+        if (impTeam == null) {
             throw new BusinessException("当前项目未上传前期资料");
         }
         EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
-        if (evaScheme == null){
+        if (evaScheme == null) {
             throw new BusinessException("当前项目未上传前期资料");
         }
         ScheduledPlan scheduledPlan = scheduledPlanService.findByEvaSchemeID(evaScheme.getId());

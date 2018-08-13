@@ -76,7 +76,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑用户', '#(ctxPath)/system/user/update?id=' + data.id, '', '', function () {
+                pop_show('编辑用户', '#(ctxPath)/system/user/update?id=' + data.id, '710', '530', function () {
                     reloadTable($('#name').val(), $('#phone').val());
                 });
             } else if (obj.event === 'use') {
@@ -109,7 +109,7 @@
         });
 
         $("#add").click(function () {
-            pop_show('添加用户', '#(ctxPath)/system/user/add', '', '', function () {
+            pop_show('添加用户', '#(ctxPath)/system/user/add', '710', '530', function () {
                 reloadTable($('#name').val(), $('#phone').val());
             });
         });
