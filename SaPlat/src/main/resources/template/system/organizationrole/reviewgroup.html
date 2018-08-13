@@ -27,12 +27,13 @@
 //                {checkbox: false,  fixed: true, space: true}
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 150,sort:true}
-                , {field: 'scope', title: '服务范围', minWidth: 150}
-                , {field: 'performance', title: '服务业绩', minWidth: 150}
-                , {field: 'resume', title: '人员简历', minWidth: 150}
-                , {field: 'content', title: '专业内容', minWidth: 150}
-                , {field: 'administrator', title: '管理员姓名', minWidth: 120}
-                , {field: 'contact', title: '管理员联系方式', minWidth: 150}
+                , {field: 'scope', title: '服务范围', minWidth: 150,sort:true}
+                , {field: 'performance', title: '服务业绩', minWidth: 150,sort:true}
+                , {field: 'resume', title: '人员简历', minWidth: 150,sort:true}
+                , {field: 'content', title: '专业内容', minWidth: 150,sort:true}
+                , {field: 'administrator', title: '管理员姓名', minWidth: 120,sort:true}
+                , {field: 'contact', title: '管理员联系方式', minWidth: 150,sort:true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
 
                 , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 200} //这里的toolbar值是模板元素的选择器
             ]]
@@ -41,6 +42,10 @@
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]

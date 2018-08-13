@@ -53,6 +53,10 @@
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
+            }
             , page: true
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30
