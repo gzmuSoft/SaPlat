@@ -38,6 +38,7 @@
 #define content()
 <div class="x-body">
     <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="orgstructure.parentID" placeholder="" class="layui-input layui-disabled" value="#(parentID)" required  lay-verify="required" autocomplete="off" readonly="readonly" />
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>架构名称</label>
             <div class="layui-input-block">
@@ -67,9 +68,9 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>上级架构编号</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>上级架构</label>
             <div class="layui-input-block">
-                <input type="text" name="orgstructure.parentID" placeholder="" class="layui-input layui-disabled" value="#(parentID)" required  lay-verify="required" autocomplete="off" readonly="readonly" />
+                <input type="text" name="struct" placeholder="" class="layui-input layui-disabled" value="#(parentStructName)" required  lay-verify="required" autocomplete="off" readonly="readonly" />
             </div>
         </div>
 
