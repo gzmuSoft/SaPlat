@@ -24,23 +24,23 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'birthday', title: '出生日期', width: 100}
-                , {field: 'phone', title: '手机号码', width: 200}
-                , {field: 'politics', title: '政治面貌', width: 200}
-                , {field: 'nation', title: '民族', width: 200}
-                , {field: 'nationality', title: '国籍', width: 200}
-                , {field: 'education', title: '学历', width: 200}
-                , {field: 'othername', title: '曾用名', width: 200}
-                , {field: 'duty', title: '职务', width: 200}
-                , {field: 'residence', title: '长期居住地址', width: 200}
-                , {field: 'mail', title: '邮箱', width: 200}
-                , {field: 'resume', title: '工作简历', width: 200}
-                , {field: 'children', title: '子女情况', width: 200}
-                , {field: 'maritalstatus', title: '婚姻状况', width: 200}
-                , {field: 'census', title: '户籍', width: 200}
-                , {field: 'occupation', title: '职业', width: 200}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+
+                , {field: 'birthday', title: '出生日期', minWidth: 100,sort:true}
+                , {field: 'phone', title: '手机号码', minWidth: 120,sort:true}
+                , {field: 'politics', title: '政治面貌', minWidth: 100,sort:true}
+                , {field: 'nation', title: '民族', minWidth: 60,sort:true}
+                , {field: 'nationality', title: '国籍', minWidth: 60,sort:true}
+                , {field: 'education', title: '学历', minWidth: 60,sort:true}
+                , {field: 'othername', title: '曾用名', minWidth:100,sort:true}
+                , {field: 'duty', title: '职务', minWidth: 60,sort:true}
+                , {field: 'residence', title: '长期居住地址', minWidth: 200,sort:true}
+                , {field: 'mail', title: '邮箱', minWidth: 150,sort:true}
+                , {field: 'resume', title: '工作简历', minWidth: 120,sort:true}
+                , {field: 'children', title: '子女情况', minWidth: 120,sort:true}
+                , {field: 'maritalstatus', title: '婚姻状况', minWidth: 120,sort:true}
+                , {field: 'census', title: '户籍', minWidth: 120,sort:true}
+                , {field: 'occupation', title: '职业', minWidth: 100,sort:true}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/affected_group/tableData'
             , method: 'get'

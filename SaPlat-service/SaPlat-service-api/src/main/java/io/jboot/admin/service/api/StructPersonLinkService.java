@@ -3,12 +3,21 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 
 import java.util.List;
 import java.util.Map;
 
 public interface StructPersonLinkService {
+    /**
+     * 根据用户personId查询用户已经加入的架构
+     * @param pageNumber
+     * @param pageSize
+     * @param personID
+     * @return
+     */
+    public Page<Record> findStructListPageByPersonID(int pageNumber, int pageSize, Long personID);
     /**
      * 根据用户ID以及架构ID查询用户是否已经是架构成员
      * 防止用户重复加入架构的情况
