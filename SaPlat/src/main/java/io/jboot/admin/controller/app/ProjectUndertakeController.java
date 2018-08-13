@@ -416,7 +416,7 @@ public class ProjectUndertakeController extends BaseController {
         fileForm.setLastAccessTime(new Date());
         fileForm.setCreateUserID(user.getId());
         fileForm.setLastUpdateUserID(user.getId());
-        FileForm newFileForm = fileFormService.saveAndGet(fileForm,files);
+        FileForm newFileForm = fileFormService.saveAndGet(fileForm, files);
         if (newFileForm == null) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
@@ -427,7 +427,6 @@ public class ProjectUndertakeController extends BaseController {
             renderJson(RestResult.buildSuccess(map));
         }
     }
-
 
 
     /**
@@ -451,9 +450,25 @@ public class ProjectUndertakeController extends BaseController {
         if (page.getList() != null) {
             page.getList().forEach(p -> {
                 EvaScheme evaScheme = evaSchemeService.findByProjectID(p.getId());
-                if (evaScheme != null) {
-                    p.setRemark(evaScheme.getStatus());
+                if (evaScheme != null){
+                    if ("1".equals(evaScheme.getStatus())) {
+                        p.setRemark("待审核");
+                        p.setSpell("3");
+                    } else if ("2".equals(evaScheme.getStatus())) {
+                        p.setRemark("审核通过");
+                        p.setSpell("2");
+                    } else if ("3".equals(evaScheme.getStatus())) {
+                        p.setRemark("审核不通过");
+                        p.setSpell("1");
+                    } else {
+                        p.setRemark("当前项目未上传前期资料");
+                        p.setSpell("0");
+                    }
+                } else {
+                    p.setRemark("当前项目未上传前期资料");
+                    p.setSpell("0");
                 }
+
             });
         }
         renderJson(new DataTable<Project>(page));
@@ -468,7 +483,13 @@ public class ProjectUndertakeController extends BaseController {
         Long id = getParaToLong("id");
         Project project = projectService.findById(id);
         ImpTeam impTeam = impTeamService.findByProjectId(id);
+        if (impTeam == null){
+            throw new BusinessException("当前项目未上传前期资料");
+        }
         EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
+        if (evaScheme == null){
+            throw new BusinessException("当前项目未上传前期资料");
+        }
         ScheduledPlan scheduledPlan = scheduledPlanService.findByEvaSchemeID(evaScheme.getId());
         FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
         FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
@@ -484,7 +505,7 @@ public class ProjectUndertakeController extends BaseController {
 
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(project.getId());
         Person leader = personService.findById(impTeam.getLeaderID());
-        List<String> asLeaderIds = Arrays.asList(impTeam.getAssLeaderIDs().split(","));
+        String[] asLeaderIds = impTeam.getAssLeaderIDs().split(",");
         List<LeaderGroup> asLeaderGroups = Collections.synchronizedList(new ArrayList<LeaderGroup>());
         for (String asLeaderId : asLeaderIds) {
             if (!"".equals(asLeaderId.trim())) {
@@ -526,7 +547,6 @@ public class ProjectUndertakeController extends BaseController {
                 .setAttr("project", project)
                 .setAttr("evaScheme", evaScheme)
                 .setAttr("scheduledPlan", scheduledPlan)
-
                 .render("projectImpTeamSee.html");
     }
 

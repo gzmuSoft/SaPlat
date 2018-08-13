@@ -105,6 +105,10 @@
 
         var identity = '#(person.identity)';
         // if (identity)
+        if (identity != null || identity !== "") {
+            $('#person\\.identity').val(identity);
+        }
+
         $('#see').removeClass('layui-hide layui-disabled').prop("disabled", "").click(function () {
             if (identity == null || identity === "") {
                 layer.msg("对不起，您当前没有上传身份证件照！");
