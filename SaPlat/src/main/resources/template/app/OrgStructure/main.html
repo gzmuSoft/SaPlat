@@ -32,7 +32,7 @@
                 , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
                 , {field: 'lastAccessTime', title: '最后访问时间', minWidth: 150}
                 , {field: 'remark', title: '备注', minWidth: 100}
-                , {fixed: 'right', title: '操作', minWidth: 250, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', minWidth: 240, align: 'center', toolbar: '#barOption'}
 
             ]]
             , url: '#(ctxPath)/app/OrgStructure/tableData?orgType=#(orgType)'
@@ -117,7 +117,7 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/OrgStructure/addPerson')
-    <a class="layui-btn layui-btn-xs" lay-event="addPerson">添加人员</a>
+    <a class="layui-btn layui-btn-xs" lay-event="addPerson">邀请</a>
     #end
 
     #shiroHasPermission('/app/OrgStructure/updateStructure')
