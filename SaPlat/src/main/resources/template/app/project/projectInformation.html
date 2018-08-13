@@ -121,6 +121,8 @@
                 <table id="dateTable" lay-filter="dateTable"></table>
             </div>
             <script type="text/html" id="barOption">
+
+
                 #shiroHasPermission('/app/project/fileUploading')
                 #[[
                 {{#  if(!d.isUpLoad){ }}
@@ -131,7 +133,7 @@
                 {{# } else if(d.isUpLoad){ }}
                 ]]#
                 <a class="layui-btn layui-btn-xs " lay-event="upload">√ 已上传</a>
-
+                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="see">查看</a>
                 #[[
                 {{#  } }}
                 ]]#
@@ -159,7 +161,7 @@
     var left, opacity, scale;
     var animating;
     var projectId = -1, judgeFile = false;
-    var paTypeID;
+    var paTypeID, fileId;
     layui.use(['layedit', 'table'], function () {
         /**
          * 操作对象
@@ -219,48 +221,10 @@
                         url: '#(ctxPath)/app/project/fileTable?id=' + projectId + '&paTypeID=' + paTypeID
                     });
                 });
+            } else if (obj.event === 'see') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                });
             }
-        });
-
-        /**
-         * 上一步按钮事件
-         */
-        $('.previous').click(function () {
-            if (this.id === "previousPage2") {
-                presentPage = 1;
-                if (presentPage < maxPage) saveOrUpdate = 0;
-            } else if (this.id === "previousPage3") {
-                presentPage = 2;
-                if (presentPage < maxPage) saveOrUpdate = 0;
-            } else if (this.id === "previousPage4") {
-                presentPage = 3;
-                if (presentPage < maxPage) saveOrUpdate = 0;
-            }
-            if (animating)
-                return false;
-            animating = true;
-            current_fs = $(this).parent();
-            previous_fs = $(this).parent().prev();
-            $('#progressbar').find('li').eq($('fieldset').index(current_fs)).removeClass('active');
-            previous_fs.show();
-            current_fs.animate({opacity: 0}, {
-                step: function (now, mx) {
-                    scale = 0.8 + (1 - now) * 0.2;
-                    left = (1 - now) * 50 + '%';
-                    opacity = 1 - now;
-                    current_fs.css({'left': left});
-                    previous_fs.css({
-                        'transform': 'scale(' + scale + ')',
-                        'opacity': opacity
-                    });
-                },
-                duration: 800,
-                complete: function () {
-                    current_fs.hide();
-                    animating = false;
-                },
-                easing: 'easeInOutBack'
-            });
         });
 
         /**
@@ -303,6 +267,47 @@
                 flag = false;
             return flag;
         }
+
+        /**
+         * 上一步按钮事件
+         */
+        $('.previous').click(function () {
+            if (this.id === "previousPage2") {
+                presentPage = 1;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            } else if (this.id === "previousPage3") {
+                presentPage = 2;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            } else if (this.id === "previousPage4") {
+                presentPage = 3;
+                if (presentPage < maxPage) saveOrUpdate = 0;
+            }
+            if (animating)
+                return false;
+            animating = true;
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+            $('#progressbar').find('li').eq($('fieldset').index(current_fs)).removeClass('active');
+            previous_fs.show();
+            current_fs.animate({opacity: 0}, {
+                step: function (now, mx) {
+                    scale = 0.8 + (1 - now) * 0.2;
+                    left = (1 - now) * 50 + '%';
+                    opacity = 1 - now;
+                    current_fs.css({'left': left});
+                    previous_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                easing: 'easeInOutBack'
+            });
+        });
 
         /**
          * 下一步按钮事件
