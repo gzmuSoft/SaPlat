@@ -4,10 +4,10 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.AuthService;
+import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserRoleService;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.User;
-import io.jboot.admin.service.entity.model.UserRole;
+import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -28,6 +28,12 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
 
     @JbootrpcService
     private UserRoleService userRoleService;
+
+    @JbootrpcService
+    private RoleService roleService;
+
+    @JbootrpcService
+    private UserService userService;
 
     @Override
     public Auth findByUser(User user) {
@@ -102,6 +108,26 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             public boolean run() throws SQLException {
                 model.setLastUpdTime(new Date());
                 if (!model.update()) {
+                    return false;
+                }
+
+                Role role1 = roleService.findById(model.getRoleId());
+                Notification notification = new Notification();
+                notification.setName("认证结果通知 ");
+                notification.setSource("/app/project/invite");
+                if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+                    notification.setContent("您好,您认证的" + role1.getName() + "认证成功");
+                } else {
+                    notification.setContent("您好,您认证的" + role1.getName() + "认证失败");
+                }
+                notification.setReceiverID(Math.toIntExact(model.getUserId()));
+                notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
+                notification.setCreateTime(new Date());
+                notification.setLastUpdateUserID(userService.findByName(model.getLastUpdUser()).getId());
+                notification.setLastAccessTime(new Date());
+                notification.setIsEnable(true);
+                notification.setStatus(0);
+                if (!notification.save()) {
                     return false;
                 }
                 List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());

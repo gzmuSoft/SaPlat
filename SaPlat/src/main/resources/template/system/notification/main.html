@@ -59,7 +59,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                pop_show('查看通知信息', '#(ctxPath)/system/notification/view?id=' + data.id, '', '500', function () {
+                pop_show('查看通知信息', '#(ctxPath)/system/notification/view?id=' + data.id, '700', '480', function () {
                     reloadTable(null, null);
                 });
             } else if (obj.event == 'del') {

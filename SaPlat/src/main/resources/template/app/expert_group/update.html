@@ -3,6 +3,9 @@
 
 #define css()
 <style>
+    .layui-form-label{
+        width: 120px;
+    }
 
 </style>
 #end
@@ -45,33 +48,33 @@
             <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="专家团体名称" class="layui-input" value="#(model.name)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="工作时间" class="layui-input" value="#(model.worktime)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width:500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>在职状态</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="在职状态" class="layui-input" value="#(model.workstate)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>专业资格内容</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="专业资格内容" class="layui-input" value="#(model.profess)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>专业证书</label>
             <div class="layui-input-inline">
                 <button  type="button" class="layui-btn" name="check" id="check2" style="margin: 0 200px" value="#(model.certificate)">点击查看</button>
             </div>
@@ -81,12 +84,12 @@
             <label class="layui-form-label"><em class="require-mark">*</em>部门名称</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="部门名称" class="layui-input" value="#(model.department)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
+            <label class="layui-form-label" ><em class="require-mark">*</em>工作证件照片</label>
             <div class="layui-input-inline">
                 <button  type="button" class="layui-btn" style="margin: 0 200px" value="#(model.workpictrue)">点击查看</button>
             </div>
@@ -94,7 +97,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>参与项目经历</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width: 500px">
                 <textarea name="model.project"
                                       class="layui-textarea" disabled="disabled">#(model.project)</textarea>
             </div>
