@@ -17,9 +17,11 @@
         var layer = layui.layer,
             $ = layui.jquery;
         $('#person').click(function () {
-            window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectId=#(projectId)&type=0";
+            console.log("sss#(projectId)");
+            window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectId="+"#(projectId)"+"&type=0";
         });
         $('#organization').click(function () {
+            console.log("sss#(projectId)");
             window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectId=#(projectId)&type=1";
         });
         $('#ret').click(function () {
@@ -39,6 +41,5 @@
         <button id="organization" class="layui-btn layui-btn-radius layui-btn-lg">添加团体问卷调查表</button>
         <button id="ret" class="layui-btn layui-btn-radius layui-btn-lg">返回上级界面</button>
     </div>
-
 </div>
 #end
