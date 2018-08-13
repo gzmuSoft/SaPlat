@@ -15,6 +15,7 @@ import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import net.sf.ehcache.search.expression.Or;
 
 import java.util.*;
 
@@ -116,8 +117,11 @@ public class OrgStructureController extends BaseController {
     public void addPerson() {
         //获取架构id
         Long id = getParaToLong("id");
+        //获取架构
+        OrgStructure org = orgStructureService.findById(id);
         String orgType = getPara("orgType");
         setAttr("id", id)
+                .setAttr("orgStructName",org.getName())
                 .setAttr("orgType", orgType)
                 .render("addPerson.html");
     }
