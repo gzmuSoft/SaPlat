@@ -24,6 +24,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.apache.zookeeper.Login;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,9 @@ public class MainController extends BaseController {
 
     @JbootrpcService
     private PersonService personService;
+
+    @JbootrpcService
+    private ProjectUndertakeService projectUndertakeService;
 
     public void index() {
         render("index.html");
@@ -220,6 +224,7 @@ public class MainController extends BaseController {
                     setAttr("assessAmount",assessAmount).//待评项目
                     setAttr("auditAmount",auditAmount).//待审核
                     setAttr("reviewAmount",reviewAmount).//待审查
+                    setAttr("undertakeRate",new DecimalFormat("##0.00").format(projectUndertakeService.findAllAndUndertakeByUserId(loginUser.getId()))).//承接率
                     setAttr("role",role).
                     setAttr("user",loginUser).
                     render("welcome.html");
@@ -259,7 +264,6 @@ public class MainController extends BaseController {
     public void update(){
         User user = new User();
         user.setId(getParaToLong("id"));
-        user.setName(getPara("name"));
         user.setPhone(getPara("phone"));
         user.setEmail(getPara("email"));
         if (!userService.update(user)) {
