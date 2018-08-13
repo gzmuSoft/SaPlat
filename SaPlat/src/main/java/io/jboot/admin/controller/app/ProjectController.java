@@ -156,10 +156,10 @@ public class ProjectController extends BaseController {
                 authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
                 authProject.setName(loginUser.getName());
                 authProject.setLastUpdUser(loginUser.getName());
-                if (project.getAssessmentMode().equals("自评")) {
+                if ("自评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.REVIEW);
                     project.setStatus(ProjectStatus.REVIEW);
-                } else if (project.getAssessmentMode().equals("委评")) {
+                } else if ("委评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.VERIFIING);
                     project.setStatus(ProjectStatus.VERIFIING);
                 }
@@ -752,7 +752,7 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void seeFacAgency() {
-        FacAgency facAgency = facAgencyService.findById(getParaToLong("id"));
+        FacAgency facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
         setAttr("facAgency", facAgency).render("facAgency.html");
     }
 
@@ -878,7 +878,7 @@ public class ProjectController extends BaseController {
         Project project;
         for (int i = 0; i < page.getList().size(); i++) {
             project = projectService.findById(page.getList().get(i).getProjectID());
-            if (!page.getList().get(i).getRemark().equals("审查完成") && project != null && page.getList().get(i).getDeadTime().before(new Date())) {
+            if (!"审查完成".equals(page.getList().get(i).getRemark()) && project != null && page.getList().get(i).getDeadTime().before(new Date())) {
                 float allNum, passNum, rate;
                 applyInvite = new ApplyInvite();
                 applyInvite.setModule(1);

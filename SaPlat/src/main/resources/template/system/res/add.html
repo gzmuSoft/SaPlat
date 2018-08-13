@@ -41,7 +41,7 @@
             <label class="layui-form-label">父级名称</label>
             <div class="layui-input-block">
                 <input type="text" name="pname" placeholder="父级名称" class="layui-input" value="#(pRes.name)"
-                       readonly="readonly" disabled="disabled"/>
+                       readonly="readonly" style="width: 500px" disabled="disabled"/>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>资源名称</label>
             <div class="layui-input-block">
                 <input type="text" name="res.name" placeholder="资源名称" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>资源URL</label>
             <div class="layui-input-block">
                 <input type="text" name="res.url" placeholder="资源URL" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -65,7 +65,7 @@
             <label class="layui-form-label">资源图标</label>
             <div class="layui-input-block">
                 <input type="text" name="res.iconCls" placeholder="资源图标" class="layui-input" value=""
-                       autocomplete="off"/>
+                       style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -73,14 +73,14 @@
             <label class="layui-form-label"><em class="require-mark">*</em>资源描述</label>
             <div class="layui-input-block">
                 <input type="text" name="res.des" placeholder="资源描述" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>资源类型</label>
-            <div class="layui-input-block">
-                <select id='type' name="res.type" lay-verify="required">
+            <div class="layui-input-block"style="width: 500px">
+                <select id='type' name="res.type"  lay-verify="required">
                     <option></option>
                     #option("TYPE_SYSTEM_RES")
                 </select>
@@ -91,14 +91,14 @@
             <label class="layui-form-label"><em class="require-mark">*</em>排序号</label>
             <div class="layui-input-block">
                 <input type="number" name="res.sort" placeholder="排序号" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block">
-                <select id='status' name="res.status" lay-verify="required">
+            <div class="layui-input-block"style="width: 500px">
+                <select id='status' name="res.status"  lay-verify="required">
                     <option></option>
                     #statusOption(io.jboot.admin.service.entity.status.system.ResStatus::me(), '1')
                 </select>

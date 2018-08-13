@@ -1,22 +1,1319 @@
 #include("/template/common/layout/_page_layout.html")
 #@layout()
 
+
 #define css()
 <style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: 400;
+    }
 
+    blockquote,
+    body,
+    button,
+    dd,
+    div,
+    dl,
+    dt,
+    form,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    input,
+    li,
+    ol,
+    p,
+    pre,
+    td,
+    textarea,
+    th,
+    ul {
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    body {
+        line-height: 24px;
+        font: 14px Helvetica Neue, Helvetica, PingFang SC, \5FAE\8F6F\96C5\9ED1, Tahoma, Arial, sans-serif;
+    }
+
+    html {
+        background-color: #f2f2f2;
+        color: #666;
+    }
+
+    .layui-fluid {
+        position: relative;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    .layui-fluid {
+        padding: 15px;
+    }
+
+    .layui-col-space15 {
+        margin: -7.5px;
+    }
+
+    .layui-col-md12,
+    .layui-col-md4,
+    .layui-col-md6,
+    .layui-col-md8,
+    .layui-col-xs3,
+    .layui-col-xs6 {
+        position: relative;
+        display: block;
+        box-sizing: border-box;
+    }
+
+    .layui-col-md12,
+    .layui-col-md4,
+    .layui-col-md6,
+    .layui-col-md8 {
+        float: left;
+    }
+
+    .layui-col-md8 {
+        width: 66.66%;
+    }
+
+    .layui-col-md4 {
+        width: 33.33%;
+    }
+
+    .layui-col-md6 {
+        width: 50%;
+    }
+
+    .layui-col-md12 {
+        width: 100%;
+    }
+
+    .layui-col-space15 > * {
+        padding: 7.5px;
+    }
+
+    .layui-card {
+        margin-bottom: 15px;
+        border-radius: 2px;
+        background-color: #fff;
+        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    :last-child.layui-card {
+        margin-bottom: 0px;
+    }
+
+    .layui-card-body,
+    .layui-card-header {
+        position: relative;
+    }
+
+    .layui-card-header {
+        height: 42px;
+        line-height: 42px;
+        padding: 0 15px;
+        border-bottom: 1px solid #f6f6f6;
+        color: #333;
+        border-radius: 2px 2px 0 0;
+        font-size: 14px;
+    }
+
+    .layui-card-header {
+        position: relative;
+    }
+
+    .layui-card-body {
+        padding: 10px 15px;
+        line-height: 24px;
+    }
+
+    .layui-text {
+        line-height: 22px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .layadmin-text p {
+        margin-bottom: 10px;
+        text-indent: 2em;
+    }
+
+    .layadmin-text p:last-child {
+        margin: 0;
+    }
+
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .layui-text a:not(.layui-btn) {
+        color: #01aaed;
+    }
+
+    button,
+    input,
+    optgroup,
+    option,
+    select,
+    textarea {
+        font-family: inherit;
+        font-size: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        outline: 0;
+    }
+
+    /*img {*/
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+    /*}*/
+
+    .layui-edge {
+        position: relative;
+    }
+
+    .layui-btn,
+    .layui-edge,
+    img {
+        vertical-align: middle;
+    }
+
+    .layui-btn
+    .layui-icon {
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0px;
+    }
+
+    .layui-border-box * {
+        box-sizing: border-box;
+    }
+
+    .layui-box * {
+        box-sizing: content-box;
+    }
+
+    .layui-icon {
+        font-family: layui-icon !important;
+        font-size: 16px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .layui-edge-bottom {
+        top: 2px;
+        border-top-color: #999;
+        border-top-style: solid;
+    }
+
+    .layui-edge-top {
+        top: -4px;
+        border-bottom-color: #999;
+        border-bottom-style: solid;
+    }
+
+    [lay-href],
+    [lay-tips],
+    [layadmin-event] {
+        cursor: pointer;
+    }
+
+    .layui-card-header .layui-icon {
+        line-height: initial;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        margin-top: -7px;
+    }
+
+    .layui-carousel {
+        position: relative;
+        left: 0px;
+        top: 0px;
+        background-color: #f8f8f8;
+    }
+
+    .layadmin-carousel {
+        height: 185px !important;
+        background-color: #fff;
+    }
+
+    .layui-carousel > [carousel-item] {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .layui-carousel-ind {
+        position: relative;
+        top: -35px;
+        width: 100%;
+        line-height: 0 !important;
+        text-align: center;
+        font-size: 0px;
+    }
+
+    .layadmin-carousel .layui-carousel-ind {
+        position: absolute;
+        top: -41px;
+        text-align: right;
+    }
+
+    .layadmin-news .layui-carousel-ind {
+        height: 45px;
+    }
+
+    .layui-carousel-arrow {
+        display: none \9;
+        opacity: 0;
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        margin-top: -18px;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        font-size: 20px;
+        border: 0;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.2);
+        color: #fff;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+        cursor: pointer;
+    }
+
+    [lay-type=add].layui-carousel-arrow {
+        left: auto !important;
+        right: 10px;
+    }
+
+    [lay-arrow=none].layui-carousel .layui-carousel-arrow {
+        display: none;
+    }
+
+    .layui-carousel-ind ul {
+        display: inline-block;
+        padding: 5px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+    }
+
+    .layadmin-carousel .layui-carousel-ind ul {
+        background: 0 0;
+    }
+
+    .layui-carousel-ind li {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin: 0 3px;
+        font-size: 14px;
+        background-color: #e2e2e2;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        cursor: pointer;
+        -webkit-transition-duration: 0.3s;
+        transition-duration: 0.3s;
+    }
+
+    .layui-col-xs3,
+    .layui-col-xs6 {
+        float: left;
+    }
+
+    .layui-col-space10 > * {
+        padding: 5px;
+    }
+
+    .layadmin-shortcut li {
+        text-align: center;
+    }
+
+    .layui-carousel-ind li.layui-this {
+        background-color: #fff;
+    }
+
+    .layadmin-carousel .layui-carousel-ind li {
+        background-color: #e2e2e2;
+    }
+
+    .layadmin-carousel .layui-carousel-ind li.layui-this {
+        background-color: #999;
+    }
+
+    .layui-col-space10 {
+        margin: -5px;
+    }
+
+    .layui-carousel > [carousel-item] > * {
+        display: none;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #f8f8f8;
+        transition-duration: 0.3s;
+        -webkit-transition-duration: 0.3s;
+    }
+
+    .layadmin-carousel .layui-carousel,
+    .layadmin-carousel > [carousel-item] > * {
+        background-color: #fff;
+    }
+
+    .layadmin-carousel .layui-col-space10 {
+        margin: 0;
+    }
+
+    .layui-carousel > [carousel-item] >,
+    .layui-carousel > [carousel-item] >,
+    .layui-carousel > [carousel-item] > .layui-this {
+        display: block;
+    }
+
+    .layui-carousel > [carousel-item] > .layui-this {
+        left: 0px;
+    }
+
+    .layadmin-dataview > [carousel-item] > div {
+        height: 332px;
+    }
+
+    [lay-anim=updown].layui-carousel > [carousel-item] > *,
+    [lay-anim=fade].layui-carousel > [carousel-item] > * {
+        left: 0px !important;
+    }
+
+    .layui-progress-bar {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 0px;
+        max-width: 100%;
+        height: 6px;
+        border-radius: 20px;
+        text-align: right;
+        background-color: #5fb878;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+    }
+
+    .layadmin-news a {
+        display: block;
+        line-height: 60px;
+        text-align: center;
+    }
+
+    .layadmin-takerates {
+        padding-top: 5px;
+    }
+
+    .layui-progress {
+        position: relative;
+        height: 6px;
+        border-radius: 20px;
+        background-color: #e2e2e2;
+    }
+
+    .layadmin-takerates .layui-progress {
+        margin: 50px 0 60px;
+    }
+
+    .layadmin-takerates :last-child.layui-progress {
+        margin-bottom: 10px;
+    }
+
+    .layadmin-takerates .layui-progress h3 {
+        position: absolute;
+        right: 0px;
+        top: -35px;
+        color: #999;
+        font-size: 14px;
+    }
+
+    .layadmin-takerates .layui-progress-bar {
+        text-align: left;
+    }
+
+    .layui-progress-text {
+        position: relative;
+        top: -20px;
+        line-height: 18px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .layadmin-takerates .layui-progress-text {
+        top: -35px;
+        line-height: 26px;
+        font-size: 26px;
+    }
+
+    .layui-edge {
+        display: inline-block;
+        width: 0px;
+        height: 0px;
+        border-width: 6px;
+        border-style: dashed;
+        border-color: transparent;
+        overflow: hidden;
+    }
+
+    .layui-table {
+        margin: 10px 0;
+    }
+
+    .layui-table {
+        width: 100%;
+        background-color: #fff;
+        color: #666;
+    }
+
+    .layui-card-body .layui-table {
+        margin: 5px 0;
+    }
+
+    .layui-table tr {
+        transition: all .3s;
+        -webkit-transition: all .3s;
+    }
+
+    .layui-table tbody tr:hover,
+    .layui-table thead tr,
+    [lay-even].layui-table tr:nth-child(2n) {
+        background-color: #f2f2f2;
+    }
+
+    .layui-table th {
+        text-align: left;
+        font-weight: 400;
+    }
+
+    .layui-table td,
+    .layui-table th,
+    [lay-skin=line].layui-table,
+    [lay-skin=row].layui-table {
+        border-width: 1px;
+        border-style: solid;
+        border-color: #e6e6e6;
+    }
+
+    .layui-table td,
+    .layui-table th {
+        position: relative;
+        padding: 9px 15px;
+        min-height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+    }
+
+    .layui-btn-container {
+        font-size: 0px;
+    }
+
+    .layui-btn {
+        outline: 0;
+        -webkit-appearance: none;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+        box-sizing: border-box;
+    }
+
+    .layui-btn {
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        background-color: #009688;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .layui-btn-danger {
+        background-color: #ff5722;
+    }
+
+    .layui-btn + .layui-btn {
+        margin-left: 10px;
+    }
+
+    .layui-btn-container .layui-btn {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .layui-btn-container .layui-btn + .layui-btn {
+        margin-left: 0px;
+    }
+
+    .layui-table .layui-btn-container .layui-btn {
+        margin-bottom: 9px;
+    }
+
+    .layui-card .layui-tab {
+        margin: 0;
+    }
+
+    .layui-tab-title .layui-this {
+        color: #000;
+    }
+
+    .layui-form-pane [pane]
+        .layui-form-pane
+    .layui-tab-title .layui-this::after {
+        border-color: #e6e6e6;
+    }
+
+    .layui-card .layui-tab-brief {
+        height: 42px;
+        border-bottom-color: #f6f6f6;
+    }
+
+    .layui-card .layui-tab-brief .layui-tab-content {
+        padding: 15px;
+    }
+
+    .layui-card .layui-table-view {
+        margin: 0;
+    }
+
+    .layui-table-view .layui-table {
+        position: relative;
+        width: auto;
+        margin: 0;
+    }
+
+    .layui-table-header .layui-table {
+        margin-bottom: -1px;
+    }
+
+    .layui-table-page > div {
+        height: 26px;
+    }
+
+    .layui-form input[type=checkbox],
+    .layui-form input[type=radio],
+    .layui-form select {
+        display: none;
+    }
+
+    .layui-laypage a,
+    .layui-laypage button,
+    .layui-laypage input,
+    .layui-laypage select,
+    .layui-laypage span {
+        border: 1px solid #e2e2e2;
+    }
+
+    .layui-laypage a,
+    .layui-laypage span {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        vertical-align: middle;
+        padding: 0 15px;
+        height: 28px;
+        line-height: 28px;
+        margin: 0 -1px 5px 0;
+        background-color: #fff;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .layui-laypage a {
+        text-decoration: none;
+    }
+
+    .layui-laypage > :first-child {
+        margin-left: 0px !important;
+    }
+
+    .layui-laypage > a:first-child,
+    .layui-laypage > a:first-child em {
+        border-radius: 2px 0 0 2px;
+    }
+
+    .layui-laypage > :last-child {
+        margin-right: 0px !important;
+    }
+
+    .layui-laypage
+    .layui-laypage
+
+
+    .layui-table-page .layui-laypage a,
+    .layui-table-page .layui-laypage span {
+        height: 26px;
+        line-height: 26px;
+        margin-bottom: 10px;
+        border: none;
+        background: 0 0;
+    }
+
+    .layui-table-page .layui-laypage span {
+        margin-left: 0px;
+        padding: 0;
+    }
+
+    .layui-table-page .layui-laypage a,
+    .layui-table-page .layui-laypage span {
+        padding: 0 12px;
+    }
+
+    .layui-laypage select {
+        height: 22px;
+        padding: 3px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .layui-table-page select {
+        height: 18px;
+    }
+
+    .layui-form [lay-ignore] {
+        display: initial;
+    }
+
+    .layui-table-view select[lay-ignore] {
+        display: inline-block;
+    }
+
+    .layui-laypage button,
+    .layui-laypage input {
+        height: 30px;
+        line-height: 30px;
+        border-radius: 2px;
+        vertical-align: top;
+        background-color: #fff;
+        box-sizing: border-box;
+    }
+
+    .layui-laypage input {
+        display: inline-block;
+        width: 40px;
+        margin: 0 10px;
+        padding: 0 3px;
+        text-align: center;
+    }
+
+    .layui-laypage button {
+        margin-left: 10px;
+        padding: 0 10px;
+        cursor: pointer;
+    }
+
+    .layui-table-page .layui-laypage button,
+    .layui-table-page .layui-laypage input {
+        height: 26px;
+        line-height: 26px;
+    }
+
+    .layui-table-page .layui-laypage input {
+        width: 40px;
+    }
+
+    .layui-table-page .layui-laypage button {
+        padding: 0 10px;
+    }
+
+    .layui-laypage em {
+        font-style: normal;
+    }
+
+    .layui-laypage .layui-laypage-curr em {
+        position: relative;
+        color: #fff;
+    }
+
+    .layui-table-view [lay-skin=line].layui-table {
+        border-width: 0 1px 0 0;
+    }
+
+    [lay-skin=line].layui-table td,
+    [lay-skin=line].layui-table th {
+        border-width: 0 0 1px;
+    }
+
+    .layui-table-view .layui-table td,
+    .layui-table-view .layui-table th {
+        padding: 5px 0;
+        border-top: none;
+        border-left: none;
+    }
+
+    .layui-table-view .layui-table td {
+        cursor: default;
+    }
+
+    .layui-table-sort .layui-edge {
+        position: absolute;
+        left: 5px;
+        border-width: 5px;
+    }
+
+    .layui-tab-title li {
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        vertical-align: middle;
+        font-size: 14px;
+        transition: all .2s;
+        -webkit-transition: all .2s;
+        position: relative;
+        line-height: 40px;
+        min-width: 65px;
+        padding: 0 15px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .layui-tab-brief > .layui-tab-title .layui-this {
+        color: #009688;
+    }
+
+    .layui-card .layui-tab-brief .layui-tab-title li {
+        margin: 0 15px;
+        padding: 0;
+        line-height: 42px;
+    }
+
+    .layui-card .layui-tab-brief .layui-tab-title li.layui-this {
+        color: #333;
+    }
+
+    .layui-col-xs6 {
+        width: 50%;
+    }
+
+    .layadmin-backlog .layadmin-backlog-body {
+        display: block;
+        padding: 10px 15px;
+        background-color: #f8f8f8;
+        color: #999;
+        border-radius: 2px;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+    }
+
+    .layadmin-backlog-body h3 {
+        padding-bottom: 10px;
+        font-size: 12px;
+    }
+
+    a cite {
+        font-style: normal;
+        *cursor: pointer;
+    }
+
+    .layadmin-backlog-body p cite {
+        font-style: normal;
+        font-size: 30px;
+        font-weight: 300;
+        color: #009688;
+    }
+
+    .layadmin-shortcut li .layui-icon {
+        display: inline-block;
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        border-radius: 2px;
+        font-size: 30px;
+        background-color: #f8f8f8;
+        color: #333;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+    }
+
+    .layadmin-shortcut li cite {
+        position: relative;
+        top: 2px;
+        display: block;
+        color: #666;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 14px;
+    }
 </style>
-#end
-
-#define js()
-
 #end
 
 #define content()
 <div class="layui-fluid">
-    <h3>欢迎登录</h3>
-    <br>
-    <p>SaPlat开源地址：欢迎star</p>
-    <p>github：<a href="https://github.com/gzmuSoft/SaPlat">https://github.com/gzmuSoft/SaPlat</a></p>
-</div>
+    <div class="layui-row layui-col-space15" style="min-width: 1100px">
+        <div class="layui-col-md8">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px">快捷方式</div>
+                        <div class="layui-card-body" style="height: 200px">
+                            #if(role == 1)
+                            <div class="layui-carousel layadmin-carousel layadmin-shortcut"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div>
+                                    <ul class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/role">
+                                                <i class="layui-icon layui-icon-username">
+                                                </i>
+                                                <cite>角色管理</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/data">
+                                                <i class="layui-icon layui-icon-set">
+                                                </i>
+                                                <cite>数据管理</cite>
+                                            </a>
 
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/log">
+                                                <i class="layui-icon layui-icon-date">
+                                                </i>
+                                                <cite>日志管理</cite>
+                                            </a>
+
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/auth">
+                                                <i class="layui-icon layui-icon-username">
+                                                </i>
+                                                <cite>角色审核管理</cite>
+                                            </a>
+
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/res">
+                                                <i class="layui-icon layui-icon-list">
+                                                </i>
+                                                <cite>资源管理</cite>
+                                            </a>
+
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/expert_group">
+                                                <i class="layui-icon layui-icon-user">
+                                                </i>
+                                                <cite>专业团体管理</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/ass_review">
+                                                <i class="layui-icon layui-icon-file">
+                                                </i>
+                                                <cite>项目评估审查</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/system/projectauth">
+                                                <i class="layui-icon layui-icon-file-b">
+                                                </i>
+                                                <cite>项目审核</cite>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="layui-carousel-ind"></div>
+                            </div>
+                            #else if(role == 3)
+                            <div class="layui-carousel layadmin-carousel layadmin-shortcut"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div>
+                                    <ul class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/organization/projectGet">
+                                                <i class="layui-icon layui-icon-release">
+                                                </i>
+                                                <cite>立项资格申请</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/project/">
+                                                <i class="layui-icon layui-icon-edit">
+                                                </i>
+                                                <cite>建立项目</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/project/toBuildProject">
+                                                <i class="layui-icon layui-icon-template">
+                                                </i>
+                                                <cite>项目资料补充</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/project/toVerfedSuccess">
+                                                <i class="layui-icon layui-icon-template-1">
+                                                </i>
+                                                <cite>审核完的项目</cite>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="layui-carousel-ind"></div>
+                            </div>
+                            #else
+                            <div class="layui-carousel layadmin-carousel layadmin-shortcut"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div>
+                                    <ul class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a href="#(ctxPath)/app/OrgStructure/joinStructure">
+                                                <i class="layui-icon layui-icon-snowflake">
+                                                </i>
+                                                <cite>加入架构</cite>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="layui-carousel-ind"></div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        #if(role == 1)
+                        <div class="layui-card-header" style="font-size: 18px">用户管理</div>
+                        <div class="layui-card-body" style="height: 200px">
+                            <div class="layui-carousel layadmin-carousel layadmin-backlog"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/user">
+                                                <h3 style="font-size: 16px">已注册账号</h3>
+                                                <p><cite>#(userAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/person">
+                                                <h3 style="font-size: 16px">个人账号</h3>
+                                                <p><cite>#(personAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/organization">
+                                                <h3 style="font-size: 16px">组织账号</h3>
+                                                <p><cite>#(organizationAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body">
+                                                <h3 style="font-size: 16px">项目数量</h3>
+                                                <p><cite>#(projectAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        #else if(role == 3)
+                        <div class="layui-card-header" style="font-size: 18px">项目管理</div>
+                        <div class="layui-card-body" style="height: 200px">
+                            <div class="layui-carousel layadmin-carousel layadmin-backlog"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/evaluation">
+                                                <h3 style="font-size: 16px">待评项目</h3>
+                                                <p><cite>#(assessAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/toVerfiing">
+                                                <h3 style="font-size: 16px">待审核项目</h3>
+                                                <p><cite>#(auditAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body">
+                                                <h3 style="font-size: 16px">已有项目</h3>
+                                                <p><cite>#(projectAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/evaluation">
+                                                <h3 style="font-size: 16px">待审查项目</h3>
+                                                <p><cite>#(reviewAmount)</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        #else
+                        <div class="layui-card-header" style="font-size: 18px">架构管理</div>
+                        <div class="layui-card-body" style="height: 200px">
+                            <div class="layui-carousel layadmin-carousel layadmin-backlog"
+                                 style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
+                                 lay-anim="">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs6">
+                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/OrgStructure/myStructure">
+                                                <h3 style="font-size: 16px">加入的架构</h3>
+                                                <p><cite>#(count)</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header" style="font-size: 18px">个人信息</div>
+                <div class="layui-card-body layui-text">
+                    <table class="layui-table">
+                        <colgroup>
+                            <col width="100">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td class="layui-hide" id="id">#(user.id)</td>
+                            <td style="width: 130px;text-align: center">&nbsp; 用 &nbsp; 户 &nbsp;名</td>
+                            <td id="name">#(user.name)</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 130px;text-align: center">&nbsp; 手&nbsp; 机 &nbsp;号</td>
+                            <td class="user" id="phone">#(user.phone)</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 130px;text-align: center">&nbsp; 邮 &nbsp;&nbsp;&nbsp;&nbsp; 箱</td>
+                            <td class="user" id="email">#(user.email)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="layui-btn-container"
+                         style="margin-top: 30px ;margin-right: 30%;width: 280px">
+                        <button type="button" class="layui-btn" name="check" id="check" style="background: #fd5f00">编辑信息</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check2" style="background: #fd5f00">保存信息</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">修改密码</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15" style="min-width: 1100px">
+        <div class="layui-col-md4">
+            <div class="layui-row layui-col-space15">
+                #if(role == 1)
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px" ></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>转化率（日同比 28% <span class="layui-edge layui-edge-top" lay-tips="增长"
+                                                      lay-offset="-15"></span>）
+                                </h3>
+                                <div class="layui-progress-bar" style="width: 65%;" lay-percent="40%"><span
+                                        class="layui-progress-text">40%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px" ></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>CPU使用率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="30%"><span
+                                        class="layui-progress-text">30%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px"></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>CPU使用率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="20%">
+                                    <span class="layui-progress-text">20%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #else if(role == 3)
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px" value="项目名称">风险转化率：</div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>转化率（日同比 28%<span class="layui-edge layui-edge-top" lay-tips="增长"
+                                                      lay-offset="-15"></span>）
+                                </h3>
+                                <div class="layui-progress-bar" style="width: 65%;" lay-percent="65%"><span
+                                        class="layui-progress-text">65%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px" value="项目名称">项目承接率：</div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>项目承接率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="73%"><span
+                                        class="layui-progress-text">58%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px" value="项目名称">CPU使用率：</div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>CPU使用率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="58%">
+                                    <span class="layui-progress-text">58%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #else
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px"></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>转化率（日同比 28% <span class="layui-edge layui-edge-top" lay-tips="增长"
+                                                      lay-offset="-15"></span>）
+                                </h3>
+                                <div class="layui-progress-bar" style="width: 65%;" lay-percent="65%"><span
+                                        class="layui-progress-text">65%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px"></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>CPU使用率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="58%"><span
+                                        class="layui-progress-text">58%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-size: 18px"></div>
+                        <div class="layui-card-body layadmin-takerates">
+                            <div class="layui-progress" lay-showpercent="yes">
+                                <h3>CPU使用率</h3>
+                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="58%">
+                                    <span class="layui-progress-text">58%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                #end
+            </div>
+        </div>
+        <div class="layui-col-md8">
+            <div class="layui-card">
+                <!--这里的样式需要style="height:401px"-->
+                <div class="layui-carousel" id="broadcast">
+                    <div carousel-item style="height:401px">
+                        <div><img src="/static/img/welcome/c20d39c41a.jpg"></div>
+                        <div><img src="/static/img/welcome/03781695770e1920000018c1bc257a0.jpg"></div>
+                        <div><img src="/static/img/welcome/52733d977e488.jpg"></div>
+                        <div><img src="/static/img/welcome/23229Y3826C6.jpg"></div>
+                        <div><img src="/static/img/welcome/1-130FPR232.jpg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form','carousel','layer', 'element'], function () {
+        // 操作对象
+        var layer = layui.layer
+            , $ = layui.jquery;
+
+        var carousel = layui.carousel;
+        carousel.render({
+            elem: '#broadcast'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+
+
+//        pop_show("","",,function () {
+//
+//        })
+        //编辑信息
+        $('#check').click(function () {
+            $(".user").each(function () {
+                $(this).attr("contenteditable",true);
+            })
+            $('#check2').removeClass("layui-hide");
+            $(this).addClass("layui-hide");
+            layer.msg("开启编辑");
+        });
+
+        //保存信息
+        $('#check2').click(function () {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/update',
+                data: {id:$('#id').text(),name:$('#name').text(),phone:$('#phone').text(),email:$('#email').text()},
+                loadFlag: true,
+                success: function (data) {
+                    $(".user").each(function () {
+                        $(this).attr("contenteditable",false);
+                    })
+                    $('#check').removeClass("layui-hide");
+                    $('#check2').addClass("layui-hide");
+                }
+            });
+        })
+    });
+</script>
 #end

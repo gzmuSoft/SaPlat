@@ -10,6 +10,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.OrganizationValidator;
@@ -124,7 +125,7 @@ public class OrganizationController extends BaseController {
         Long fileId = getParaToLong("fileId");
         FileForm model = new FileForm();
         Files files = null;
-        if (tableName.equals("organization")) {
+        if ("organization".equals(tableName)) {
             model = fileFormService.findFirstByTableNameAndRecordIDAndFileName(tableName, fieldName, loginUser.getUserID());
             if (model == null) {
                 model = new FileForm();
@@ -136,7 +137,7 @@ public class OrganizationController extends BaseController {
                 }
             }
             model.setStatus(false);
-        } else if (tableName.equals("facAgency")) {
+        } else if ("facAgency".equals(tableName)) {
             FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
             if (facAgency != null) {
                 Long id = facAgency.getId();
@@ -146,7 +147,7 @@ public class OrganizationController extends BaseController {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
-        } else if (tableName.equals("enterprise")) {
+        } else if ("enterprise".equals(tableName)) {
             Enterprise enterprise = enterpriseService.findByOrgId(loginUser.getUserID());
             if (enterprise != null) {
                 Long id = enterprise.getId();
@@ -156,7 +157,7 @@ public class OrganizationController extends BaseController {
                 model = new FileForm();
                 model.setCreateTime(new Date());
             }
-        } else if (tableName.equals("profGroup")) {
+        } else if ("profGroup".equals(tableName)) {
             ProfGroup profGroup = profGroupService.findByOrgId(loginUser.getUserID());
             if (profGroup != null) {
                 Long id = profGroup.getId();
@@ -319,7 +320,7 @@ public class OrganizationController extends BaseController {
     public void managementCancel() {
         User user = AuthUtils.getLoginUser();
         Management model = managementService.findByOrgId(organizationService.findById(user.getUserID()).getId());
-        Auth auth = authService.findByUserAndRole(user, roleService.findByName("管理机构").getId());
+        Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
         if (!managementService.saveOrUpdate(model, auth)) {
@@ -402,7 +403,7 @@ public class OrganizationController extends BaseController {
     public void enterpriseCancel() {
         User user = AuthUtils.getLoginUser();
         Enterprise model = enterpriseService.findByOrgId(organizationService.findById(user.getUserID()).getId());
-        Auth auth = authService.findByUserAndRole(user, roleService.findByName("企业机构").getId());
+        Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
         if (!enterpriseService.saveOrUpdate(model, auth)) {
@@ -496,7 +497,7 @@ public class OrganizationController extends BaseController {
     public void facAgencyCancel() {
         User user = AuthUtils.getLoginUser();
         FacAgency model = facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId());
-        Auth auth = authService.findByUserAndRole(user, roleService.findByName("服务机构").getId());
+        Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
         if (!facAgencyService.saveOrUpdate(model, auth)) {
@@ -580,7 +581,7 @@ public class OrganizationController extends BaseController {
     public void profGroupCancel() {
         User user = AuthUtils.getLoginUser();
         ProfGroup model = profGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
-        Auth auth = authService.findByUserAndRole(user, roleService.findByName("专业团体").getId());
+        Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
         if (!profGroupService.saveOrUpdate(model, auth)) {
@@ -652,7 +653,7 @@ public class OrganizationController extends BaseController {
     public void reviewGroupCancel() {
         User user = AuthUtils.getLoginUser();
         ReviewGroup model = reviewGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
-        Auth auth = authService.findByUserAndRole(user, roleService.findByName("审查团体").getId());
+        Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
         auth.setStatus(AuthStatus.CANCEL_VERIFY);
         model.setIsEnable(false);
         if (!reviewGroupService.saveOrUpdate(model, auth)) {

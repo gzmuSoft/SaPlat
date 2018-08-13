@@ -22,16 +22,16 @@
             , height: 'full-150'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {field: 'name', title: '项目名称', width: 200, sort: true}
+                {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                 , {
                     field: 'status',
                     title: '状态',
-                    width: 100,
+                    minWidth: 100,
                     sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                 }
-                , {field: 'reply', title: '回复', width: 300}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                , {field: 'reply', title: '回复', minWidth: 300}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
             , method: 'get'
@@ -54,7 +54,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.facAgencyID, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.createUserID, '', '', function () {
                 });
             } else if (obj.event === 'agree') {
                 if (button == 1) {

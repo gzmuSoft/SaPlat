@@ -40,7 +40,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>角色名称</label>
             <div class="layui-input-block">
                 <input type="text" name="role.name" placeholder="角色名称" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -48,7 +48,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>角色描述</label>
             <div class="layui-input-block">
                 <input type="text" name="role.des" placeholder="角色描述" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -56,13 +56,13 @@
             <label class="layui-form-label"><em class="require-mark">*</em>排序号</label>
             <div class="layui-input-block">
                 <input type="number" name="role.sort" placeholder="排序号" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block"style="width: 500px" >
                 <select id='status' name="role.isEnable" lay-verify="required">
                     <option></option>
                     #statusOption(io.jboot.admin.service.entity.status.system.RoleStatus::me(), '1')

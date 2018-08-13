@@ -10,6 +10,8 @@ public interface UserService  {
 
     public Page<User> findPage(User sysUser, int pageNumber, int pageSize);
 
+    public List<User> findAll();
+
     public boolean hasUser(String name);
 
     public User findByName(String name);

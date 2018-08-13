@@ -10,7 +10,9 @@
 
     <!--css start-->
     <style>
-
+.layui-form-label{
+    width: 150px;
+}
     </style>
     <!--css end-->
 </head>
@@ -21,31 +23,31 @@
     <h2>项目基本资料</h2>
     <hr class="layui-bg-red">
     <div class="layui-row">
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>项目名称：</label>
                 <div class="layui-input-block">
                     <input value="#(project.name)" id="model.name" name="project.name" lay-verify="required"
-                           autocomplete="off" placeholder="请输入" class="layui-input" type="text">
+                           autocomplete="off" placeholder="请输入" class="layui-input" type="text" style="width: 300px">
                 </div>
             </div>
         </div>
 
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>预计金额：</label>
                 <div class="layui-input-block">
                     <input value="#(project.amount)" id="model.amount" name="project.amount" lay-verify="required"
-                           autocomplete="off" placeholder="￥" class="layui-input" type="tel">
+                           autocomplete="off" placeholder="￥" class="layui-input" type="tel" style="width: 300px" >
                 </div>
             </div>
         </div>
     </div>
     <div class="layui-row">
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>角色名称：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline" style="width: 300px">
                     <select id="project.roleName" name="project.roleName">
                         <option selected="selected">#(project.roleName)</option>
                         #for(List : roleNameList)
@@ -56,10 +58,10 @@
             </div>
         </div>
 
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>项目评估类型：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline" style="width: 300px">
                     <select id="project.paTypeID" name="project.paTypeID">
                         <option value="#(paTypeId)" selected="selected">#(paTypeName)</option>
                         #for(List : PaTypeNameList)
@@ -69,11 +71,12 @@
                 </div>
             </div>
         </div>
-
-        <div class="layui-col-md4">
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>项目阶段：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline" style="width: 300px">
                     <select id="project.pStepID" name="project.pStepID">
                         <option value="#(pStepId)" selected="selected">#(pStepName)</option>
                         #for(List : projectStepNameList)
@@ -83,21 +86,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="layui-row">
-        <div class="layui-col-md4">
-            <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>地 址：</label>
-                <div class="layui-input-block">
-                    <input value="#(project.site)" id="model.site" name="project.site" lay-verify="required"
-                           autocomplete="off" placeholder="请输入" class="layui-input" type="text">
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md8">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
                 <label class="layui-form-label"><em class="require-mark">*</em>评估方式：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-block" >
                     <input class="btn layui-btn layui-btn-primary" type="button" id="zp" value="自评">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input class="btn layui-btn layui-btn-primary" type="button" id="wp" value="委评">
@@ -105,41 +97,48 @@
             </div>
         </div>
     </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>地 址：</label>
+            <div class="layui-input-block" >
+                <input value="#(project.site)" id="model.site" name="project.site" lay-verify="required"
+                       autocomplete="off" placeholder="请输入" class="layui-input" style="width: 900px" type="text">
+            </div>
+        </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label"><em class="require-mark">*</em>项目简介：</label>
-        <div class="layui-input-block" style="width: 84%;margin: auto">
+        <div class="layui-input-block" style="width: 900px;margin:0 180px">
             <textarea name="project.brief" id="demo"
-                      class="layui-textarea">#(project.brief)</textarea>
+                      class="layui-textarea" >#(project.brief)</textarea>
         </div>
     </div>
     <br>
     <h2>领导小组基本资料</h2>
     <hr class="layui-bg-orange">
     <div class="layui-row">
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>组长：</label>
+                <label class="layui-form-label" style="width: 150px"><em class="require-mark">*</em>组长：</label>
                 <div class="layui-input-block">
                     <input value="#(leaderGroup.leader)" id="model.leader" type="text" name="leaderGroup.leader"
-                           lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" type="text">
+                           lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input"style="width: 300px" type="text">
                 </div>
             </div>
         </div>
-        <div class="layui-col-md4">
+        <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>副组长：</label>
+                <label class="layui-form-label" style="width: 150px"><em class="require-mark">*</em>副组长：</label>
                 <div class="layui-input-block">
                     <input value="#(leaderGroup.deputy)" id="model.deputy" type="text" name="leaderGroup.deputy"
-                           lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" type="text">
+                           lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width: 300px" type="text">
                 </div>
             </div>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label"><em class="require-mark">*</em>组员：</label>
-        <div class="layui-input-block">
+        <div class="layui-input-block"style="margin:0 180px">
             <textarea id="model.crew" name="leaderGroup.crew" placeholder="请输入内容,用逗号间隔" class="layui-textarea"
-                      style="width:1200px">#(leaderGroup.crew)</textarea>
+                      style="width: 900px">#(leaderGroup.crew)</textarea>
         </div>
     </div>
     <br>
@@ -278,9 +277,9 @@
             , height: '500'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {field: 'id', title: '编号', width: 60}
-                , {field: 'name', title: '需上传的文件', width: 600}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                {field: 'id', title: '编号', minWidth: 60}
+                , {field: 'name', title: '需上传的文件',  minWidth: 600}
+                , {fixed: 'right', title: '操作',  minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
             , method: 'get'

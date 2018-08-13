@@ -41,14 +41,14 @@
             <label class="layui-form-label"><em class="require-mark">*</em>回复信息</label>
             <div class="layui-input-block">
                 <input type="text" name="auth.reply" placeholder="回复信息" class="layui-input" value="#(auth.reply)"
-                       required lay-verify="required" autocomplete="off"/>
+                       required lay-verify="required" style="width: 500px"  autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-inline">
-                <select id='status' name="auth.status" lay-verify="required">
+            <div class="layui-input-inline" style="width: 500px">
+                <select id='status' name="auth.status" lay-verify="required" >
                     <option></option>
                     #statusOption(authStatus)
                 </select>

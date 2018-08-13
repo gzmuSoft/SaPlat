@@ -468,8 +468,9 @@ public class InformationController extends BaseController {
                 };
                 Nation nationName = null;
                 for (Nation nation : nations) {
-                    if (questionnaire.getNationID() == nation.getId())
+                    if (questionnaire.getNationID().equals(nation.getId())) {
                         nationName = nation;
+                    }
                     nationStatus.add(nation.getId().toString(), nation.getName());
                 }
                 //加载学历
@@ -480,8 +481,9 @@ public class InformationController extends BaseController {
                 };
                 Educational educationalName = null;
                 for (Educational educational : educationals) {
-                    if (questionnaire.getDegreeOfEducationID() == educational.getId())
+                    if (questionnaire.getDegreeOfEducationID().equals(educational.getId())) {
                         educationalName = educational;
+                    }
                     educationalStatus.add(educational.getId().toString(), educational.getName());
                 }
                 //加载职业
@@ -492,8 +494,9 @@ public class InformationController extends BaseController {
                 };
                 Occupation occupationName = null;
                 for (Occupation item : occupations) {
-                    if (questionnaire.getOccupationID() == item.getId())
+                    if (questionnaire.getOccupationID().equals(item.getId())) {
                         occupationName = item;
+                    }
                     occupationStatus.add(item.getId().toString(), item.getName());
                 }
                 setAttr("questionnaireContents", questionnaireContents).

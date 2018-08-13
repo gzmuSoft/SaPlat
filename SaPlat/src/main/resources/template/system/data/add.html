@@ -40,7 +40,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>代码</label>
             <div class="layui-input-block">
                 <input type="text" name="data.code" placeholder="代码" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -48,14 +48,14 @@
             <label class="layui-form-label"><em class="require-mark">*</em>代码描述</label>
             <div class="layui-input-block">
                 <input type="text" name="data.codeDesc" placeholder="代码描述" class="layui-input" value="" required
-                       lay-verify="required" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>类型代码</label>
             <div class="layui-input-block">
-                <input type="text" name="data.type" placeholder="类型代码" class="layui-input" value="" autocomplete="off"/>
+                <input type="text" name="data.type" placeholder="类型代码" class="layui-input" value="" style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -63,7 +63,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>类型描述</label>
             <div class="layui-input-block">
                 <input type="text" name="data.typeDesc" placeholder="类型描述" class="layui-input" value=""
-                       autocomplete="off"/>
+                       style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
@@ -71,14 +71,14 @@
             <label class="layui-form-label"><em class="require-mark">*</em>排序号</label>
             <div class="layui-input-block">
                 <input type="number" name="data.orderNo" placeholder="排序号" class="layui-input" value=""
-                       autocomplete="off"/>
+                       style="width: 500px" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block">
-                <select id='status' name="data.status" lay-verify="required">
+            <div class="layui-input-block"style="width: 500px">
+                <select id='status' name="data.status" lay-verify="required" >
                     <option></option>
                     #statusOption(io.jboot.admin.service.entity.status.system.DataStatus::me(), '1')
                 </select>

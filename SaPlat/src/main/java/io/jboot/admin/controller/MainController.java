@@ -6,17 +6,12 @@ import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.Consts;
 import io.jboot.admin.base.common.RestResult;
+import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.plugin.shiro.MuitiLoginToken;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.NewsService;
-import io.jboot.admin.service.api.NotificationService;
-import io.jboot.admin.service.api.RoleService;
-import io.jboot.admin.service.api.UserRoleService;
-import io.jboot.admin.service.api.UserService;
-import io.jboot.admin.service.entity.model.News;
-import io.jboot.admin.service.entity.model.User;
-import io.jboot.admin.service.entity.model.UserRole;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -27,8 +22,10 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
+import org.apache.zookeeper.Login;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,6 +49,15 @@ public class MainController extends BaseController {
 
     @JbootrpcService
     private NewsService newsService;
+
+    @JbootrpcService
+    private ProjectService projectService;
+
+    @JbootrpcService
+    private StructPersonLinkService structPersonLinkService;
+
+    @JbootrpcService
+    private PersonService personService;
 
     public void index() {
         render("index.html");
@@ -163,7 +169,67 @@ public class MainController extends BaseController {
     }
 
     public void welcome() {
-        render("welcome.html");
+        User loginUser = AuthUtils.getLoginUser();
+        Long role = 0L;
+        List<UserRole> userRoles = userRoleService.findListByUserId(loginUser.getId());
+        for (UserRole userRole:userRoles) {
+            role = userRole.getRoleID();
+            if (userRole.getRoleID() == 1) {
+                break;
+            }
+            if (userRole.getRoleID() == 3) {
+                break;
+            }
+        }
+        loginUser = userService.findById(loginUser.getId());
+        if (role == 1){
+            //人数 个人 组织 项目数
+            List<User> users = userService.findAll();
+            List<UserRole> roles = userRoleService.findAll();
+            Long personAmount = 0L,organizationAmount = 0L;
+            for (UserRole userRole: roles) {
+                if (userRole.getRoleID() == 2) {
+                    personAmount++;
+                }
+                if (userRole.getRoleID() == 3) {
+                    organizationAmount++;
+                }
+            }
+            setAttr("userAmount",users.size()).
+                    setAttr("projectAmount",projectService.findAll().size()).
+                    setAttr("personAmount",personAmount).
+                    setAttr("organizationAmount",organizationAmount).
+                    setAttr("role",role).
+                    setAttr("user",loginUser).
+                    render("welcome.html");
+        }else if (role == 3){
+            List<Project> projectList = projectService.findByUserId(loginUser.getId());
+            Long assessAmount = 0L,auditAmount = 0L, reviewAmount = 0L ;
+            for (Project project:projectList) {
+                if ("4".equals(project.getStatus())) {
+                    assessAmount++;
+                }
+                if ("3".equals(project.getStatus())) {
+                    auditAmount++;
+                }
+                if ("5".equals(project.getStatus())) {
+                    reviewAmount++;
+                }
+            }
+            setAttr("projectAmount",projectList.size()).//已有项目
+                    setAttr("assessAmount",assessAmount).//待评项目
+                    setAttr("auditAmount",auditAmount).//待审核
+                    setAttr("reviewAmount",reviewAmount).//待审查
+                    setAttr("role",role).
+                    setAttr("user",loginUser).
+                    render("welcome.html");
+        }else {
+            Map<String,Object> map = structPersonLinkService.findStructureListByPersonID(personService.findById(loginUser.getUserID()).getId());
+            setAttr("role",role).
+                    setAttr("count",map.get("count"));
+                    setAttr("user",loginUser).
+                    render("welcome.html");
+        }
     }
 
     public void message() {
@@ -188,5 +254,17 @@ public class MainController extends BaseController {
                 break;
             }
         }
+    }
+
+    public void update(){
+        User user = new User();
+        user.setId(getParaToLong("id"));
+        user.setName(getPara("name"));
+        user.setPhone(getPara("phone"));
+        user.setEmail(getPara("email"));
+        if (!userService.update(user)) {
+            throw new BusinessException("保存失败!");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 }

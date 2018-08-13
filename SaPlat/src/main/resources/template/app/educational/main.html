@@ -25,15 +25,16 @@
             , cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', minWidth: 80, unresize: true, sort: true}
+                // , {field: 'id', title: 'ID', minWidth: 80, unresize: true, sort: true}
                 , {field: 'name', title: '名称',minWidth: 240, sort: true}
                 , {field: 'sort', title: '排序',minWidth: 240, sort: true}
+                , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
                 , {field: 'remark', title: '备注',minWidth: 240}
                 , {
                     field: 'isEnable',
                     title: '是否可用',
                     sort: true,
-                    minWidth: 240,
+                    minWidth: 80,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'
                 }
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
@@ -72,7 +73,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑学历', '#(ctxPath)/app/educational/update?id=' + data.id, '460', '315', function () {
+                pop_show('编辑学历', '#(ctxPath)/app/educational/update?id=' + data.id, '460', '330', function () {
                     reloadTable($('#name').val());
                 });
             } else if (obj.event === 'use') {
@@ -105,7 +106,7 @@
         });
 
         $("#add").click(function () {
-            pop_show('添加学历', '#(ctxPath)/app/educational/add', '460', '315', function () {
+            pop_show('添加学历', '#(ctxPath)/app/educational/add', '460', '330', function () {
                 reloadTable($('#name').val(), $('#des').val());
             });
         });

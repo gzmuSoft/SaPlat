@@ -23,15 +23,16 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '项目名称', width: 200}
+                , {field: 'name', title: '项目名称', minWidth: 200,sort:true}
                 , {
                     field: 'status',
                     title: '状态',
-                    width: 100,
+                    minWidth: 100,
+                    sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                 }
-                , {field: 'reply', title: '回复', width: 200}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
+                , {field: 'reply', title: '回复', minWidth: 200}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOptionInvite'}
             ]]
             , url: '#(ctxPath)/app/project/reviewProjectTable'
             , method: 'get'
