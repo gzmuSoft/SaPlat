@@ -600,8 +600,8 @@ public class ProjectController extends BaseController {
         if (projectUndertakeList != null){
             projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
         }
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "assessmentMode", "isEnable"},
-                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "自评", "1"});
+        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status",  "isEnable"},
+                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
         if (projectList == null) {
             projectList = Collections.synchronizedList(new ArrayList<>());
         }
