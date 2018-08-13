@@ -30,6 +30,12 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
     @Override
     public Page<AuthProject> findPage(AuthProject authProject, int pageNumber, int pageSize){
         Columns columns = Columns.create();
+        if(authProject.getStartTime()!=null){
+            columns.ge("lastUpdTime",authProject.getStartTime());
+        }
+        if (authProject.getEntTime()!=null){
+            columns.lt("lastUpdTime",authProject.getEntTime());
+        }
         if (authProject.getStatus() != null) {
             columns.like("status", "%" + authProject.getStatus() + "%");
         }
@@ -43,10 +49,10 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
             columns.like("name", "%" + authProject.getName() + "%");
         }
         columns.lt("type","4");
-//        if(authProject.getType()!=null){
-//
-//        }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-status");
+        if(authProject.getRoleId()!=null){
+            columns.eq("roleId",authProject.getRoleId());
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-lastUpdTime");
     }
 
     @Override

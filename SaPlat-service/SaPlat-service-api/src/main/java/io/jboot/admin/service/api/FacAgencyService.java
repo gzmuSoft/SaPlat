@@ -18,6 +18,7 @@ public interface FacAgencyService  {
     public FacAgency findById(Object id);
 
     public FacAgency findByOrgId(Long orgId);
+
     /**
      * 关联组织和管理机构
      *

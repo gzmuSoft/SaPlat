@@ -49,16 +49,20 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                 //标题栏
                 {field: '0', align: 'center', width: 50, type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '文件名', width: 300, align: 'center'}
-                , {field: 'createUserName', title: '上传人员', width: 150, align: 'center'}
-                , {field: 'createTime', title: '上传时间', width: 150, align: 'center', sort: true}
-                , {field: 'option', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '文件名', minWidth: 300, align: 'center', sort: true}
+                , {field: 'createUserName', title: '上传人员', minWidth: 150, align: 'center', sort: true}
+                , {field: 'createTime', title: '上传时间', minWidth: 150, align: 'center', sort: true}
+                , {field: 'option', title: '操作', align: 'center', minWidth: 150,toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]

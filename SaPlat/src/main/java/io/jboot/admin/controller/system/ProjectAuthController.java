@@ -17,6 +17,10 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,9 +106,11 @@ public class ProjectAuthController extends BaseController {
     @Before(GET.class)
     public void dataIndex() {
         List<Role> roleList = roleService.findByStatusUsed();
-        BaseStatus roleStatus = new RoleStatus();
+        BaseStatus roleStatus = new BaseStatus() {};
         for (Role role : roleList) {
-            roleStatus.add(role.getId().toString(), role.getName());
+            if (role.getName().contains("立项")) {
+                roleStatus.add(role.getId().toString(), role.getName());
+            }
         }
         setAttr("roleStatus", roleStatus).render("dataIndex.html");
     }
@@ -117,7 +123,7 @@ public class ProjectAuthController extends BaseController {
         if (auth == null) {
             throw new BusinessException("没有这个审核");
         }
-        if(auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)){
+        if (auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)) {
             throw new BusinessException("用户已取消审核");
         }
         BaseStatus authStatus = new BaseStatus() {
@@ -211,7 +217,13 @@ public class ProjectAuthController extends BaseController {
     public void dataTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        String ctime = getPara("cTime", "ctime");
         AuthProject authProject = new AuthProject();
+        int cindex = ctime.indexOf("/");
+        if (cindex > 0) {
+            authProject.setStartTime(ctime.substring(0, cindex - 1));
+            authProject.setEntTime(ctime.substring(cindex + 2));
+        }
         if (getParaToLong("userId") != null) {
             authProject.setUserId(getParaToLong("userId"));
         }
@@ -220,6 +232,9 @@ public class ProjectAuthController extends BaseController {
         }
         if (!"".equals(getPara("name"))) {
             authProject.setName(getPara("name"));
+        }
+        if (!"".equals(getPara("roleId"))) {
+            authProject.setName(getPara("roleId"));
         }
         authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
         Page<AuthProject> page = authProjectService.findPage(authProject, pageNumber, pageSize);
@@ -277,10 +292,9 @@ public class ProjectAuthController extends BaseController {
             } else {
                 throw new BusinessException("请求参数非法");
             }
-        }
-        catch (NullPointerException nullPoint){
+        } catch (NullPointerException nullPoint) {
             throw new BusinessException("用户资料错误!");
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new BusinessException("请求参数非法");
         }
     }
