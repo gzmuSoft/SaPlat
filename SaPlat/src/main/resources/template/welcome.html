@@ -288,26 +288,7 @@
         height: 45px;
     }
 
-    .layui-carousel-arrow {
-        display: none \9;
-        opacity: 0;
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        margin-top: -18px;
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        font-size: 20px;
-        border: 0;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.2);
-        color: #fff;
-        -webkit-transition-duration: 0.3s;
-        transition-duration: 0.3s;
-        cursor: pointer;
-    }
+
 
     [lay-type=add].layui-carousel-arrow {
         left: auto !important;
@@ -889,16 +870,16 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="adRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/role">
+                                            <a lay-href="#(ctxPath)/system/role">
                                                 <i class="layui-icon layui-icon-username">
                                                 </i>
                                                 <cite>角色管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/data">
+                                            <a lay-href="#(ctxPath)/system/data">
                                                 <i class="layui-icon layui-icon-set">
                                                 </i>
                                                 <cite>数据管理</cite>
@@ -906,7 +887,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/log">
+                                            <a lay-href="#(ctxPath)/system/log">
                                                 <i class="layui-icon layui-icon-date">
                                                 </i>
                                                 <cite>日志管理</cite>
@@ -914,7 +895,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/auth">
+                                            <a lay-href="#(ctxPath)/system/auth">
                                                 <i class="layui-icon layui-icon-username">
                                                 </i>
                                                 <cite>角色审核管理</cite>
@@ -922,7 +903,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/res">
+                                            <a lay-href="#(ctxPath)/system/res">
                                                 <i class="layui-icon layui-icon-list">
                                                 </i>
                                                 <cite>资源管理</cite>
@@ -930,21 +911,21 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/expert_group">
+                                            <a lay-href="#(ctxPath)/app/expert_group">
                                                 <i class="layui-icon layui-icon-user">
                                                 </i>
                                                 <cite>专业团体管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/ass_review">
+                                            <a lay-href="#(ctxPath)/app/ass_review">
                                                 <i class="layui-icon layui-icon-file">
                                                 </i>
                                                 <cite>项目评估审查</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/projectauth">
+                                            <a lay-href="#(ctxPath)/system/projectauth">
                                                 <i class="layui-icon layui-icon-file-b">
                                                 </i>
                                                 <cite>项目审核</cite>
@@ -959,30 +940,30 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="tissueRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/organization/projectGet">
+                                            <a lay-href="#(ctxPath)/app/organization/projectGet">
                                                 <i class="layui-icon layui-icon-release">
                                                 </i>
                                                 <cite>立项资格申请</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/">
+                                            <a lay-href="#(ctxPath)/app/project/">
                                                 <i class="layui-icon layui-icon-edit">
                                                 </i>
                                                 <cite>建立项目</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/toBuildProject">
+                                            <a lay-href="#(ctxPath)/app/project/toBuildProject">
                                                 <i class="layui-icon layui-icon-template">
                                                 </i>
                                                 <cite>项目资料补充</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/toVerfedSuccess">
+                                            <a lay-href="#(ctxPath)/app/project/toVerfedSuccess">
                                                 <i class="layui-icon layui-icon-template-1">
                                                 </i>
                                                 <cite>审核完的项目</cite>
@@ -997,9 +978,9 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="personRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/OrgStructure/joinStructure">
+                                            <a lay-href="#(ctxPath)/app/OrgStructure/joinStructure">
                                                 <i class="layui-icon layui-icon-snowflake">
                                                 </i>
                                                 <cite>加入架构</cite>
@@ -1022,21 +1003,21 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="adManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/user">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/user">
                                                 <h3 style="font-size: 16px">已注册账号</h3>
                                                 <p><cite>#(userAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/person">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/person">
                                                 <h3 style="font-size: 16px">个人账号</h3>
                                                 <p><cite>#(personAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/organization">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/organization">
                                                 <h3 style="font-size: 16px">组织账号</h3>
                                                 <p><cite>#(organizationAmount)</cite></p>
                                             </a>
@@ -1058,15 +1039,15 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="tissueManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/evaluation">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/evaluation">
                                                 <h3 style="font-size: 16px">待评项目</h3>
                                                 <p><cite>#(assessAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/toVerfiing">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/toVerfiing">
                                                 <h3 style="font-size: 16px">待审核项目</h3>
                                                 <p><cite>#(auditAmount)</cite></p>
                                             </a>
@@ -1078,7 +1059,7 @@
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/review">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/review">
                                                 <h3 style="font-size: 16px">待审查项目</h3>
                                                 <p><cite>#(reviewAmount)</cite></p>
                                             </a>
@@ -1094,9 +1075,9 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="personManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/OrgStructure/myStructure">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/OrgStructure/myStructure">
                                                 <h3 style="font-size: 16px">加入的架构</h3>
                                                 <p><cite>#(count)</cite></p>
                                             </a>
@@ -1290,6 +1271,28 @@
             ,anim: "default"
         });
 
+        //快捷通道
+        $('#adRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        $('#tissueRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        $('#personRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        //管理
+        $('#adManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
+        $('#tissueManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
+        $('#personManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
+
+        //进度条
         $('#undertakeRate').css("width","#(undertakeRate)%");
         //编辑信息
         $('#check').click(function () {
