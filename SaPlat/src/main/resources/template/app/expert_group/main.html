@@ -29,8 +29,6 @@
                 , {field: 'worktime', title: '工作时间', minWidth: 200, sort: true}
                 , {field: 'workstate', title: '在职状态', minWidth: 150, sort: true}
                 , {field: 'profess', title: '专业资格内容', minWidth: 200, sort: true}
-                , {field: 'politics', title: '政治面貌', minWidth: 150, sort: true}
-                , {field: 'nation', title: '民族', minWidth: 150, sort: true}
                 , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
@@ -50,25 +48,8 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
-                    util.sendAjax({
-                        type: 'POST',
-                        url: '#(ctxPath)/app/expert_group/delete',
-                        data: {id: data.id},
-                        loadFlag: true,
-                        success: function (data) {
-                            layer.close(index);
-                            reloadTable($('#name').val(), $('#des').val());
-                        },
-                        unSuccess: function (data) {
-                            layer.close(index);
-                        }
-                    })
-                });
-            } else if (obj.event === 'edit') {
-                pop_show('编辑专家团体', '#(ctxPath)/app/expert_group/update?id=' + data.id, '', '', function () {
-                    reloadTable($('#name').val(), $('#des').val());
+            if (obj.event === 'edit') {
+                pop_show('查看专家团体', '#(ctxPath)/app/expert_group/update?id=' + data.id, '', '', function () {
                 });
             } else if (obj.event === 'use') {
                 util.sendAjax({
@@ -140,18 +121,13 @@
     </form>
     <hr>
     <div class="layui-row">
-        <div class="layui-btn-group">
-            #shiroHasPermission('/app/expert_group/add')
-            <button id="add" class="layui-btn layui-btn-small">添加专家团体</button>
-            #end
-        </div>
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 </div>
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/expert_group/update')
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
     #end
 
     #[[
@@ -174,8 +150,5 @@
     {{#  } }}
     ]]#
 
-    #shiroHasPermission('/app/expert_group/delete')
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    #end
 </script>
 #end
