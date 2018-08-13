@@ -39,7 +39,7 @@
             data.field['expertGroup.certificate'] = file2;
             $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
                 layer.msg(res.msg);
-                if (res.code === '0'){
+                if (res.code === '0') {
                     setTimeout(function () {
                         window.location.href = document.referrer;
                     }, 1000);
@@ -48,6 +48,27 @@
             return false;
 
         });
+
+        var workpictrue = '#(expertGroup.workpictrue)';
+        var certificate = '#(expertGroup.certificate)';
+        $('#see1').click(function () {
+            if (workpictrue == null || workpictrue === "") {
+                layer.msg("对不起，您当前没有上传工作证件照片！");
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + workpictrue, '', '', function () {
+                });
+            }
+        });
+        $('#see2').click(function () {
+            if (certificate == null || certificate === "") {
+                layer.msg("对不起，您当前没有上传专业资格证书！");
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + certificate, '', '', function () {
+                });
+            }
+        });
+
+
         $(function () {
             var test = "#(expertGroup.nation)";
             if (test.length > 0) {
@@ -65,13 +86,17 @@
                 });
                 return serializeObj;
             };
+            if (workpictrue != null && workpictrue !== "") {
+                file1 = workpictrue;
+            }
+            if (certificate != null && certificate !== "") {
+                file2 = certificate;
+            }
         });
 
         $('#back').click(function () {
             history.go(-1);
         });
-
-
 
         upload.render({
             elem: '#upload1'
@@ -88,7 +113,8 @@
                     $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
-                    $('#upload1').text('已认证');
+                    workpictrue = res.data.fileId;
+                    $('#upload1').text('上传成功');
                     // $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("工作证件照片文件上传错误，请重新选择上传！");
@@ -115,7 +141,8 @@
                     $('.loading-bg').remove();
                     layer.msg("专业资格证书上传成功");
                     file2 = res.data.fileId;
-                    $('#upload2').text('已认证');
+                    certificate = res.data.fileId;
+                    $('#upload2').text('上传成功');
                     // $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
                 } else if (res.code == 1) {
                     layer.msg("专业资格证书文件上传失败，请重新选择上传！");
@@ -130,12 +157,12 @@
         var flag = "#(flag)";
         var auth = "#(auth)";
         if (flag === "true") {
-            if (auth === "true"){
+            if (auth === "true") {
                 $('#sub').remove();
-                $('#upload1').addClass("layui-disabled").prop("disabled", "disabled");
-                $('#upload2').addClass("layui-disabled").prop("disabled", "disabled");
-                $('input').attr("disabled","disabled").addClass("layui-disabled");
-                $('textarea').attr("disabled","disabled").addClass("layui-disabled");
+                $('#upload1').addClass("layui-hide layui-disabled").prop("disabled", "disabled");
+                $('#upload2').addClass("layui-hide layui-disabled").prop("disabled", "disabled");
+                $('input').attr("disabled", "disabled").addClass("layui-disabled");
+                $('textarea').attr("disabled", "disabled").addClass("layui-disabled");
                 $('.layui-select-title').removeClass('layui-select-title')
             }
         }
@@ -166,8 +193,8 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertGroup.workstate" style="width: 180px">在职状态</label>
-            <div class="layui-input-inline" style="width: 210px" >
-                <select name="expertGroup.workstate" id="expertGroup.workstate" >
+            <div class="layui-input-inline" style="width: 210px">
+                <select name="expertGroup.workstate" id="expertGroup.workstate">
                     <option value="">请选择</option>
                     #if(expertGroup.wokstate == 0)
                     <option value="在职">在职</option>
@@ -181,22 +208,23 @@
         </div>
 
         <div class="layui-form-item">
-                <label class="layui-form-label" for="expertGroup.worktime"style="width: 180px">工作时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
-                           value="#(expertGroup.worktime)" class="layui-input" lay-verify="required" style="width: 210px">
-                </div>
+            <label class="layui-form-label" for="expertGroup.worktime" style="width: 180px">工作时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
+                       value="#(expertGroup.worktime)" class="layui-input" lay-verify="required" style="width: 210px">
+            </div>
         </div>
         <div class="layui-form-item">
-                <label class="layui-form-label" for="expertGroup.department"style="width: 180px">部门名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
-                           value="#(expertGroup.department)" class="layui-input"style="width: 210px">
-                </div>
+            <label class="layui-form-label" for="expertGroup.department" style="width: 180px">部门名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
+                       value="#(expertGroup.department)" class="layui-input" style="width: 210px">
+            </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload1"style="width: 180px"><em class="require-mark">*</em>工作证件照片</label>
+            <label class="layui-form-label" for="upload1" style="width: 180px"><em
+                    class="require-mark">*</em>工作证件照片</label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
@@ -204,6 +232,8 @@
                             <i class="layui-icon"></i>上传文件
                         </button>
                         <button type="button" class="layui-hide" id="uploadBtn1"></button>
+                        <button type="button" class="layui-btn" id="see1">浏览</button>
+
                     </div>
                 </div>
             </div>
@@ -211,7 +241,9 @@
 
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.profess"><h style="margin: 0 30px">专业资格内容</h></label>
+            <label class="layui-form-label" for="expertGroup.profess">
+                <h style="margin: 0 30px">专业资格内容</h>
+            </label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
                           class="layui-textarea">#(expertGroup.profess)</textarea>
@@ -219,7 +251,8 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload2" style="width: 180px"><em class="require-mark">*</em>专业资格证书</label>
+            <label class="layui-form-label" for="upload2" style="width: 180px"><em
+                    class="require-mark">*</em>专业资格证书</label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
@@ -227,6 +260,7 @@
                             <i class="layui-icon"></i>上传文件
                         </button>
                         <button type="button" class="layui-hide" id="uploadBtn2"></button>
+                        <button type="button" class="layui-btn" id="see2">浏览</button>
                     </div>
                 </div>
             </div>
@@ -234,7 +268,9 @@
 
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label" for="expertGroup.project"><h style="margin: 0 30px">参与项目经历</h></label>
+            <label class="layui-form-label" for="expertGroup.project">
+                <h style="margin: 0 30px">参与项目经历</h>
+            </label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.project" id="expertGroup.project"
                           class="layui-textarea">#(expertGroup.project)</textarea>
