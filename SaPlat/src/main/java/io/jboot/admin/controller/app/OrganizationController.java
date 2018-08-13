@@ -112,7 +112,11 @@ public class OrganizationController extends BaseController {
         loginUser = userService.findById(loginUser.getId());
 
         Organization organization = organizationService.findById(loginUser.getUserID());
-        Long fileId = fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", organization.getId()).getFileID();
+        FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", organization.getId());
+        Long fileId = null;
+        if (fileForm != null) {
+            fileId = fileForm.getFileID();
+        }
         setAttr("fileId", fileId).setAttr("organization", organization).setAttr("user", loginUser).render("main.html");
     }
 
@@ -709,11 +713,16 @@ public class OrganizationController extends BaseController {
             }
         });
 
-        setAttr("noVerify", noVerify)
-                .setAttr("verify", verify)
-                .setAttr("verifying", verifying)
-                .setAttr("roleList", roleList)
-                .render("projectGet.html");
+        List<UserRole> userRole = userRoleService.findListByUserId(user.getId());
+        if (userRole.size() != 1) {
+            setAttr("noVerify", noVerify).setAttr("flag", true)
+                    .setAttr("verify", verify)
+                    .setAttr("verifying", verifying)
+                    .setAttr("roleList", roleList)
+                    .render("projectGet.html");
+        } else {
+            setAttr("flag", false).render("projectGet.html");
+        }
     }
 
 

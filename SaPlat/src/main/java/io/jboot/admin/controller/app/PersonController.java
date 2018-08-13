@@ -338,7 +338,6 @@ public class PersonController extends BaseController {
     /**
      * 专家团体取消认证
      */
-    @Before(POST.class)
     public void cancelExpertGroupAuth() {
         User user = AuthUtils.getLoginUser();
         ExpertGroup expertGroup = expertGroupService.findByPersonId(personService.findByUser(user).getId());

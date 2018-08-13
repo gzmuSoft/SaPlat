@@ -98,12 +98,12 @@ public class ProjectController extends BaseController {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
         if (roleNameList.size() != 0) {
-            setAttr("roleNameList", roleNameList)
+            setAttr("roleNameList", roleNameList).setAttr("flag", true)
                     .setAttr("PaTypeNameList", PaTypeList)
                     .setAttr("projectStepNameList", projectStepList)
                     .render("projectInformation.html");
         } else {
-            render("notToProject.html");
+            setAttr("flag", false).render("projectInformation.html");
         }
     }
 
@@ -147,6 +147,7 @@ public class ProjectController extends BaseController {
                 throw new BusinessException("项目资料上传失败");
             }
         } else if (saveOrUpdate == 0) {
+            JSONObject jsonData = new JSONObject();
             if (getParaToBoolean("judgeFile")) {
                 AuthProject authProject = new AuthProject();
                 authProject.setUserId(loginUser.getId());
@@ -159,9 +160,11 @@ public class ProjectController extends BaseController {
                 if ("自评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.REVIEW);
                     project.setStatus(ProjectStatus.REVIEW);
+                    jsonData.put("flag", 0);
                 } else if ("委评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.VERIFIING);
                     project.setStatus(ProjectStatus.VERIFIING);
+                    jsonData.put("flag", 1);
                 }
                 if (authProjectService.save(authProject)) {
                     renderJson(RestResult.buildSuccess("项目状态表上传成功"));
@@ -169,12 +172,15 @@ public class ProjectController extends BaseController {
                     renderJson(RestResult.buildError("项目状态表上传失败"));
                     throw new BusinessException("项目状态表上传失败");
                 }
+            } else {
+                jsonData.put("flag", 2);
             }
             if (getParaToLong("projectId") != -1) {
                 project.setId(getParaToLong("projectId"));
             }
             if (projectService.update(project)) {
                 renderJson(RestResult.buildSuccess("项目资料更新成功"));
+                renderJson(jsonData);
             } else {
                 renderJson(RestResult.buildError("项目资料更新失败"));
                 throw new BusinessException("项目资料更新失败");

@@ -73,7 +73,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑数据', '#(ctxPath)/system/data/update?id=' + data.id, '', '', function () {
+                pop_show('编辑数据', '#(ctxPath)/system/data/update?id=' + data.id, '700', '440', function () {
                     reloadTableQuery();
                 });
             } else if (obj.event === 'use') {
@@ -106,7 +106,7 @@
         });
 
         $("#add").click(function () {
-            pop_show('添加数据', '#(ctxPath)/system/data/add', '', '', function () {
+            pop_show('添加数据', '#(ctxPath)/system/data/add', '700', '440', function () {
                 reloadTableQuery();
             });
         });

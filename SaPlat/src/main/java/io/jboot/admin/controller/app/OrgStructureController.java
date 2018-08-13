@@ -244,9 +244,13 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara({"structureID"})
     public void StructurePersonList() {
+        int pageNumber = getParaToInt("pageNumber",1);
+        int pageSize = getParaToInt("pageSize",30);
         Long sid = getParaToLong("structureID");
-        Map<String, Object> structPersonLinkList = structPersonLinkService.findByStructIdAndUsername(sid);
-        renderJson(structPersonLinkList);
+        Page<Record> page = structPersonLinkService.findPersonListByStructId(pageNumber,pageSize,sid);
+        renderJson(new DataTable<Record>(page));
+//        Map<String, Object> structPersonLinkList = structPersonLinkService.findByStructIdAndUsername(sid);
+//        renderJson(structPersonLinkList);
     }
 
     /**
@@ -493,6 +497,20 @@ public class OrgStructureController extends BaseController {
     }
 
     /**
+     *
+     */
+    public void personUse(){
+
+    }
+
+    /**
+     *
+     */
+
+    public void personUnuse(){
+
+    }
+    /**
      * 私有方法 用于查询用户在是否已经是架构中的成员 避免架构人员关联表中数据存在重复
      * true存在 false 不存在
      */
@@ -558,8 +576,8 @@ public class OrgStructureController extends BaseController {
     public void test() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long personID = getParaToLong("personID",AuthUtils.getLoginUser().getUserID());
-        Page<Record> page = structPersonLinkService.findStructListPageByPersonID(pageNumber, pageSize, personID);
+        Long structureID = getParaToLong("structureID",(long)19);
+        Page<Record> page = structPersonLinkService.findPersonListByStructId(pageNumber, pageSize, structureID);
         renderJson(new DataTable<Record>(page));
     }
 

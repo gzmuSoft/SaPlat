@@ -116,7 +116,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑资源', '#(ctxPath)/system/res/update?id=' + data.id, '', '', function () {
+                pop_show('编辑资源', '#(ctxPath)/system/res/update?id=' + data.id, '700', '540', function () {
                     reloadTable(pid);
                     zTreeReload();
                 });
@@ -144,7 +144,7 @@
         });
 
         $("#addRes").click(function () {
-            pop_show('添加资源', '#(ctxPath)/system/res/add?parentID=' + pid, '', '', function () {
+            pop_show('添加资源', '#(ctxPath)/system/res/add?parentID=' + pid, '700', '540', function () {
                 reloadTable(pid);
                 zTreeReload();
             });
