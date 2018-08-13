@@ -336,7 +336,9 @@ public class ProjectController extends BaseController {
             childProjectFileType.setParentID(parentProjectFileType.getId());
             Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
-                if (fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId()) != null) {
+                FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId());
+                if (fileProject != null) {
+                    page.getList().get(i).setFileID(fileProject.getFileID());
                     page.getList().get(i).setIsUpLoad(true);
                 } else {
                     page.getList().get(i).setIsUpLoad(false);
@@ -441,7 +443,8 @@ public class ProjectController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
 
-        if (model.getFileTypeID() == 35L) {
+        Long q_fileTypeId = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
+        if (model.getFileTypeID().equals(q_fileTypeId)) {
             model.setId(null);
             model.setCreateTime(new Date());
             if (!fileProjectService.save(model)) {
@@ -599,8 +602,8 @@ public class ProjectController extends BaseController {
         if (projectUndertakeList != null){
             projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
         }
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "assessmentMode", "isEnable"},
-                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "自评", "1"});
+        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status",  "isEnable"},
+                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
         if (projectList == null) {
             projectList = Collections.synchronizedList(new ArrayList<>());
         }
@@ -749,10 +752,19 @@ public class ProjectController extends BaseController {
 
     /**
      * 查看服务机构详细信息
+     * 参数flag
+     * true   邀请第三方介入时查看
+     * false  第三方申请介入时查看
      */
-    @NotNullPara({"id"})
+    @NotNullPara({"id", "flag"})
     public void seeFacAgency() {
-        FacAgency facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
+        FacAgency facAgency = null;
+        Boolean flag = getParaToBoolean("flag");
+        if (flag) {
+            facAgency = facAgencyService.findById(getParaToLong("id"));
+        } else {
+            facAgency = facAgencyService.findByOrgId(organizationService.findById(userService.findById(getParaToLong("id")).getUserID()).getId());
+        }
         setAttr("facAgency", facAgency).render("facAgency.html");
     }
 

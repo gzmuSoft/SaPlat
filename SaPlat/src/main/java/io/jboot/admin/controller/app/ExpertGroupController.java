@@ -60,16 +60,6 @@ public class ExpertGroupController extends BaseController {
         renderJson(new DataTable<ExpertGroup>(page));
     }
 
-    /**
-     * delete
-     */
-    public void delete() {
-        Long id = getParaToLong("id");
-        if (!expertGroupService.deleteById(id)) {
-            throw new BusinessException("删除失败");
-        }
-        renderJson(RestResult.buildSuccess());
-    }
 
     @NotNullPara({"id"})
     public void update() {

@@ -29,6 +29,10 @@
 
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+        $("button").click(function () {
+            pop_show('查看图片', '#(ctxPath)/util/pdfView?fileID='+$(this).val(),'', '', function () {
+            });
+        })
     });
 </script>
 #end
@@ -41,30 +45,59 @@
             <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
             <div class="layui-input-block">
                 <input type="text" name="book.name" placeholder="专家团体名称" class="layui-input" value="#(model.name)"
-                       required lay-verify="required" style="width: 280px"  autocomplete="off"/>
+                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>排序</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
             <div class="layui-input-block">
-                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input"
-                       value="#(model.sort)" required lay-verify="required" style="width: 280px"  autocomplete="off"/>
+                <input type="text" name="book.name" placeholder="工作时间" class="layui-input" value="#(model.worktime)"
+                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">备注</label>
+            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
             <div class="layui-input-block">
-                <input id="remark" type="text" name="model.remark" placeholder="备注" class="layui-input"
-                       value="#(model.remark)" style="width: 280px"  autocomplete="off"/>
+                <input type="text" name="book.name" placeholder="在职状态" class="layui-input" value="#(model.workstate)"
+                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>专业资格内容</label>
+            <div class="layui-input-block">
+                <input type="text" name="book.name" placeholder="专业资格内容" class="layui-input" value="#(model.profess)"
+                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"></label>
-            <button class="layui-btn" lay-filter="sub" lay-submit>
-                保存
-            </button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
+            <div class="layui-input-inline">
+                <button  type="button" class="layui-btn" name="check" id="check2" style="margin: 0 200px" value="#(model.certificate)">点击查看</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>部门名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="book.name" placeholder="部门名称" class="layui-input" value="#(model.department)"
+                       required lay-verify="required" style="width: 280px"  autocomplete="off" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
+            <div class="layui-input-inline">
+                <button  type="button" class="layui-btn" style="margin: 0 200px" value="#(model.workpictrue)">点击查看</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>参与项目经历</label>
+            <div class="layui-input-block">
+                <textarea name="model.project"
+                                      class="layui-textarea" disabled="disabled">#(model.project)</textarea>
+            </div>
         </div>
     </form>
 </div>

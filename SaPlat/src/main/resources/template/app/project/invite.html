@@ -103,7 +103,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看详细资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id, '400', '', function () {
+                pop_show('查看详细资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id + '&flag=' + true, '400', '', function () {
                 });
             } else if (obj.event === 'invite') {
                 $.ajax({
