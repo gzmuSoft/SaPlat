@@ -2,6 +2,7 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -321,8 +322,11 @@ public class OrgStructureController extends BaseController {
      */
     public void myStructureListApi() {
         Long uid = AuthUtils.getLoginUser().getUserID();
-        Map<String, Object> list = structPersonLinkService.findStructureListByPersonID(uid);
-        renderJson(list);
+        int pageNumber = getParaToInt("pageNubmer",1);
+        int pageSize = getParaToInt("pageSize",30);
+//        Map<String, Object> list = structPersonLinkService.findStructureListByPersonID(uid);
+        Page<Record> page = structPersonLinkService.findStructListPageByPersonID(pageNumber,pageSize,uid);
+        renderJson(new DataTable(page));
     }
 
     /**
@@ -551,12 +555,12 @@ public class OrgStructureController extends BaseController {
         }
     }
 
-//    public void test() {
-//        int pageNumber = getParaToInt("pageNumber", 1);
-//        int pageSize = getParaToInt("pageSize", 30);
-//        Long personID = getParaToLong("personID");
-//        SqlPara sqlPara = structPersonLinkService.findStructIdPageByPersonID(pageNumber, pageSize, personID);
-//        System.out.print(sqlPara);
-//    }
+    public void test() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long personID = getParaToLong("personID",AuthUtils.getLoginUser().getUserID());
+        Page<Record> page = structPersonLinkService.findStructListPageByPersonID(pageNumber, pageSize, personID);
+        renderJson(new DataTable<Record>(page));
+    }
 
 }
