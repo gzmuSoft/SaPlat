@@ -1,0 +1,104 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>400 发生了点小错误</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link id="layuicss-layer" rel="stylesheet"
+          href="http://www.layui.com/admin/std/dist/layuiadmin/layui/css/modules/layer/default/layer.css?v=3.1.1"
+          media="all">
+    <link rel="stylesheet" href="../../static/css/register/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../static/js/layui/css/layui.css" media="all">
+    <style>
+        .layadmin-tips h1 {
+            font-size: 60px;
+            line-height: 1.5;
+            color: #009688;
+        }
+
+        #go {
+            line-height: 0.6;
+        }
+
+        #go a {
+            margin: 20px;
+            font-size: 25px;
+            cursor: pointer;
+            line-height: 2;
+        }
+
+        .layui-icon {
+            font-size: 250px;
+            color: #009688;
+        }
+    </style>
+</head>
+<body layadmin-themealias="default">
+
+
+<div class="layui-fluid">
+    <div class="layadmin-tips">
+        <div id="icon">
+            <span class="layui-icon #(icon)"></span>
+        </div>
+        <div class="layui-text">
+            <h1>
+                <span>T</span>
+                <span>I</span>
+                <span>P</span>
+                <span style="display:block;font-size: 30px">#(content)</span>
+                <div id="go">
+                    #if(btn1 != null)
+                    <a id="btn1" data-href="#(url1)" data-data="#(data1)">#(btn1)</a>
+                    #end
+                    #if(btn2 != null)
+                    <a id="btn2" data-href="#(url2)" data-data="#(data2)">#(btn2)</a>
+                    #end
+                    <a id="refuse">点击刷新</a>
+                </div>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<script src="../../static/js/layui/layui.all.js"></script>
+<script>
+    layui.use(['layer'], function () {
+        // 操作对象
+        var layer = layui.layer
+            , $ = layui.jquery;
+        var method1 = "#(method1)";
+        var method2 = "#(method2)";
+        if (method1 === "new") {
+            $('#btn1').click(function () {
+                parent.addTab("card", "#(title)", $(this).attr("data-href") + $(this).attr("data-data"));
+            });
+        } else {
+            $('#btn1').click(function () {
+                console.log($(this).attr("data-href") + $(this).attr("data-data"));
+                window.location.href = $(this).attr("data-href") + $(this).attr("data-data");
+            });
+        }
+
+        if (method2 === "new") {
+            $('#btn2').click(function () {
+                parent.addTab("card", "#(title)", $(this).attr("data-href") + $(this).attr("data-data"));
+            });
+        } else {
+            $('#btn2').click(function () {
+                window.location.href = $(this).attr("data-href") + $(this).attr("data-data");
+            });
+        }
+
+
+
+        $('#refuse').click(function () {
+            window.location.reload();
+        });
+
+    });
+</script>
+</body>
+</html>
