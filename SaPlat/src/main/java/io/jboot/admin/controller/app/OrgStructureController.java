@@ -497,18 +497,39 @@ public class OrgStructureController extends BaseController {
     }
 
     /**
-     *
+     * 组织管理 - 禁用架构成员
      */
+    @NotNullPara("id")
     public void personUse(){
-
+        Long id = getParaToLong("id");
+        StructPersonLink structPersonLink = structPersonLinkService.findById(id);
+        if(structPersonLink == null){
+            throw new BusinessException("架构用户不存在无法启用！");
+        }
+        structPersonLink.setIsEnable(true);
+        structPersonLink.setRemark("启用的架构人员");
+        if(!structPersonLinkService.update(structPersonLink)){
+            throw new BusinessException("启用失败！");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 
     /**
-     *
+     * 组织管理 - 启用架构成员
      */
-
+    @NotNullPara("id")
     public void personUnuse(){
-
+        Long id = getParaToLong("id");
+        StructPersonLink structPersonLink = structPersonLinkService.findById(id);
+        if(structPersonLink == null){
+            throw new BusinessException("架构用户不存在无法禁用！");
+        }
+        structPersonLink.setIsEnable(false);
+        structPersonLink.setRemark("启用架构人员");
+        if(!structPersonLinkService.update(structPersonLink)){
+            throw new BusinessException("禁用失败！");
+        }
+        renderJson(RestResult.buildSuccess());
     }
     /**
      * 私有方法 用于查询用户在是否已经是架构中的成员 避免架构人员关联表中数据存在重复
