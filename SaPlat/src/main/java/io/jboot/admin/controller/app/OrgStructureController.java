@@ -235,7 +235,9 @@ public class OrgStructureController extends BaseController {
     @NotNullPara({"structureID"})
     public void showPerson() {
         Long sid = getParaToLong("structureID");
+        int orgType = getParaToInt("orgType");
         setAttr("sid", sid)
+                .setAttr("orgType",orgType)
                 .render("showPerson.html");
     }
 

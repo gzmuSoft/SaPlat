@@ -82,6 +82,11 @@
         //     reloadTable(data.field.name);
         //     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         // });
+        $("#add").click(function () {
+            pop_show('邀请架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=#(sid)&orgType=#(orgType)', '', '', function () {
+                reloadTable();
+            });
+        });
     });
 
 
