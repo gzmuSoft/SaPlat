@@ -26,16 +26,20 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {title: '架构', width: 150, align: 'center', toolbar: '#structure'}
-                , {title: '内容', width: 500, align: 'center', toolbar: '#content'}
-                , {field: 'createTime', title: '创建时间', width: 150}
-                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {title: '架构', minWidth: 150,sort:true, align: 'center', toolbar: '#structure'}
+                , {title: '内容', minWidth: 500,sort:true, align: 'center', toolbar: '#content'}
+                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
+                , {fixed: 'right', title: '操作', minWidth: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/OrgStructure/showMessageApi'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]

@@ -3,13 +3,6 @@
 
 #define css()
 <style>
-    button {
-        background: #758ef0;
-        color: #FFF;
-        border: none;
-        border-radius: 15px;
-    }
-
     h3 {
         font-weight: bold;
     }
@@ -57,7 +50,7 @@
         <h2 style="margin-top: 50px;">委托第三方机构评估实施/自我评估实施</h2>
         <hr class="layui-bg-orange">
         <div class="layui-input-inline">
-            <h3>当前项目为：#(project.assessmentMode)</h3>
+            <h3 id="AssessmentMode">当前项目为：#(project.assessmentMode)</h3>
         </div>
 
         <h2 style="margin-top: 50px;">领导小组名单</h2>
@@ -123,7 +116,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID" lay-verify="required" >
+                <input class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID" lay-verify="required">
             </div>
 
             <div class="layui-form-item">
@@ -148,7 +141,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.assLeaderIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs" lay-verify="required" >
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs" lay-verify="required">
             </div>
 
             <div class="layui-form-item">
@@ -173,7 +166,8 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.expertGroupIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs" lay-verify="required">
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs"
+                       lay-verify="required">
             </div>
 
             <div class="layui-form-item">
@@ -268,25 +262,37 @@
             <table id="dateTable" lay-filter="dateTable"></table>
         </div>
 
+        <div class="layui-row ">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
+                <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
+            </div>
+        </div>
+
+        #if(project.assessmentMode == "委评")
+        <div class="layui-row" style="margin-top: 20px;">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
+                <button type="button" class="layui-btn" id="EntrustSee">查看委托书</button>
+            </div>
+        </div>
+        #end
+
         <div class="layui-form-item x-center" style="margin-top: 50px;">
             <div class="layui-input-block">
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
-                #if(project.assessmentMode == "委评")
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
-                #end
-                <button type="button" class="layui-btn site-demo-layedit" data-type="content" lay-submit
-                        lay-filter="sub" id="sub">
-                    保存
+                <button type="button" class="layui-btn" data-type="content" lay-submit lay-filter="sub" id="sub">保存
                 </button>
             </div>
         </div>
+
     </form>
 </div>
 #end
 
 #define js()
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled" lay-event="del" id="notDel" disabled=true>删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled" lay-event="del" id="notDel"
+       disabled=true>删除</a>
 </script>
 
 <script type="text/javascript">
@@ -303,7 +309,8 @@
             , laydate = layui.laydate
             , string = "?"
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
-            , fileFormId;
+            , fileFormId
+            , fileId1 = null, fileId2 = null;
 
         /**
          * 建立日期
@@ -351,10 +358,10 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[
                 {type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '计划名称', align: 'center', width: 200,edit: true}
-                , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date',edit: true}
-                , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date',edit: true}
-                , {field: 'content', title: '工作内容', align: 'center', width: 300,edit: true}
+                , {field: 'name', title: '计划名称', align: 'center', width: 200, edit: true}
+                , {field: 'startDate', title: '起始时间', align: 'center', width: 200, type: 'date', edit: true}
+                , {field: 'endDate', title: '结束时间', align: 'center', width: 200, type: 'date', edit: true}
+                , {field: 'content', title: '工作内容', align: 'center', width: 300, edit: true}
                 , {field: 'action', title: '操作', align: 'center', unresize: true, rowspan: 1, toolbar: '#barDemo'}
             ]]
             , loading: true
@@ -368,7 +375,7 @@
         var not = true;
         var index = table.cache.dateTable.length;
         $('#addTable').click(function () {
-                isNull();
+            isNull();
             if (!not) {
                 var tr = $('<tr data-index="' + index + '"></tr>');
                 var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
@@ -502,7 +509,7 @@
                 temp.length++;
                 temp[temp.length - 1] = data.value;
                 $(id2).append(data.elem[data.elem.selectedIndex].text + " ");
-                $(id1).val($(id1).val()+data.value + ",");
+                $(id1).val($(id1).val() + data.value + ",");
             }
         }
 
@@ -513,7 +520,7 @@
             $.each(table.cache.dateTable, function notNull(index, value) {
                 if (value.LAY_TABLE_INDEX >= 0) {
                     if (value.name != null) {
-                        not = (value.content == null||value.content=="")
+                        not = (value.content == null || value.content == "")
                     } else
                         not = true;
                 }
@@ -593,35 +600,61 @@
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
+
                 if (res.code == 0) {
                     $('.loading-bg').remove();
                     var flag;
                     util.sendAjax({
                         type: 'GET',
                         url: '#(ctxPath)/app/projectUndertake/upFile',
-                        async:false,
+                        async: false,
                         data: {
-                            fileId:res.data.fileId,
-                            fieldName:$(this)[0].item.text()
+                            fileId: res.data.fileId,
+                            fieldName: $(this)[0].item.text()
                         },
                         loadFlag: true,
                         success: function (data) {
-                            if(data.code==0) {
+                            if (data.code == 0) {
                                 fileFormId = data.data.fileFormId;
-                                flag=true;
-
+                                flag = true;
                             }
                         }
                     });
-                    if(flag){
+                    if (flag) {
                         $(this)[0].item.addClass("layui-btn-disabled");
-                        $(this)[0].item.attr("disabled",true);
+                        $(this)[0].item.attr("disabled", true);
+                    }
+                    if ($(this)[0].item.attr('id') === "EvaEntrust") {
+                        fileId2 = res.data.fileId;
+                    } else {
+                        fileId1 = res.data.fileId;
                     }
                 } else if (res.code == 1) {
                     return false;
                 }
             }, error: function (index, upload) {
                 layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+        /**
+         * 文件查看
+         */
+        $("#CoverSee").click(function () {
+            if (fileId1 === null || fileId1 === "") {
+                layer.msg("您还没有上传稳评封面哦")
+            } else {
+                pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
+                });
+            }
+        });
+
+        $("#EntrustSee").click(function () {
+            if (fileId2 === null || fileId2 === "") {
+                layer.msg("您还没有上传委托书哦")
+            } else {
+                pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
+                });
             }
         });
 
@@ -686,7 +719,6 @@
                                     }
                                 }
                             });
-
                         } else {
                             layer.msg("必填项不能为空！");
                             return false;

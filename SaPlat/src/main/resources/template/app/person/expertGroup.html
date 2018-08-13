@@ -9,36 +9,6 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use('layer', function () {
-        var layer = layui.layer
-            , $ = layui.jquery;
-
-
-        $('.go').click(function () {
-            $('h1').fadeOut("fast");
-            $(this).fadeOut("fast");
-            window.location.href = "#(ctxPath)/app/person/verify";
-        });
-
-        $('#exit').click(function () {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/app/person/cancelExpertGroupAuth',
-                data: null,
-                loadFlag: true,
-                success: function (data) {
-                    layer.msg('取消成功！');
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-            return false;
-        });
-
-    });
-
 
 </script>
 #end
@@ -50,27 +20,27 @@
     </fieldset>
 
     #if(auth.status.equals("3"))
-        <h2>您的认证信息正在审核中......</h2>
-        <br><br>
-        <button class="layui-btn layui-btn-normal go">点击查看</button>
-        <button class="layui-btn layui-btn-normal" id="exit">取消认证</button>
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=您的认证信息正在审核中&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-log&btn2=取消认证&url2=#(ctxPath)/app/person/cancelExpertGroupAuth";
+    </script>
     #else if(auth.status.equals("2"))
-        <h2>您好，您已经成功认证专家团体</h2>
-        <br><br>
-        <button class="layui-btn layui-btn-normal go">点击查看当前认证信息</button>
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=您已经成功认证专家团体&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-auz";
+    </script>
     #else if(auth.status.equals("1"))
-        <h2>认证失败</h2><br>
-        <h3>原因是：#(auth.reply)</h3>
-        <br><br>
-        <button class="layui-btn layui-btn-normal go">点击重新认证</button>
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=认证失败:#(auth.reply)&btn1=重新认证&url1=#(ctxPath)/app/person/verify&title=重新认证&icon=layui-icon-face-cry";
+    </script>
     #else
-        #if(affectedGroup == null)
-            <h2>请在个人资料中完善您的信息！</h2>
-        #else
-            <h2>您当前未认证专家团体</h2>
-            <br><br>
-            <button class="layui-btn layui-btn-normal go">点击认证</button>
-        #end
+    #if(affectedGroup == null)
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=请在个人资料中完善您的信息&btn1=点击完善&method1=new&url1=#(ctxPath)/app/person/index&title=用户资料完善&icon=layui-icon-tips";
+    </script>
+    #else
+    <script>
+        window.location.href = "#(ctxPath)/util/tip?content=您还没有认证专家团体&btn1=点击认证&url1=#(ctxPath)/app/person/verify&title=专家团体认证&icon=layui-icon-add-circle-fine";
+    </script>
+    #end
     #end
     <hr>
 </div>

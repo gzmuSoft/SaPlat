@@ -28,7 +28,7 @@
                 , {field: 'name', title: '名称',minWidth: 200,sort:true}
                 , {field: 'sort', title: '顺序',minWidth: 120,sort:true}
                 , {field: 'createTime', title: '创建时间',minWidth: 150,sort:true}
-                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', minWidth: 280, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/system/projectfiletype/tableData?parentID=' + parentID
             , method: 'get'
@@ -36,6 +36,11 @@
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
+            , initSort: {
+                field: 'createTime'
+                ,type: 'desc'
+            }
+
             , page: true
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30

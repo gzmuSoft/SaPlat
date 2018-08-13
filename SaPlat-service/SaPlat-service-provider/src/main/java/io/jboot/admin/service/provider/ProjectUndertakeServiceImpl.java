@@ -15,7 +15,9 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 @Bean
 @Singleton
@@ -112,5 +114,18 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         columns.eq("projectID", projectID);
         columns.eq("status", status);
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public float findAllAndUndertakeByUserId(Long userId) {
+        List<ProjectUndertake> list = DAO.findListByColumn("createUserID",userId);
+        float projectAmount = list.size(), undertakeAmount = 0 ,undertakeRate = 0;
+        for (ProjectUndertake projectUndertake:list) {
+            if (projectUndertake.getStatus() ==  2)
+                undertakeAmount++;
+        }
+        if (projectAmount == 0)
+            return undertakeRate;
+        return undertakeAmount/projectAmount*100;
     }
 }

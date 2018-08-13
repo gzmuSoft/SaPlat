@@ -24,16 +24,16 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'id', title: 'ID', width: 60}
-                , {field: 'name', title: '商品名称', width: 180}
-                , {field: 'prodDesc', title: '商品描述', width: 250}
-                , {field: 'totalNum', title: '库存数', width: 80}
-                , {field: 'orderedNum', title: '售出数', width: 80}
-                , {field: 'createDate', title: '创建时间', width: 150}
-                , {field: 'lastUpdAcct', title: '最后更新人', width: 100}
-                , {field: 'lastUpdTime', title: '最后更新时间', width: 150}
-                , {field: 'note', title: '备注', width: 150}
-                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+
+                , {field: 'name', title: '商品名称', minWidth: 180}
+                , {field: 'prodDesc', title: '商品描述', minWidth: 250}
+                , {field: 'totalNum', title: '库存数', minWidth: 80}
+                , {field: 'orderedNum', title: '售出数', minWidth: 80}
+                , {field: 'createDate', title: '创建时间', minWidth: 150}
+                , {field: 'lastUpdAcct', title: '最后更新人', minWidth: 100}
+                , {field: 'lastUpdTime', title: '最后更新时间', minWidth: 150}
+                , {field: 'note', title: '备注', minWidth: 150}
+                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/b2c/product/tableData'
             , method: 'get'

@@ -4,6 +4,10 @@
 
 #define css()
 <style>
+    img{
+        height: 100%;
+        width: 100%;
+    }
     h1,
     h2,
     h3,
@@ -188,6 +192,8 @@
     .layui-edge,
     img {
         vertical-align: middle;
+        width: 100%;
+        height: 100%;
     }
 
     .layui-btn
@@ -282,26 +288,7 @@
         height: 45px;
     }
 
-    .layui-carousel-arrow {
-        display: none \9;
-        opacity: 0;
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        margin-top: -18px;
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        font-size: 20px;
-        border: 0;
-        border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.2);
-        color: #fff;
-        -webkit-transition-duration: 0.3s;
-        transition-duration: 0.3s;
-        cursor: pointer;
-    }
+
 
     [lay-type=add].layui-carousel-arrow {
         left: auto !important;
@@ -883,16 +870,16 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="adRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/role">
+                                            <a lay-href="#(ctxPath)/system/role">
                                                 <i class="layui-icon layui-icon-username">
                                                 </i>
                                                 <cite>角色管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/data">
+                                            <a lay-href="#(ctxPath)/system/data">
                                                 <i class="layui-icon layui-icon-set">
                                                 </i>
                                                 <cite>数据管理</cite>
@@ -900,7 +887,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/log">
+                                            <a lay-href="#(ctxPath)/system/log">
                                                 <i class="layui-icon layui-icon-date">
                                                 </i>
                                                 <cite>日志管理</cite>
@@ -908,7 +895,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/auth">
+                                            <a lay-href="#(ctxPath)/system/auth">
                                                 <i class="layui-icon layui-icon-username">
                                                 </i>
                                                 <cite>角色审核管理</cite>
@@ -916,7 +903,7 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/res">
+                                            <a lay-href="#(ctxPath)/system/res">
                                                 <i class="layui-icon layui-icon-list">
                                                 </i>
                                                 <cite>资源管理</cite>
@@ -924,21 +911,21 @@
 
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/expert_group">
+                                            <a lay-href="#(ctxPath)/app/expert_group">
                                                 <i class="layui-icon layui-icon-user">
                                                 </i>
                                                 <cite>专业团体管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/ass_review">
+                                            <a lay-href="#(ctxPath)/app/ass_review">
                                                 <i class="layui-icon layui-icon-file">
                                                 </i>
                                                 <cite>项目评估审查</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/system/projectauth">
+                                            <a lay-href="#(ctxPath)/system/projectauth">
                                                 <i class="layui-icon layui-icon-file-b">
                                                 </i>
                                                 <cite>项目审核</cite>
@@ -953,30 +940,30 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="tissueRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/organization/projectGet">
+                                            <a lay-href="#(ctxPath)/app/organization/projectGet">
                                                 <i class="layui-icon layui-icon-release">
                                                 </i>
                                                 <cite>立项资格申请</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/">
+                                            <a lay-href="#(ctxPath)/app/project/">
                                                 <i class="layui-icon layui-icon-edit">
                                                 </i>
                                                 <cite>建立项目</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/toBuildProject">
+                                            <a lay-href="#(ctxPath)/app/project/toBuildProject">
                                                 <i class="layui-icon layui-icon-template">
                                                 </i>
                                                 <cite>项目资料补充</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/project/toVerfedSuccess">
+                                            <a lay-href="#(ctxPath)/app/project/toVerfedSuccess">
                                                 <i class="layui-icon layui-icon-template-1">
                                                 </i>
                                                 <cite>审核完的项目</cite>
@@ -991,9 +978,9 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div>
-                                    <ul class="layui-row layui-col-space10">
+                                    <ul id="personRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a href="#(ctxPath)/app/OrgStructure/joinStructure">
+                                            <a lay-href="#(ctxPath)/app/OrgStructure/joinStructure">
                                                 <i class="layui-icon layui-icon-snowflake">
                                                 </i>
                                                 <cite>加入架构</cite>
@@ -1016,21 +1003,21 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="adManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/user">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/user">
                                                 <h3 style="font-size: 16px">已注册账号</h3>
                                                 <p><cite>#(userAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/person">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/person">
                                                 <h3 style="font-size: 16px">个人账号</h3>
                                                 <p><cite>#(personAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/system/organization">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/system/organization">
                                                 <h3 style="font-size: 16px">组织账号</h3>
                                                 <p><cite>#(organizationAmount)</cite></p>
                                             </a>
@@ -1052,15 +1039,15 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="tissueManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/evaluation">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/evaluation">
                                                 <h3 style="font-size: 16px">待评项目</h3>
                                                 <p><cite>#(assessAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/toVerfiing">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/toVerfiing">
                                                 <h3 style="font-size: 16px">待审核项目</h3>
                                                 <p><cite>#(auditAmount)</cite></p>
                                             </a>
@@ -1072,7 +1059,7 @@
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/project/evaluation">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/review">
                                                 <h3 style="font-size: 16px">待审查项目</h3>
                                                 <p><cite>#(reviewAmount)</cite></p>
                                             </a>
@@ -1088,9 +1075,9 @@
                                  style="width: 100%; height: 280px;" lay-arrow="none" lay-indicator="inside"
                                  lay-anim="">
                                 <div carousel-item="">
-                                    <ul class="layui-row layui-col-space10 layui-this">
+                                    <ul id="personManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" href="#(ctxPath)/app/OrgStructure/myStructure">
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/OrgStructure/myStructure">
                                                 <h3 style="font-size: 16px">加入的架构</h3>
                                                 <p><cite>#(count)</cite></p>
                                             </a>
@@ -1184,7 +1171,7 @@
                         <div class="layui-card-body layadmin-takerates">
                             <div class="layui-progress" lay-showpercent="yes">
                                 <h3>转化率（日同比 28%<span class="layui-edge layui-edge-top" lay-tips="增长"
-                                                      lay-offset="-15"></span>）
+                                                     lay-offset="-15"></span>）
                                 </h3>
                                 <div class="layui-progress-bar" style="width: 65%;" lay-percent="65%"><span
                                         class="layui-progress-text">65%</span></div>
@@ -1196,8 +1183,8 @@
                         <div class="layui-card-body layadmin-takerates">
                             <div class="layui-progress" lay-showpercent="yes">
                                 <h3>项目承接率</h3>
-                                <div class="layui-progress-bar" style="width: 58%;" lay-percent="73%"><span
-                                        class="layui-progress-text">58%</span></div>
+                                <div id="undertakeRate" class="layui-progress-bar" style="width: 0%;" lay-percent="#(undertakeRate)%"><span
+                                        class="layui-progress-text">#(undertakeRate)%</span></div>
                             </div>
                         </div>
                     </div>
@@ -1252,13 +1239,11 @@
         </div>
         <div class="layui-col-md8">
             <div class="layui-card">
-                <!--这里的样式需要style="height:401px"-->
                 <div class="layui-carousel" id="broadcast">
-                    <div carousel-item style="height:401px">
-                        <div><img src="/static/img/welcome/c20d39c41a.jpg"></div>
-                        <div><img src="/static/img/welcome/03781695770e1920000018c1bc257a0.jpg"></div>
+                    <div carousel-item style="height:402px;width: 100%">
+                        <div id="echars1" style="height:402px"></div>
+                        <div id="echars2" style="height:402px;width:844px"></div>
                         <div><img src="/static/img/welcome/52733d977e488.jpg"></div>
-                        <div><img src="/static/img/welcome/23229Y3826C6.jpg"></div>
                         <div><img src="/static/img/welcome/1-130FPR232.jpg"></div>
                     </div>
                 </div>
@@ -1270,6 +1255,7 @@
 
 
 #define js()
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/echarts.common.min.js"></script>
 <script type="text/javascript">
     layui.use(['form','carousel','layer', 'element'], function () {
         // 操作对象
@@ -1281,13 +1267,33 @@
             elem: '#broadcast'
             ,width: '100%' //设置容器宽度
             ,arrow: 'always' //始终显示箭头
-            //,anim: 'updown' //切换动画方式
+            ,interval: 5000
+            ,anim: "default"
         });
 
+        //快捷通道
+        $('#adRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        $('#tissueRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        $('#personRapid').find("a").click(function () {
+            parent.addTab('card',$(this).children("cite").text(),$(this).attr("lay-href"));
+        })
+        //管理
+        $('#adManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
+        $('#tissueManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
+        $('#personManage').find("a").click(function () {
+            parent.addTab('card',$(this).children("h3").text(),$(this).attr("lay-href"));
+        })
 
-//        pop_show("","",,function () {
-//
-//        })
+        //进度条
+        $('#undertakeRate').css("width","#(undertakeRate)%");
         //编辑信息
         $('#check').click(function () {
             $(".user").each(function () {
@@ -1298,22 +1304,100 @@
             layer.msg("开启编辑");
         });
 
+
         //保存信息
         $('#check2').click(function () {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/update',
-                data: {id:$('#id').text(),name:$('#name').text(),phone:$('#phone').text(),email:$('#email').text()},
-                loadFlag: true,
-                success: function (data) {
-                    $(".user").each(function () {
-                        $(this).attr("contenteditable",false);
-                    })
-                    $('#check').removeClass("layui-hide");
-                    $('#check2').addClass("layui-hide");
-                }
-            });
+            //电话验证正则
+            var phone = /(^[0-9]{3,4}\-[0-9]{3,8}$)|(^[0-9]{3,8}$)|(^\([0-9]{3,4}\)[0-9]{3,8}$)|(^0{0,1}13[0-9]{9}$)/;
+            //邮箱验证正则
+            var email = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+            if (!phone.test($('#phone').text()))
+                layer.msg("电话号码错误!");
+            else if (!email.test($('#email').text()))
+                layer.msg("邮箱错误!");
+            else {
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/update',
+                    data: {id:$('#id').text(),phone:$('#phone').text(),email:$('#email').text()},
+                    loadFlag: true,
+                    success: function (data) {
+                        $(".user").each(function () {
+                            $(this).attr("contenteditable",false);
+                        })
+                        $('#check').removeClass("layui-hide");
+                        $('#check2').addClass("layui-hide");
+                    }
+                });
+            }
         })
-    });
+
+        //轮播静态数据部分
+        var myChart1 = echarts.init(document.getElementById('echars1'));
+        var myChart2 = echarts.init(document.getElementById('echars2'));
+        option1 = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['周一','周二','周三','周四','周五','周六','周日']
+            },
+            yAxis: {
+
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'邮件营销',
+                    type:'line',
+                    stack: '总量',
+                    data:[120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    name:'联盟广告',
+                    type:'line',
+                    stack: '总量',
+                    data:[220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    name:'视频广告',
+                    type:'line',
+                    stack: '总量',
+                    data:[150, 232, 201, 154, 190, 330, 410]
+                },
+                {
+                    name:'直接访问',
+                    type:'line',
+                    stack: '总量',
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    name:'搜索引擎',
+                    type:'line',
+                    stack: '总量',
+                    data:[820, 932, 901, 934, 1290, 1330, 1320]
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option1);
+        myChart2.setOption(option1);
+});
 </script>
 #end
