@@ -25,13 +25,11 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '架构名称', minWidth: 150,sort:true}
-                , {field: 'orgType', title: '组织类型', minWidth: 150,sort:true}
-                , {field: 'orgID', title: '机构代码', minWidth: 150,sort:true}
+                , {field: 'orgTypeName', title: '组织类型', minWidth: 150, toolbar: '#orgName'}
+                , {field: 'orgID', title: '组织编号', minWidth: 150,sort:true}
                 , {field: 'parentID', title: '上级架构ID', minWidth: 100,sort:true}
-                , {field: 'createUserID', title: '创建用户ID', minWidth: 100,sort:true}
                 , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
-                , {field: 'lastAccessTime', title: '最后访问时间', minWidth: 150}
-                , {field: 'remark', title: '备注', minWidth: 100}
+                // , {field: 'remark', title: '备注', minWidth: 100}
                 , {fixed: 'right', title: '操作', minWidth: 240, align: 'center', toolbar: '#barOption'}
 
             ]]
@@ -130,5 +128,44 @@
 
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="showPerson">成员</a>
 
+</script>
+
+<script type="text/html" id="orgName">
+    #[[
+    {{#  if(d.orgType == '0'){ }}
+    ]]#
+        管理机构
+    #[[
+    {{# } }}
+    ]]#
+
+    #[[
+    {{#  if(d.orgType == '1'){ }}
+    ]]#
+        企业机构
+    #[[
+    {{# } }}
+    ]]#
+    #[[
+    {{#  if(d.orgType == '2'){ }}
+    ]]#
+        服务机构
+    #[[
+    {{# } }}
+    ]]#
+    #[[
+    {{#  if(d.orgType == '3'){ }}
+    ]]#
+        审查团体
+    #[[
+    {{# } }}
+    ]]#
+    #[[
+    {{#  if(d.orgType == '4'){ }}
+    ]]#
+        专业团体
+    #[[
+    {{# } }}
+    ]]#
 </script>
 #end
