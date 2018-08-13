@@ -23,19 +23,18 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.name"style="width: 180px">专业团体名称</label>
+                <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" required/>
+                    <input type="number" id="organization.name" name="organization.name" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.orgID"style="width: 180px">组织机构编号</label>
+                <label class="layui-form-label" for="profGroup.name"style="width: 180px">专业团体名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.code)"
-                           class="layui-input " style="width: 500px" disabled/>
-
+                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
+                           class="layui-input" style="width: 500px" required/>
                 </div>
             </div>
 
