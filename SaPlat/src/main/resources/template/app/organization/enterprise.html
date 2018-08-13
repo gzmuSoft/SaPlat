@@ -22,19 +22,18 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.name" style="width: 180px">企业机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.name" name="enterprise.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" required/>
+                <label class="layui-form-label" for="enterprise.orgID"style="width: 180px">组织机构名称</label>
+                <div class="layui-input-block " style="margin: 0 180px">
+                    <input type="text" id="enterprise.orgID" name="enterprise.orgID" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.orgID"style="width: 180px">组织机构代码</label>
-                <div class="layui-input-block " style="margin: 0 180px">
-                    <input type="text" id="enterprise.orgID" name="enterprise.orgID" value="#(organization.code)"
-                           class="layui-input " style="width: 500px" disabled/>
-
+                <label class="layui-form-label" for="enterprise.name" style="width: 180px">企业机构名称</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="enterprise.name" name="enterprise.name" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" required/>
                 </div>
             </div>
 

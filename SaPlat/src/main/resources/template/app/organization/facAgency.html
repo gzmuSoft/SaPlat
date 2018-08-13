@@ -23,18 +23,18 @@
         <div class="layui-form-pane">
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.name" style="width: 180px">服务机构名称</label>
+                <label class="layui-form-label" for="facAgency.orgID"style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" required/>
+                    <input type="number" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.orgID"style="width: 180px">组织机构编号</label>
+                <label class="layui-form-label" for="facAgency.name" style="width: 180px">服务机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.code)"
-                           class="layui-input " style="width: 500px" disabled/>
+                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" required/>
                 </div>
             </div>
 

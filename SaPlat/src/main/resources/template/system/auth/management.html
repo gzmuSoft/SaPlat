@@ -27,21 +27,23 @@
                     <!--<button class="layui-btn" name="check" id="check1" style="margin: 0 200px">点击查看</button>-->
                 <!--</div>-->
             <!--</div>-->
+
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.name" style="width: 180px">管理机构名称</label>
+                <label class="layui-form-label" for="enterprise.orgID" style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="management.name" name="management.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" disabled/>
+                    <input type="text" id="enterprise.orgID" name="enterprise.orgID" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.orgID" style="width: 180px">组织机构编号</label>
+                <label class="layui-form-label" for="management.name" style="width: 180px">管理机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="management.orgID" name="management.orgID" value="#(organization.id)"
-                           class="layui-input  " style="width: 500px" disabled/>
+                    <input type="text" id="management.name" name="management.name" value="#(management.name)"
+                           class="layui-input" style="width: 500px" disabled/>
                 </div>
             </div>
+
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="management.responsibility" style="width: 180px">部门职责</label>

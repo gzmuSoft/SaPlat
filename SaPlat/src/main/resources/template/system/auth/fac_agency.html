@@ -33,22 +33,22 @@
 
                 <!--</div>-->
             <!--</div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="enterprise.orgID" style="width: 180px">组织机构名称</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="enterprise.orgID" name="enterprise.orgID" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
+                </div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="facAgency.name" style="width: 180px">服务机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)"
+                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(facAgency.name)"
                            class="layui-input  " style="width: 500px" disabled/>
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.orgID" style="width: 180px">组织机构编号</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.id)"
-                           class="layui-input  " style="width: 500px" disabled/>
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="check2" style="width: 180px"><em class="require-mark">*</em>维稳办备案文件照片</label>
