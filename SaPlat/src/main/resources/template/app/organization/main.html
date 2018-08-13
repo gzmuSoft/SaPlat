@@ -88,6 +88,11 @@
                     <button type="button" class="layui-btn layui-disabled" disabled="disabled" name="upload"
                             id="upload"><i class="layui-icon"></i>上传文件
                     </button>
+                    #if(organization.certificate!=null)
+                    <button type="button" class="layui-btn see">查看</button>
+                    #else
+                    <button type="button" class="layui-btn layui-hide see">查看</button>
+                    #end
                 </div>
             </div>
 
@@ -112,11 +117,19 @@
 
 #define js()
 <script type="text/javascript">
+
     layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , upload = layui.upload
             , form = layui.form;
+
+        var fileID = '#(fileId)';
+
+        $(".see").click(function () {
+            pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
+            });
+        });
 
         upload.render({
             elem: '#upload'
@@ -134,6 +147,8 @@
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=organization&fieldName=营业执照', function () {
                         layer.msg("上传成功");
                         $('#upload').text('已上传');
+                        fileID = res.data.fileId;
+                        $('.see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
@@ -186,8 +201,6 @@
         });
     });
 
-    $("#upload").click(function () {
 
-    })
 </script>
 #end

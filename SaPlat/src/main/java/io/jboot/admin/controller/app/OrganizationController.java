@@ -110,8 +110,10 @@ public class OrganizationController extends BaseController {
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
         loginUser = userService.findById(loginUser.getId());
+
         Organization organization = organizationService.findById(loginUser.getUserID());
-        setAttr("organization", organization).setAttr("user", loginUser).render("main.html");
+        Long fileId = fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", organization.getId()).getFileID();
+        setAttr("fileId", fileId).setAttr("organization", organization).setAttr("user", loginUser).render("main.html");
     }
 
     /**
@@ -191,6 +193,14 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
+        } else if (model != null && tableName.equals("organization")) {
+            Organization organization = organizationService.findById(loginUser.getUserID());
+            organization.setCertificate(model.getId().toString());
+            if (!organizationService.update(organization)) {
+                renderJson(RestResult.buildError("更新失败"));
+                throw new BusinessException("更新失败");
+            }
+            json.put("fileFromID", model.getId());
         } else {
             json.put("fileFromID", model.getId());
         }

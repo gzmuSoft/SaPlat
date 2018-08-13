@@ -18,7 +18,7 @@
             , form = layui.form
             , element = layui.element
             , laydate = layui.laydate
-            , upload = layui.upload;;
+            , upload = layui.upload;
 
         form.val("formTest", {
             "affectedGroup.occupation": $('#occupationSelected').val()
@@ -28,6 +28,8 @@
             , "affectedGroup.education": $('#educationSelected').val()
             , "affectedGroup.nationality": $('#nationalitySelected').val()
         });
+
+
 
 
         upload.render({
@@ -45,6 +47,7 @@
                     $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     $('#person\\.identity').val(res.data.fileId);
+                    identity = res.data.fileId;
                     $('#upload').text("已上传");
                 } else if (res.code == 1) {
                     layer.msg("工作证件照片文件上传错误，请重新选择上传！");
@@ -68,6 +71,7 @@
                     $("#perfect").removeClass("layui-hide");
                     $(":input").addClass("layui-disabled").prop("disabled", "disabled");
                     $('#upload').text("已上传");
+                    $('#see').removeClass('layui-hide layui-disabled').prop("disabled", "");
                     setTimeout(function () {
                         return true;
                     }, 3000);
@@ -95,9 +99,19 @@
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
             se.addClass("layui-select-title");
+            $('#upload').removeClass("layui-hide");
             return false;
-        }).removeClass("layui-hide").removeClass("layui-disabled").prop("disabled", "");
+        }).removeClass("layui-hide layui-disabled").prop("disabled", "");
 
+        var identity = '#(person.identity)';
+        // if (identity)
+        $('#see').removeClass('layui-hide layui-disabled').prop("disabled", "").click(function () {
+            if (identity == null || identity === "") {
+                layer.msg("对不起，您当前没有上传身份证件照！");
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + identity, '', '', function () {});
+            }
+        });
 
         form.verify({
             duty: function (value, item) {
@@ -146,7 +160,8 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.othername" style="width: 160px">曾用名</label>
+                            <label class="layui-form-label" for="affectedGroup.othername"
+                                   style="width: 160px">曾用名</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.othername" name="affectedGroup.othername"
                                        value="#(affectedGroup.othername)" class="layui-input"/>
@@ -163,21 +178,24 @@
                                     class="require-mark">*</em>出生日期</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.birthday" name="affectedGroup.birthday"
-                                       value="#(affectedGroup.birthday)"
-                                       lay-verify="date"
-                                       placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" required/>
+                                       value="#(affectedGroup.birthday)" class="layui-input" required
+                                       lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off"/>
+
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="upload" style="width: 160px"><em class="require-mark">*</em>身份证证件照片</label>
+                            <label class="layui-form-label" for="upload" style="width: 160px"><em
+                                    class="require-mark">*</em>身份证证件照片</label>
                             <div class="layui-input-block">
-                                <div class="layui-upload">
+                                <div class="layui-upload ">
                                     <div class="layui-upload">
-                                        <button type="button" class="layui-btn" name="upload" id="upload">
+                                        <button type="button" class="layui-btn layui-hide" name="upload" id="upload">
                                             <i class="layui-icon"></i>上传文件
                                         </button>
                                         <button type="button" class="layui-hide" id="uploadBtn"></button>
-                                        <input class="layui-hide" type="text" id="person.identity" name="person.identity">
+                                        <input class="layui-hide" type="text" id="person.identity"
+                                               name="person.identity">
+                                        <button type="button" class="layui-btn" id="see">浏览</button>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +234,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.politics"style="width: 160px"><em
+                            <label class="layui-form-label" for="affectedGroup.politics" style="width: 160px"><em
                                     class="require-mark">*</em>政治面貌</label>
                             <div class="layui-input-inline">
                                 <input type="hidden" id="politicsSelected" name="politicsSelected"
@@ -233,7 +251,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.education"style="width: 160px"><em
+                            <label class="layui-form-label" for="affectedGroup.education" style="width: 160px"><em
                                     class="require-mark">*</em>学历</label>
                             <div class="layui-input-inline">
                                 <input type="hidden" id="educationSelected" name="educationSelected"
@@ -255,17 +273,18 @@
                             <label class="layui-form-label" style="width: 160px"><em
                                     class="require-mark">*</em>电话号码</label>
                             <div class="layui-input-inline">
-                                <input value="#(person.phone)" name="person.phone" lay-verify="phone|required" class="layui-input layui-disabled" disabled>
+                                <input value="#(person.phone)" name="person.phone" lay-verify="phone|required"
+                                       class="layui-input layui-disabled" disabled>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label"style="width: 160px">邮箱</label>
+                            <label class="layui-form-label" style="width: 160px">邮箱</label>
                             <div class="layui-input-inline">
                                 <p>#(user.email)</p>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.residence"style="width: 160px"><em
+                            <label class="layui-form-label" for="affectedGroup.residence" style="width: 160px"><em
                                     class="require-mark">*</em>长期居住地址</label>
                             <div class="layui-input-inline" style="width: 400px">
                                 <input type="text" id="affectedGroup.residence" name="affectedGroup.residence"
@@ -275,7 +294,8 @@
                     </div>
                     <div class="layui-tab-item">
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.occupation"style="width: 160px">职业</label>
+                            <label class="layui-form-label" for="affectedGroup.occupation"
+                                   style="width: 160px">职业</label>
                             <div class="layui-input-inline">
                                 <select id="affectedGroup.occupation" name="affectedGroup.occupationID"
                                         lay-verify="occupation">
@@ -288,7 +308,7 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.duty"style="width: 160px">职务</label>
+                            <label class="layui-form-label" for="affectedGroup.duty" style="width: 160px">职务</label>
                             <div class="layui-input-inline">
                                 <select id="affectedGroup.duty" name="affectedGroup.dutyID"
                                         lay-verify="duty">
@@ -301,7 +321,9 @@
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label" for="affectedGroup.resume"><h style="margin: 0 30px">工作简历</h></label>
+                            <label class="layui-form-label" for="affectedGroup.resume">
+                                <h style="margin: 0 30px">工作简历</h>
+                            </label>
                             <div class="layui-input-block">
                             <textarea id="affectedGroup.resume" name="affectedGroup.resume"
                                       placeholder="请输入内容" class="layui-textarea">#(affectedGroup.resume)</textarea>
@@ -310,21 +332,23 @@
                     </div>
                     <div class="layui-tab-item">
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.census"style="width: 160px">户籍</label>
+                            <label class="layui-form-label" for="affectedGroup.census" style="width: 160px">户籍</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.census" name="affectedGroup.census"
                                        value="#(affectedGroup.census)" class="layui-input"/>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.maritalstatus"style="width: 160px">婚姻状况</label>
+                            <label class="layui-form-label" for="affectedGroup.maritalstatus"
+                                   style="width: 160px">婚姻状况</label>
                             <div class="layui-input-block" id="affectedGroup.maritalstatus">
                                 <input type="radio" name="affectedGroup.maritalstatus" value="已婚" title="已婚">
                                 <input type="radio" name="affectedGroup.maritalstatus" value="未婚" title="未婚" checked>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label" for="affectedGroup.children"style="width: 160px">子女情况</label>
+                            <label class="layui-form-label" for="affectedGroup.children"
+                                   style="width: 160px">子女情况</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.children" name="affectedGroup.children"
                                        value="#(affectedGroup.children)" class="layui-input"/>
