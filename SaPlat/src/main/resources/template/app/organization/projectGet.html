@@ -47,6 +47,7 @@
 #end
 
 #define content()
+#if(flag)
 <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;color: #009688;">
     <legend style="font-size: 20px;font-weight: 500;">未通过审核的立项权限：</legend>
     <div>
@@ -84,4 +85,9 @@
 <div style="text-align:center;">
     <button class="layui-btn layui-btn-lg"id="approve" style="border-radius: 5px;">前往进行组织机构认证</button>
 </div>
+#else
+<script>
+    window.location.href = "#(ctxPath)/util/tip?content=您尚未认证任何一个立项机构&btn1=立即认证&url1=#(ctxPath)/app/organization/prove&icon=layui-icon-vercode&method1=new&title=组织机构认证";
+</script>
+#end
 #end

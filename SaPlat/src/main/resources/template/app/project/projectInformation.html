@@ -14,6 +14,7 @@
 </head>
 
 <body>
+#if(flag)
 <article class="htmleaf-content">
     <form id="msform" method='post'>
         <ul id="progressbar">
@@ -437,5 +438,10 @@
     });
 
 </script>
+#else
+<script>
+    window.location.href = "#(ctxPath)/util/tip?content=您尚未拥有立项资格&btn1=立即申请资格&url1=#(ctxPath)/app/organization/projectGet&icon=layui-icon-auz&method1=new&title=立项资格申请";
+</script>
+#end
 </body>
 </html>
