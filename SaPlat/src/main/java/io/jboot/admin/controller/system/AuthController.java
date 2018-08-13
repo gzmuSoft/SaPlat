@@ -167,6 +167,7 @@ public class AuthController extends BaseController {
         if (!authService.update(model)) {
             throw new BusinessException("审核失败");
         }
+
         renderJson(RestResult.buildSuccess());
     }
 
