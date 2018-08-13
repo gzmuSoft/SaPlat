@@ -174,10 +174,12 @@ public class MainController extends BaseController {
         List<UserRole> userRoles = userRoleService.findListByUserId(loginUser.getId());
         for (UserRole userRole:userRoles) {
             role = userRole.getRoleID();
-            if (userRole.getRoleID() == 1)
+            if (userRole.getRoleID() == 1) {
                 break;
-            if (userRole.getRoleID() == 3)
+            }
+            if (userRole.getRoleID() == 3) {
                 break;
+            }
         }
         loginUser = userService.findById(loginUser.getId());
         if (role == 1){
@@ -186,10 +188,12 @@ public class MainController extends BaseController {
             List<UserRole> roles = userRoleService.findAll();
             Long personAmount = 0L,organizationAmount = 0L;
             for (UserRole userRole: roles) {
-                if (userRole.getRoleID() == 2)
+                if (userRole.getRoleID() == 2) {
                     personAmount++;
-                if (userRole.getRoleID() == 3)
+                }
+                if (userRole.getRoleID() == 3) {
                     organizationAmount++;
+                }
             }
             setAttr("userAmount",users.size()).
                     setAttr("projectAmount",projectService.findAll().size()).
@@ -202,12 +206,15 @@ public class MainController extends BaseController {
             List<Project> projectList = projectService.findByUserId(loginUser.getId());
             Long assessAmount = 0L,auditAmount = 0L, reviewAmount = 0L ;
             for (Project project:projectList) {
-                if (project.getStatus().equals("4"))
+                if ("4".equals(project.getStatus())) {
                     assessAmount++;
-                if (project.getStatus().equals("3"))
+                }
+                if ("3".equals(project.getStatus())) {
                     auditAmount++;
-                if (project.getStatus().equals("5"))
+                }
+                if ("5".equals(project.getStatus())) {
                     reviewAmount++;
+                }
             }
             setAttr("projectAmount",projectList.size()).//已有项目
                     setAttr("assessAmount",assessAmount).//待评项目
@@ -255,8 +262,9 @@ public class MainController extends BaseController {
         user.setName(getPara("name"));
         user.setPhone(getPara("phone"));
         user.setEmail(getPara("email"));
-        if (!userService.update(user))
+        if (!userService.update(user)) {
             throw new BusinessException("保存失败!");
+        }
         renderJson(RestResult.buildSuccess());
     }
 }
