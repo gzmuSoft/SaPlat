@@ -27,29 +27,34 @@
 //                {checkbox: false,  fixed: true, space: true}
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 150,sort:true}
-                , {field: 'responsibility', title: '部门职责', minWidth: 100}
-                , {field: 'superior', title: '上级部门', minWidth: 120}
-                , {field: 'principal', title: '上级负责人', minWidth: 120}
-                , {field: 'principalcon', title: '负责人联系方式', minWidth: 150}
-                , {field: 'party', title: '党政信息', minWidth: 100}
-                , {field: 'manager', title: '部门主管姓名', minWidth: 150}
-                , {field: 'managercon', title: '主管联系方式', minWidth: 150}
-                , {field: 'detailedaddr', title: '部门详细地址', minWidth: 150}
-                , {field: 'num', title: '部门人数', minWidth: 100}
-                , {field: 'lower', title: '下级部门', minWidth: 120}
+                , {field: 'responsibility', title: '部门职责', minWidth: 100,sort:true}
+                , {field: 'superior', title: '上级部门', minWidth: 120,sort:true}
+                , {field: 'principal', title: '上级负责人', minWidth: 120,sort:true}
+                , {field: 'principalcon', title: '负责人联系方式', minWidth: 150,sort:true}
+                , {field: 'party', title: '党政信息', minWidth: 100,sort:true}
+                , {field: 'manager', title: '部门主管姓名', minWidth: 150,sort:true}
+                , {field: 'managercon', title: '主管联系方式', minWidth: 150,sort:true}
+                , {field: 'detailedaddr', title: '部门详细地址', minWidth: 150,sort:true}
+                , {field: 'num', title: '部门人数', minWidth: 100,sort:true}
+                , {field: 'lower', title: '下级部门', minWidth: 120,sort:true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
 //                ,{field: 'createUserID', title: '创建用户ID' ,sort: true}
 //                ,{field: 'createTime', title: '创建时间' ,sort: true}
 //                ,{field: 'lastUpdateUserID', title: '末次更新用户ID' ,sort: true}
 //                ,{field: 'lastAccessTime', title: '最后一次访问时间' ,sort: true}
 //                ,{field: 'isEnable', title: '状态' ,sort: true,width:100,templet: '#test-table-checkboxTpl', unresize: true}
 
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 180} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 200} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/managementTableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]

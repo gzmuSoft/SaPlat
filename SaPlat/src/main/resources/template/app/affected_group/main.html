@@ -40,6 +40,7 @@
                 , {field: 'maritalstatus', title: '婚姻状况', minWidth: 120,sort:true}
                 , {field: 'census', title: '户籍', minWidth: 120,sort:true}
                 , {field: 'occupation', title: '职业', minWidth: 100,sort:true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/affected_group/tableData'
@@ -47,6 +48,10 @@
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]

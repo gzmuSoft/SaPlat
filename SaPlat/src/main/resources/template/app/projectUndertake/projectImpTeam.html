@@ -262,20 +262,29 @@
             <table id="dateTable" lay-filter="dateTable"></table>
         </div>
 
+        <div class="layui-row ">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
+                <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
+            </div>
+        </div>
+
+        #if(project.assessmentMode == "委评")
+        <div class="layui-row" style="margin-top: 20px;">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
+                <button type="button" class="layui-btn" id="EntrustSee">查看委托书</button>
+            </div>
+        </div>
+        #end
+
         <div class="layui-form-item x-center" style="margin-top: 50px;">
             <div class="layui-input-block">
-                <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
-                #if(project.assessmentMode == "委评")
-                <button type="button" class="layui-btn" id="EntrustSee">查看委托书</button>
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
-                #end
-                <button type="button" class="layui-btn" data-type="content" lay-submit
-                        lay-filter="sub" id="sub">
-                    保存
+                <button type="button" class="layui-btn" data-type="content" lay-submit lay-filter="sub" id="sub">保存
                 </button>
             </div>
         </div>
+
     </form>
 </div>
 #end
@@ -301,7 +310,7 @@
             , string = "?"
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
             , fileFormId
-            , fileId1, fileId2;
+            , fileId1 = null, fileId2 = null;
 
         /**
          * 建立日期
@@ -591,11 +600,7 @@
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
-                if ($(this)[0].item.text() === "委托书") {
-                    fileId2 = res.data.fileId;
-                } else {
-                    fileId1 = res.data.fileId;
-                }
+
                 if (res.code == 0) {
                     $('.loading-bg').remove();
                     var flag;
@@ -619,6 +624,11 @@
                         $(this)[0].item.addClass("layui-btn-disabled");
                         $(this)[0].item.attr("disabled", true);
                     }
+                    if ($(this)[0].item.attr('id') === "EvaEntrust") {
+                        fileId2 = res.data.fileId;
+                    } else {
+                        fileId1 = res.data.fileId;
+                    }
                 } else if (res.code == 1) {
                     return false;
                 }
@@ -631,13 +641,21 @@
          * 文件查看
          */
         $("#CoverSee").click(function () {
-            pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
-            });
+            if (fileId1 === null || fileId1 === "") {
+                layer.msg("您还没有上传稳评封面哦")
+            } else {
+                pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
+                });
+            }
         });
 
         $("#EntrustSee").click(function () {
-            pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
-            });
+            if (fileId2 === null || fileId2 === "") {
+                layer.msg("您还没有上传委托书哦")
+            } else {
+                pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
+                });
+            }
         });
 
         /**
@@ -701,7 +719,6 @@
                                     }
                                 }
                             });
-
                         } else {
                             layer.msg("必填项不能为空！");
                             return false;
