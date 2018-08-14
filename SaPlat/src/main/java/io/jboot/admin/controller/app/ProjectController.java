@@ -161,13 +161,30 @@ public class ProjectController extends BaseController {
                     authProject.setStatus(ProjectStatus.REVIEW);
                     project.setStatus(ProjectStatus.REVIEW);
                     project.setIsEnable(true);
+
+                    ProjectUndertake projectUndertake = new ProjectUndertake();
+                    projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());
+                    projectUndertake.setCreateUserID(loginUser.getId());
+                    projectUndertake.setProjectID(project.getId());
+                    projectUndertake.setFacAgencyID(loginUser.getId());
+                    projectUndertake.setApplyOrInvite(true);
+                    projectUndertake.setStatus(2);
+                    projectUndertake.setCreateTime(new Date());
+                    projectUndertake.setDeadTime(new Date());
+                    projectUndertake.setLastAccessTime(new Date());
+                    projectUndertake.setLastUpdateUserID(loginUser.getId());
+                    projectUndertake.setIsEnable(true);
+                    if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
+                        throw new BusinessException("保存失败");
+                    }
+
                     jsonData.put("flag", 0);
                 } else if ("委评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.VERIFIING);
                     project.setStatus(ProjectStatus.VERIFIING);
                     jsonData.put("flag", 1);
                 }
-                if (authProjectService.save(authProject)) {
+                if (authProjectService.saveOrUpdate(authProject)) {
                     renderJson(RestResult.buildSuccess("项目状态表上传成功"));
                 } else {
                     renderJson(RestResult.buildError("项目状态表上传失败"));
@@ -626,6 +643,7 @@ public class ProjectController extends BaseController {
             }
         }
         renderJson(RestResult.buildSuccess(projects));
+
     }
 
     /**
@@ -646,23 +664,26 @@ public class ProjectController extends BaseController {
         ProjectUndertake projectUndertake = new ProjectUndertake();
         Organization organization = organizationService.findById(loginUser.getUserID());
         FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-        if (facAgency != null) {
+        if (facAgency != null && facAgency.getIsEnable()) {
             projectUndertake.setFacAgencyID(facAgency.getId());
+            projectUndertake.setCreateUserID(loginUser.getId());
         } else {
-            projectUndertake.setFacAgencyID(loginUser.getId());
+            projectUndertake.setCreateUserID(loginUser.getId());
         }
-        projectUndertake.setIsEnable(true);
-        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
         List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
         List<ProjectUndertake> list = projectUndertakePage.getList();
         if (list == null) {
             list = Collections.synchronizedList(new ArrayList<>());
         }
         for (ProjectUndertake p : list) {
-            pageList.add(projectService.findById(p.getProjectID()));
+            Project project = projectService.findById(p.getProjectID());
+            if (project != null && project.getStatus().equals(ProjectStatus.REVIEWED)) {
+                pageList.add(project);
+            }
         }
         Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
-        renderJson(new DataTable<>(page));
+        renderJson(new DataTable<Project>(page));
     }
 
     /**
@@ -860,7 +881,9 @@ public class ProjectController extends BaseController {
     public void expertGroupTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<ExpertGroup> page = expertGroupService.findPage(pageNumber, pageSize);
+        ExpertGroup expertGroup = new ExpertGroup();
+        expertGroup.setIsEnable(true);
+        Page<ExpertGroup> page = expertGroupService.findPage(expertGroup, pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(expertGroupService.findById(page.getList().get(i).getId()).getPersonID(), 0L).getId(), getParaToLong("id")));
         }

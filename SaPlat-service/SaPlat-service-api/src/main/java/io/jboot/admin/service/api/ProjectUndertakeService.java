@@ -3,12 +3,9 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Notification;
-import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
-import io.jboot.admin.service.entity.status.system.ProjectStatus;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ProjectUndertakeService {
 
@@ -74,6 +71,14 @@ public interface ProjectUndertakeService {
      * @return Project
      */
     public Page<ProjectUndertake> findPage(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
+
+    /**
+     * @param projectUndertake
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<ProjectUndertake> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
      * 通过项目id和创建用户id
