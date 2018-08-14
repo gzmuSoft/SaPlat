@@ -15,9 +15,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 @Bean
 @Singleton
@@ -33,11 +31,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         columns.eq("projectID", projectID);
         columns.eq("facAgencyID", facAgencyID);
         columns.eq("applyOrInvite", true);
-        if (DAO.findFirstByColumns(columns) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return DAO.findFirstByColumns(columns) != null;
     }
 
     @Override
@@ -53,11 +47,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("status", 2);
-        if (DAO.findFirstByColumns(columns) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return DAO.findFirstByColumns(columns) != null;
     }
 
     @Override
@@ -80,6 +70,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
 
+    }
+
+    @Override
+    public ProjectUndertake findByProjectIdAndCreateUserID(Long id, Long userId) {
+        Columns columns = Columns.create();
+        columns.eq("projectID", id);
+        columns.eq("createUserID", userId);
+        return DAO.findFirstByColumns(columns);
     }
 
     @Override
@@ -118,14 +116,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     @Override
     public float findAllAndUndertakeByUserId(Long userId) {
-        List<ProjectUndertake> list = DAO.findListByColumn("createUserID",userId);
-        float projectAmount = list.size(), undertakeAmount = 0 ,undertakeRate = 0;
-        for (ProjectUndertake projectUndertake:list) {
-            if (projectUndertake.getStatus() ==  2)
+        Columns columns = Columns.create("createUserID", userId);
+        List<ProjectUndertake> list = DAO.findListByColumns(columns);
+        float projectAmount = list.size(), undertakeAmount = 0, undertakeRate = 0;
+        for (ProjectUndertake projectUndertake : list) {
+            if (projectUndertake.getStatus() == 2) {
                 undertakeAmount++;
+            }
         }
-        if (projectAmount == 0)
-            return undertakeRate;
-        return undertakeAmount/projectAmount*100;
+        return projectAmount == 0 ? undertakeRate : undertakeAmount / projectAmount * 100;
     }
 }

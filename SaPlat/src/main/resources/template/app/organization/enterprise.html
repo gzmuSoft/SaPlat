@@ -33,7 +33,7 @@
                 <label class="layui-form-label" for="enterprise.name" style="width: 180px">企业机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.name" name="enterprise.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" required/>
+                           class="layui-input " style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                 <label class="layui-form-label" for="enterprise.address"style="width: 180px">公司地址</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.address" name="enterprise.address"
-                           value="#(enterprise.address)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.address)" lay-verify="required" class="layui-input" style="width: 500px"/>
                 </div>
             </div>
 
@@ -68,7 +68,7 @@
                 <label class="layui-form-label" for="enterprise.principal" style="width: 180px">公司负责人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.principal" name="enterprise.principal"
-                           value="#(enterprise.principal)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.principal)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -76,7 +76,7 @@
                 <label class="layui-form-label" for="enterprise.phone"style="width: 180px">公司负责人联系方式</label>
               <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="enterprise.phone" name="enterprise.phone"
-                           value="#(enterprise.phone)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.phone)" lay-verify="required|phone" class="layui-input" style="width: 500px"/>
                 </div>
             </div>
 
@@ -84,7 +84,7 @@
                 <label class="layui-form-label" for="enterprise.type"style="width: 180px">主体类型</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.type" name="enterprise.type"
-                           value="#(enterprise.type)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.type)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -92,7 +92,7 @@
                 <label class="layui-form-label" for="enterprise.credit"style="width: 180px">统一社会信用代码</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.credit" name="enterprise.credit"
-                           value="#(enterprise.credit)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.credit)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -100,7 +100,7 @@
                 <label class="layui-form-label" for="enterprise.scope"style="width: 180px">业务范围</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.scope" name="enterprise.scope"
-                           value="#(enterprise.scope)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.scope)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@
                 <label class="layui-form-label" for="enterprise.start"style="width: 180px">创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="date" id="enterprise.start" name="enterprise.start"
-                           value="#(enterprise.start)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.start)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -116,7 +116,7 @@
                 <label class="layui-form-label" for="enterprise.person"style="width: 180px">企业法人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.person" name="enterprise.person"
-                           value="#(enterprise.person)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.person)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -124,7 +124,7 @@
                 <label class="layui-form-label" for="enterprise.capital"style="width: 180px">注册资本</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="enterprise.capital" name="enterprise.capital"
-                           value="#(enterprise.capital)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.capital)" lay-verify="required|mLength" class="layui-input" style="width: 500px"/>
                 </div>
             </div>
 
@@ -142,7 +142,7 @@
                 <label class="layui-form-label" for="enterprise.website"style="width: 180px">企业网站</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.website" name="enterprise.website"
-                           value="#(enterprise.website)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.website)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
@@ -150,7 +150,7 @@
                 <label class="layui-form-label" for="enterprise.landline"style="width: 180px">座机电话</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.landline" name="enterprise.landline"
-                           value="#(enterprise.landline)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.landline)" class="layui-input" style="width: 500px" lay-verify="tel"/>
                 </div>
             </div>
 
@@ -158,7 +158,7 @@
                 <label class="layui-form-label" for="enterprise.scale" style="width: 180px">企业人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="enterprise.scale" name="enterprise.scale"
-                           value="#(enterprise.scale)" class="layui-input" style="width: 500px" required/>
+                           value="#(enterprise.scale)" class="layui-input" style="width: 500px" lay-verify="required|pLength"/>
                 </div>
             </div>
 
@@ -219,6 +219,21 @@
             , error: function (index, upload) {
                 alert("文件上传错误！请重新尝试！");
             }
+        });
+
+        form.verify({
+            mLength: [
+                /^[\S]{0,11}$/
+                ,'注册资金不能大于11位'
+            ]
+            ,tel: [
+                /0\d{2,3}-\d{7,8}/
+                ,'座机电话格式不正确'
+            ]
+            ,pLength: [
+                /^[\S]{0,11}$/
+                ,'人数不能大于11位'
+            ]
         });
 
         form.on('submit(sub)', function (data) {

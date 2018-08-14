@@ -34,13 +34,73 @@
 </div>
 
 <script type="text/html" id="barOption">
+
+
+    #[[
+    {{#  if(d.remark == "待确认"){ }}
+    ]]#
+    #shiroHasPermission('/app/projectUndertake/agency')
+    <a class="layui-btn layui-btn-xs">待确认</a>
+    #end
     #shiroHasPermission('/app/projectUndertake/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end
+    #[[
+    {{#  } }}
+    ]]#
 
+    #[[
+    {{#  if(d.remark == "已拒绝"){ }}
+    ]]#
+    #shiroHasPermission('/app/projectUndertake/agency')
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agency">重新申请</a>
+    #end
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.remark == "已拒绝"){ }}
+    ]]#
+    #shiroHasPermission('/app/projectUndertake/agency')
+    <a class="layui-btn layui-btn-warm layui-btn-xs">已同意</a>
+    #end
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+
+    #[[
+    {{#  if(d.remark == "未承接"){ }}
+    ]]#
     #shiroHasPermission('/app/projectUndertake/agency')
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="agency">申请介入</a>
     #end
+    #shiroHasPermission('/app/projectUndertake/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.remark == "已被承接"){ }}
+    ]]#
+    #shiroHasPermission('/app/projectUndertake/agency')
+    <a class="layui-btn layui-btn-danger layui-btn-xs">无法承接</a>
+    #end
+    #[[
+    {{#  } }}
+    ]]#
+
+
+
 </script>
 #end
 
@@ -66,7 +126,7 @@
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
                 , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                , {field: 'remark', title: '备注', minWidth: 100}
+                , {field: 'remark', title: '状态', minWidth: 100}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/projectUndertake/projectList'
@@ -99,7 +159,7 @@
                     .removeAttr("lay-event").text("已申请");
                 $.post("#(ctxPath)/app/projectUndertake/agency", {id: data.id}, function (msg) {
                     layer.msg(msg.msg);
-
+                    reloadTable();
                 });
             }
         });
@@ -110,7 +170,7 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
-        reloadTable = function (minAmount, maxAmount) {
+        var reloadTable = function (minAmount, maxAmount) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectList'
                 , where: {

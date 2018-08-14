@@ -60,8 +60,6 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
         return Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
-
-
                 Notification notification = new Notification();
                 notification.setName("立项审核通知 ");
                 notification.setSource("/app/projectAuth/verifyPostupdate");
@@ -84,6 +82,7 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
 
                 model.setLastUpdTime(new Date());
                 Project project = projectService.findById(model.getProjectId());
+                project.setIsEnable(true);
                 project.setStatus(model.getStatus());
                 return model.update() && project.update();
             }
