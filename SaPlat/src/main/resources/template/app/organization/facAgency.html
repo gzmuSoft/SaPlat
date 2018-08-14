@@ -25,7 +25,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="organization.name" name="organization.name"placeholder="#(organization.name)" value="#(organization.name)"
+                    <input type="text" id="organization.name" name="organization.name"placeholder="#(organization.name)" value="#(organization.name)"
                            class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                 <label class="layui-form-label" for="facAgency.phone"style="width: 180px">公司负责人联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="facAgency.phone" name="facAgency.phone"
-                           value="#(facAgency.phone)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.phone)" class="layui-input"style="width: 500px"  lay-verify="required|phone"/>
                 </div>
             </div>
 
@@ -144,7 +144,7 @@
                 <label class="layui-form-label" for="facAgency.capital"style="width: 180px">注册资本</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="facAgency.capital" name="facAgency.capital"
-                           value="#(facAgency.capital)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.capital)" class="layui-input"style="width: 500px"  lay-verify="required|mLength"/>
                 </div>
             </div>
 
@@ -160,7 +160,7 @@
                 <label class="layui-form-label" for="facAgency.landline"style="width: 180px">座机电话</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.landline" name="facAgency.landline"
-                           value="#(facAgency.landline)" class="layui-input" style="width: 500px" required/>
+                           value="#(facAgency.landline)" class="layui-input" style="width: 500px" lay-verify="tel"/>
                 </div>
             </div>
 
@@ -168,7 +168,7 @@
                 <label class="layui-form-label" for="facAgency.scale"style="width: 180px">企业人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="facAgency.scale" name="facAgency.scale"
-                           value="#(facAgency.scale)" class="layui-input" style="width: 500px" required/>
+                           value="#(facAgency.scale)" class="layui-input" style="width: 500px" lay-verify="required|pLength"/>
                 </div>
             </div>
 
@@ -201,6 +201,21 @@
             , upload = layui.upload;
 
         var fileFromID, fileFromID1;
+
+        form.verify({
+            mLength: [
+                /^[\S]{0,11}$/
+                ,'注册资金不能大于11位'
+            ]
+            ,tel: [
+                /0\d{2,3}-\d{7,8}/
+                ,'座机电话格式不正确'
+            ]
+            ,pLength: [
+                /^[\S]{0,11}$/
+                ,'人数不能大于11位'
+            ]
+        });
 
         upload.render({
             elem: '#upload'
