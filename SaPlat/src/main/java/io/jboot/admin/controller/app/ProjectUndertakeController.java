@@ -96,7 +96,30 @@ public class ProjectUndertakeController extends BaseController {
             project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
             project.setMinAmount(Double.parseDouble(getPara("minAmount")));
         }
+        project.setIsPublic(true);
+        project.setStatus(ProjectStatus.IS_VERIFY);
         Page<Project> page = projectService.findPageByIsPublic(project, pageNumber, pageSize);
+        if (page.getList().size() > 0) {
+            page.getList().forEach(p -> {
+                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());
+                if (projectUndertake != null){
+                    Integer status = projectUndertake.getStatus();
+                    if (status == null) {
+                        p.setRemark("未承接");
+                    } else if (status == 0) {
+                        p.setRemark("待确认");
+                    } else if (status == 1) {
+                        p.setRemark("已拒绝");
+                    } else if (status == 2) {
+                        p.setRemark("已同意");
+                    } else if (status == 3) {
+                        p.setRemark("已被承接");
+                    }
+                } else {
+                    p.setRemark("未承接");
+                }
+            });
+        }
         renderJson(new DataTable<Project>(page));
     }
 
@@ -122,15 +145,19 @@ public class ProjectUndertakeController extends BaseController {
         Organization organization = organizationService.findById(user.getUserID());
         FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
 
-        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId());
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndCreateUserID(id, user.getId());
         Project project = projectService.findById(id);
-        if (projectUndertake != null && projectUndertake.getStatus() != 1) {
-            renderJson(RestResult.buildError("您已经被邀请了，无需再申请！"));
-            throw new BusinessException("您已经被邀请了，无需再申请！");
-        } else if (projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId()) != null && projectUndertake.getStatus() != 1) {
-            renderJson(RestResult.buildError("您已经申请过了，请不要重复申请！"));
-            throw new BusinessException("您已经申请过了，请不要重复申请！");
-        } else if (projectUndertake == null) {
+        if (projectUndertake != null) {
+            if (projectUndertake.getApplyOrInvite()) {
+                if (projectUndertake.getStatus() != Integer.parseInt(ProjectUndertakeStatus.REFUSE)) {
+                    throw new BusinessException("您已经被邀请了，无需再申请！");
+                }
+            } else {
+                if (projectUndertake.getStatus() != Integer.parseInt(ProjectUndertakeStatus.REFUSE)) {
+                    throw new BusinessException("您已经申请过了，请不要重复申请！");
+                }
+            }
+        } else {
             projectUndertake = new ProjectUndertake();
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());

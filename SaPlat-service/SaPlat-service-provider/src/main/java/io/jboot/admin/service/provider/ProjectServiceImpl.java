@@ -131,8 +131,14 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.ge("amount", project.getMinAmount());
             columns.le("amount", project.getMaxAmount());
         }
-        if (project.getIsPublic()) {
+        if (project.getIsPublic() != null) {
             columns.eq("isPublic", project.getIsPublic());
+        }
+        if (project.getIsEnable() != null){
+            columns.eq("isEnable", project.getIsEnable());
+        }
+        if (project.getStatus() != null){
+            columns.eq("status", project.getStatus());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
