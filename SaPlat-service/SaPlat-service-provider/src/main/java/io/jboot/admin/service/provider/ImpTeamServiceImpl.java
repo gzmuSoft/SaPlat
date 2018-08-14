@@ -3,6 +3,7 @@ package io.jboot.admin.service.provider;
 import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.ImpTeamService;
+import io.jboot.admin.service.api.ScheduledPlanService;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -19,6 +20,8 @@ import java.util.List;
 @Singleton
 @JbootrpcService
 public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements ImpTeamService {
+    @Inject
+    ScheduledPlanService scheduledPlanService;
 
     @Override
     public List<ImpTeam> findByUserID(Long id) {
@@ -50,7 +53,7 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
     }
 
     @Override
-    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm) {
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm1, FileForm fileForm2) {
         return Db.tx(() -> {
             if (!evaScheme.save()) {
                 return false;
@@ -63,8 +66,63 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
                     }
                 }
             }
-            fileForm.setRecordID(evaScheme.getId());
-            return Db.tx(() -> model.save() && fileForm.update());
+            if (fileForm1 != null) {
+                fileForm1.setStatus(true);
+                fileForm1.setRecordID(evaScheme.getId());
+                if (!fileForm1.update()) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            if (fileForm2 != null) {
+                fileForm2.setStatus(true);
+                fileForm2.setRecordID(evaScheme.getId());
+                if (!fileForm2.update()) {
+                    return false;
+                }
+            }
+            return model.save();
+        });
+    }
+
+    public boolean update(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> newScheduledPlans, FileForm fileForm1, FileForm fileForm2) {
+        List<ScheduledPlan> oldScheduledPlan = scheduledPlanService.findListByEvaSchemeID(evaScheme.getId());
+        return Db.tx(() -> {
+            if (!evaScheme.update()) {
+                return false;
+            }
+            if (evaScheme.getProjectID() != null) {
+                for (ScheduledPlan scheduledPlan : oldScheduledPlan) {
+                    scheduledPlan.setIsEnable(false);
+                    if (!scheduledPlan.update()) {
+                        return false;
+                    }
+                }
+                for (ScheduledPlan scheduledPlan : newScheduledPlans) {
+                    scheduledPlan.setEvaSchemeID(evaScheme.getId());
+                    if (!scheduledPlan.save()) {
+                        return false;
+                    }
+                }
+            }
+            if (fileForm1 != null) {
+                fileForm1.setStatus(true);
+                fileForm1.setRecordID(evaScheme.getId());
+                if (!fileForm1.update()) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            if (fileForm2 != null) {
+                fileForm2.setStatus(true);
+                fileForm2.setRecordID(evaScheme.getId());
+                if (!fileForm2.update()) {
+                    return false;
+                }
+            }
+            return model.update();
         });
     }
 

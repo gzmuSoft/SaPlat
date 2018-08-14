@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.ProjectUndertakeService;
 import io.jboot.admin.service.entity.model.Notification;
@@ -128,5 +130,19 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             }
         }
         return projectAmount == 0 ? undertakeRate : undertakeAmount / projectAmount * 100;
+    }
+
+    @Override
+    public Page<ProjectUndertake> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
+        Kv c = null;
+        SqlPara sqlPara = null;
+        if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
+            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("createUserID", projectUndertake.getCreateUserID()).set("ID", projectUndertake.getCreateUserID());
+            sqlPara = Db.getSqlPara("app-project.project", c);
+        } else {
+            c = Kv.by("ID", projectUndertake.getCreateUserID());
+            sqlPara = Db.getSqlPara("app-project.project-self", c);
+        }
+        return DAO.paginate(pageNumber, pageSize, sqlPara);
     }
 }

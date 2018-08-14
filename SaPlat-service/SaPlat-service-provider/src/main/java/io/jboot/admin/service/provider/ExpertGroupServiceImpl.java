@@ -35,6 +35,9 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         if (StrKit.notBlank(model.getName())) {
             columns.like("name", "%" + model.getName() + "%");
         }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 

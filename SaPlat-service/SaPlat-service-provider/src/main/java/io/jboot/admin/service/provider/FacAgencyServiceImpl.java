@@ -32,8 +32,10 @@ public class FacAgencyServiceImpl extends JbootServiceBase<FacAgency> implements
     }
 
     @Override
-    public Page<FacAgency> findPage(int pageNumber, int pageSize) {
-        return DAO.paginate(pageNumber, pageSize, "id desc");
+    public Page<FacAgency> findPage(long orgID,int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        columns.ne("orgID", orgID);
+        return DAO.paginateByColumns(pageNumber, pageSize,columns.getList(), "id desc");
     }
 
     @Override
