@@ -14,10 +14,16 @@
             $ = layui.jquery,
             util = layui.util;
         $('li').click(function () {
-            layer.tips('请点击右侧悬浮块查看', parent.$('li[lay-type="bar1"]'),{
+            layer.tips('点我查看', parent.$('li[lay-type="bar1"]'),{
                 tipsMore: true,
                 time: 3000
             });
+            layer.tips('请点击右侧悬浮块查看', $(this),{
+                tipsMore: true,
+                time: 3000,
+                tips: 1
+            });
+            return false;
         })
     });
 </script>
