@@ -3,8 +3,11 @@ package io.jboot.admin.support.auth;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import io.jboot.Jboot;
+import io.jboot.admin.base.plugin.shiro.ShiroCacheUtils;
 import io.jboot.admin.service.api.ResService;
+import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.Res;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.ResStatus;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import org.apache.shiro.SecurityUtils;
@@ -21,6 +24,9 @@ public class AuthInterceptor implements Interceptor {
 
     @JbootrpcService
     private ResService resService;
+
+    @JbootrpcService
+    private UserService userService;
 
     /**
      * 获取全部 需要控制的权限
@@ -58,6 +64,17 @@ public class AuthInterceptor implements Interceptor {
             ai.getController().renderError(403);
         } else {
             ai.invoke();
+        }
+
+        User user = AuthUtils.getLoginUser();
+        if (user.getId() != null){
+            user = userService.findById(user.getId());
+            String status = user.getStatus();
+            if ("3".equals(status)){
+                ShiroCacheUtils.clearAuthorizationInfoAll();
+                user.setStatus("1");
+                userService.update(user);
+            }
         }
     }
 

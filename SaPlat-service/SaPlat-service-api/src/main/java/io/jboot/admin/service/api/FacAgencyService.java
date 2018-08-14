@@ -44,7 +44,7 @@ public interface FacAgencyService  {
      *
      * @return 页
      */
-    public Page<FacAgency> findPage(int pageNumber, int pageSize);
+    public Page<FacAgency> findPage(long id,int pageNumber, int pageSize);
 
     /**
      * 根据名称查询 项目阶段 信息

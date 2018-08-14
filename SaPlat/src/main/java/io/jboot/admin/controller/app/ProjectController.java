@@ -130,7 +130,7 @@ public class ProjectController extends BaseController {
         project.setStatus(ProjectStatus.BUILDING);
         project.setCreateUserID(loginUser.getId());
         project.setLastUpdateUserID(loginUser.getId());
-        project.setIsEnable(true);
+        project.setIsEnable(false);
         int saveOrUpdate = getParaToInt("saveOrUpdate");
         if (saveOrUpdate == 1) {
             Project model = projectService.saveProject(project);
@@ -160,6 +160,7 @@ public class ProjectController extends BaseController {
                 if ("自评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.REVIEW);
                     project.setStatus(ProjectStatus.REVIEW);
+                    project.setIsEnable(true);
                     jsonData.put("flag", 0);
                 } else if ("委评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.VERIFIING);
@@ -620,6 +621,11 @@ public class ProjectController extends BaseController {
         if (projectList.size() > 0 && !projects.addAll(projectList)) {
             throw new BusinessException("数据加载失败。。。");
         }
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i) == null){
+                projects.remove(i);
+            }
+        }
         renderJson(RestResult.buildSuccess(projects));
     }
 
@@ -638,12 +644,26 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Project project = new Project();
-        project.setUserId(loginUser.getId());
-        project.setStatus(ProjectStatus.REVIEWED);
-        project.setIsEnable(true);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(page));
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        Organization organization = organizationService.findById(loginUser.getUserID());
+        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+        } else {
+            projectUndertake.setFacAgencyID(loginUser.getId());
+        }
+        projectUndertake.setIsEnable(true);
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
+        List<ProjectUndertake> list = projectUndertakePage.getList();
+        if (list == null) {
+            list = Collections.synchronizedList(new ArrayList<>());
+        }
+        for (ProjectUndertake p : list) {
+            pageList.add(projectService.findById(p.getProjectID()));
+        }
+        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
+        renderJson(new DataTable<>(page));
     }
 
     /**
@@ -780,9 +800,10 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void facAgencyTable() {
+        User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<FacAgency> page = facAgencyService.findPage(pageNumber, pageSize);
+        Page<FacAgency> page = facAgencyService.findPage(user.getUserID(),pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(projectUndertakeService.findIsInvite(page.getList().get(i).getId(), getParaToLong("id")));
         }

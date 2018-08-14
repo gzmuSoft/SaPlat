@@ -1,7 +1,11 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.OrgStructureService;
 import io.jboot.admin.service.entity.model.OrgStructure;
@@ -35,5 +39,12 @@ public class OrgStructureServiceImpl extends JbootServiceBase<OrgStructure> impl
             columns.eq("id",orgStructure.getId());
         }
         return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"id desc");
+    }
+    @Override
+    public Page<Record> findMainList(int pageNumber, int pageSize, Long uid, int orgTye,String structName){
+        Kv para = Kv.by("uid",uid).set("orgType",orgTye).set("structName",structName);
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.orgStructureList",para);
+        Page<Record> page = Db.paginate(pageNumber,pageSize,sqlPara);
+        return page;
     }
 }

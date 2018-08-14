@@ -41,16 +41,19 @@
         evaScheme = JSON.parse(evaScheme);
         project = JSON.parse(project);
         var flag = "true";
+        var isSelf = "#(isSelf)";
         if (typeof(evaScheme.status) === "undefined") {
-            $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+            if (isSelf === "true") {
+                layer.msg("承接当前项目的服务机构尚未填写稳评资料");
+            } else {
+                $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+            }
         } else if (evaScheme.status === "1") {
             $('#next').remove();
             layer.msg("您的项目正在审核中，请耐心等待。。。");
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaScheme.status === "2") {
-            var isSelf = "#(isSelf)";
             var method = "#(method)";
-            layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
             add(flag, 20);
             add("#(siteSurveyExpertAdvice)", 15);
             add("#(diagnoses)", 15);
@@ -66,6 +69,7 @@
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=true");
                     }, 500);
                 } else if (isSelf === "false") {
+                    layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
                     setTimeout(function () {
                         element.progress('tip', percent + '%');
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
@@ -77,9 +81,6 @@
                     $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
                 }, 500);
             }
-            console.log("isSelf" + isSelf);
-            console.log("method" + method);
-
         } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);

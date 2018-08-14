@@ -125,15 +125,22 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
-    public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize) {
+    public Page<Project> findPageByIsPublic(long userId, Project project, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if ((project.getMinAmount() != 0.0) || project.getMaxAmount() != 0.0) {
             columns.ge("amount", project.getMinAmount());
             columns.le("amount", project.getMaxAmount());
         }
-        if (project.getIsPublic()) {
+        if (project.getIsPublic() != null) {
             columns.eq("isPublic", project.getIsPublic());
         }
+        if (project.getIsEnable() != null){
+            columns.eq("isEnable", project.getIsEnable());
+        }
+        if (project.getStatus() != null){
+            columns.eq("status", project.getStatus());
+        }
+        columns.ne("userId",userId);
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 

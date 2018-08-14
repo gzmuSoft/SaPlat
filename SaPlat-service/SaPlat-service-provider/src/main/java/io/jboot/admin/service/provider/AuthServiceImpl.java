@@ -3,10 +3,7 @@ package io.jboot.admin.service.provider;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.AuthService;
-import io.jboot.admin.service.api.RoleService;
-import io.jboot.admin.service.api.UserRoleService;
-import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.aop.annotation.Bean;
@@ -34,6 +31,25 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
 
     @JbootrpcService
     private UserService userService;
+
+    @JbootrpcService
+    private ExpertGroupService expertGroupService;
+
+    @JbootrpcService
+    private ManagementService managementService;
+
+    @JbootrpcService
+    private EnterpriseService enterpriseService;
+
+    @JbootrpcService
+    private FacAgencyService facAgencyService;
+
+    @JbootrpcService
+    private ProfGroupService profGroupService;
+
+    @JbootrpcService
+    private ReviewGroupService reviewGroupService;
+
 
     @Override
     public Auth findByUser(User user) {
@@ -103,49 +119,86 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
 
     @Override
     public boolean update(Auth model) {
-        return Db.tx(new IAtom() {
-            @Override
-            public boolean run() throws SQLException {
-                model.setLastUpdTime(new Date());
-                if (!model.update()) {
-                    return false;
-                }
+        return Db.tx(() -> {
 
-                Role role1 = roleService.findById(model.getRoleId());
-                Notification notification = new Notification();
-                notification.setName("认证结果通知 ");
-                notification.setSource("/app/project/invite");
-                if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
-                } else {
-                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核不通过");
-                }
-                notification.setReceiverID(Math.toIntExact(model.getUserId()));
-                notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
-                notification.setCreateTime(new Date());
-                notification.setLastUpdateUserID(userService.findByName(model.getLastUpdUser()).getId());
-                notification.setLastAccessTime(new Date());
-                notification.setIsEnable(true);
-                notification.setStatus(0);
-                if (!notification.save()) {
-                    return false;
-                }
-                if(!model.getStatus().equals(AuthStatus.IS_VERIFY)){
-                    return true;
-                }
-                List<UserRole> userRoleList = new ArrayList<UserRole>();
-                UserRole userRole = new UserRole();
-                userRole.setRoleID(model.getRoleId());
-                userRole.setUserID(model.getUserId());
-                userRoleList.add(userRole);
-                int[] rets = userRoleService.batchSave(userRoleList);
-                for (int ret : rets) {
-                    if (ret < 1) {
-                        return false;
-                    }
-                }
+            model.setLastUpdTime(new Date());
+            if (!model.update()) {
+                return false;
+            }
+
+            Role role1 = roleService.findById(model.getRoleId());
+            Notification notification = new Notification();
+            notification.setName("认证结果通知 ");
+            notification.setSource("/app/project/invite");
+            if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+                notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
+            } else {
+                notification.setContent("您好,您申请的 " + role1.getName() + " 审核不通过");
+            }
+            notification.setReceiverID(Math.toIntExact(model.getUserId()));
+            notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
+            notification.setCreateTime(new Date());
+            notification.setLastUpdateUserID(userService.findByName(model.getLastUpdUser()).getId());
+            notification.setLastAccessTime(new Date());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            if (!notification.save()) {
+                return false;
+            }
+            if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
                 return true;
             }
+            User user = userService.findById(model.getUserId());
+            if ("专家团体".equals(role1.getName())) {
+                ExpertGroup expertGroup = expertGroupService.findByPersonId(user.getUserID());
+                expertGroup.setIsEnable(true);
+                if (!expertGroupService.update(expertGroup)) {
+                    return false;
+                }
+            } else if ("服务机构".equals(role1.getName())) {
+                FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
+                facAgency.setIsEnable(true);
+                if (!facAgencyService.update(facAgency)) {
+                    return false;
+                }
+            } else if ("管理机构".equals(role1.getName())) {
+                Management management = managementService.findByOrgId(user.getUserID());
+                management.setIsEnable(true);
+                if (!managementService.update(management)) {
+                    return false;
+                }
+            } else if ("企业机构".equals(role1.getName())) {
+                Enterprise enterprise = enterpriseService.findByOrgId(user.getUserID());
+                enterprise.setIsEnable(true);
+                if (!enterpriseService.update(enterprise)) {
+                    return false;
+                }
+            } else if ("审查团体".equals(role1.getName())) {
+                ReviewGroup reviewGroup = reviewGroupService.findByOrgId(user.getUserID());
+                reviewGroup.setIsEnable(true);
+                if (!reviewGroupService.update(reviewGroup)) {
+                    return false;
+                }
+            } else if ("专业团体".equals(role1.getName())) {
+                ProfGroup profGroup = profGroupService.findByOrgId(user.getUserID());
+                profGroup.setIsEnable(true);
+                if (!profGroupService.update(profGroup)) {
+                    return false;
+                }
+            }
+            List<UserRole> userRoleList = new ArrayList<UserRole>();
+            UserRole userRole = new UserRole();
+            userRole.setRoleID(model.getRoleId());
+            userRole.setUserID(model.getUserId());
+            userRoleList.add(userRole);
+            int[] rets = userRoleService.batchSave(userRoleList);
+            for (int ret : rets) {
+                if (ret < 1) {
+                    return false;
+                }
+            }
+            user.setStatus("3");
+            return userService.update(user);
         });
     }
 

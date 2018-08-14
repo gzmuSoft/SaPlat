@@ -34,10 +34,7 @@
         });
 
         $('#approve').click(function () {
-            setTimeout(function () {
-                layer.msg("一秒后自动跳转...");
-                window.location.href = "#(ctxPath)/app/organization/prove";
-            },1500);
+            parent.addTab('card',"组织机构认证","#(ctxPath)/app/organization/prove");
         })
 
     });
@@ -83,7 +80,7 @@
     </div>
 </fieldset>
 <div style="text-align:center;">
-    <button class="layui-btn layui-btn-lg"id="approve" style="border-radius: 5px;">前往进行组织机构认证</button>
+    <button class="layui-btn layui-btn-lg" id="approve" style="border-radius: 5px;">前往进行组织机构认证</button>
 </div>
 #else
 <script>
