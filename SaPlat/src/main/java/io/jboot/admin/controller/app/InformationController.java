@@ -122,6 +122,21 @@ public class InformationController extends BaseController {
 
 
     /**
+     * edit 下的欢迎页面
+     */
+    public void welcome(){
+        List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估").getId());
+        ProjectFileType projectFileType = new ProjectFileType();
+        projectFileType.setName("稳评方案");
+        list.add(0,projectFileType);
+        setAttr("projectId", getParaToLong("id"))
+                .setAttr("list",list)
+                .setAttr("flag", getPara("flag", "false"))
+                .render("welcome.html");
+    }
+
+
+    /**
      * 个人资料填写，加载当前可以填写的项目
      */
     @NotNullPara("id")

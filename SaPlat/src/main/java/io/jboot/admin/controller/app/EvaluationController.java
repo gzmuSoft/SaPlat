@@ -93,11 +93,11 @@ public class EvaluationController extends BaseController {
             } else {
                 setAttr("isSelf", "true");
             }
-            setAttr("method","false");
+            setAttr("method", "false");
         } else if (!project.getUserId().equals(u.getId())) {
             throw new BusinessException("这个不是你的项目哦~！");
-        } else if ("自评".equals(project.getAssessmentMode())){
-            setAttr("method","true");
+        } else if ("自评".equals(project.getAssessmentMode())) {
+            setAttr("method", "true");
         }
 
         if (evaScheme == null) {

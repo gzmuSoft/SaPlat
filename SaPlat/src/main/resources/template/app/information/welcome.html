@@ -1,0 +1,43 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use('layer', function () {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            util = layui.util;
+        $('li').click(function () {
+            layer.tips('点我查看', parent.$('li[lay-type="bar1"]'),{
+                tipsMore: true,
+                time: 3000
+            });
+            layer.tips('请点击右侧悬浮块查看', $(this),{
+                tipsMore: true,
+                time: 3000,
+                tips: 1
+            });
+            return false;
+        })
+    });
+</script>
+#end
+
+#define content()
+<ul class="layui-timeline">
+    #for(l : list)
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <div class="layui-timeline-title">#(l.name)</div>
+        </div>
+    </li>
+    #end
+</ul>
+#end
