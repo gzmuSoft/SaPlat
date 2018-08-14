@@ -103,13 +103,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">组长</label>
                 <div class="layui-input-inline">
-                    <p>#(leader)</p>
+                    <p>#(leader.name)</p>
                 </div>
                 <label class="layui-form-label"style="width: 150px">副组长</label>
                 <div class="layui-input-inline">
                     <p>
                         #for(asLeaderGroup : asLeaderGroups)
-                        #(asLeaderGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #(asLeaderGroup.deputy) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end
                     </p>
                 </div>

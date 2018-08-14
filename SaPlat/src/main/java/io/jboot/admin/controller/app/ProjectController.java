@@ -385,6 +385,7 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         Project model = getBean(Project.class, "project");
         model.setId(id);
+        model.setStatus(ProjectStatus.BUILDING);
         model.setAssessmentMode(getPara("assessmentMode"));
         LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
         if (leaderGroupService.findByProjectID(id) != null) {
