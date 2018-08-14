@@ -79,6 +79,7 @@
                 , {field: 'workstate', title: '在职状态', width: 100}
                 , {field: 'profess', title: '专业资格内容', width: 200}
                 , {field: 'project', title: '参与项目经历', width: 200}
+                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/expertGroupTable?id=' + $('#id').val()
@@ -86,6 +87,10 @@
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , initSort: {
+                field: 'createTime'//按照时间进行默认排序
+                ,type: 'desc'
             }
             , page: true
             , limits: [30, 60, 90, 150, 300]
