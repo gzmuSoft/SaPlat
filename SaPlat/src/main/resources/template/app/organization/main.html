@@ -91,7 +91,7 @@
                     #if(organization.certificate != null)
                     <button type="button" class="layui-btn see">查看</button>
                     #else
-                    <button type="button" class="layui-btn layui-hide see">查看</button>
+                    <button type="button" class="layui-btn layui-hide see" id="see">查看</button>
                     #end
                 </div>
             </div>
@@ -127,8 +127,13 @@
         var fileID = '#(fileId)';
 
         $(".see").click(function () {
-            pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
-            });
+            if (fileID === '') {
+                layer.msg("您还未上传营业执照！");
+                setTimeout(1000);
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
+                });
+            }
         });
 
         upload.render({
