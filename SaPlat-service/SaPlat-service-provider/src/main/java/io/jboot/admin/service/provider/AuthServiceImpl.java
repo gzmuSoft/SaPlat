@@ -97,7 +97,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             columns.lt("type", "2");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-status");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-lastUpdTime");
     }
 
 
@@ -116,9 +116,9 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 notification.setName("认证结果通知 ");
                 notification.setSource("/app/project/invite");
                 if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                    notification.setContent("您好,您认证的" + role1.getName() + "认证成功");
+                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
                 } else {
-                    notification.setContent("您好,您认证的" + role1.getName() + "认证失败");
+                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核不通过");
                 }
                 notification.setReceiverID(Math.toIntExact(model.getUserId()));
                 notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
@@ -130,16 +130,10 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 if (!notification.save()) {
                     return false;
                 }
-                List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
-                for (UserRole role : userRoleList) {
-                    if (model.getUserId().equals(role.getUserID()) && model.getRoleId().equals(role.getRoleID())) {
-                        if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                            userRoleService.delete(role);
-                        }
-                        return true;
-                    }
+                if(!model.getStatus().equals(AuthStatus.IS_VERIFY)){
+                    return true;
                 }
-                userRoleList = new ArrayList<UserRole>();
+                List<UserRole> userRoleList = new ArrayList<UserRole>();
                 UserRole userRole = new UserRole();
                 userRole.setRoleID(model.getRoleId());
                 userRole.setUserID(model.getUserId());

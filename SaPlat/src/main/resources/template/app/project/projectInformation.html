@@ -217,10 +217,20 @@
             var data = obj.data;
             var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
             if (obj.event === 'upload') {
-                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId, '500', '300', function () {
-                    table.reload('dateTable', {
-                        url: '#(ctxPath)/app/project/fileTable?id=' + projectId + '&paTypeID=' + paTypeID
-                    });
+                layer.open({
+                    type: 2,
+                    area: ['500px', '300px'],
+                    fix: false, //不固定
+                    maxmin: false,
+                    shadeClose: false,
+                    shade: 0.4,
+                    title: '上传文件',
+                    content: '#(ctxPath)/app/project/fileUploading?id=' + data.id + '&projectId=' + projectId,
+                    end: function () {
+                        table.reload('dateTable', {
+                            url: '#(ctxPath)/app/project/fileTable?id=' + projectId + '&paTypeID=' + paTypeID
+                        });
+                    }
                 });
             } else if (obj.event === 'see') {
                 pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
