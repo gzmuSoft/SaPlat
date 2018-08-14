@@ -99,7 +99,7 @@ public class ProjectUndertakeController extends BaseController {
         }
         project.setIsPublic(true);
         project.setStatus(ProjectStatus.IS_VERIFY);
-        Page<Project> page = projectService.findPageByIsPublic(user.getUserID(),project, pageNumber, pageSize);
+        Page<Project> page = projectService.findPageByIsPublic(user.getId(),project, pageNumber, pageSize);
         if (page.getList().size() > 0) {
             page.getList().forEach(p -> {
                 ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());

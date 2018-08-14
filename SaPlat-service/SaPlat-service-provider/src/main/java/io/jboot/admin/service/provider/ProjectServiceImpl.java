@@ -141,6 +141,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.eq("status", project.getStatus());
         }
         columns.ne("userId",userId);
+
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 
