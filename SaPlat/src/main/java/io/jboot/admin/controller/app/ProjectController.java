@@ -620,6 +620,11 @@ public class ProjectController extends BaseController {
         if (projectList.size() > 0 && !projects.addAll(projectList)) {
             throw new BusinessException("数据加载失败。。。");
         }
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i) == null){
+                projects.remove(i);
+            }
+        }
         renderJson(RestResult.buildSuccess(projects));
     }
 

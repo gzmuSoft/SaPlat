@@ -13,11 +13,25 @@
         var layer = layui.layer,
             $ = layui.jquery,
             util = layui.util;
-
+        $('li').click(function () {
+            layer.tips('请点击右侧悬浮块查看', parent.$('li[lay-type="bar1"]'),{
+                tipsMore: true,
+                time: 3000
+            });
+        })
     });
 </script>
 #end
 
 #define content()
-
+<ul class="layui-timeline">
+    #for(l : list)
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <div class="layui-timeline-title">#(l.name)</div>
+        </div>
+    </li>
+    #end
+</ul>
 #end
