@@ -162,7 +162,7 @@ public class FileUploadController extends BaseController {
             throw new BusinessException("没有此项目权限");
         }
         fileProject.setIsEnable(true);
-        project.setStatus(ProjectStatus.REVIEW);
+        project.setStatus(ProjectStatus.REVIEWED);
         if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
             throw new BusinessException("提交失败");
         }

@@ -302,7 +302,7 @@ public class PersonController extends BaseController {
         expertGroup.setLastAccessTime(new Date());
         expertGroup.setPersonID(person.getId());
         expertGroup.setName(person.getName());
-        expertGroup.setIsEnable(false);
+        expertGroup.setIsEnable(true);
         ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
         if (name != null) {
             expertGroup.setId(name.getId());
