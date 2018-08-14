@@ -52,7 +52,7 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
         if(authProject.getRoleId()!=null){
             columns.eq("roleId",authProject.getRoleId());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-lastUpdTime");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "status desc,lastUpdTime desc");
     }
 
     @Override

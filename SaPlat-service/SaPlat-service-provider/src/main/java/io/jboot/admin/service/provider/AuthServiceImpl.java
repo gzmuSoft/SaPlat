@@ -114,7 +114,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             columns.lt("type", "2");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-lastUpdTime");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "status desc,lastUpdTime desc");
     }
 
 
