@@ -15,7 +15,6 @@
             util = layui.util,
             table = layui.table;
         var url = "#(url)DataTable";
-        console.log(url);
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
             , id: 'dateTable'
@@ -55,7 +54,6 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            console.log(obj);
             if (obj.event === 'edit') {
                 window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&flag=#(flag)&id=" + data.id;
             } else if (obj.event === 'delete') {
@@ -71,7 +69,6 @@
             }
         });
         var flag = '#(flag)';
-        console.log("tableViewer" + flag);
         if (flag === "true") {
             $('#add').remove();
             $('#del').remove();
