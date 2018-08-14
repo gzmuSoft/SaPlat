@@ -307,6 +307,10 @@ public class ProjectUndertakeController extends BaseController {
     public void toProjectImpTeam() {
         Long id = getParaToLong("id");
         StringBuilder string = new StringBuilder();
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
+        if (evaScheme != null) {
+            setAttr("status", evaScheme.getStatus());
+        }
         Project project = projectService.findById(id);//点击的当前项目
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
@@ -357,6 +361,7 @@ public class ProjectUndertakeController extends BaseController {
     public void ImpTeam() {
         User loginUser = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
+
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
         impTeam.setProjectID(id);
         impTeam.setCreateTime(new Date());
@@ -371,15 +376,14 @@ public class ProjectUndertakeController extends BaseController {
         evaScheme.setCreateUserID(loginUser.getId());
         evaScheme.setLastUpdateUserID(loginUser.getId());
         evaScheme.setStatus("1");
+
         ScheduledPlan scheduledPlan;
         String[] sName = getParaValues("ScheduledPlan.name");
         String[] sStartDate = getParaValues("ScheduledPlan.startDate");
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
-
-        FileForm fileForm = fileFormService.findById(getParaToLong("fileFormId"));
-        fileForm.setStatus(true);
-
+        FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
+        FileForm fileForm2 = fileFormService.findById(getParaToLong("fileFormId2"));
         List<ScheduledPlan> scheduledPlans = new ArrayList<>();
         for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
@@ -393,7 +397,16 @@ public class ProjectUndertakeController extends BaseController {
             scheduledPlan.setLastUpdateUserID(loginUser.getId());
             scheduledPlans.add(scheduledPlan);
         }
-        if (impTeamService.save(impTeam, evaScheme, scheduledPlans, fileForm)) {
+        if (getPara("status").equals("3")) {
+            impTeam.setId(impTeamService.findByProjectId(id).getId());
+            evaScheme.setId(evaSchemeService.findByProjectID(id).getId());
+            if (impTeamService.update(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2)) {
+                renderJson(RestResult.buildSuccess("更新成功"));
+            } else {
+                renderJson(RestResult.buildError("更新失败"));
+                throw new BusinessException("更新失败");
+            }
+        } else if (impTeamService.save(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2)) {
             renderJson(RestResult.buildSuccess("保存成功"));
         } else {
             renderJson(RestResult.buildError("保存失败"));

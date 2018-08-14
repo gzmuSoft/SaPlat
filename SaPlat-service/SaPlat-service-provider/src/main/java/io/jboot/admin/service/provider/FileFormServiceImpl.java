@@ -1,6 +1,7 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Db;
+import io.jboot.admin.service.api.EvaSchemeService;
 import io.jboot.admin.service.api.FileFormService;
 import io.jboot.admin.service.entity.model.FileForm;
 import io.jboot.admin.service.entity.model.Files;
@@ -9,12 +10,14 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Bean
 @Singleton
 @JbootrpcService
 public class FileFormServiceImpl extends JbootServiceBase<FileForm> implements FileFormService {
+
     @Override
     public FileForm saveAndGet(FileForm model, Files files) {
         if (!model.save() && !files.update()) {

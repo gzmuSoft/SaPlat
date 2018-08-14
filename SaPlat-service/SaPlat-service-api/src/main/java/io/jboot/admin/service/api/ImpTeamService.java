@@ -82,7 +82,7 @@ public interface ImpTeamService {
      * @param model,evaScheme
      * @return if save success
      */
-    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm);
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm1, FileForm fileForm2);
 
 
     /**
@@ -92,6 +92,8 @@ public interface ImpTeamService {
      * @return
      */
     public boolean update(ImpTeam model);
+
+    public boolean update(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm1, FileForm fileForm2);
 
     public List<ImpTeam> findByUserID(Long id);
 

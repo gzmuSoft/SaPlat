@@ -309,7 +309,7 @@
             , laydate = layui.laydate
             , string = "?"
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
-            , fileFormId
+            , fileFormId1 = null, fileFormId2 = null
             , fileId1 = null, fileId2 = null;
 
         /**
@@ -600,9 +600,10 @@
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
-
+                $('.loading-bg').remove();
+                var ele = $(this)[0].item;
+                console.log(ele.attr('id'));
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     var flag;
                     util.sendAjax({
                         type: 'GET',
@@ -610,21 +611,21 @@
                         async: false,
                         data: {
                             fileId: res.data.fileId,
-                            fieldName: $(this)[0].item.text()
+                            fieldName: ele.text()
                         },
                         loadFlag: true,
                         success: function (data) {
                             if (data.code == 0) {
-                                fileFormId = data.data.fileFormId;
+                                if (ele.attr('id') === "EvaEntrust") {
+                                    fileFormId2 = data.data.fileFormId;
+                                } else {
+                                    fileFormId1 = data.data.fileFormId;
+                                }
                                 flag = true;
                             }
                         }
                     });
-                    if (flag) {
-                        $(this)[0].item.addClass("layui-btn-disabled");
-                        $(this)[0].item.attr("disabled", true);
-                    }
-                    if ($(this)[0].item.attr('id') === "EvaEntrust") {
+                    if (ele.attr('id') === "EvaEntrust") {
                         fileId2 = res.data.fileId;
                     } else {
                         fileId1 = res.data.fileId;
@@ -662,7 +663,7 @@
          * 数据打包
          */
         function dataString() {
-            string += "fileFormId=" + fileFormId + "&EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
+            string += "fileFormId1=" + fileFormId1 + "&fileFormId2=" + fileFormId2 + "&EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX >= 0) {
                     string += "ScheduledPlan.name=" + value.name + "&ScheduledPlan.content=" + value.content + "&";
@@ -684,7 +685,7 @@
             string += $("#impTeamName").attr('name') + "=" + $("#impTeamName").val() + "&";
             string += $("#startDate").attr('name') + "=" + $("#startDate").val() + "&";
             string += $("#endDate").attr('name') + "=" + $("#endDate").val() + "&";
-            string += 'id=#(project.id)';
+            string += 'id=#(project.id)&status=#(status)';
             return string;
         }
 

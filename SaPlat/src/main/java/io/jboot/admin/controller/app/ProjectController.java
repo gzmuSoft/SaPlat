@@ -367,6 +367,7 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         Project model = getBean(Project.class, "project");
         model.setId(id);
+        model.setStatus(ProjectStatus.BUILDING);
         model.setAssessmentMode(getPara("assessmentMode"));
         LeaderGroup leaderGroup = getBean(LeaderGroup.class, "leaderGroup");
         if (leaderGroupService.findByProjectID(id) != null) {
@@ -605,10 +606,10 @@ public class ProjectController extends BaseController {
         project.setStatus(ProjectStatus.REVIEW);
         project.setIsEnable(true);
         List<Project> projectList = null;
-        if (projectUndertakeList != null){
+        if (projectUndertakeList != null) {
             projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
         }
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status",  "isEnable"},
+        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
                 new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
         if (projectList == null) {
             projectList = Collections.synchronizedList(new ArrayList<>());
