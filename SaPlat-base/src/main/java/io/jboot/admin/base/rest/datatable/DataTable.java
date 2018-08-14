@@ -24,6 +24,11 @@ public class DataTable<T> {
         this.data = page.getList();
     }
 
+    public DataTable(int count, List<T> data) {
+        this.count = count;
+        this.data = data;
+    }
+
     public int getCode() {
         return code;
     }
