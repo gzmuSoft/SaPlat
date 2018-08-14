@@ -38,6 +38,13 @@
                 </div>
             </div>
 
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label" for="facAgency.orgID" style="width: 180px">组织机构编号</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="number" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.id)"/>
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 180px"><em class="require-mark">*</em>维稳办备案文件照片</label>
                 <div class="layui-input-block layui-upload" style="align-content: center;">
@@ -207,14 +214,15 @@
                 $('body').prepend(bg);
             }, done: function (res) {
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=维稳备案文件照片', function (data) {
+                        $('.loading-bg').remove();
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
+                    $('.loading-bg').remove();
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);
@@ -237,14 +245,15 @@
                 $('body').prepend(bg);
             }, done: function (res) {
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=法人身份证照片', function (data) {
+                        $('.loading-bg').remove();
                         fileFromID1 = data.fileFromID;
                         layer.msg("上传成功");
                         fileID1 = res.data.fileId;
                         $('#see1').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
+                    $('.loading-bg').remove();
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);

@@ -37,7 +37,10 @@
 
             data.field['expertGroup.workpictrue'] = file1;
             data.field['expertGroup.certificate'] = file2;
+            var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+            $('body').prepend(bg);
             $.post("#(ctxPath)/app/person/expertGroupVerify", $.param(data.field), function (res) {
+                $('.loading-bg').remove();
                 layer.msg(res.msg);
                 if (res.code === '0') {
                     setTimeout(function () {
@@ -109,8 +112,8 @@
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
+                $('.loading-bg').remove();
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
                     workpictrue = res.data.fileId;
