@@ -68,10 +68,10 @@
                 success: function (data) {
                     layer.msg('编辑成功');
                     $(".layui-btn").addClass("layui-hide");
-                    $("#perfect").removeClass("layui-hide");
                     $(":input").addClass("layui-disabled").prop("disabled", "disabled");
                     $('#upload').text("已上传");
                     $('#see').removeClass('layui-hide layui-disabled').prop("disabled", "");
+                    $("#perfect").removeClass("layui-hide layui-disabled").prop("disabled", "");
                     setTimeout(function () {
                         return true;
                     }, 3000);
@@ -199,7 +199,7 @@
                                         <button type="button" class="layui-hide" id="uploadBtn"></button>
                                         <input class="layui-hide" type="text" id="person.identity"
                                                name="person.identity">
-                                        <button type="button" class="layui-btn" id="see">浏览</button>
+                                        <button type="button" class="layui-btn" id="see">查看</button>
                                     </div>
                                 </div>
                             </div>

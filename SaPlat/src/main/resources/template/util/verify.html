@@ -100,7 +100,7 @@
                     if (res.code === '0') {
                         layer.msg("操作成功，正在刷新页面！");
                         setTimeout(function () {
-                            window.location.reload();
+                            window.parent.window.refresh();
                         }, 1000);
                     } else {
                         layer.msg(res.msg);
@@ -116,7 +116,7 @@
                     if (res.code === '0') {
                         layer.msg("操作成功，正在刷新页面！");
                         setTimeout(function () {
-                            window.location.reload();
+                            window.parent.window.refresh();
                         }, 1000);
                     } else {
                         layer.msg(res.msg);
