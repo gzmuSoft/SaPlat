@@ -22,7 +22,7 @@ public class OrganizationValidator extends JsonValidator {
         validateString("organization.principal", 2, 7, "委办负责人姓名请在2-7位");
         validateRequiredString("organization.addr", "请输入组织机构地址");
         if (!c.getPara("organization.code").equals("")) {
-            validateString("organization.code", 18, 18, "请输入组织机构代码");
+            validateString("organization.code", 18, 18, "请输入18位组织机构代码");
         }
         if (!c.getPara("rePwd").equals("") && !c.getPara("user.pwd").equals(c.getPara("rePwd"))) {
             addError("两次密码输入不一致");
