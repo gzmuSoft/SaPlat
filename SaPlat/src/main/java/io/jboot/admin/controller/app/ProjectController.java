@@ -780,9 +780,10 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void facAgencyTable() {
+        User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<FacAgency> page = facAgencyService.findPage(pageNumber, pageSize);
+        Page<FacAgency> page = facAgencyService.findPage(user.getUserID(),pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(projectUndertakeService.findIsInvite(page.getList().get(i).getId(), getParaToLong("id")));
         }
