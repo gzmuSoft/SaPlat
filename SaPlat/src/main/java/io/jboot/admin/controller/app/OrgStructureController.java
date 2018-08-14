@@ -1,9 +1,7 @@
 package io.jboot.admin.controller.app;
 
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -17,7 +15,6 @@ import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-import net.sf.ehcache.search.expression.Or;
 
 import java.util.*;
 
@@ -217,16 +214,13 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara("orgType")
     public void tableData() {
-        //List<String> list = Arrays.asList("管理机构","企业机构","服务机构","审查团体","专业团体");
         int orgType = getParaToInt("orgType");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long uid = AuthUtils.getLoginUser().getId();
-        OrgStructure orgStructure = new OrgStructure();
-        orgStructure.setName(getPara("name"));
-
-        Page<OrgStructure> page = orgStructureService.findPage(orgStructure, pageNumber, pageSize, uid, orgType);
-        renderJson(new DataTable<OrgStructure>(page));
+        String structName = getPara("name","");
+        Page<Record> page = orgStructureService.findMainList(pageNumber,pageSize,uid,orgType,structName);
+        renderJson(new DataTable<Record>(page));
     }
 
     /**
@@ -596,12 +590,12 @@ public class OrgStructureController extends BaseController {
         }
     }
 
-    public void test() {
+/*    public void test() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long structureID = getParaToLong("structureID",(long)19);
-        Page<Record> page = structPersonLinkService.findPersonListByStructId(pageNumber, pageSize, structureID);
+        Long structureID = getParaToLong("structureID",(long)12);
+        Page<Record> page = orgStructureService.findMainList(pageNumber,pageSize,(long)12,5,"机构");
         renderJson(new DataTable<Record>(page));
-    }
+    }*/
 
 }

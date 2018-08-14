@@ -50,6 +50,9 @@
             , loading: true
             , done: function (res, curr, count) {
             }
+            , text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
         });
         table.on('tool(dateTable)', function(obj) {
             var data = obj.data;
