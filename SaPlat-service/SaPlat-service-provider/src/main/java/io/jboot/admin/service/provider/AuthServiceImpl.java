@@ -116,9 +116,9 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 notification.setName("认证结果通知 ");
                 notification.setSource("/app/project/invite");
                 if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                    notification.setContent("您好,您认证的" + role1.getName() + "认证成功");
+                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
                 } else {
-                    notification.setContent("您好,您认证的" + role1.getName() + "认证失败");
+                    notification.setContent("您好,您申请的 " + role1.getName() + " 审核不通过");
                 }
                 notification.setReceiverID(Math.toIntExact(model.getUserId()));
                 notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
