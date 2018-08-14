@@ -38,8 +38,8 @@
 #end
 
 #define content()
-<div class="x-body">
-    <form id="addForm" class="layui-form" action="">
+<div class="x-body layui-main">
+    <form id="addForm" class="layui-form " action="">
         <input type="hidden" name="person.id" value="#(person.id)">
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>个人名称</label>
@@ -73,7 +73,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>地址</label>
             <div class="layui-input-block">
-                <input type="text" name="person.addr" placeholder="地址" class="layui-input" value="#(person.addr)"
+                <input type="text" name="person.addr" class="layui-input" value="#(person.addr)"
                        style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>

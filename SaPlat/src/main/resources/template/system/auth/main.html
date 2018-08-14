@@ -55,7 +55,7 @@
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
             , initSort: {
-                field: 'lastUpdTime'//按照时间进行默认排序
+                field: 'status'//按照时间进行默认排序
                 ,type: 'desc'
             }
             , page: true
@@ -197,10 +197,7 @@
 
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">审核</a>
 
-    #[[
-    {{# } else if(d.status!= '0'){ }}
-    ]]#
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="warning">复审</a>
+
     #[[
     {{#  } }}
     ]]#
