@@ -21,7 +21,7 @@
       ,person.createUserID
       ,person.createTime
       ,person.isEnable
-  FROM
+  from
        `struct_person_link` as person
       ,`sys_user` as user
   where
@@ -31,4 +31,33 @@
         and
       person.structID = ?
   order by person.createTime desc
+#end
+#sql("orgStructureList")
+  select
+        a.*,
+        if
+          ( b.name IS NULL, "根架构", b.name ) as parentName
+  from
+      ( select
+            *
+        from
+             org_structure
+        where
+            createUserID = #para(uid)
+            and
+            orgType = #para(orgType)
+      ) as a
+        left join
+      ( select
+            *
+        from
+             org_structure
+        where
+            createUserID = #para(uid)
+            and
+            orgType = #para(orgType)
+      ) as b
+      on a.parentID = b.ID
+  where a.name like concat('%', #para(structName) ,'%')
+  order by a.createTime desc
 #end

@@ -138,16 +138,17 @@
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , where: {applyOrInvite: false, flag: true} //设定异步数据接口的额外参数
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {field: 'name', title: '项目名称', minWidth: 100, sort: true}
+                    , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
                     , {
                         field: 'status',
                         title: '状态',
-                        width: 100,
+                        minWidth: 100,
                         sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
-                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'}
+                    , {field: 'reply', title: '回复', minWidth: 100}
+                    , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
                 ]]
             });
         });
@@ -158,16 +159,17 @@
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , cols: [[                  //标题栏
-                    {field: 'name', title: '项目名称', width: 100, sort: true}
+                    {field: 'name', title: '项目名称', minWidth: 100, sort: true}
+                    , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
                     , {
                         field: 'status',
                         title: '状态',
-                        width: 100,
+                        minWidth: 100,
                         sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
-                    , {field: 'reply', title: '回复', width: 100}
-                    , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOptionInvite'}
+                    , {field: 'reply', title: '回复', minWidth: 100}
+                    , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOptionInvite'}
                 ]]
                 , where: {applyOrInvite: true, flag: false} //设定异步数据接口的额外参数
             });

@@ -59,7 +59,6 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            console.log(data);
             if (obj.event === "see"){
                 window.location.href = "#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + data.id;
             } else if (obj.event === "accept"){

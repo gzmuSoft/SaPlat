@@ -81,9 +81,6 @@
                     $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
                 }, 500);
             }
-            console.log("isSelf" + isSelf);
-            console.log("method" + method);
-
         } else if (evaScheme.status === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
             $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
