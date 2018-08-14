@@ -605,10 +605,10 @@ public class ProjectController extends BaseController {
         project.setStatus(ProjectStatus.REVIEW);
         project.setIsEnable(true);
         List<Project> projectList = null;
-        if (projectUndertakeList != null){
+        if (projectUndertakeList != null) {
             projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
         }
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status",  "isEnable"},
+        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
                 new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
         if (projectList == null) {
             projectList = Collections.synchronizedList(new ArrayList<>());
@@ -637,12 +637,26 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Project project = new Project();
-        project.setUserId(loginUser.getId());
-        project.setStatus(ProjectStatus.REVIEWED);
-        project.setIsEnable(true);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(page));
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        Organization organization = organizationService.findById(loginUser.getUserID());
+        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+        } else {
+            projectUndertake.setFacAgencyID(loginUser.getId());
+        }
+        projectUndertake.setIsEnable(true);
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
+        List<ProjectUndertake> list = projectUndertakePage.getList();
+        if (list == null) {
+            list = Collections.synchronizedList(new ArrayList<>());
+        }
+        for (ProjectUndertake p : list) {
+            pageList.add(projectService.findById(p.getProjectID()));
+        }
+        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
+        renderJson(new DataTable<>(page));
     }
 
     /**

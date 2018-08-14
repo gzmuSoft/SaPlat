@@ -70,10 +70,10 @@ public interface ProjectUndertakeService {
     /**
      * @param pageNumber
      * @param pageSize
-     * @param project
+     * @param projectUndertake
      * @return Project
      */
-    public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize);
+    public Page<ProjectUndertake> findPage(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
      * 通过项目id和创建用户id
