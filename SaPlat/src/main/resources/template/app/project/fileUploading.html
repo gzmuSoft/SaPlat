@@ -27,8 +27,8 @@
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
+                $('.loading-bg').remove();
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     pop_close();
                     $.post('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + id + '&projectId=' + projectId);
                 } else if (res.code == 1) {

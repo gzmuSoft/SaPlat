@@ -148,14 +148,15 @@
                 $('body').prepend(bg);
             }, done: function (res) {
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=profGroup&fieldName=管理员身份证照片', function (data) {
+                        $('.loading-bg').remove();
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
+                    $('.loading-bg').remove();
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);

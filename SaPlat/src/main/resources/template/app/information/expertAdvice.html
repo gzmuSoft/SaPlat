@@ -101,11 +101,18 @@
                     data.id = id;
                     data.expertGroupId = $('dd.layui-this').attr("lay-value");
                 }
-                $.post("#(ctxPath)/app/information/expertAdvicePost", data, function (e) {
-                    layer.msg("提交成功！正在跳转...");
-                    setTimeout(function () {
-                        window.location.href = document.referrer;
-                    }, 2000);
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+                $.post("#(ctxPath)/app/information/expertAdvicePost", data, function (res) {
+                    $('.loading-bg').remove();
+                    if (res == '0'){
+                        layer.msg("提交成功！正在跳转...");
+                        setTimeout(function () {
+                            window.location.href = document.referrer;
+                        }, 1000);
+                    }else {
+                        layer.msg(res.msg);
+                    }
                 });
                 return false;
             }

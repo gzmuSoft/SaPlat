@@ -95,8 +95,11 @@
         var type2 = "#(type2)";
         if (type1 === "ajax") {
             $('#btn1').unbind("click").click(function () {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
                 var da = $(this).attr("data-data");
                 $.post($(this).attr("data-href"), da, function (res) {
+                    $('.loading-bg').remove();
                     if (res.code === '0') {
                         layer.msg("操作成功，正在刷新页面！");
                         setTimeout(function () {
@@ -111,8 +114,11 @@
 
         if (type2 === "ajax") {
             $('#btn2').unbind("click").click(function () {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
                 var da = $(this).attr("data-data");
                 $.post($(this).attr("data-href"), da, function (res) {
+                    $('.loading-bg').remove();
                     if (res.code === '0') {
                         layer.msg("操作成功，正在刷新页面！");
                         setTimeout(function () {
