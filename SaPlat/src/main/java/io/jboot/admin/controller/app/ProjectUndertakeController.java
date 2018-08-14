@@ -88,6 +88,7 @@ public class ProjectUndertakeController extends BaseController {
      * 榜单显示已发布的项目
      */
     public void projectList() {
+        User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
@@ -98,7 +99,7 @@ public class ProjectUndertakeController extends BaseController {
         }
         project.setIsPublic(true);
         project.setStatus(ProjectStatus.IS_VERIFY);
-        Page<Project> page = projectService.findPageByIsPublic(project, pageNumber, pageSize);
+        Page<Project> page = projectService.findPageByIsPublic(user.getUserID(),project, pageNumber, pageSize);
         if (page.getList().size() > 0) {
             page.getList().forEach(p -> {
                 ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());
@@ -128,7 +129,6 @@ public class ProjectUndertakeController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-        User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
         setAttr("model", model).render("see.html");

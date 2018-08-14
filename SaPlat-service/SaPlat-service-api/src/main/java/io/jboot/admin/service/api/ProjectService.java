@@ -104,12 +104,13 @@ public interface ProjectService  {
     /**
      * find model by user and role and isEnable
      *
+     * @param userId
      * @param pageNumber
      * @param pageSize
      * @param project
      * @return Project
      */
-    public Page<Project> findPageByIsPublic(Project project, int pageNumber, int pageSize);
+    public Page<Project> findPageByIsPublic(long userId, Project project, int pageNumber, int pageSize);
 
     /**
      *
