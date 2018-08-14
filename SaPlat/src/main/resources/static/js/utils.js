@@ -33,6 +33,27 @@ function pop_show(title,url,w,h,f){
 	});
 }
 
+function pop_max_show(title,url,f){
+    if (title == null || title == '') {
+        title=false;
+    };
+    if (url == null || url == '') {
+        url="404.html";
+    };
+    layer.open({
+        type: 2,
+        area: ['100%', '100%'],
+        fix: false, //不固定
+        maxmin: false,
+        shadeClose: false,
+        shade:0.4,
+        title: title,
+        content: url,
+        end: f,
+        anim: 5
+    });
+}
+
 /*关闭弹出框口*/
 function pop_close(){
 	var index = parent.layer.getFrameIndex(window.name);

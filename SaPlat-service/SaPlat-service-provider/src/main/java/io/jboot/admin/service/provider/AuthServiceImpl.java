@@ -97,7 +97,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             columns.lt("type", "2");
         }
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-status");
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "-lastUpdTime");
     }
 
 
@@ -130,16 +130,10 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                 if (!notification.save()) {
                     return false;
                 }
-                List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
-                for (UserRole role : userRoleList) {
-                    if (model.getUserId().equals(role.getUserID()) && model.getRoleId().equals(role.getRoleID())) {
-                        if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                            userRoleService.delete(role);
-                        }
-                        return true;
-                    }
+                if(!model.getStatus().equals(AuthStatus.IS_VERIFY)){
+                    return true;
                 }
-                userRoleList = new ArrayList<UserRole>();
+                List<UserRole> userRoleList = new ArrayList<UserRole>();
                 UserRole userRole = new UserRole();
                 userRole.setRoleID(model.getRoleId());
                 userRole.setUserID(model.getUserId());
