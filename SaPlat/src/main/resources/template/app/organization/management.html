@@ -71,7 +71,7 @@
                 <label class="layui-form-label" for="management.principalcon"style="width: 180px">负责人联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="management.principalcon" name="management.principalcon"
-                           value="#(management.principalcon)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.principalcon)" class="layui-input"style="width: 500px" lay-verify="required|phone"/>
                 </div>
             </div>
 
@@ -95,7 +95,7 @@
                 <label class="layui-form-label" for="management.managercon"style="width: 180px">主管联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="management.managercon" name="management.managercon"
-                           value="#(management.managercon)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.managercon)" class="layui-input"style="width: 500px" lay-verify="required|phone"/>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
                 <label class="layui-form-label" for="management.num"style="width: 180px">部门人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="management.num" name="management.num"
-                           value="#(management.num)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.num)" class="layui-input"style="width: 500px" lay-verify="required|length"/>
                 </div>
             </div>
 
@@ -148,6 +148,13 @@
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
+
+        form.verify({
+            length: [
+                /^[\S]{0,11}$/
+                ,'人数不能大于11位'
+            ]
+        });
 
         form.on('submit(sub)', function (data) {
             util.sendAjax({
