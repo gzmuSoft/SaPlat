@@ -84,7 +84,7 @@
                 <label class="layui-form-label" for="profGroup.capital" style="width: 180px">注册资金</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="profGroup.capital" name="profGroup.capital"
-                           value="#(profGroup.capital)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.capital)" class="layui-input" style="width: 500px" lay-verify="required|mLength"/>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
                 <label class="layui-form-label" for="profGroup.contact" style="width: 180px">管理员联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="profGroup.contact" name="profGroup.contact"
-                           value="#(profGroup.contact)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.contact)" class="layui-input" style="width: 500px" lay-verify="required|phone"/>
                 </div>
             </div>
 
@@ -172,6 +172,13 @@
             , error: function (index, upload) {
                 alert("文件上传错误！请重新尝试！");
             }
+        });
+
+        form.verify({
+            mLength: [
+                /^[\S]{0,11}$/
+                ,'注册资金不能大于11位'
+            ]
         });
 
         form.on('submit(sub)', function (data) {

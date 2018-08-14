@@ -75,6 +75,13 @@ public interface ProjectUndertakeService {
      */
     public Page<ProjectUndertake> findPage(ProjectUndertake project, int pageNumber, int pageSize);
 
+    /**
+     * 通过项目id和创建用户id
+     * @param id
+     * @param userId
+     * @return
+     */
+    public ProjectUndertake findByProjectIdAndCreateUserID(Long id, Long userId);
 
     /**
      * 通过项目编号和服务机构编号查询项目承接

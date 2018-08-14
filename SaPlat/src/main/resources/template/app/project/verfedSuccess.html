@@ -80,9 +80,8 @@
                 , {field: 'amount', title: '预计金额', minWidth: 100, sort: true}
                 , {field: 'brief', title: '简介', align: 'center', minWidth: 250,sort: true}
                 , {field: 'assessmentMode', title: '评估方式', minWidth: 100,sort: true}
-                , {field: 'remark', title: '备注', minWidth: 150,sort: true}
                 , {fixed: 'right', title: '发布状态', minWidth: 170,sort: true, align: 'center', toolbar: '#barOption-publicStatus'} //这里的toolbar值是模板元素的选择器
-                ,{field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {fixed: 'right', title: '操作', minWidth: 150,sort: true, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/verfedSuccess'
@@ -100,6 +99,9 @@
             , limit: 30 //默认采用30
             , loading: true
             , done: function (res, curr, count) {
+                // 隐藏恶心人的单元格重复问题，在修改 field 的时候务必修改此处
+                $('th[data-field=6]').last().remove();
+                $('td[data-field=6]').last().remove();
             }
         });
 
