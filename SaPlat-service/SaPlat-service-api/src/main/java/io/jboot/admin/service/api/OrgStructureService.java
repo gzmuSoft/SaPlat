@@ -2,11 +2,16 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.service.entity.model.OrgStructure;
 
 import java.util.List;
 
 public interface OrgStructureService {
+    /**
+     * Main 组织-组织架构数据显示以及分页
+     */
+    public Page<Record> findMainList(int pageNumber, int pageSize,Long uid,int orgTye,String structName);
     /**
      * 查找架构 - 个人主动加入
      * @param orgStructure

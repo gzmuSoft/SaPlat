@@ -163,13 +163,14 @@
     var animating;
     var projectId = -1, judgeFile = false;
     var paTypeID, fileId;
-    layui.use(['layedit', 'table'], function () {
+    layui.use(['layedit', 'table', 'element'], function () {
         /**
          * 操作对象
          */
         var $ = layui.jquery
             , layedit = layui.layedit
             , table = layui.table
+            , element = layui.element
             , saveOrUpdate = 1, maxPage = 1, presentPage = 1;
 
         /**
@@ -389,8 +390,10 @@
                         judgeFile = data.judgeFile;
                         if (judgeFile === true) {
                             layer.msg("您的所有文件都已上传完毕")
+                            setTimeout(1000);
                         } else if (judgeFile === false) {
                             layer.msg("您还有部分文件未上传，之后您可以前往“立项中的项目”进行完善")
+                            setTimeout(1000);
                         }
                     });
             }
@@ -430,17 +433,33 @@
         $('.submit').click(function () {
             $.getJSON("#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile,
                 function (data) {
-                    console.log(data);
-                    if (data.flag === 0) {
-                        parent.addTab('card', "评估中的项目", "#(ctxPath)/app/project/evaluation");
-                        parent.close();
-                    } else if (data.flag === 1) {
-                        parent.addTab('card', "审核中的项目", "#(ctxPath)/app/project/toVerfiing");
-                        parent.close();
-                    } else if (data.flag === 2) {
-                        parent.addTab('card', "立项中的项目", "#(ctxPath)/app/project/toBuildProject");
-                        parent.close();
-                    }
+                    layer.open({
+                        content: '填写提交完毕'
+                        , btn: ['查看项目状态', '成立新项目']
+                        , yes: function (index, layero) {
+                            //按钮【按钮一】的回调
+                            var ele = parent.$("li.layui-this").children("i");
+                            if (data.flag === 0) {
+//                                $("dd.layui-this").removeClass("layui-this");
+//                                $("dd:contains('项目评估')").addClass("layui-this");
+                                parent.addTab('card', "项目评估", "#(ctxPath)/app/project/evaluation");
+                            } else if (data.flag === 1) {
+                                parent.addTab('card', "审核中的项目", "#(ctxPath)/app/project/toVerfiing");
+                            } else if (data.flag === 2) {
+                                parent.addTab('card', "立项中的项目", "#(ctxPath)/app/project/toBuildProject");
+                            }
+                            ele.click();
+                        }
+                        , btn2: function (index, layero) {
+                            //按钮【按钮二】的回调
+                            window.location.reload();
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                        , cancel: function () {
+                            //右上角关闭回调
+                            return false //开启该代码可禁止点击该按钮关闭
+                        }
+                    });
                 }
             )
         });

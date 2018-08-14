@@ -82,6 +82,7 @@ public class AuthProjectServiceImpl extends JbootServiceBase<AuthProject> implem
 
                 model.setLastUpdTime(new Date());
                 Project project = projectService.findById(model.getProjectId());
+                project.setIsEnable(true);
                 project.setStatus(model.getStatus());
                 return model.update() && project.update();
             }
