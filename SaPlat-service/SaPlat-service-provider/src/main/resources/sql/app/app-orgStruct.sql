@@ -61,3 +61,31 @@
   where a.name like concat('%', #para(structName) ,'%')
   order by a.createTime desc
 #end
+
+#sql("searchStructureByName")
+    select
+         a.*
+         ,b.name as belongToName
+    from
+         org_structure as a,
+         sys_user as b
+    where
+         a.createUserID = b.id
+           and
+         a.name like concat('%', #para(structName) ,'%')
+    order by a.createTime desc
+  #end
+
+#sql("searchStructureByID")
+    select
+        a.*
+        ,b.name as belongToName
+    from
+        org_structure as a,
+        sys_user as b
+    where
+        a.createUserID = b.id
+          and
+        a.id = #para(structId)
+    order by a.createTime desc
+#end
