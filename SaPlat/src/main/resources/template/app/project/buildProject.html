@@ -74,16 +74,13 @@
                     $.post('#(ctxPath)/app/project/sendAssessment', {
                         id: data.id
                     }, function (res) {
-                        console.log(res.status);
                         if (res.status == true) {
                             layer.msg("发起审核成功！");
-                            setTimeout(function () {
-                            }, 1000);
+                            layer.close(index);
                             window.location.reload();
                         } else if (res.status == false) {
                             layer.msg("请先将项目相关资料补充完整！");
-                            setTimeout(function () {
-                            }, 1000);
+                            layer.close(index);
                         }
                     });
                 });

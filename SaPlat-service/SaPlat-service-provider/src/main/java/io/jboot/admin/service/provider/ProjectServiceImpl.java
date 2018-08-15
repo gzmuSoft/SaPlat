@@ -178,16 +178,17 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake) {
         return Db.tx(() -> {
-            if (projectUndertake == null) {
-                return false;
-            }
             if (!model.saveOrUpdate()) {
                 return false;
             }
-            authProject.setProjectId(model.getId());
-            projectUndertake.setProjectID(model.getId());
-
-            return Db.tx(() -> authProject.saveOrUpdate() && projectUndertake.saveOrUpdate());
+            if (projectUndertake == null) {
+                authProject.setProjectId(model.getId());
+                return Db.tx(() -> authProject.saveOrUpdate());
+            } else {
+                authProject.setProjectId(model.getId());
+                projectUndertake.setProjectID(model.getId());
+                return Db.tx(() -> authProject.saveOrUpdate() && projectUndertake.saveOrUpdate());
+            }
         });
     }
 
