@@ -1200,7 +1200,7 @@ public class ProjectController extends BaseController {
         BaseStatus baseStatus=new BaseStatus() {};
         baseStatus.add("4","评估中");
         baseStatus.add("5","审查中");
-        baseStatus.add("7","审查完成");
+        baseStatus.add("7","审查通过");
         setAttr("statusList",baseStatus);
         render("projectCollect.html");
     }
