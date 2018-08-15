@@ -215,9 +215,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public Page<Project> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
         Kv c;
         SqlPara sqlPara = null;
-        if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
+        if (projectUndertake.getFacAgencyID() != null) {
             c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus());
-            sqlPara = Db.getSqlPara("app-project.project-self", c);
+            sqlPara = Db.getSqlPara("app-project.project-xxx", c);
         }
         return DAO.paginate(pageNumber, pageSize, sqlPara);
     }
