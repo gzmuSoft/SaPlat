@@ -1215,6 +1215,7 @@ public class ProjectController extends BaseController {
         render("projectCollect.html");
     }
 
+
     @Before(GET.class)
     @NotNullPara({"pageNumber","pageSize"})
     public void projectCollectTableData(){

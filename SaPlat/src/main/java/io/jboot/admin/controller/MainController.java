@@ -246,13 +246,13 @@ public class MainController extends BaseController {
             // 已有项目
             setAttr("projectAmount", projectList.size()).
                     // 待评项目
-                    setAttr("assessAmount", assessAmount).
+                            setAttr("assessAmount", assessAmount).
                     // 待审核
-                    setAttr("auditAmount", auditAmount).
+                            setAttr("auditAmount", auditAmount).
                     // 待审查
-                    setAttr("reviewAmount", reviewAmount).
+                            setAttr("reviewAmount", reviewAmount).
                     // 承接率
-                    setAttr("undertakeRate", new DecimalFormat("##0.00").format(projectUndertakeService.findAllAndUndertakeByUserId(loginUser.getId()))).
+                            setAttr("undertakeRate", new DecimalFormat("##0.00").format(projectUndertakeService.findAllAndUndertakeByUserId(loginUser.getId()))).
                     setAttr("role", role).
                     setAttr("user", loginUser).
                     render("welcome.html");
@@ -298,5 +298,9 @@ public class MainController extends BaseController {
             throw new BusinessException("保存失败!");
         }
         renderJson(RestResult.buildSuccess());
+    }
+
+    public void help(){
+        render("help.html");
     }
 }
