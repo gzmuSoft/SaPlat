@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="../static/css/register/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="../static/css/register/style/admin.css" media="all">
     <link rel="stylesheet" href="../static/css/register/style/login.css" media="all">
-    <link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/jq22.css" />
 </head>
 
 <body>
@@ -170,6 +169,7 @@
 </div>
 
 #include("/template/common/include/_all_js.html")
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/mailCompletion.js"></script>
 <script>
     layui.use(['form', 'element'], function () {
         var $ = layui.$,
@@ -178,6 +178,11 @@
 
         form.render();
 
+
+        $(".email").each(function () {
+            var mail = new hcMailCompletion($(this).attr("id"));
+            mail.run();
+        });
         //提交
         form.on('submit(LAY-user-reg-submit)', function (obj) {
             var field = obj.field;
