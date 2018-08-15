@@ -104,6 +104,9 @@
                         layer.close(index);
                     });
                 });
+            } else if(obj.event==="view"){
+                pop_max_show('查看', '#(ctxPath)/system/organizationrole/view?orgID=' + data.orgID+"&type=facAgency",function () {
+                });
             }
 
 
@@ -156,9 +159,9 @@
 
 <script type="text/html" id="barOption">
 
-    #shiroHasPermission('/system/auth/view')
-    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
-    <!--#end-->
+    #shiroHasPermission('/system/organizationrole/view')
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
+    #end
 
 
     #shiroHasPermission('/system/auth/view')
