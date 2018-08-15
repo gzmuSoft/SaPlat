@@ -63,6 +63,7 @@ public class ProAssReviewController extends BaseController {
                 break;
             //专家页面，有提交意见的表单，只有预审报告文件
             case 3:
+                setAttr("projectId",projectId).
                 render("main_expert.html");
                 break;
             default:
@@ -93,7 +94,6 @@ public class ProAssReviewController extends BaseController {
     @NotNullPara("projectId")
     public void recData() {
         Long projectId = getParaToLong("projectId");
-
         ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
@@ -132,11 +132,15 @@ public class ProAssReviewController extends BaseController {
 
     @Before({POST.class, ProAssReviewValidator.class})
     public void postAdd() {
-        System.out.println("#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@#####&&&&&@@@@@@@");
         ProAssReview model = getBean(ProAssReview.class, "model");
         if (proAssReviewService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
+
+        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), model.getProjectID());
+        model.setFileID(fileProject.getFileID());
+
         model.setCreateUserID(AuthUtils.getLoginUser().getId());//使创建用户编号为当前用户的编号
         model.setLastUpdateUserID(AuthUtils.getLoginUser().getId());//使末次更新用户编号为当前用户的编号
         model.setIsEnable(true);
