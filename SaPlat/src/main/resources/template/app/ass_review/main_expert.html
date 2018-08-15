@@ -4,7 +4,7 @@
 #define css()
 <style>
     .pdfobject-container {
-        width: 48%;
+        width: 65%;
         height: 100%;
         padding: 5em 0;
     }
@@ -37,39 +37,43 @@
         /**
          * 获取列表的数据，参考information edit.html
          */
-        $.get("#(ctxPath)/app/information/editData", {projectId: "#(projectId)"}, function (res) {
+        $.get("#(ctxPath)/app/ass_review/recData", {projectId: "#(projectId)"}, function (res) {
             var data = res.list;
-            var liTagS = '<li class="layui-timeline-item">';
-            var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
-            var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
-            var timeTxtTagS = '<h3 class="layui-timeline-title">';
-            var timeTxtTagE = '</h3>';
-            var reTitle = '评估审查意见：';
-            var timeLineContentDivE = '</div>';
-            var liTagE = '</li>';
-            var liItem = '';
-            ul = $('<ul class="layui-timeline"></ul>');
-            data.forEach(function (ele) {
-                liItem = '';
-                liItem += liTagS;
-                liItem += timeLineIcon;
-                liItem += timeLineContentDivS;
-                liItem += timeTxtTagS;
-                liItem += ele.createTime;
-                liItem += timeTxtTagE;
-                liItem += reTitle;
-                liItem += ele.recomment;
-                liItem += '<hr class="layui-bg-gray">';
-                liItem += '意见反馈：';
-                if (ele.feedback) {
-                    liItem += ele.feedback;
-                } else {
-                    liItem += '暂无';
-                }
-                liItem += timeLineContentDivE;
-                liItem += liTagE;
-                $("ul#recomment").append(liItem);
-            });
+            if(data&&0 !=data.length){
+                $("ul#recomment").find("li").remove();
+                var liTagS = '<li class="layui-timeline-item">';
+                var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+                var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+                var timeTxtTagS = '<h3 class="layui-timeline-title">';
+                var timeTxtTagE = '</h3>';
+                var reTitle = '评估审查意见：';
+                var timeLineContentDivE = '</div>';
+                var liTagE = '</li>';
+                var liItem = '';
+                data.forEach(function (ele) {
+                    liItem = '';
+                    liItem += liTagS;
+                    liItem += timeLineIcon;
+                    liItem += timeLineContentDivS;
+                    liItem += timeTxtTagS;
+                    liItem += ele.createTime;
+                    liItem += timeTxtTagE;
+                    liItem += reTitle;
+                    liItem += ele.recomment;
+                    liItem += '<hr class="layui-bg-gray">';
+                    liItem += '意见反馈：';
+                    if (ele.feedback) {
+                        liItem += ele.feedback;
+                    } else {
+                        liItem += '暂无';
+                    }
+                    liItem += timeLineContentDivE;
+                    liItem += liTagE;
+                    $("ul#recomment").append(liItem);
+                });
+            } else {
+                $("ul#recomment").append("<div>暂无评审意见</div>");
+            }
         });
     });
     //渲染表单，
@@ -115,19 +119,14 @@
     <div class="layui-row">
         <div id="" class="layui-col-md12">
             <form id="rec" class="layui-form" action="">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">是否通过</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" name="isPassS" lay-skin="switch" lay-filter="switchS" lay-text="通过|不通过">
-                        <input class="layui-hide" type="text" value="0" name="model.isPass">
-                        <input class="layui-hide" type="text" value="test" name="model.name">
-                        <input class="layui-hide" type="text" value="6" name="model.sort">
-                    </div>
-                </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">审查意见</label>
                     <div class="layui-input-block">
                         <textarea placeholder="请输入内容" class="layui-textarea" name="model.recomment"></textarea>
+                        <input class="layui-hide" type="text" value="0" name="model.isPass">
+                        <input class="layui-hide" type="text" value="test" name="model.name">
+                        <input class="layui-hide" type="text" value="#(projectId)" name="model.projectID">
+                        <input class="layui-hide" type="text" value="6" name="model.sort">
                     </div>
                 </div>
                 <div class="layui-form-item">
