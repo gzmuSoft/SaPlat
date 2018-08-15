@@ -783,6 +783,65 @@ public class ProjectController extends BaseController {
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
+    @NotNullPara("id")
+    public void finishUpload() {
+        Project project = projectService.findById(getParaToLong("id"));
+        if (project == null) {
+            throw new BusinessException("项目不存在");
+        }
+        ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
+        if (fileProject == null) {
+            fileProject = new FileProject();
+            fileProject.setName(projectFileType.getName());
+            fileProject.setProjectID(project.getId());
+            fileProject.setFileTypeID(projectFileType.getId());
+            fileProject.setIsEnable(false);
+            fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
+            fileProject = fileProjectService.saveAndGet(fileProject);
+        }
+        setAttr("fileProject", fileProject);
+        render("finishUpload.html");
+    }
+
+    public void finishUploadSave() {
+        FileProject fileProject = getBean(FileProject.class, "fileProject");
+        Project project = projectService.findById(fileProject.getProjectID());
+        fileProject.setIsEnable(false);
+        FileProject model = fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(), fileProject.getProjectID());
+        model.setFileID(fileProject.getFileID());
+        if (!fileProjectService.updateFileProjectAndFiles(model)) {
+            throw new BusinessException("保存失败,请重试");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    @NotNullPara({"fileProjectID"})
+    public void finishUploadSub() {
+        FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
+        Project project = projectService.findById(fileProject.getProjectID());
+        fileProject.setIsEnable(true);
+        project.setCreateTime(new Date());
+        if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
+            throw new BusinessException("提交失败");
+        }
+        renderJson(RestResult.buildSuccess());
+
+    }
+
+    @NotNullPara("id")
+    public void finishView(){
+        Project project = projectService.findById(getParaToLong("id"));
+        ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+        FileProject fileProject=fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(),project.getId());
+        setAttr("fileProject",fileProject);
+        if(fileProject!=null) {
+            setAttr("fileID", fileProject.getFileID());
+        }
+        render("finishView.html");
+
+    }
+
 
     /**
      * 项目公开-填写日期
@@ -1198,8 +1257,7 @@ public class ProjectController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project=new Project();
-        project.setStatus(ProjectStatus.REVIEWED);
-        project.setUserId(AuthUtils.getLoginUser().getId());
+        project.setStatus(ProjectStatus.CHECKED);
         project.setIsEnable(true);
         Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
         renderJson(new DataTable<Project>(page));

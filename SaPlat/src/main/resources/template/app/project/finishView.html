@@ -1,0 +1,35 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    $("#view").click(function () {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + '#(fileID)', '', '', function () {
+        });
+    });
+    $("#back").click(function () {
+        history.go(-1);
+    });
+</script>
+#end
+
+#define content()
+    #if(fileProject==null)
+    <div class="x-center">
+        <h1 style="margin-top: 59px;">未上传终审报告</h1>
+    </div>
+    #else
+        <div class="x-center">
+            <h3 style="margin-top: 47px;">查看终审报告文件</h3>
+            <button id="view" style="margin-top: 12px;" class="layui-btn layui-btn-small">查看</button>
+        </div>
+    #end
+    <div class="x-center">
+        <button id="back" class="layui-btn layui-btn-small" style="margin-top: 34px;">返回</button>
+    </div>
+#end

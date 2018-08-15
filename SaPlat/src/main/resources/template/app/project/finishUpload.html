@@ -1,0 +1,119 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    var element = '#(fileProject.toJson())';
+    var fileProject = JSON.parse(element);
+    layui.use(['table', 'layer', 'upload'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , upload = layui.upload;
+        upload.render({
+            elem: '#add'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            //,multiple: true
+            , exts: 'pdf'
+            , data: {
+                description: "文档文件"
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
+                $('.loading-bg').remove();
+                if (res.code == 0) {
+                    postFileID(fileProject.fileTypeID, res.data.fileId, fileProject.projectID);
+                    return true;
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    return false;
+                }
+            }
+            , error: function (index, upload) {
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+    });
+
+    function postFileID(_fileTypeID, _fileID, _projectID) {
+        util.sendAjax({
+            type: 'POST',
+            url: '#(ctxPath)/app/project/finishUploadSave',
+            data: {
+                'fileProject.fileID': _fileID,
+                'fileProject.projectID': _projectID,
+                'fileProject.fileTypeID': _fileTypeID
+            },
+            loadFlag: true,
+            success: function (data) {
+                window.location.reload();
+            },
+            unSuccess: function (data) {
+            }
+        })
+    }
+
+    $("#sub").click(function () {
+        util.sendAjax({
+            type: 'POST',
+            url: '#(ctxPath)/app/project/finishUploadSub',
+            data: {
+                fileProjectID: fileProject.id
+            },
+            loadFlag: true,
+            success: function (data) {
+                window.location.reload();
+            },
+            unSuccess: function (data) {
+            }
+        });
+    });
+    $("#view").click(function () {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileProject.fileID, '', '', function () {
+        });
+    });
+    $("#view2").click(function () {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileProject.fileID, '', '', function () {
+        });
+    });
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+        <legend class="x-center">终审报告</legend>
+        #if(!fileProject.isEnable)
+        <div class="x-center">
+            <h3>上传终审报告文件</h3>
+            <button id="add" class="layui-btn layui-btn-small">上传</button>
+        </div>
+        #if(fileProject.fileID!=null)
+        <div class="x-center">
+            <h3>预览终审报告文件</h3>
+            <button id="view" class="layui-btn layui-btn-small">预览</button>
+        </div>
+        <div class="x-center">
+            <h3>提交终审报告文件</h3>
+            <button id="sub" class="layui-btn layui-btn-small">提交</button>
+        </div>
+        #end
+        #else
+        <div class="x-center">
+            <h1>你已提交文件</h1><button id="view2" class="layui-btn layui-btn-small" style="margin-top: 30px;">查看文件</button>
+        </div>
+        #end
+    </fieldset>
+</div>
+#end

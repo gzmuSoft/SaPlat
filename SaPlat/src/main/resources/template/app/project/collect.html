@@ -19,8 +19,12 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/project/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看预审报告</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">预审报告</a>
     #end
+
+
+    <a class="layui-btn layui-btn-xs" lay-event="seeFinish">终审报告</a>
+
 </script>
 #end
 
@@ -63,11 +67,12 @@
         });
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2'
-            // if (obj.event === 'see') {
-            //     pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
-            //     });
-            // }
+             if (obj.event === 'see') {
+                 window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2';
+             }
+             else if(obj.event==="seeFinish"){
+                 window.location.href = '#(ctxPath)/app/project/finishView?id=' + data.id;
+             }
         });
     });
 </script>

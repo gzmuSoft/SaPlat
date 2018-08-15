@@ -21,12 +21,14 @@
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end
+    <a class="layui-btn layui-btn-xs" lay-event="upload">上传终审报告文件</a>
 </script>
 #end
 
 #define js()
 <script type="text/javascript">
     layui.use(['table', 'layer'], function () {
+        var id = null ;
         var table = layui.table;
         // 表格渲染
         var tableIns = table.render({
@@ -38,6 +40,7 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'id', title: 'id'}
                 , {field: 'name', title: '项目名称', minWidth: 150, sort: true}
                 , {field: 'roleName', title: '角色名称', minWidth: 120, sort: true}
                 , {field: 'amount', title: '预计金额（元）', minWidth: 120, sort: true}
@@ -45,7 +48,7 @@
                 , {field: 'brief', title: '简介', minWidth: 150, sort: true}
                 ,{field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {field: 'remark', title: '备注', minWidth: 150}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/reviewed'
             , method: 'get'
@@ -67,6 +70,8 @@
             if (obj.event === 'see') {
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
                 });
+            }else if (obj.event === 'upload') {
+               window.location.href = "#(ctxPath)/app/project/finishUpload?id=" + data.id;
             }
         });
     });
