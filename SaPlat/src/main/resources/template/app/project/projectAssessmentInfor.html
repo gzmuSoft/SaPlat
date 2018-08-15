@@ -187,7 +187,7 @@
 <!--js start-->
 <script type="text/javascript">
 
-    var assessmentMode = '';
+    var assessmentMode = '#(project.assessmentMode)';
 
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
@@ -202,6 +202,17 @@
 
         var index = layedit.build('demo'); //建立编辑器
 
+
+        (function () {
+            console.log("s"+assessmentMode);
+            if (assessmentMode === "委评") {
+                $("#zp").css("color", '#d9cfdc');
+                $("#wp").css("color", '#0fae7f');
+            } else{
+                $("#zp").css("color", '#0fae7f');
+                $("#wp").css("color", '#d9cfdc');
+            }
+        })()
         /**
          * 判断是否填写完整
          */
