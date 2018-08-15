@@ -102,12 +102,10 @@ public class ProjectUndertakeController extends BaseController {
         Page<Project> page = projectService.findPageByIsPublic(user.getId(),project, pageNumber, pageSize);
         if (page.getList().size() > 0) {
             page.getList().forEach(p -> {
-                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());
+                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndCreateUserID(p.getId(), user.getId());
                 if (projectUndertake != null){
                     Integer status = projectUndertake.getStatus();
-                    if (status == null) {
-                        p.setRemark("未承接");
-                    } else if (status == 0) {
+                    if (status == 0) {
                         p.setRemark("待确认");
                     } else if (status == 1) {
                         p.setRemark("已拒绝");
