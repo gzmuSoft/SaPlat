@@ -15,7 +15,7 @@
 #define content()
 <div class="x-body">
 
-    <label class="layui-form-label">服务机构名称</label>
+    <label class="layui-form-label" style="width: 120px">服务机构名称</label>
     <div class="layui-input-inline">
         <input type="text" id="name" name="name" placeholder="服务机构名称" class="layui-input"/>
     </div>
@@ -73,12 +73,12 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '服务机构名称', width: 100}
-                , {field: 'scope', title: '服务范围', width: 100}
-                , {field: 'principal', title: '负责人', width: 100}
-                , {field: 'capital', title: '注册资本', width: 100}
-                , {field: 'resume', title: '公司简历', width: 100}
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '服务机构名称', minWidth: 120}
+                , {field: 'scope', title: '服务范围', minWidth: 100}
+                , {field: 'principal', title: '负责人', minWidth: 80}
+                , {field: 'capital', title: '注册资本', minWidth: 100}
+                , {field: 'resume', title: '公司简历', minWidth: 100}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/facAgencyTable?id=' + $('#id').val()
             , method: 'get'

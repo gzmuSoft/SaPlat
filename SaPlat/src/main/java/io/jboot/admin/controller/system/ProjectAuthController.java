@@ -341,6 +341,9 @@ public class ProjectAuthController extends BaseController {
 //            }
 //            i++;
 //        }
+        User user=userService.findById(project.getUserId());
+        Organization organization=organizationService.findById(user.getUserID());
+        setAttr("organization",organization);
         setAttr("paTypeName", paTypeName).setAttr("pStepName", pStepName)
                 .setAttr("paTypeId", project.getPaTypeID()).setAttr("pStepId", project.getPStepID())
                 .setAttr("projectID", id)

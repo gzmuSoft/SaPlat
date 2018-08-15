@@ -389,8 +389,8 @@ public class OrgStructureController extends BaseController {
         OrgStructure orgStructure = new OrgStructure();
         orgStructure.setName(name);
         orgStructure.setId(sid);
-        Page<OrgStructure> page = orgStructureService.searchStructure(orgStructure, pageNumber, pageSize);
-        renderJson(new DataTable<OrgStructure>(page));
+        Page<Record> page = orgStructureService.searchStructure(orgStructure, pageNumber, pageSize);
+        renderJson(new DataTable<Record>(page));
     }
 
     /**
@@ -597,5 +597,8 @@ public class OrgStructureController extends BaseController {
         Page<Record> page = orgStructureService.findMainList(pageNumber,pageSize,(long)12,5,"机构");
         renderJson(new DataTable<Record>(page));
     }*/
+    public void test(){
+        render("test.html");
+    }
 
 }

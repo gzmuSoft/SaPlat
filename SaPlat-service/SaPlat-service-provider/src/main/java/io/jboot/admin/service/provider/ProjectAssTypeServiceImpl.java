@@ -1,7 +1,10 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.api.ProjectFileTypeService;
+import io.jboot.admin.service.entity.model.ProjectFileType;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -16,6 +19,9 @@ import java.util.List;
 @Singleton
 @JbootrpcService
 public class ProjectAssTypeServiceImpl extends JbootServiceBase<ProjectAssType> implements ProjectAssTypeService {
+
+    @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
 
     /**
      * find all model
@@ -52,5 +58,29 @@ public class ProjectAssTypeServiceImpl extends JbootServiceBase<ProjectAssType> 
     @Override
     public ProjectAssType findByName(String name) {
         return DAO.findFirstByColumn("name", name);
+    }
+
+    @Override
+    public boolean save(ProjectAssType model){
+        return Db.tx(() -> {
+            ProjectFileType parent=projectFileTypeService.findByName("立项");
+            ProjectFileType projectFileType=new ProjectFileType();
+            projectFileType.setParentID(parent.getId());
+            projectFileType.setCreateUserID(model.getCreateUserID());
+            projectFileType.setName(model.getName());
+            projectFileType.setRemark("立项评估类型");
+            return projectFileType.save()&&model.save();
+        });
+    }
+
+    @Override
+    public boolean update(ProjectAssType model){
+        return Db.tx(() -> {
+            ProjectFileType parent=projectFileTypeService.findByName("立项");
+            ProjectAssType oldModel = findById(model.getId());
+            ProjectFileType projectFileType=projectFileTypeService.findByNameAndParentID(oldModel.getName(),parent.getId());
+            projectFileType.setName(model.getName());
+            return projectFileType.update()&&model.update();
+        });
     }
 }

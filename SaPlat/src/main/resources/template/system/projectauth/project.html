@@ -34,22 +34,22 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 150px"><em class="require-mark">*</em>组织机构名称：</label>
+                <div class="layui-input-block " style="margin: 0 150px">
+                    <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)" value="#(organization.name)"
+                           class="layui-input " style="width: 500px" disabled/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label" for="project.amount" style="width: 150px"><em class="require-mark">*</em>预计金额：</label>
                 <div class="layui-input-block"style="margin: 0 150px">
-                    <input type="text" id="project.amount" name="project.amount" value="#(project.amount/10000)万元"
+                    <input type="text" id="project.amount" name="project.amount" value='#number(project.amount, ",###")'
                            class="layui-input " style="width: 500px" disabled/>
                     <!--<p>#(project.amount)</p>-->
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="project.roleName" style="width: 150px"><em class="require-mark">*</em>角色名称：</label>
-                <div class="layui-input-block"style="margin: 0 150px">
-                    <input type="text" id="project.roleName" name="project.roleName" value="#(project.roleName)"
-                           class="layui-input " style="width: 500px" disabled/>
-                    <!--<p>#(project.roleName)</p>-->
-                </div>
-            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="paTypeName" style="width: 150px"><em class="require-mark">*</em>项目评估类型：</label>

@@ -124,13 +124,13 @@ public class InformationController extends BaseController {
     /**
      * edit 下的欢迎页面
      */
-    public void welcome(){
+    public void welcome() {
         List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估").getId());
         ProjectFileType projectFileType = new ProjectFileType();
         projectFileType.setName("稳评方案");
-        list.add(0,projectFileType);
+        list.add(0, projectFileType);
         setAttr("projectId", getParaToLong("id"))
-                .setAttr("list",list)
+                .setAttr("list", list)
                 .setAttr("flag", getPara("flag", "false"))
                 .render("welcome.html");
     }
@@ -215,7 +215,8 @@ public class InformationController extends BaseController {
                 renderJson(RestResult.buildError("項目还不能填写资料"));
                 throw new BusinessException("項目还不能填写资料");
             }
-            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+            Organization organization = organizationService.findById(user.getUserID());
+            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
             name = facAgency.getName();
         }
         SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
@@ -318,18 +319,26 @@ public class InformationController extends BaseController {
         Files files = filesService.findById(fileProject.getFileID());
         setAttr("files", files);
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
-        User user;
+        User user = AuthUtils.getLoginUser();
         Organization organization;
-        if("自评".equals(project.getAssessmentMode())){
+        /**
+         * 自评的时候
+         * projectUndertake的facAgencyID是
+         */
+        if ("自评".equals(project.getAssessmentMode())) {
             user = userService.findById(projectUndertake.getFacAgencyID());
-            organization=organizationService.findById(user.getUserID());
-        }
-        else if ("委评".equals(project.getAssessmentMode())){
-            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
-            organization = organizationService.findById(facAgency.getOrgID());
-            user = userService.findByUserIdAndUserSource(organization.getId(), 1);
-        }
-        else {
+            organization = organizationService.findById(user.getUserID());
+        } else if ("委评".equals(project.getAssessmentMode())) {
+            if(projectUndertake.getApplyOrInvite()){
+                FacAgency facAgency=facAgencyService.findById(projectUndertake.getFacAgencyID());
+                organization = organizationService.findById(facAgency.getOrgID());
+                user=userService.findByUserIdAndUserSource(organization.getId(),1);
+            }
+            else{
+                user=userService.findById(projectUndertake.getCreateUserID());
+                organization=organizationService.findById(user.getUserID());
+            }
+        } else {
             throw new BusinessException("请求错误");
         }
         ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(user.getId(), project.getId());
@@ -636,10 +645,23 @@ public class InformationController extends BaseController {
     @NotNullPara("projectID")
     public void toInitialRiskExpertise() {
         Long projectId = getParaToLong("projectID");
-        setAttr("expertGroups", expertGroupService.findAll())
-                .setAttr("flag", getPara("flag", "false"))
-                .setAttr("projectId", projectId)
-                .render("initialRiskExpertise.html");
+        // 获取到当前行的id
+        Long id = getParaToLong("id");
+        // 设置必要的标识
+        setAttr("flag", getPara("flag", "false"))
+                .setAttr("project", projectService.findById(projectId))
+                .setAttr("projectId", projectId);
+        // 如果为空，就是添加，否则为查看
+        if (id == null) {
+            setAttr("expertGroups", expertGroupService.findAll())
+                    .render("initialRiskExpertise.html");
+        } else {
+            InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(id);
+            ExpertGroup expertGroup = expertGroupService.findById(initialRiskExpertise.getExpertID());
+            setAttr("initialRiskExpertise", initialRiskExpertise)
+                    .setAttr("expertGroup", expertGroup)
+                    .render("initialRiskExpertiseSee.html");
+        }
     }
 
     /**

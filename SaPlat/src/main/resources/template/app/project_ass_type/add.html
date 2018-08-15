@@ -16,8 +16,8 @@
             , $ = layui.jquery;
         form.verify({
             oneVerify : function(value) {
-                if (value.length >0) {
-                    return '只能输入一位字符';
+                if (value.length >2) {
+                    return '只能输入两位以下字符';
                 }
             }
         });

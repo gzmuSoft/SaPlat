@@ -3,6 +3,32 @@
  * @author: 随丶
  */
 @charset "utf-8";
+.fill_ipt{
+    position: relative;
+    margin: 200px 0 0 200px;
+}
+.bigtx{
+    height: 30px;
+    min-width:10px;
+    line-height: 30px;
+    padding: 0px 8px;
+    border: 1px solid #C9CFDA;
+    background: #f5f7fc;
+    box-shadow: 0 0 10px rgba(120,144,156,0.2);
+    position: absolute;
+    left: 0;
+    top: -0px;
+    font-size: 24px;
+    color: #1c2b36;
+    line-height: normal;
+    /*display: none;*/
+    opacity: 0;
+    transition: all 0.2s;
+}
+.bigtx span{
+    font-size: 24px;
+    color: #1c2b36;
+}
 
 .loading-bg {
     background: white;

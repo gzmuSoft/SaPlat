@@ -188,7 +188,6 @@
         position: relative;
     }
 
-    .layui-btn,
     .layui-edge,
     img {
         vertical-align: middle;
@@ -863,7 +862,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md6">
                     <div class="layui-card">
-                        <div class="layui-card-header" style="font-size: 18px">快捷方式</div>
+                        <div class="layui-card-header" style="font-size: 18px">快捷通道</div>
                         <div class="layui-card-body" style="height: 200px">
                             #if(role == 1)
                             <div class="layui-carousel layadmin-carousel layadmin-shortcut"
@@ -872,65 +871,62 @@
                                 <div>
                                     <ul id="adRapid" class="layui-row layui-col-space10">
                                         <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/system/role">
-                                                <i class="layui-icon layui-icon-username">
-                                                </i>
-                                                <cite>角色管理</cite>
-                                            </a>
-                                        </li>
-                                        <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/system/data">
-                                                <i class="layui-icon layui-icon-set">
-                                                </i>
-                                                <cite>数据管理</cite>
-                                            </a>
-
-                                        </li>
-                                        <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/system/log">
-                                                <i class="layui-icon layui-icon-date">
-                                                </i>
-                                                <cite>日志管理</cite>
-                                            </a>
-
-                                        </li>
-                                        <li class="layui-col-xs3">
                                             <a lay-href="#(ctxPath)/system/auth">
-                                                <i class="layui-icon layui-icon-username">
+                                                <i class="layui-icon layui-icon-group">
                                                 </i>
                                                 <cite>角色审核管理</cite>
                                             </a>
-
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/system/res">
-                                                <i class="layui-icon layui-icon-list">
+                                            <a lay-href="#(ctxPath)/app/project_step">
+                                                <i class="layui-icon layui-icon-release">
                                                 </i>
-                                                <cite>资源管理</cite>
-                                            </a>
-
-                                        </li>
-                                        <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/app/expert_group">
-                                                <i class="layui-icon layui-icon-user">
-                                                </i>
-                                                <cite>专业团体管理</cite>
+                                                <cite>项目阶段管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
-                                            <a lay-href="#(ctxPath)/app/ass_review">
-                                                <i class="layui-icon layui-icon-file">
+                                            <a lay-href="#(ctxPath)/app/project_ass_type">
+                                                <i class="layui-icon layui-icon-form">
                                                 </i>
-                                                <cite>项目评估审查</cite>
+                                                <cite>评估类型管理</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/risk_level">
+                                                <i class="layui-icon layui-icon-engine">
+                                                </i>
+                                                <cite>风险等级管理</cite>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs3">
                                             <a lay-href="#(ctxPath)/system/projectauth">
-                                                <i class="layui-icon layui-icon-file-b">
+                                                <i class="layui-icon layui-icon-console">
+                                                </i>
+                                                <cite>立项审核管理</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/system/projectauth">
+                                                <i class="layui-icon layui-icon-senior">
                                                 </i>
                                                 <cite>项目审核</cite>
                                             </a>
                                         </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/system/organization/">
+                                                <i class="layui-icon layui-icon-list">
+                                                </i>
+                                                <cite>组织管理</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/system/log">
+                                                <i class="layui-icon layui-icon-read">
+                                                </i>
+                                                <cite>日志信息</cite>
+                                            </a>
+                                        </li>
+
                                     </ul>
                                 </div>
                                 <div class="layui-carousel-ind"></div>
@@ -941,6 +937,13 @@
                                  lay-anim="">
                                 <div>
                                     <ul id="tissueRapid" class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/organization/prove">
+                                                <i class="layui-icon layui-icon-auz">
+                                                </i>
+                                                <cite>组织机构认证</cite>
+                                            </a>
+                                        </li>
                                         <li class="layui-col-xs3">
                                             <a lay-href="#(ctxPath)/app/organization/projectGet">
                                                 <i class="layui-icon layui-icon-release">
@@ -964,9 +967,30 @@
                                         </li>
                                         <li class="layui-col-xs3">
                                             <a lay-href="#(ctxPath)/app/project/toVerfedSuccess">
-                                                <i class="layui-icon layui-icon-template-1">
+                                                <i class="layui-icon layui-icon-ok-circle">
                                                 </i>
-                                                <cite>审核完的项目</cite>
+                                                <cite>审核完成的项目</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/project/evaluation">
+                                                <i class="layui-icon layui-icon-group">
+                                                </i>
+                                                <cite>项目评估</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/project/review">
+                                                <i class="layui-icon layui-icon-website">
+                                                </i>
+                                                <cite>项目审查</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/track/toRiskTrack">
+                                                <i class="layui-icon layui-icon-app">
+                                                </i>
+                                                <cite>风险跟踪管理</cite>
                                             </a>
                                         </li>
                                     </ul>
@@ -979,6 +1003,20 @@
                                  lay-anim="">
                                 <div>
                                     <ul id="personRapid" class="layui-row layui-col-space10">
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/person">
+                                                <i class="layui-icon layui-icon-username">
+                                                </i>
+                                                <cite>个人资料</cite>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs3">
+                                            <a lay-href="#(ctxPath)/app/person/expertGroup">
+                                                <i class="layui-icon layui-icon-auz">
+                                                </i>
+                                                <cite>专家团体认证</cite>
+                                            </a>
+                                        </li>
                                         <li class="layui-col-xs3">
                                             <a lay-href="#(ctxPath)/app/OrgStructure/joinStructure">
                                                 <i class="layui-icon layui-icon-snowflake">
@@ -1041,21 +1079,21 @@
                                 <div carousel-item="">
                                     <ul id="tissueManage" class="layui-row layui-col-space10 layui-this">
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/evaluation">
-                                                <h3 style="font-size: 16px">待评项目</h3>
-                                                <p><cite>#(assessAmount)</cite></p>
+                                            <a class="layadmin-backlog-body">
+                                                <h3 style="font-size: 16px">已有项目</h3>
+                                                <p><cite>#(projectAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
                                             <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/toVerfiing">
-                                                <h3 style="font-size: 16px">待审核项目</h3>
+                                                <h3 style="font-size: 16px">审核中项目</h3>
                                                 <p><cite>#(auditAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
-                                            <a class="layadmin-backlog-body">
-                                                <h3 style="font-size: 16px">已有项目</h3>
-                                                <p><cite>#(projectAmount)</cite></p>
+                                            <a class="layadmin-backlog-body" lay-href="#(ctxPath)/app/project/evaluation">
+                                                <h3 style="font-size: 16px">待评项目</h3>
+                                                <p><cite>#(assessAmount)</cite></p>
                                             </a>
                                         </li>
                                         <li class="layui-col-xs6">
@@ -1120,7 +1158,7 @@
                          style="margin-top: 30px ;margin-right: 30%;width: 280px">
                         <button type="button" class="layui-btn" name="check" id="check" style="background: #fd5f00">编辑信息</button>
                         <button type="button" class="layui-btn layui-hide" name="check" id="check2" style="background: #fd5f00">保存信息</button>
-                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">修改密码</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">取消</button>
                     </div>
                 </div>
             </div>
@@ -1242,7 +1280,7 @@
                 <div class="layui-carousel" id="broadcast">
                     <div carousel-item style="height:402px;width: 100%">
                         <div id="echars1" style="height:402px"></div>
-                        <div id="echars2" style="height:402px;width:844px"></div>
+                        <!--<div id="echars2" style="height:402px;width:844px"></div>-->
                         <div><img src="/static/img/welcome/52733d977e488.jpg"></div>
                         <div><img src="/static/img/welcome/1-130FPR232.jpg"></div>
                     </div>
@@ -1300,9 +1338,18 @@
                 $(this).attr("contenteditable",true);
             })
             $('#check2').removeClass("layui-hide");
+            $('#check3').removeClass("layui-hide");
             $(this).addClass("layui-hide");
             layer.msg("开启编辑");
         });
+        $('#check3').click(function () {
+            $('#check2').addClass("layui-hide");
+            $('#check3').addClass("layui-hide");
+            $('#check').removeClass("layui-hide");
+            $(".user").each(function () {
+                $(this).attr("contenteditable",false);
+            })
+        })
 
 
         //保存信息
@@ -1327,6 +1374,7 @@
                         })
                         $('#check').removeClass("layui-hide");
                         $('#check2').addClass("layui-hide");
+                        $('#check3').addClass("layui-hide");
                     }
                 });
             }
@@ -1334,7 +1382,7 @@
 
         //轮播静态数据部分
         var myChart1 = echarts.init(document.getElementById('echars1'));
-        var myChart2 = echarts.init(document.getElementById('echars2'));
+//        var myChart2 = echarts.init(document.getElementById('echars2'));
         option1 = {
             tooltip: {
                 trigger: 'axis'
@@ -1397,7 +1445,7 @@
         };
         // 使用刚指定的配置项和数据显示图表。
         myChart1.setOption(option1);
-        myChart2.setOption(option1);
+//        myChart2.setOption(option1);
 });
 </script>
 #end

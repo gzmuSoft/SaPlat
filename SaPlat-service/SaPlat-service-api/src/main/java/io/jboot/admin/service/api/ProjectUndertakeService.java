@@ -98,12 +98,29 @@ public interface ProjectUndertakeService {
 
     /**
      *
+     * @param facAgencyId
+     * @param status
+     * @param aoi
+     * @return
+     */
+    List<ProjectUndertake> findListByFacAgencyIdAndStatusAndAOI(Long facAgencyId, String status, boolean aoi);
+
+    /**
+     *
      * @param projectId
      * @param projectStatus
      * @return
      */
     public ProjectUndertake findByProjectIdAndStatus(Long projectId, String projectStatus);
 
+    /**
+     * 通过创建者id和状态查询
+     * @param createUserId
+     * @param status
+     * @param aoi 如何承接
+     * @return
+     */
+    public List<ProjectUndertake> findByCreateUserIDAndStatusAndAOI(Long createUserId, String status, boolean aoi);
 
     /**
      * 通过项目编号查询项目承接

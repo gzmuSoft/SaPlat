@@ -45,6 +45,9 @@ public class OrganizationRoleController extends Controller {
     @JbootrpcService
     private ReviewGroupService reviewGroupService;
 
+    @JbootrpcService
+    private FileFormService fileFormService;
+
     public void managementIndex() {
         render("management.html");
 
@@ -256,5 +259,45 @@ public class OrganizationRoleController extends Controller {
         }
 
         renderJson(RestResult.buildSuccess());
+    }
+
+
+    @Before(GET.class)
+    @NotNullPara({"orgID","type"})
+    public void view() {
+        String type=getPara("type");
+        Organization organization = organizationService.findById(getParaToLong("orgID"));
+        try {
+            if ("facAgency".equals(type)) {
+                FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+                FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency", "法人身份证照片", facAgency.getId());
+                setAttr("pictrue", fileForm.getFileID());
+                fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency", "维稳备案文件照片", facAgency.getId());
+                setAttr("regDocsFilePath", fileForm.getFileID());
+                setAttr("organization", organization).setAttr("facAgency", facAgency).render("fac_agencyView.html");
+            } else if ("management".equals(type)) {
+                Management management = managementService.findByOrgId(organization.getId());
+                setAttr("organization", organization).setAttr("management", management).render("managementView.html");
+            } else if ("enterprise".equals(type)) {
+                Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
+                FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("enterprise", "法人身份证照片", enterprise.getId());
+                setAttr("pictrue", fileForm.getFileID());
+                setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterpriseView.html");
+            } else if ("reviewGroup".equals(type)) {
+                ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());
+                setAttr("organization", organization).setAttr("reviewGroup", reviewGroup).render("review_groupView.html");
+            } else if ("profGroup".equals(type)) {
+                ProfGroup profGroup = profGroupService.findByOrgId(organization.getId());
+                FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("profGroup", "管理员身份证照片", profGroup.getId());
+                setAttr("identity", fileForm.getFileID());
+                setAttr("organization", organization).setAttr("profGroup", profGroup).render("prof_groupView.html");
+            } else {
+                throw new BusinessException("请求参数非法");
+            }
+        } catch (NullPointerException nullPoint) {
+            throw new BusinessException("用户资料错误!");
+        } catch (Exception e) {
+            throw new BusinessException("请求参数非法");
+        }
     }
 }
