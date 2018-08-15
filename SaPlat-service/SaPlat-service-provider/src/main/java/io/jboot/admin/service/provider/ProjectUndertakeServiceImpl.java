@@ -94,11 +94,30 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     }
 
     @Override
+    public List<ProjectUndertake> findListByFacAgencyIdAndStatusAndAOI(Long facAgencyId, String status, boolean aoi) {
+        Columns columns = Columns.create();
+        columns.eq("facAgencyID",facAgencyId);
+        columns.eq("status",status);
+        columns.eq("isEnable",aoi);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
     public ProjectUndertake findByProjectIdAndStatus(Long projectId, String projectStatus) {
         Columns columns = Columns.create();
         columns.eq("projectID", projectId);
         columns.eq("status", projectStatus);
         return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<ProjectUndertake> findByCreateUserIDAndStatusAndAOI(Long createUserId, String status,boolean aoi) {
+        Columns columns = Columns.create();
+        columns.eq("createUserID",createUserId);
+        columns.eq("status",status);
+        columns.eq("applyOrInvite",aoi);
+        columns.eq("isEnable",true);
+        return DAO.findListByColumns(columns);
     }
 
     @Override

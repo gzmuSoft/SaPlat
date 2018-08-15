@@ -188,7 +188,6 @@
         position: relative;
     }
 
-    .layui-btn,
     .layui-edge,
     img {
         vertical-align: middle;
@@ -1120,7 +1119,7 @@
                          style="margin-top: 30px ;margin-right: 30%;width: 280px">
                         <button type="button" class="layui-btn" name="check" id="check" style="background: #fd5f00">编辑信息</button>
                         <button type="button" class="layui-btn layui-hide" name="check" id="check2" style="background: #fd5f00">保存信息</button>
-                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">修改密码</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">取消</button>
                     </div>
                 </div>
             </div>
@@ -1300,9 +1299,18 @@
                 $(this).attr("contenteditable",true);
             })
             $('#check2').removeClass("layui-hide");
+            $('#check3').removeClass("layui-hide");
             $(this).addClass("layui-hide");
             layer.msg("开启编辑");
         });
+        $('#check3').click(function () {
+            $('#check2').addClass("layui-hide");
+            $('#check3').addClass("layui-hide");
+            $('#check').removeClass("layui-hide");
+            $(".user").each(function () {
+                $(this).attr("contenteditable",false);
+            })
+        })
 
 
         //保存信息
@@ -1327,6 +1335,7 @@
                         })
                         $('#check').removeClass("layui-hide");
                         $('#check2').addClass("layui-hide");
+                        $('#check3').addClass("layui-hide");
                     }
                 });
             }
