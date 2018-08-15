@@ -20,7 +20,6 @@
 
     <form id="person" class="layui-form" action="">
         <div class="layui-form-pane">
-
             <div class="layui-form-item">
                 <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block " style="margin: 0 180px">
@@ -121,12 +120,13 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.capital"style="width: 180px">注册资本</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="enterprise.capital" name="enterprise.capital"
-                           value="#(enterprise.capital)" lay-verify="required|mLength" class="layui-input" style="width: 500px"/>
+                <label class="layui-form-label" for="enterprise.capital" style="width: 180px">注册资本</label>
+                <div class="layui-input-inline" >
+                    <input type="number" id="enterprise.capital" name="enterprise.capital" value="#(enterprise.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
+                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
             </div>
+
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
