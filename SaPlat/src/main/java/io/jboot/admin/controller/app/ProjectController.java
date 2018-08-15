@@ -653,19 +653,15 @@ public class ProjectController extends BaseController {
             }
         }
         // 排除是空的类
-        for (int i = 0; i < undertake.size(); i++) {
-            if (undertake.get(i) == null){
-                undertake.remove(i);
-            }
-        }
+        undertake.removeAll(Collections.singleton(null));
         // 不论是不是服务机构，都要查找自评的项目。
         List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
                 new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
-
         // 防止查出的是 null 的情况
         if (projects == null) {
             projects = Collections.synchronizedList(new ArrayList<>());
         }
+        projects.removeAll(Collections.singleton(null));
         if (projects.size() < 1 && undertake.size() > 0) {
             // 当委评的不为空，自评的为空
             renderJson(RestResult.buildSuccess(undertake));
