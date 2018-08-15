@@ -12,6 +12,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.LoginValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -59,6 +60,12 @@ public class MainController extends BaseController {
 
     @JbootrpcService
     private PersonService personService;
+
+    @JbootrpcService
+    private OrganizationService organizationService;
+
+    @JbootrpcService
+    private FacAgencyService facAgencyService;
 
     @JbootrpcService
     private ProjectUndertakeService projectUndertakeService;
@@ -176,7 +183,7 @@ public class MainController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Long role = 0L;
         List<UserRole> userRoles = userRoleService.findListByUserId(loginUser.getId());
-        for (UserRole userRole:userRoles) {
+        for (UserRole userRole : userRoles) {
             role = userRole.getRoleID();
             if (userRole.getRoleID() == 1) {
                 break;
@@ -186,12 +193,12 @@ public class MainController extends BaseController {
             }
         }
         loginUser = userService.findById(loginUser.getId());
-        if (role == 1){
+        if (role == 1) {
             //人数 个人 组织 项目数
             List<User> users = userService.findAll();
             List<UserRole> roles = userRoleService.findAll();
-            Long personAmount = 0L,organizationAmount = 0L;
-            for (UserRole userRole: roles) {
+            Long personAmount = 0L, organizationAmount = 0L;
+            for (UserRole userRole : roles) {
                 if (userRole.getRoleID() == 2) {
                     personAmount++;
                 }
@@ -199,17 +206,17 @@ public class MainController extends BaseController {
                     organizationAmount++;
                 }
             }
-            setAttr("userAmount",users.size()).
-                    setAttr("projectAmount",projectService.findAll().size()).
-                    setAttr("personAmount",personAmount).
-                    setAttr("organizationAmount",organizationAmount).
-                    setAttr("role",role).
-                    setAttr("user",loginUser).
+            setAttr("userAmount", users.size()).
+                    setAttr("projectAmount", projectService.findAll().size()).
+                    setAttr("personAmount", personAmount).
+                    setAttr("organizationAmount", organizationAmount).
+                    setAttr("role", role).
+                    setAttr("user", loginUser).
                     render("welcome.html");
-        }else if (role == 3){
+        } else if (role == 3) {
             List<Project> projectList = projectService.findByUserId(loginUser.getId());
-            Long assessAmount = 0L,auditAmount = 0L, reviewAmount = 0L ;
-            for (Project project:projectList) {
+            Long assessAmount = 0L, auditAmount = 0L, reviewAmount = 0L;
+            for (Project project : projectList) {
                 if ("4".equals(project.getStatus())) {
                     assessAmount++;
                 }
@@ -220,19 +227,40 @@ public class MainController extends BaseController {
                     reviewAmount++;
                 }
             }
-            setAttr("projectAmount",projectList.size()).//已有项目
-                    setAttr("assessAmount",assessAmount).//待评项目
-                    setAttr("auditAmount",auditAmount).//待审核
-                    setAttr("reviewAmount",reviewAmount).//待审查
-                    setAttr("undertakeRate",new DecimalFormat("##0.00").format(projectUndertakeService.findAllAndUndertakeByUserId(loginUser.getId()))).//承接率
-                    setAttr("role",role).
-                    setAttr("user",loginUser).
+            // 如果当前用户为服务机构，查询当前项目所承接的
+            Organization organization = organizationService.findById(loginUser.getUserID());
+            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+            if (facAgency != null) {
+                // 查询当为申请成功的时候的项目
+                List<ProjectUndertake> projectUndertakes1 = projectUndertakeService.findByCreateUserIDAndStatusAndAOI(loginUser.getId(), ProjectUndertakeStatus.ACCEPT, false);
+                // 查询当为邀请成功的时候的项目
+                List<ProjectUndertake> projectUndertakes2 = projectUndertakeService.findListByFacAgencyIdAndStatusAndAOI(facAgency.getId(), ProjectUndertakeStatus.ACCEPT, true);
+                if (projectUndertakes1 != null) {
+                    assessAmount += projectUndertakes1.size();
+                }
+                if (projectUndertakes2 != null) {
+                    assessAmount += projectUndertakes2.size();
+                }
+            }
+
+            // 已有项目
+            setAttr("projectAmount", projectList.size()).
+                    // 待评项目
+                    setAttr("assessAmount", assessAmount).
+                    // 待审核
+                    setAttr("auditAmount", auditAmount).
+                    // 待审查
+                    setAttr("reviewAmount", reviewAmount).
+                    // 承接率
+                    setAttr("undertakeRate", new DecimalFormat("##0.00").format(projectUndertakeService.findAllAndUndertakeByUserId(loginUser.getId()))).
+                    setAttr("role", role).
+                    setAttr("user", loginUser).
                     render("welcome.html");
-        }else {
-            Map<String,Object> map = structPersonLinkService.findStructureListByPersonID(personService.findById(loginUser.getUserID()).getId());
-            setAttr("role",role).
-                    setAttr("count",map.get("count"));
-                    setAttr("user",loginUser).
+        } else {
+            Map<String, Object> map = structPersonLinkService.findStructureListByPersonID(personService.findById(loginUser.getUserID()).getId());
+            setAttr("role", role).
+                    setAttr("count", map.get("count"));
+            setAttr("user", loginUser).
                     render("welcome.html");
         }
     }
@@ -261,7 +289,7 @@ public class MainController extends BaseController {
         }
     }
 
-    public void update(){
+    public void update() {
         User user = new User();
         user.setId(getParaToLong("id"));
         user.setPhone(getPara("phone"));

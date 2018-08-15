@@ -14,11 +14,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: 120px">预计金额范围：</label>
                     <div class="layui-input-inline" style="width: 120px;">
-                        <input name="minAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
+                        <input name="minAmount" placeholder="￥" autocomplete="off" class="layui-input money" type="number">
                     </div>
                     <div class="layui-form-mid">-</div>
                     <div class="layui-input-inline" style="width: 120px;">
-                        <input name="maxAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
+                        <input name="maxAmount" placeholder="￥" autocomplete="off" class="layui-input money" type="number">
                     </div>
                     <div class="layui-input-inline" style="width : 80px">
                         <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
@@ -122,7 +122,7 @@
             , cols: [[                  //标题栏
                 {field: 'name', title: '项目名称', minWidth: 100, sort: true}
                 , {field: 'roleName', title: '角色名称', minWidth: 100}
-                , {field: 'amount', title: '预计金额', minWidth: 100, sort: true}
+                , {field: 'amount', title: '预计金额（元）', minWidth: 100, sort: true}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
                 , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}

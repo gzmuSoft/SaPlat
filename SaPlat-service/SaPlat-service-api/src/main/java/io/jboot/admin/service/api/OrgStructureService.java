@@ -19,7 +19,7 @@ public interface OrgStructureService {
      * @param pageSize
      * @return
      */
-    public Page<OrgStructure> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize);
+    public Page<Record> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize);
     /**
      * MAIN数据分页
      * @param orgStructure
