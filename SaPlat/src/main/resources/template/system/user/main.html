@@ -149,9 +149,11 @@
     <hr>
     <div class="layui-row">
         <div class="layui-btn-group">
+            #--
             #shiroHasPermission('/system/user/add')
-            <button id="add" class="layui-btn layui-btn-small">添加用户</button>
+            <!--<button id="add" class="layui-btn layui-btn-small">添加用户</button>-->
             #end
+            --#
         </div>
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -159,7 +161,7 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/system/user/update')
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
     #end
 
     #[[
@@ -182,8 +184,10 @@
     {{#  } }}
     ]]#
 
+    #--
     #shiroHasPermission('/system/user/delete')
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
     #end
+    --#
 </script>
 #end

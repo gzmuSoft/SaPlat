@@ -318,9 +318,20 @@ public class InformationController extends BaseController {
         Files files = filesService.findById(fileProject.getFileID());
         setAttr("files", files);
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
-        FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
-        Organization organization = organizationService.findById(facAgency.getOrgID());
-        User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+        User user;
+        Organization organization;
+        if("自评".equals(project.getAssessmentMode())){
+            user = userService.findById(projectUndertake.getFacAgencyID());
+            organization=organizationService.findById(user.getUserID());
+        }
+        else if ("委评".equals(project.getAssessmentMode())){
+            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+            organization = organizationService.findById(facAgency.getOrgID());
+            user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+        }
+        else {
+            throw new BusinessException("请求错误");
+        }
         ImpTeam impTeam = impTeamService.findByUserIDAndProjectID(user.getId(), project.getId());
         String invTeamIDs = impTeam.getInvTeamIDs();
         String[] invTeamIDList = invTeamIDs.split(",");
@@ -330,7 +341,7 @@ public class InformationController extends BaseController {
             invTeamMap.put(invTeamID, person.getName());
         }
         setAttr("invTeamMap", invTeamMap);
-        setAttr("facagency", facAgency)
+        setAttr("organization", organization)
                 .setAttr("flag", getPara("flag", "false"));
         render("diagnose.html");
     }

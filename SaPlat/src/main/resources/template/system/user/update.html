@@ -41,23 +41,23 @@
             <label class="layui-form-label"><em class="require-mark">*</em>用户帐号</label>
             <div class="layui-input-block">
                 <input type="text" name="user.name" placeholder="用户帐号" class="layui-input" value="#(user.name)" required
-                       lay-verify="required" style="width: 500px" autocomplete="off"/>
+                       lay-verify="required" style="width: 500px" autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">登录密码</label>
-            <div class="layui-input-block">
-                <input type="text" name="user.pwd" placeholder="若不修改密码，无需输入" class="layui-input" value=""
-                       style="width: 500px" autocomplete="off"/>
-            </div>
-        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">登录密码</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="user.pwd" placeholder="若不修改密码，无需输入" class="layui-input" value=""-->
+                       <!--style="width: 500px" autocomplete="off"/>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <div class="layui-form-item">
             <label class="layui-form-label">电话号码</label>
             <div class="layui-input-block">
                 <input type="text" name="user.phone" placeholder="电话号码" class="layui-input" value="#(user.phone)"
-                       style="width: 500px"  autocomplete="off"/>
+                       style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
@@ -65,7 +65,7 @@
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
                 <input type="text" name="user.email" placeholder="邮箱" class="layui-input" value="#(user.email)"
-                       style="width: 500px"  autocomplete="off"/>
+                       style="width: 500px"  autocomplete="off" disabled="disabled"/>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
             <label class="layui-form-label">用户角色</label>
             <div class="layui-input-block">
                 #for (role : roleList)
-                <input type="checkbox" name="userRole" value="#(role.id)"
+                <input type="checkbox" name="userRole" value="#(role.id)" disabled="disabled"
                        #for (userRole : userRoleList)
                        #(userRole.id== role.id ? 'checked' : '')
                 #end
@@ -85,20 +85,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
             <div class="layui-input-block" style="width: 500px">
-                <select id='status' name="user.status"  lay-verify="required">
+                <select id='status' name="user.status"  lay-verify="required" disabled="disabled">
                     <option></option>
                     #statusOption(io.jboot.admin.service.entity.status.system.UserStatus::me(), user.status)
                 </select>
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label"></label>
-            <button class="layui-btn" lay-filter="sub" lay-submit>
-                保存
-            </button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
     </form>
 </div>
 #end
