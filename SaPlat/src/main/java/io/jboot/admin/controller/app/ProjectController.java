@@ -1148,6 +1148,7 @@ public class ProjectController extends BaseController {
         if (managementService.findByOrgId(loginUser.getUserID()) != null) {
             Project project = new Project();
             project.setIsEnable(true);
+            project.setStatus(ProjectStatus.CHECKED);
             page = projectService.findPage(project, pageNumber, pageSize);
         }
         Long projectFileTypeID = getParaToLong("projectFileTypeID");
@@ -1160,7 +1161,13 @@ public class ProjectController extends BaseController {
                 } else {
                     page.getList().get(i).setIsUpload(false);
                 }
-                ProjectUndertake projectUndertake1 = projectUndertakeService.findByProjectIdAndFacAgencyId(page.getList().get(i).getId(), facAgency.getId());
+                ProjectUndertake projectUndertake1;
+                if (facAgency != null) {
+                    projectUndertake1 = projectUndertakeService.findByProjectIdAndFacAgencyId(page.getList().get(i).getId(), facAgency.getId());
+                } else {
+                    projectUndertake1 = projectUndertakeService.findByProjectIdAndFacAgencyId(page.getList().get(i).getId(), loginUser.getId());
+
+                }
                 if (projectUndertake1 != null) {
                     page.getList().get(i).setRemark("1");
                 }
