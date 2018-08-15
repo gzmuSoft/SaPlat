@@ -25,11 +25,11 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '申请人', minWidth: 120,sort:true}
-                , {field: 'roleId', title: '申请角色', minWidth: 100, templet: '#statusTpl(roleStatus, "roleId")'}
+                , {field: 'roleId', title: '申请角色', minWidth: 60, templet: '#statusTpl(roleStatus, "roleId")'}
                 , {
                     field: 'type',
                     title: '申请类型',
-                    minWidth: 100,
+                    minWidth: 60,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")',
                     sort:true
                 }
@@ -83,7 +83,7 @@
                     reloadTable(null, null, null, null);
                 });
             } else if (obj.event === 'view') {
-                pop_show('认证信息', '#(ctxPath)/system/auth/view?id=' + data.id, '', '', function () {
+                pop_max_show('认证信息', '#(ctxPath)/system/auth/view?id=' + data.id, '', '', function () {
                     return false;
                 });
             } else if (obj.event === 'warning') {

@@ -42,7 +42,7 @@ function pop_max_show(title,url,f){
     };
     layer.open({
         type: 2,
-        area: ['100%', '100%'],
+        area: ['90%', '90%'],
         fix: false, //不固定
         maxmin: false,
         shadeClose: false,

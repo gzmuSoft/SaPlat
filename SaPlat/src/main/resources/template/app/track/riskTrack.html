@@ -9,30 +9,20 @@
 #define content()
 
 <br>
-<h2 class="title" align="center" style="color: #00a89a">备案资料移交表</h2><br>
-<hr class="layui-bg-blue">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
+    <legend style="font-size: 20px;font-weight: 500;">风险跟踪管理登记</legend>
+</fieldset>
 <div class="layui-row">
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
 <script type="text/html" id="barOption">
-    #[[
-    {{#  if(d.isUpload){ }}
-    ]]#
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">重新上传</a>
-    #[[
-    {{# } else if(!d.isUpload){ }}
-    ]]#
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">上传备案资料移交表</a>
-    #[[
-    {{#  } }}
-    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">上传风险跟踪管理登记表</a>
 </script>
 #end
 
 #define js()
 <script type="text/javascript">
-    var projectFileTypeID = "#(projectFileTypeID)";
+    var projectFileTypeID = 0;
 
     layui.use(['table', 'layer'], function () {
         var table = layui.table,
@@ -47,11 +37,11 @@
             , height: 'full-150'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                 //标题栏
-                {field: '0', align: 'center',  type: 'numbers', unresize: 'true'}
+                {field: '0', align: 'center', width: 50, type: 'numbers', unresize: 'true'}
                 , {field: 'name', title: '文件名', minWidth: 300, align: 'center', sort: true}
                 , {field: 'createUserName', title: '上传人员', minWidth: 150, align: 'center', sort: true}
                 , {field: 'createTime', title: '上传时间', minWidth: 150, align: 'center', sort: true}
-                , {field: 'option', title: '操作',minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'option', title: '操作', align: 'center', minWidth: 150, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/checkedTable?projectFileTypeID=' + projectFileTypeID
             , method: 'get'
@@ -75,16 +65,8 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'see') {
-                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '600', '600', function () {
-                    table.reload('dateTable-measure', {
-                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
-                    });
-                });
-            } else if (obj.event === 'upload') {
-                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + data.id, '500', '300', function () {
-                    window.location.reload();
-                });
+            if (obj.event === 'upload') {
+                window.location.href = '#(ctxPath)/app/track/toRiskTrackManagement?projectID=' + data.id;
             }
         });
 

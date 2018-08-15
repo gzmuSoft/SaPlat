@@ -94,8 +94,10 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 
-
-
+    @Override
+    public ApplyInvite findByProjectID(Long projectID) {
+        return DAO.findFirstByColumn("projectID", projectID);
+    }
     @Override
     public List<ApplyInvite> findList(ApplyInvite model) {
         Columns columns = Columns.create();
@@ -110,6 +112,12 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         }
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getStatus() != null) {
+            columns.eq("status", model.getStatus());
+        }
+        if (model.getCreateUserID() != null) {
+            columns.eq("createUserID", model.getCreateUserID());
         }
         return DAO.findListByColumns(columns);
     }

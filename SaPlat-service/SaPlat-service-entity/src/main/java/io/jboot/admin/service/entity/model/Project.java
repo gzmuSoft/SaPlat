@@ -13,6 +13,24 @@ public class Project extends BaseProject<Project> {
     private boolean isReceive;
     private double maxAmount;
     private double minAmount;
+    private boolean isUpload;
+    private Long fileID;
+
+    public Long getFileID() {
+        return fileID;
+    }
+
+    public void setFileID(Long fileID) {
+        this.fileID = fileID;
+    }
+
+    public boolean getIsUpload() {
+        return isUpload;
+    }
+
+    public void setIsUpload(boolean isUpload) {
+        this.isUpload = isUpload;
+    }
 
     public double getMaxAmount() {
         return maxAmount;

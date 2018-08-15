@@ -66,7 +66,9 @@
                         layer.msg("同意成功！");
                         setTimeout(function () {
                         }, 1000);
-                        window.location.reload();
+                        table.reload('dateTable', {
+                            url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=0'
+                        });
                     });
                 });
             } else if (obj.event === 'refuse') {
@@ -99,7 +101,9 @@
                                 layer.msg("拒绝成功！");
                                 setTimeout(function () {
                                 }, 1000);
-                                window.location.reload();
+                                table.reload('dateTable', {
+                                    url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=0'
+                                });
                             });
                         });
                     }
@@ -115,7 +119,9 @@
                         layer.msg("审查完成！");
                         setTimeout(function () {
                         }, 1000);
-                        window.location.reload();
+                        table.reload('dateTable', {
+                            url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=1'
+                        });
                     });
                 });
             } else if (obj.event === 'noPass') {
@@ -148,7 +154,9 @@
                                 layer.msg("审查完成！");
                                 setTimeout(function () {
                                 }, 1000);
-                                window.location.reload();
+                                table.reload('dateTable', {
+                                    url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=1'
+                                });
                             });
                         });
                     }
@@ -303,7 +311,7 @@
     #[[
     {{#  if(d.status == '2'){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="view">查看审查资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看预审报告</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pass">通过</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="noPass">不通过</a>
     #[[
@@ -313,11 +321,11 @@
 
 <script type="text/html" id="barOption-reviewed">
     #[[
-    {{#   if((d.status == '3')){ }}
+    {{#   if(d.status == '3'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已通过</a>
     #[[
-    {{# } else if((d.status == '4')){ }}
+    {{# } else if(d.status == '4'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">不通过</a>
     #[[
@@ -332,11 +340,11 @@
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
     #[[
-    {{# } else if((d.status == '2')){ }}
+    {{# } else if(d.status == '2'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已同意</a>
     #[[
-    {{# } else if((d.status == '1')){ }}
+    {{# } else if(d.status == '1'){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已拒绝</a>
     #[[

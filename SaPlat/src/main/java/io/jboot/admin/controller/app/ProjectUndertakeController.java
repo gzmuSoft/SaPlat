@@ -53,12 +53,12 @@ public class ProjectUndertakeController extends BaseController {
     private ImpTeamService impTeamService;
     @JbootrpcService
     private ScheduledPlanService scheduledPlanService;
-
     @JbootrpcService
     private FileFormService fileFormService;
-
     @JbootrpcService
     private FilesService filesService;
+    @JbootrpcService
+    private UserService userService;
 
     /**
      * 去重
@@ -130,7 +130,11 @@ public class ProjectUndertakeController extends BaseController {
     public void see() {
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
-        setAttr("model", model).render("see.html");
+        User user = userService.findById(model.getUserId());
+        Organization organization = organizationService.findById(user.getUserID());
+        setAttr("organization",organization)
+                .setAttr("model", model)
+                .render("see.html");
     }
 
     /**
