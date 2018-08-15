@@ -633,6 +633,10 @@ public class ProjectController extends BaseController {
                 projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
             }
         }
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setCreateUserID(loginUser.getId());
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, 1, 30);
+        projectUndertakeList.addAll(projectUndertakePage.getList());
         Project project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.REVIEW);
