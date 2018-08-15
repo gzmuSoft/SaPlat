@@ -47,12 +47,7 @@ public class FileUploadController extends BaseController {
     @Before(GET.class)
     @NotNullPara({"projectID"})
     public void index() {
-        Long projectID = getParaToLong("projectID");
-        Project project = projectService.findById(projectID);
         String flag = getPara("flag", "false");
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
-        }
         setAttr("projectID", getParaToLong("projectID"));
         ProjectFileType projectFileType = projectFileTypeService.findByNameAndParentID("评估文件", -1L);
         setAttr("parentID", projectFileType.getId())
@@ -87,9 +82,6 @@ public class FileUploadController extends BaseController {
     public void save() {
         FileProject fileProject = getBean(FileProject.class, "fileProject");
         Project project = projectService.findById(fileProject.getProjectID());
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
-        }
         ProjectFileType projectFileType = projectFileTypeService.findById(fileProject.getFileTypeID());
         fileProject.setName(projectFileType.getName());
         fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
@@ -102,9 +94,7 @@ public class FileUploadController extends BaseController {
     @NotNullPara({"id", "projectID"})
     public void delete() {
         Project project = projectService.findById(getParaToLong("projectID"));
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
-        }
+
         FileProject fileProject = fileProjectService.findById(getParaToLong("id"));
         if (!fileProjectService.deleteFileProjectAndFiles(fileProject)) {
             throw new BusinessException("删除失败");
@@ -118,9 +108,6 @@ public class FileUploadController extends BaseController {
         Long percent = getParaToLong("percent");
         if (project == null) {
             throw new BusinessException("项目不存在");
-        }
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
         }
         ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
@@ -142,9 +129,6 @@ public class FileUploadController extends BaseController {
     public void documentSave() {
         FileProject fileProject = getBean(FileProject.class, "fileProject");
         Project project = projectService.findById(fileProject.getProjectID());
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
-        }
         fileProject.setIsEnable(false);
         FileProject model = fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(), fileProject.getProjectID());
         model.setFileID(fileProject.getFileID());
@@ -158,9 +142,6 @@ public class FileUploadController extends BaseController {
     public void documentSub() {
         FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
         Project project = projectService.findById(fileProject.getProjectID());
-        if (!hasPermission(project)) {
-            throw new BusinessException("没有此项目权限");
-        }
         fileProject.setIsEnable(true);
         project.setStatus(ProjectStatus.REVIEWED);
         if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
