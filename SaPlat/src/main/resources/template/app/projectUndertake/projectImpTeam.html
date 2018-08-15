@@ -88,17 +88,18 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeamName"style="width: 150px">小组名称</label>
+                <label class="layui-form-label" for="impTeamName" style="width: 150px">小组名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="impTeamName" name="impTeam.name" class="layui-input" lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.leaderID1"style="width: 150px">组长</label>
+                <label class="layui-form-label" for="impTeam.leaderID1" style="width: 150px">组长</label>
                 <div class="layui-input-inline">
                     <label>
                         <select lay-filter="clickOption1" lay-search>
+                            <option value="">请选择</option>
                             #for(List : orgStructures)
                             #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
@@ -120,10 +121,11 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.assLeaderIDs1"style="width: 150px">副组长</label>
+                <label class="layui-form-label" for="impTeam.assLeaderIDs1" style="width: 150px">副组长</label>
                 <div class="layui-input-inline">
                     <label>
                         <select lay-filter="clickOption2" lay-search>
+                            <option value="">请选择</option>
                             #for(List : orgStructures)
                             #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
@@ -145,10 +147,11 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.expertGroupIDs1"style="width: 150px">专家成员</label>
+                <label class="layui-form-label" for="impTeam.expertGroupIDs1" style="width: 150px">专家成员</label>
                 <div class="layui-input-inline">
                     <label>
                         <select lay-filter="clickOption3" lay-search>
+                            <option value="">请选择</option>
                             #for(List : orgStructures)
                             #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
@@ -171,10 +174,11 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.invTeamIDs1"style="width: 150px">现场调查成员</label>
+                <label class="layui-form-label" for="impTeam.invTeamIDs1" style="width: 150px">现场调查成员</label>
                 <div class="layui-input-inline">
                     <label>
                         <select lay-filter="clickOption4" lay-search>
+                            <option value="">请选择</option>
                             #for(List : orgStructures)
                             #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
@@ -196,10 +200,11 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.repTeamIDs1"style="width: 150px">报告编制成员</label>
+                <label class="layui-form-label" for="impTeam.repTeamIDs1" style="width: 150px">报告编制成员</label>
                 <div class="layui-input-inline">
                     <label>
                         <select lay-filter="clickOption5" lay-search>
+                            <option value="">请选择</option>
                             #for(List : orgStructures)
                             #if(List != null)
                             <option value="#(List.id)">#(List.name)</option>
@@ -307,7 +312,6 @@
             , $ = layui.jquery
             , layedit = layui.layedit
             , laydate = layui.laydate
-            , string = "?"
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
             , fileFormId1 = null, fileFormId2 = null
             , fileId1 = null, fileId2 = null;
@@ -350,7 +354,7 @@
          */
         table.cache.dateTable = [];
         table.render({
-            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            elem: '#dateTable'//指定原始表格元素选择器（推荐id选择器）
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
@@ -602,7 +606,6 @@
             }, done: function (res) {
                 $('.loading-bg').remove();
                 var ele = $(this)[0].item;
-                console.log(ele.attr('id'));
                 if (res.code == 0) {
                     var flag;
                     util.sendAjax({
@@ -625,6 +628,9 @@
                             }
                         }
                     });
+                    if (flag) {
+                        $(ele.text("已上传（更改）"));
+                    }
                     if (ele.attr('id') === "EvaEntrust") {
                         fileId2 = res.data.fileId;
                     } else {
@@ -663,30 +669,60 @@
          * 数据打包
          */
         function dataString() {
-            string += "fileFormId1=" + fileFormId1 + "&fileFormId2=" + fileFormId2 + "&EvaScheme.gist=" + layedit.getContent(index1) + "&EvaScheme.method=" + layedit.getContent(index2) + "&EvaScheme.demand=" + layedit.getContent(index3) + "&EvaScheme.measure=" + layedit.getContent(index4) + "&";
+            var data = {};
+            //两个文件
+            data.fileFormId1 = fileFormId1;
+            data.fileFormId2 = fileFormId2;
+
+            //四个富文本框
+            data['EvaScheme.gist'] = layedit.getContent(index1);
+            data['EvaScheme.method'] = layedit.getContent(index2);
+            data['EvaScheme.demand'] = layedit.getContent(index3);
+            data['EvaScheme.measure'] = layedit.getContent(index4);
+
+            //计划表的名称和内容
+            data['ScheduledPlan.name'] = [];
+            data['ScheduledPlan.content'] = [];
             $.each(table.cache.dateTable, function (index, value) {
                 if (value.LAY_TABLE_INDEX >= 0) {
-                    string += "ScheduledPlan.name=" + value.name + "&ScheduledPlan.content=" + value.content + "&";
+                    data['ScheduledPlan.name'].push(value.name);
+                    data['ScheduledPlan.content'].push(value.content);
                 }
             });
+            data['ScheduledPlan.name'] = JSON.stringify(data['ScheduledPlan.name']);
+            data['ScheduledPlan.content'] = JSON.stringify(data['ScheduledPlan.content']);
+
+            //计划表的日期
             var temp = 2;
+            data['ScheduledPlan.startDate'] = [];
+            data['ScheduledPlan.endDate'] = [];
             $('.dateC').each(function () {
                 if (temp % 2 === 0) {
-                    string += "ScheduledPlan.startDate=" + $(this).text() + "&";
-                    temp++;
+                    data['ScheduledPlan.startDate'].push($(this).text());
                 } else {
-                    string += "ScheduledPlan.endDate=" + $(this).text() + "&";
-                    temp++;
+                    data['ScheduledPlan.endDate'].push($(this).text());
                 }
+                temp++;
             });
+            data['ScheduledPlan.startDate'] = JSON.stringify(data['ScheduledPlan.startDate']);
+            data['ScheduledPlan.endDate'] = JSON.stringify(data['ScheduledPlan.endDate']);
+
+            //实施小组
             $("input.layui-hide").each(function () {
-                string += $(this).attr('id') + "=" + $(this).val() + "&";
+                data[$(this).attr('id')] = $(this).val();
             });
-            string += $("#impTeamName").attr('name') + "=" + $("#impTeamName").val() + "&";
-            string += $("#startDate").attr('name') + "=" + $("#startDate").val() + "&";
-            string += $("#endDate").attr('name') + "=" + $("#endDate").val() + "&";
-            string += 'id=#(project.id)&status=#(status)';
-            return string;
+
+            //实施小组名称
+            data[$("#impTeamName").attr('name')] = $("#impTeamName").val();
+
+            //计划总时间
+            data[$("#startDate").attr('name')] = $("#startDate").val();
+            data[$("#endDate").attr('name')] = $("#endDate").val();
+
+            //projectID和status
+            data.id = '#(project.id)';
+            data.status = '#(status)';
+            return data;
         }
 
         /**
@@ -700,7 +736,8 @@
                             var ajaxTimeoutTest = $.ajax({
                                 type: 'POST',
                                 timeout: 3000,
-                                url: '#(ctxPath)/app/projectUndertake/ImpTeam' + dataString(),
+                                url: '#(ctxPath)/app/projectUndertake/ImpTeam',
+                                data: dataString(),
                                 loadFlag: true,
                                 success: function (data) { //请求成功的回调函数
                                     window.parent.location.reload();

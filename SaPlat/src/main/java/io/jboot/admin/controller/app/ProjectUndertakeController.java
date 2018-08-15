@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
@@ -99,11 +100,11 @@ public class ProjectUndertakeController extends BaseController {
         }
         project.setIsPublic(true);
         project.setStatus(ProjectStatus.IS_VERIFY);
-        Page<Project> page = projectService.findPageByIsPublic(user.getId(),project, pageNumber, pageSize);
+        Page<Project> page = projectService.findPageByIsPublic(user.getId(), project, pageNumber, pageSize);
         if (page.getList().size() > 0) {
             page.getList().forEach(p -> {
                 ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());
-                if (projectUndertake != null){
+                if (projectUndertake != null) {
                     Integer status = projectUndertake.getStatus();
                     if (status == null) {
                         p.setRemark("未承接");
@@ -404,11 +405,12 @@ public class ProjectUndertakeController extends BaseController {
         evaScheme.setLastUpdateUserID(loginUser.getId());
         evaScheme.setStatus("1");
 
+        Gson gson = new Gson();
         ScheduledPlan scheduledPlan;
-        String[] sName = getParaValues("ScheduledPlan.name");
-        String[] sStartDate = getParaValues("ScheduledPlan.startDate");
-        String[] sEndDate = getParaValues("ScheduledPlan.endDate");
-        String[] sContent = getParaValues("ScheduledPlan.content");
+        String[] sName = gson.fromJson(getPara("ScheduledPlan.name"), String[].class);
+        String[] sStartDate = gson.fromJson(getPara("ScheduledPlan.startDate"), String[].class);
+        String[] sEndDate = gson.fromJson(getPara("ScheduledPlan.endDate"), String[].class);
+        String[] sContent = gson.fromJson(getPara("ScheduledPlan.content"), String[].class);
         FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
         FileForm fileForm2 = fileFormService.findById(getParaToLong("fileFormId2"));
         List<ScheduledPlan> scheduledPlans = new ArrayList<>();
