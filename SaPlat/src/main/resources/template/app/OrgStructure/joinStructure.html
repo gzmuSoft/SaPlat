@@ -24,9 +24,8 @@
             , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                // , {field: 'id', title: '架构ID', minWidth: 100}
                 , {field: 'name', title: '架构名称', minWidth: 150,sort:true}
-                , {field: 'createUserID', title: '创建用户', minWidth: 150,sort:true}
+                , {field: 'belongToName', title: '所属组织', minWidth: 150,sort:true}
                 , {field: 'createTime', title: '创建时间', minWidth: 180,sort:true}
                 // , {field: 6, title: '状态', width: 100}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
@@ -70,8 +69,14 @@
              reloadTable(data.field.name,data.field.sid);
              return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
          });
+        //监听两个输入框不能同时输入数据
+        $("#name").click(function(){
+            $("#sid").val("");
+        });
+        $("#sid").click(function(){
+            $("#name").val("");
+        });
     });
-
 
 </script>
 #end
@@ -88,7 +93,7 @@
 
                 <label class="layui-form-label">架构ID</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="sid" name="sid" placeholder="架构ID" class="layui-input"/>
+                    <input type="number" id="sid" name="sid" placeholder="架构ID" class="layui-input"/>
                 </div>
 
                 <div class="layui-input-inline" style="width : 80px">
