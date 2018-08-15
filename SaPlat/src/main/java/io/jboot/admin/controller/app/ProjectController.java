@@ -3,6 +3,7 @@ package io.jboot.admin.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
+import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
@@ -1161,6 +1162,21 @@ public class ProjectController extends BaseController {
                 System.out.println(page.getList().get(i).getId() + ":" + page.getList().get(i).getIsUpload());
             }
         }
+        renderJson(new DataTable<Project>(page));
+    }
+    @Before(GET.class)
+    public void collectView(){
+        render("collect.html");
+    }
+    @Before(GET.class)
+    @NotNullPara({"pageNumber","pageSize"})
+    public void collectTableData(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project=new Project();
+        project.setStatus(ProjectStatus.REVIEWED);
+        project.setIsEnable(true);
+        Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
         renderJson(new DataTable<Project>(page));
     }
 }
