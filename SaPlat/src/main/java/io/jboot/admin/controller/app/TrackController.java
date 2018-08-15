@@ -65,11 +65,19 @@ public class TrackController extends BaseController {
     }
 
     /**
-     * 风险跟踪管理登记表-页面
+     * 风险跟踪管理登记表-项目-页面
      */
     public void toRiskTrack() {
+        render("riskTrack.html");
+    }
+
+    /**
+     * 风险跟踪管理登记表-页面
+     */
+    @NotNullPara("projectID")
+    public void toRiskTrackManagement() {
         Long projectFileTypeID = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
-        setAttr("projectFileTypeID", projectFileTypeID).setAttr("projectID", 114).render("riskTrackingManagement.html");
+        setAttr("projectFileTypeID", projectFileTypeID).setAttr("projectID", getParaToLong("projectID")).render("riskTrackingManagement.html");
     }
 
     /**
@@ -93,28 +101,18 @@ public class TrackController extends BaseController {
      * 跟踪资料移交表-页面
      */
     public void toTrackData() {
-        Long projectID = 114L;
         Long projectFileTypeID = projectFileTypeService.findByName("跟踪资料移交表").getId();
-        Boolean flag = false;
-        if (fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, projectID) != null) {
-            flag = true;
-        }
-        setAttr("flag", flag).setAttr("projectFileTypeID", projectFileTypeID)
-                .setAttr("projectID", projectID).render("trackingDataTransfer.html");
+        setAttr("projectFileTypeID", projectFileTypeID).render("trackingDataTransfer.html");
     }
 
     /**
      * 备案资料移交表-页面
      */
     public void toRecordData() {
-        Long projectID = 114L;
         Long projectFileTypeID = projectFileTypeService.findByName("备案资料移交表").getId();
-        Boolean flag = false;
-        if (fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, projectID) != null) {
-            flag = true;
-        }
-        setAttr("flag", flag).setAttr("projectFileTypeID", projectFileTypeID)
-                .setAttr("projectID", projectID).render("recordDataTransfer.html");
+        setAttr("projectFileTypeID", projectFileTypeID).render("recordDataTransfer.html");
     }
+
+
 }
 

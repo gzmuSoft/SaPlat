@@ -77,13 +77,15 @@
             var data = obj.data;
             if (obj.event === 'see') {
                 pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '600', '600', function () {
-                    table.reload('dateTable-measure', {
+                    table.reload('dateTable', {
                         url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
                     });
                 });
             } else if (obj.event === 'del') {
                 $.post('#(ctxPath)/app/track/deleteRiskTrackingMessage?id=' + data.projectID + '&fileID=' + data.fileID, function () {
-                    window.location.reload();
+                    table.reload('dateTable', {
+                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
+                    });
                 });
             }
         });
@@ -91,7 +93,9 @@
         $("#upload").click(function () {
             pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
                 layer.msg("上传成功！");
-                window.location.reload();
+                table.reload('dateTable', {
+                    url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
+                });
             });
         });
 

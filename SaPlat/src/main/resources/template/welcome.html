@@ -1280,7 +1280,7 @@
                 <div class="layui-carousel" id="broadcast">
                     <div carousel-item style="height:402px;width: 100%">
                         <div id="echars1" style="height:402px"></div>
-                        <div id="echars2" style="height:402px;width:844px"></div>
+                        <!--<div id="echars2" style="height:402px;width:844px"></div>-->
                         <div><img src="/static/img/welcome/52733d977e488.jpg"></div>
                         <div><img src="/static/img/welcome/1-130FPR232.jpg"></div>
                     </div>
@@ -1382,7 +1382,7 @@
 
         //轮播静态数据部分
         var myChart1 = echarts.init(document.getElementById('echars1'));
-        var myChart2 = echarts.init(document.getElementById('echars2'));
+//        var myChart2 = echarts.init(document.getElementById('echars2'));
         option1 = {
             tooltip: {
                 trigger: 'axis'
@@ -1445,7 +1445,7 @@
         };
         // 使用刚指定的配置项和数据显示图表。
         myChart1.setOption(option1);
-        myChart2.setOption(option1);
+//        myChart2.setOption(option1);
 });
 </script>
 #end
