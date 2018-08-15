@@ -247,6 +247,8 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
         model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
+        Organization organization=organizationService.findById(user.getUserID());
+        setAttr("organization",organization);
         setAttr("model", model).render("update.html");
 
     }
