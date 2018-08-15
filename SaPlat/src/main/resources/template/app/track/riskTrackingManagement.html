@@ -15,8 +15,7 @@
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
-    #if(fRole && mRole)
-    #else if(fRole)
+    #if(fRole && !mRole)
     <div class="layui-form-item" style="text-align: center">
         <div class="layui-input-block">
             <button type="button" id="upload" class="layui-btn" lay-submit="" lay-filter="upload"
@@ -28,7 +27,7 @@
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>
     </script>
-    #else
+    #else if(mRole && !fRole)
     <script type="text/html" id="barOption">
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
     </script>
