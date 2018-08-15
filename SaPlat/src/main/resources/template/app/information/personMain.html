@@ -42,18 +42,18 @@
     </fieldset>
     <div class="layui-row">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">问卷信息所属部门：</label>
+                <label class="layui-form-label" style="width: 160px">问卷信息所属部门：</label>
                 <div class="layui-input-block">
                     <input type="text" name="questionnaire.department" lay-verify="required" value="#(questionnaire.department)" autocomplete="off" placeholder="请输入标题"
-                           class="layui-input" >
+                           class="layui-input" style="width: 500px" >
                 </div>
             </div>
     </div>
     <div class="layui-row">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label" style="width: 200px">问卷调查时间：</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" style="width: 160px">问卷调查时间：</label>
+                <div class="layui-input-inline" >
                     <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
                            autocomplete="off" class="layui-input">
                 </div>
@@ -66,16 +66,16 @@
     <div class="layui-row">
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">姓名：</label>
-                <div class="layui-input-block">
+                <label class="layui-form-label" style="width: 160px">姓名：</label>
+                <div class="layui-input-block" >
                     <input type="text" name="questionnaire.personName" lay-verify="required" value="#(questionnaire.personName)" placeholder="请输入姓名" autocomplete="off"
-                           class="layui-input" style="width: 500px">
+                           class="layui-input" style="width: 300px">
                 </div>
             </div>
         </div>
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">性别：</label>
+                <label class="layui-form-label" style="width: 160px">性别：</label>
                 <div class="layui-input-block" >
                     #if(questionnaire.personGender == 2)
                         <input type="radio" name="questionnaire.personGender" value=1 title="男">
@@ -93,8 +93,8 @@
         <div class="layui-col-md6">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width: 200px">民族：</label>
-                    <div class="layui-input-inline" style="width: 500px">
+                    <label class="layui-form-label" style="width:160px">民族：</label>
+                    <div class="layui-input-inline" style="width: 300px">
                         <select name="questionnaire.nationID" lay-verify="required" lay-search="">
                             #if(nation != null)
                                 <option value="#(nation.id)">#(nation.name)</option>
@@ -109,9 +109,9 @@
         </div>
         <div class="layui-col-md6">
             <div class="layui-inline">
-                <label class="layui-form-label" style="width: 200px">联系电话：</label>
-                <div class="layui-input-inline" style="width: 500px">
-                    <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input">
+                <label class="layui-form-label" style="width:160px">联系电话：</label>
+                <div class="layui-input-inline" >
+                    <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input"style="width: 300px">
                 </div>
             </div>
         </div>
@@ -119,17 +119,17 @@
     <div class="layui-row">
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">身份证号码：</label>
-                <div class="layui-input-block" style="width: 500px">
+                <label class="layui-form-label" style="width: 160px">身份证号码：</label>
+                <div class="layui-input-block" >
                     <input type="text" name="questionnaire.IDCard" lay-verify="identity" value="#(questionnaire.IDCard)" placeholder="请输入身份证" autocomplete="off"
-                           class="layui-input">
+                           class="layui-input" style="width: 300px">
                 </div>
             </div>
         </div>
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">年龄：</label>
-                <div class="layui-input-block" style="width: 500px">
+                <label class="layui-form-label" style="width: 160px">年龄：</label>
+                <div class="layui-input-inline" style="width: 300px">
                     <input type="number" name="questionnaire.age" lay-verify="required" value="#(questionnaire.age)" autocomplete="off" placeholder="请输入年龄"
                            class="layui-input">
                 </div>
@@ -139,8 +139,8 @@
     <div class="layui-row">
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">职业：</label>
-                <div class="layui-input-inline" style="width: 500px">
+                <label class="layui-form-label" style="width:160px">职业：</label>
+                <div class="layui-input-inline" style="width: 300px">
                     <select name="questionnaire.occupationID" lay-verify="required" lay-search="">
                         #if(occupation != null)
                             <option value="#(occupation.id)">#(occupation.name)</option>
@@ -154,8 +154,8 @@
         </div>
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">文化程度：</label>
-                <div class="layui-input-inline" style="width: 500px">
+                <label class="layui-form-label" style="width: 160px">文化程度：</label>
+                <div class="layui-input-inline" style="width: 300px">
                     <select name="questionnaire.degreeOfEducationID" lay-verify="required" lay-search="">
                         #if(educational != null)
                             <option value="#(educational.id)">#(educational.name)</option>
@@ -169,7 +169,7 @@
         </div>
         <div class="layui-row">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 200px">居住地址：</label>
+                <label class="layui-form-label" style="width: 160px">居住地址：</label>
                 <div class="layui-input-block">
                     <input type="text" name="questionnaire.addr" lay-verify="required" value="#(questionnaire.addr)" autocomplete="off" placeholder="请输入居住地址"
                            class="layui-input" style="width: 500px">

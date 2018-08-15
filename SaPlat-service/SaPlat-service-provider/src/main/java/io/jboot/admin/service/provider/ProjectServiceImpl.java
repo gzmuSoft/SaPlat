@@ -121,6 +121,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (StrKit.notBlank(project.getStatus())) {
             columns.like("status", "%" + project.getStatus() + "%");
         }
+        if(project.getIsEnable()!=null){
+            columns.eq("IsEnable", project.getIsEnable());
+        }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 
