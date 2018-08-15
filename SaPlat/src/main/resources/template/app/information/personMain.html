@@ -210,11 +210,10 @@
         </li>
     </ol>
     <br>
-    <div class="layui-form-item" style="text-align: center">
+    <div style="text-align: center">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" lay-filter="demo1" id="sub" style="position:absolute;left:25%;">提交</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="reset" class="layui-btn layui-btn-warm" style="position:absolute;right:35%;">重置</button>
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
+            <button type="button" class="layui-btn" id="ret" >返回</button>
         </div>
     </div>
     #for(i = 1; i < contentsLength; i++)
@@ -241,6 +240,12 @@
             elem: '#date'
         });
 
+
+        //返回上一级
+        $('#ret').click(function () {
+            window.history.go(-1);
+        });
+
         //监听提交
         form.on('submit(demo1)', function (data) {
             data.field['project.brief'] = layedit.getContent(briefIndex);
@@ -255,6 +260,8 @@
             });
             return false;
         });
+
+
 
         function jointString() {
             $(".content").each(function () {
