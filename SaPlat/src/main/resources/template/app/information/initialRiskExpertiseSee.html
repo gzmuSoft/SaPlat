@@ -1,0 +1,57 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define content()
+<h1 class="x-center">3.9.3 初始风险因素及其风险程度</h1>
+<hr class="layui-bg-red">
+<p>当前专家：#(expertGroup.name)</p>
+<p>项目名称：#(project.name)</p>
+<p>风险因素：#(initialRiskExpertise.riskFactor)</p>
+<p>风险概率专家意见：
+    #if(initialRiskExpertise.riskExpertise ==
+    很低
+    #else if(initialRiskExpertise.riskExpertise == 2)
+    较低
+    #else if(initialRiskExpertise.riskExpertise == 3)
+    中等
+    #else if(initialRiskExpertise.riskExpertise == 4)
+    较高
+    #else if(initialRiskExpertise.riskExpertise == 5)
+    很高
+    #end
+</p>
+<p>风险概率：#(initialRiskExpertise.riskProbability)</p>
+<p>影响程度专家意见：
+    #if(initialRiskExpertise.riskProbability == 1)
+    可忽略
+    #else if(initialRiskExpertise.riskProbability == 2)
+    较小
+    #else if(initialRiskExpertise.riskProbability == 3)
+    中等
+    #else if(initialRiskExpertise.riskProbability == 4)
+    较大
+    #else if(initialRiskExpertise.riskProbability == 5)
+    严重
+    #end
+</p>
+<p>影响程度概率：#(initialRiskExpertise.incidenceProbability)</p>
+<p>风险概率：#(initialRiskExpertise.riskLevel)</p>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'element'], function () {
+        var element = layui.element
+            , $ = layui.jquery
+            , layer = layui.layer
+            , util = layui.util;
+
+    });
+</script>
+#end
