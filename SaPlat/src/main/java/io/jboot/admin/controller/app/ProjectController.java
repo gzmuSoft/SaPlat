@@ -666,6 +666,7 @@ public class ProjectController extends BaseController {
             }
             renderJson(RestResult.buildSuccess(projects));
         }
+        renderJson(RestResult.buildSuccess(projects));
     }
 
     /**
