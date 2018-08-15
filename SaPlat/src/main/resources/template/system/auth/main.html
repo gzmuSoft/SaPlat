@@ -83,7 +83,7 @@
                     reloadTable(null, null, null, null);
                 });
             } else if (obj.event === 'view') {
-                pop_show('认证信息', '#(ctxPath)/system/auth/view?id=' + data.id, '', '', function () {
+                pop_max_show('认证信息', '#(ctxPath)/system/auth/view?id=' + data.id, '', '', function () {
                     return false;
                 });
             } else if (obj.event === 'warning') {
