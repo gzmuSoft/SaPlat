@@ -426,6 +426,7 @@ public class ProjectController extends BaseController {
             } else if ("自评".equals(project.getAssessmentMode())) {
                 authProject.setStatus(ProjectStatus.REVIEW);
                 project.setStatus(ProjectStatus.REVIEW);
+                project.setIsEnable(true);
 
                 projectUndertake = new ProjectUndertake();
                 projectUndertake.setName(projectService.findById(getParaToLong("id")).getName());
