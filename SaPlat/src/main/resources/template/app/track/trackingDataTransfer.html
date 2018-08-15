@@ -8,7 +8,6 @@
 
 #define content()
 
-#if(flag)
 <br>
 <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
     <legend style="font-size: 20px;font-weight: 500;">跟踪资料移交表</legend>
@@ -16,23 +15,24 @@
 <div class="layui-row">
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
-#else
-<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-    <legend legend class="x-center">跟踪资料移交表</legend>
-    <div class="x-center">
-        <button id="upload" class="layui-btn layui-btn-lg"><i class="layui-icon"></i>上传</button>
-    </div>
-</fieldset>
-#end
 <script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.flag){ }}
+    ]]#
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">重新上传</a>
+    #[[
+    {{# } else if(!d.flag){ }}
+    ]]#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">上传跟踪资料移交表</a>
+    #[[
+    {{#  } }}
+    ]]#
 </script>
 #end
 
 #define js()
 <script type="text/javascript">
-    var projectID = "#(projectID)";
     var projectFileTypeID = "#(projectFileTypeID)";
 
     layui.use(['table', 'layer'], function () {
@@ -54,7 +54,7 @@
                 , {field: 'createTime', title: '上传时间', minWidth: 150, align: 'center', sort: true}
                 , {field: 'option', title: '操作', align: 'center', minWidth: 150,toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
+            , url: '#(ctxPath)/app/project/checkedTable?projectFileTypeID=' + projectFileTypeID
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -78,22 +78,13 @@
             var data = obj.data;
             if (obj.event === 'see') {
                 pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '600', '600', function () {
-                    table.reload('dateTable-measure', {
-                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
-                    });
+                    window.location.reload();
                 });
             } else if (obj.event === 'upload') {
-                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
+                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + data.id, '500', '300', function () {
                     window.location.reload();
                 });
             }
-        });
-
-        $("#upload").click(function () {
-            pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
-                layer.msg("上传成功！");
-                window.location.reload();
-            });
         });
 
     });

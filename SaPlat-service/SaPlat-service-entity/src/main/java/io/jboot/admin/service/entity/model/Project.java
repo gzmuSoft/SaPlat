@@ -13,6 +13,15 @@ public class Project extends BaseProject<Project> {
     private boolean isReceive;
     private double maxAmount;
     private double minAmount;
+    private boolean isUpload;
+
+    public boolean getIsUpload() {
+        return isUpload;
+    }
+
+    public void setIsUpload(boolean isUpload) {
+        this.isUpload = isUpload;
+    }
 
     public double getMaxAmount() {
         return maxAmount;

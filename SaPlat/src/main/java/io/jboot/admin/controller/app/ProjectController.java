@@ -617,56 +617,33 @@ public class ProjectController extends BaseController {
      */
     public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
-        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
-        Role role = roleService.findByName("服务机构");
-        boolean flag = false;
-        for (UserRole userRole : roles) {
-            if (userRole.getRoleID().equals(role.getId())) {
-                flag = true;
-                break;
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        Organization organization = organizationService.findById(loginUser.getUserID());
+        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        if (facAgency != null && facAgency.getIsEnable()) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+            projectUndertake.setCreateUserID(loginUser.getId());
+        } else {
+            projectUndertake.setCreateUserID(loginUser.getId());
+        }
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
+        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
+        List<ProjectUndertake> list = projectUndertakePage.getList();
+        if (list == null) {
+            list = Collections.synchronizedList(new ArrayList<>());
+        }
+        for (ProjectUndertake p : list) {
+            Project project = projectService.findById(p.getProjectID());
+            if (project != null && project.getStatus().equals(ProjectStatus.REVIEW)) {
+                pageList.add(project);
             }
         }
-
-        // 初始化评估列表
-        List<Project> undertake = Collections.synchronizedList(new ArrayList<>());
-        // 如果是服务机构,查找委评的项目
-        if (flag){
-            // 查找服务机构
-            Organization organization = organizationService.findById(loginUser.getUserID());
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency != null) {
-                // 查找承接表
-                List<ProjectUndertake> projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
-                // 通过承接表查找他已经承接的项目
-                undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList,ProjectStatus.REVIEW);
-            }
-        }
-
-        // 不论是不是服务机构，都要查找自评的项目
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
-                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
-        // 防止查出的是 null 的情况
-        if (undertake == null){
-            undertake = Collections.synchronizedList(new ArrayList<>());
-        }
-        if (projects == null){
-            projects = Collections.synchronizedList(new ArrayList<>());
-        }
-        if (projects.size() < 1 && undertake.size() > 0){
-            // 当委评的不为空，自评的为空
-            renderJson(RestResult.buildSuccess(undertake));
-        } else if (projects.size() > 0 && undertake.size() < 1){
-            // 当委评的为空，自评的不为空
-            renderJson(RestResult.buildSuccess(projects));
-        } else if (projects.size() > 0){
-            // 合并两个列表
-            if (!projects.addAll(undertake)) {
-                // 合并失败
-                throw new BusinessException("数据加载失败。。。");
-            }
-            renderJson(RestResult.buildSuccess(projects));
-        }
+        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
+        renderJson(new DataTable<Project>(page));
     }
+
 
     /**
      * 通往项目管理界面-已评估（待审查）
@@ -723,6 +700,39 @@ public class ProjectController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
+        project.setStatus(ProjectStatus.REVIEWED);
+        project.setUserId(loginUser.getId());
+        List<Project> pageList = projectService.findPage(project, pageNumber, pageSize).getList();
+        for (Project p : pageList) {
+            ApplyInvite applyInvite = applyInviteService.findByProjectID(p.getId());
+            if (applyInvite != null && applyInvite.getDeadTime().before(new Date())) {
+                float allNum, noPassNum, rate;
+                applyInvite = new ApplyInvite();
+                applyInvite.setModule(1);
+                applyInvite.setProjectID(p.getId());
+                applyInvite.setCreateUserID(loginUser.getId());
+                applyInvite.setIsEnable(true);
+                List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+                allNum = list.size();
+                applyInvite.setStatus(ApplyInviteStatus.NOPASS);
+                list = applyInviteService.findList(applyInvite);
+                noPassNum = list.size();
+                rate = 1 - (noPassNum / allNum);
+                if (rate > 0.8) {
+                    p.setStatus(ProjectStatus.CHECKED);
+                } else {
+                    p.setStatus(ProjectStatus.REVIEW);
+                }
+                if (allNum <= 3) {
+                    p.setStatus(ProjectStatus.REVIEW);
+                }
+                if (!projectService.update(p)) {
+                    throw new BusinessException("更新失败！");
+                }
+            }
+        }
+
+        project = new Project();
         project.setUserId(loginUser.getId());
         project.setStatus(ProjectStatus.CHECKED);
         project.setIsEnable(true);
@@ -886,7 +896,12 @@ public class ProjectController extends BaseController {
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.WAITE);
         applyInvite.setCreateTime(new Date());
-        applyInvite.setDeadTime(time.getTime());
+        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
+        if (timeTmp != null) {
+            applyInvite.setDeadTime(timeTmp.getDeadTime());
+        } else {
+            applyInvite.setDeadTime(time.getTime());
+        }
         applyInvite.setLastAccessTime(new Date());
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
@@ -959,34 +974,9 @@ public class ProjectController extends BaseController {
             applyInvite.setRemark("审查完成");
         }
         Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
-        Project project;
-        for (int i = 0; i < page.getList().size(); i++) {
-            project = projectService.findById(page.getList().get(i).getProjectID());
-            if (!"审查完成".equals(page.getList().get(i).getRemark()) && project != null && page.getList().get(i).getDeadTime().before(new Date())) {
-                float allNum, passNum, rate;
-                applyInvite = new ApplyInvite();
-                applyInvite.setModule(1);
-                applyInvite.setProjectID(project.getId());
-                applyInvite.setUserID(user.getId());
-                applyInvite.setIsEnable(true);
-                List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-                allNum = list.size();
-                applyInvite.setStatus(ApplyInviteStatus.PASS);
-                list = applyInviteService.findList(applyInvite);
-                passNum = list.size();
-                rate = passNum / allNum;
-                if (rate > 0.8) {
-                    project.setStatus(ProjectStatus.CHECKED);
-                } else {
-                    project.setStatus(ProjectStatus.REVIEW);
-                }
-                applyInvite = page.getList().remove(i);
-                applyInvite.setStatus(ApplyInviteStatus.PASS);
+        int size = page.getList().size();
+        for (int i = 0; i < size; i++) {
 
-                if (!projectService.update(project, applyInvite)) {
-                    throw new BusinessException("更新失败！");
-                }
-            }
         }
         renderJson(new DataTable<ApplyInvite>(page));
     }
@@ -1062,30 +1052,76 @@ public class ProjectController extends BaseController {
             renderJson(RestResult.buildError("请求失败，请重新尝试！"));
             throw new BusinessException("请求失败，请重新尝试！");
         }
-//        Project project = projectService.findById(projectID);
-//        if(project!=null&&project.getRemark().equals("邀请审查专家结束")){
-//            float allNum,passNum,rate;
-//            applyInvite = new ApplyInvite();
-//            applyInvite.setModule(1);
-//            applyInvite.setProjectID(projectID);
-//            applyInvite.setUserID(user.getId());
-//            applyInvite.setIsEnable(true);
-//            List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-//            allNum = list.size();
-//            applyInvite.setStatus(2);
-//            list = applyInviteService.findList(applyInvite);
-//            passNum = list.size();
-//            rate = passNum/allNum;
-//            if(rate>0.8){
-//                project.setStatus(ProjectStatus.CHECKED);
-//            }else{
-//                project.setStatus(ProjectStatus.REVIEW);
-//            }
-//            if(!projectService.update(project)){
-//                renderJson(RestResult.buildError("更新项目状态失败！"));
-//                throw new BusinessException("更新项目状态失败！");
-//            }
-//        }
+        Project project = projectService.findById(projectID);
+        if (project != null) {
+            float allNum, passNum, rate;
+            applyInvite = new ApplyInvite();
+            applyInvite.setModule(1);
+            applyInvite.setProjectID(projectID);
+            applyInvite.setUserID(user.getId());
+            applyInvite.setIsEnable(true);
+            List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+            allNum = list.size();
+            if (allNum >= 3) {
+                applyInvite.setStatus(ApplyInviteStatus.NOPASS);
+                list = applyInviteService.findList(applyInvite);
+                passNum = list.size();
+                rate = 1 - (passNum / allNum);
+                if (rate > 0.8) {
+                    project.setStatus(ProjectStatus.CHECKED);
+                } else {
+                    project.setStatus(ProjectStatus.REVIEW);
+                }
+                if (!projectService.update(project)) {
+                    renderJson(RestResult.buildError("更新项目状态失败！"));
+                    throw new BusinessException("更新项目状态失败！");
+                }
+            }
+        }
         renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 服务机构查询承接的审查完成的项目-表格渲染
+     */
+    @NotNullPara("projectFileTypeID")
+    public void checkedTable() {
+        User loginUser = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        Organization organization = organizationService.findById(loginUser.getUserID());
+        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        if (facAgency != null && facAgency.getIsEnable()) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+            projectUndertake.setCreateUserID(loginUser.getId());
+        } else {
+            projectUndertake.setCreateUserID(loginUser.getId());
+        }
+        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
+        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
+        List<ProjectUndertake> list = projectUndertakePage.getList();
+        if (list == null) {
+            list = Collections.synchronizedList(new ArrayList<>());
+        }
+        for (ProjectUndertake p : list) {
+            Project project = projectService.findById(p.getProjectID());
+            if (project != null && project.getStatus().equals(ProjectStatus.CHECKED)) {
+                pageList.add(project);
+            }
+        }
+        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
+        Long projectFileTypeID = getParaToLong("projectFileTypeID");
+        if (projectFileTypeID != 0) {
+            for (int i = 0; i < page.getList().size(); i++) {
+                if (fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, page.getList().get(i).getId()) != null) {
+                    page.getList().get(i).setIsUpload(true);
+                } else {
+                    page.getList().get(i).setIsUpload(false);
+                }
+                System.out.println(page.getList().get(i).getId() + ":" + page.getList().get(i).getIsUpload());
+            }
+        }
+        renderJson(new DataTable<Project>(page));
     }
 }
