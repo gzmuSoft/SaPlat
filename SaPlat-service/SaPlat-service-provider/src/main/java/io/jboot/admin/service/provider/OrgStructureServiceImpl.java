@@ -30,15 +30,18 @@ public class OrgStructureServiceImpl extends JbootServiceBase<OrgStructure> impl
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
     @Override
-    public Page<OrgStructure> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize){
-        Columns columns = Columns.create();
-        if(StrKit.notBlank(orgStructure.getName())){
-            columns.like("name","%" + orgStructure.getName() + "%");
-        }
+    public Page<Record> searchStructure(OrgStructure orgStructure, int pageNumber, int pageSize){
+        Kv para = null;
+        SqlPara sqlPara = null;
         if(orgStructure.getId() != null){
-            columns.eq("id",orgStructure.getId());
+            para = Kv.by("structId",orgStructure.getId());
+            sqlPara = Db.getSqlPara("app-OrgStruct.searchStructureByID",para);
+        }else{
+            String structName = orgStructure.getName()!=null?orgStructure.getName():"";
+            para = Kv.by("structName",structName);
+            sqlPara = Db.getSqlPara("app-OrgStruct.searchStructureByName",para);
         }
-        return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"id desc");
+        return Db.paginate(pageNumber,pageSize,sqlPara);
     }
     @Override
     public Page<Record> findMainList(int pageNumber, int pageSize, Long uid, int orgTye,String structName){
