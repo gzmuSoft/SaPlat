@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
@@ -206,5 +208,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public List<Project> findByUserId(Long userId) {
         return DAO.findListByColumn("userId", userId);
+    }
+
+    @Override
+    public Page<Project> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
+            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus());
+            sqlPara = Db.getSqlPara("app-project.project-self", c);
+        }
+        return DAO.paginate(pageNumber, pageSize, sqlPara);
     }
 }
