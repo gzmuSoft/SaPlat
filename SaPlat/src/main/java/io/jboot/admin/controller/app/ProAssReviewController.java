@@ -53,15 +53,19 @@ public class ProAssReviewController extends BaseController {
         Long projectId = getParaToLong("projectId") ;
         Integer roleType = getParaToInt("roleType");
         switch (roleType){
-            case 1://服务机构页面，有文件目录和提交意见的表单，加载所有项目相关文件
+            //服务机构页面，有文件目录和提交意见的表单，加载所有项目相关文件
+            case 1:
                 render("main_srv.html");
                 break;
-            case 2://管理机构页面，有文件目录，加载所有项目相关文件
+            //管理机构页面，有文件目录，加载所有项目相关文件
+            case 2:
                 render("main_mgr.html");
                 break;
-            case 3://专家页面，有提交意见的表单，只有预审报告文件
+            //专家页面，有提交意见的表单，只有预审报告文件
+            case 3:
                 render("main_expert.html");
                 break;
+            default:
         }
     }
 
