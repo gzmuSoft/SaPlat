@@ -141,11 +141,11 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.capital"style="width: 180px">注册资本</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="facAgency.capital" name="facAgency.capital"
-                           value="#(facAgency.capital)" class="layui-input"style="width: 500px"  lay-verify="required|mLength"/>
+                <label class="layui-form-label" for="facAgency.capital" style="width: 180px">注册资本</label>
+                <div class="layui-input-inline" >
+                    <input type="number" id="facAgency.capital" name="facAgency.capital" value="#(facAgency.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
+                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
             </div>
 
             <div class="layui-form-item">
@@ -209,11 +209,11 @@
             ]
             ,tel: [
                 /0\d{2,3}-\d{7,8}/
-                ,'座机电话格式不正确'
+                ,'座机电话格式为000-00000000'
             ]
             ,pLength: [
-                /^[\S]{0,11}$/
-                ,'人数不能大于11位'
+                /^[\S]{0,9}$/
+                ,'人数不能大于9位'
             ]
         });
 

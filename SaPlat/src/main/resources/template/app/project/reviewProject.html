@@ -273,7 +273,7 @@
                 , limit: 30 //默认采用30
                 , loading: true
                 , where: {
-                    applyOrInvite: true, flag: 0
+                    applyOrInvite: true, flag: 2
                 }
                 , done: function (res, curr, count) {
                 }
@@ -313,7 +313,7 @@
 
 <script type="text/html" id="barOption-reviewed">
     #[[
-    {{# } else if((d.status == '3')){ }}
+    {{#   if((d.status == '3')){ }}
     ]]#
     <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已通过</a>
     #[[

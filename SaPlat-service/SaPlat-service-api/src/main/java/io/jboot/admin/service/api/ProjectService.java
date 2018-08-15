@@ -80,7 +80,7 @@ public interface ProjectService  {
      */
     public List<Project> findAll();
 
-    boolean saveOrUpdate(Project model, AuthProject authProject);
+    public boolean saveOrUpdate(Project model, AuthProject authProject);
 
     /**
      * save Or Update Project And LeaderGroup
@@ -89,7 +89,17 @@ public interface ProjectService  {
      * @param leaderGroup
      * @return
      */
-    boolean saveOrUpdate(Project model, LeaderGroup leaderGroup);
+    public boolean saveOrUpdate(Project model, LeaderGroup leaderGroup);
+
+    /**
+     * save Or Update Project And authProject And projectUndertake
+     *
+     * @param model
+     * @param authProject
+     * @param projectUndertake
+     * @return
+     */
+    public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake);
 
     /**
      * find model by user and role and isEnable

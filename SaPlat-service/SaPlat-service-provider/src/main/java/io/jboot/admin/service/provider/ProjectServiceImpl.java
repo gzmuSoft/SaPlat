@@ -134,13 +134,13 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getIsPublic() != null) {
             columns.eq("isPublic", project.getIsPublic());
         }
-        if (project.getIsEnable() != null){
+        if (project.getIsEnable() != null) {
             columns.eq("isEnable", project.getIsEnable());
         }
-        if (project.getStatus() != null){
+        if (project.getStatus() != null) {
             columns.eq("status", project.getStatus());
         }
-        columns.ne("userId",userId);
+        columns.ne("userId", userId);
 
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
@@ -167,6 +167,22 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             authProject.setProjectId(model.getId());
 
             return Db.tx(() -> authProject.saveOrUpdate() && leaderGroup.saveOrUpdate());
+        });
+    }
+
+    @Override
+    public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake) {
+        return Db.tx(() -> {
+            if (projectUndertake == null) {
+                return false;
+            }
+            if (!model.saveOrUpdate()) {
+                return false;
+            }
+            authProject.setProjectId(model.getId());
+            projectUndertake.setProjectID(model.getId());
+
+            return Db.tx(() -> authProject.saveOrUpdate() && projectUndertake.saveOrUpdate());
         });
     }
 

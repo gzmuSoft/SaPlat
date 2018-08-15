@@ -5,9 +5,12 @@ import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.BaseStatus;
+import io.jboot.admin.base.common.CacheKey;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
+import io.jboot.admin.base.plugin.shiro.ShiroCacheUtils;
+import io.jboot.admin.base.plugin.shiro.cache.ShiroCacheManager;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
@@ -18,6 +21,10 @@ import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.cache.CacheManager;
 
 import java.util.List;
 
@@ -168,6 +175,10 @@ public class AuthController extends BaseController {
             throw new BusinessException("审核失败");
         }
 
+        //角色审核成功后删除所有缓存
+        if(auth.getStatus().equals(AuthStatus.IS_VERIFY)) {
+            ShiroCacheUtils.clearAuthorizationInfoAll();
+        }
         renderJson(RestResult.buildSuccess());
     }
 

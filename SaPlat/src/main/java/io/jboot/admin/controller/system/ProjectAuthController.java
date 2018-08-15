@@ -169,7 +169,7 @@ public class ProjectAuthController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    @Before(POST.class)
+    @Before({POST.class})
     public void dataPostupdate() {
         AuthProject authProject = getBean(AuthProject.class, "authProject");
         AuthProject model = authProjectService.findById(authProject.getId());
