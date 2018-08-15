@@ -3,7 +3,6 @@ package io.jboot.admin.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
-import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -773,11 +772,10 @@ public class ProjectController extends BaseController {
             }
         }
 
-        project = new Project();
-        project.setUserId(loginUser.getId());
-        project.setStatus(ProjectStatus.CHECKED);
-        project.setIsEnable(true);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(loginUser.getUserID()).getId());
+        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
+        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
 
@@ -1155,12 +1153,13 @@ public class ProjectController extends BaseController {
         Long projectFileTypeID = getParaToLong("projectFileTypeID");
         if (projectFileTypeID != 0) {
             for (int i = 0; i < page.getList().size(); i++) {
-                if (fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, page.getList().get(i).getId()) != null) {
+                FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileTypeID, page.getList().get(i).getId());
+                if (fileProject != null) {
                     page.getList().get(i).setIsUpload(true);
+                    page.getList().get(i).setFileID(fileProject.getFileID());
                 } else {
                     page.getList().get(i).setIsUpload(false);
                 }
-                System.out.println(page.getList().get(i).getId() + ":" + page.getList().get(i).getIsUpload());
             }
         }
         renderJson(new DataTable<Project>(page));

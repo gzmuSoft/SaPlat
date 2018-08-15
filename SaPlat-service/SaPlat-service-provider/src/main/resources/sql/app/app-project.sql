@@ -37,3 +37,7 @@
         status = 2
   order by createTime desc
 #end
+
+#sql("project-xxx")
+SELECT a.* FROM project as a,project_undertake as b where a.isEnable = 1 and a.id = b.projectID AND ((b.facAgencyID = #para(facAgencyID) and a.status = #para(status)) or (b.createUserID = b.facAgencyID and b.createUserID = #para(facAgencyID)))
+#end
