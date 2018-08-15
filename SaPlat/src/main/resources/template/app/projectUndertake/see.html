@@ -35,7 +35,7 @@
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label">项目名称</label>
+                <label class="layui-form-label" style="width: 180px">项目名称</label>
                 <div class="layui-input-block " style="margin: 0 180px">
                     <input type="text" id="model.name" name="model.name" placeholder="#(model.name)" value="#(model.name)"
                            class="layui-input " style="width: 500px" disabled/>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">组织机构名称</label>
+                <label class="layui-form-label" style="width: 180px">组织机构名称</label>
                 <div class="layui-input-block " style="margin: 0 180px">
                     <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)" value="#(organization.name)"
                            class="layui-input " style="width: 500px" disabled/>
@@ -53,14 +53,14 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="model.amount" style="width: 180px">预计金额</label>
                 <div class="layui-input-inline" >
-                    <input type="text" id="model.amount" name="model.amount" value='#number(model.amount, ",###")'  class="layui-input" style="width: 430px" disabled >
+                    <input type="text" id="model.amount" name="model.amount" value='#number(model.amount, ",###")'  class="layui-input" style="width: 500px" disabled >
                 </div>
-                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
+                <div class="layui-form-mid layui-word-aux" style="margin:0 150px">（￥）元</div>
             </div>
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label">项目类型</label>
+                <label class="layui-form-label" style="width: 180px">项目类型</label>
                 <div class="layui-input-block " style="margin: 0 180px">
                     <input type="text" id="model.typeName" name="model.typeName" placeholder="#(model.typeName)" value="#(model.typeName)"
                            class="layui-input " style="width: 500px" disabled/>
@@ -68,20 +68,18 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">地址</label>
+                <label class="layui-form-label" style="width: 180px">地址</label>
                     <div class="layui-input-block " style="margin: 0 180px">
                         <input type="text" id="model.site" name="model.site" placeholder="#(model.site)" value="#(model.site)"
                                class="layui-input " style="width: 500px" disabled/>
                     </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="#(model.brief)" style="width: 680px;">
-                    <h style="margin: 0 50px">简介</h>
+                <label class="layui-form-label" style="width: 680px;">
+                    简介
                 </label>
                 <div class="layui-input-block">
-					<textarea id="#(model.brief)" name="#(model.brief)" lay-verify="required" placeholder=""
-                              class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(model.brief)</textarea>
+                    <div>#(model.brief)</div>
                 </div>
             </div>
         </div>
