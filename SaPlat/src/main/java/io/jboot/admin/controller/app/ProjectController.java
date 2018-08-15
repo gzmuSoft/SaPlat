@@ -78,6 +78,9 @@ public class ProjectController extends BaseController {
     private EvaSchemeService evaSchemeService;
 
     @JbootrpcService
+    private ManagementService managementService;
+
+    @JbootrpcService
     private ProjectFileTypeService projectFileTypeService;
 
     @JbootrpcService
@@ -769,7 +772,13 @@ public class ProjectController extends BaseController {
 //        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(loginUser.getUserID()).getId());
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+        } else {
+            projectUndertake.setFacAgencyID(loginUser.getId());
+        }
+        projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
@@ -1146,6 +1155,11 @@ public class ProjectController extends BaseController {
             }
         }
         Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
+        if (managementService.findByOrgId(organization.getId()) != null) {
+            Project project = new Project();
+            project.setIsEnable(true);
+            page = projectService.findPage(project, pageNumber, pageSize);
+        }
         Long projectFileTypeID = getParaToLong("projectFileTypeID");
         if (projectFileTypeID != 0) {
             for (int i = 0; i < page.getList().size(); i++) {
@@ -1155,6 +1169,10 @@ public class ProjectController extends BaseController {
                     page.getList().get(i).setFileID(fileProject.getFileID());
                 } else {
                     page.getList().get(i).setIsUpload(false);
+                }
+                ProjectUndertake projectUndertake1 = projectUndertakeService.findByProjectIdAndFacAgencyId(page.getList().get(i).getId(), facAgency.getId());
+                if (projectUndertake1 != null) {
+                    page.getList().get(i).setRemark("1");
                 }
             }
         }

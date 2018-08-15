@@ -52,12 +52,12 @@ where
     a.isEnable = 1
 and
     a.id = b.projectID
-AND
+and
+    a.status = #para(status)
+and
     ((b.facAgencyID = #para(facAgencyID)
-  and
-    a.status = #para(status))
 or
     (b.createUserID = b.facAgencyID
   and
-    b.createUserID = #para(facAgencyID)))
+    b.createUserID = #para(userID))))
 #end

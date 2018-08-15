@@ -15,7 +15,8 @@
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
-    #if(fRole)
+    #if(fRole && mRole)
+    #else if(fRole)
     <div class="layui-form-item" style="text-align: center">
         <div class="layui-input-block">
             <button type="button" id="upload" class="layui-btn" lay-submit="" lay-filter="upload"
