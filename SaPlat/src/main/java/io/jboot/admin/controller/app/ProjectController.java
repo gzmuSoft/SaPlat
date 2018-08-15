@@ -1133,29 +1133,19 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+//
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());
-        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-        if (facAgency != null && facAgency.getIsEnable()) {
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
+        if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
-            projectUndertake.setCreateUserID(loginUser.getId());
         } else {
-            projectUndertake.setCreateUserID(loginUser.getId());
+            projectUndertake.setFacAgencyID(loginUser.getId());
         }
-        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
-        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
-        List<ProjectUndertake> list = projectUndertakePage.getList();
-        if (list == null) {
-            list = Collections.synchronizedList(new ArrayList<>());
-        }
-        for (ProjectUndertake p : list) {
-            Project project = projectService.findById(p.getProjectID());
-            if (project != null && project.getStatus().equals(ProjectStatus.CHECKED)) {
-                pageList.add(project);
-            }
-        }
-        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
-        if (managementService.findByOrgId(organization.getId()) != null) {
+        projectUndertake.setCreateUserID(loginUser.getId());
+        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
+        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
+
+        if (managementService.findByOrgId(loginUser.getUserID()) != null) {
             Project project = new Project();
             project.setIsEnable(true);
             page = projectService.findPage(project, pageNumber, pageSize);
