@@ -14,11 +14,13 @@
 <div class="layui-row">
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
+
+#if(fRole)
 <script type="text/html" id="barOption">
     #[[
     {{#  if(d.isUpload){ }}
     ]]#
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">重新上传</a>
     #[[
     {{# } else if(!d.isUpload){ }}
@@ -28,6 +30,21 @@
     {{#  } }}
     ]]#
 </script>
+#else if(mRole)
+<script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.isUpload){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
+    #[[
+    {{# } else if(!d.isUpload){ }}
+    ]]#
+    <a class="layui-disabled layui-btn-normal layui-btn-xs" disabled="disabled">暂无资料</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#end
 #end
 
 #define js()

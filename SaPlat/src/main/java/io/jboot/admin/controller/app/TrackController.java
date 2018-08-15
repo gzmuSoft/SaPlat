@@ -9,8 +9,12 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.UserRole;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * -----------------------------
@@ -38,6 +42,11 @@ public class TrackController extends BaseController {
     @JbootrpcService
     private FilesService filesService;
 
+    @JbootrpcService
+    private UserRoleService userRoleService;
+
+    @JbootrpcService
+    private RoleService roleService;
 
     public void index() {
 
@@ -77,7 +86,17 @@ public class TrackController extends BaseController {
     @NotNullPara("projectID")
     public void toRiskTrackManagement() {
         Long projectFileTypeID = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
-        setAttr("projectFileTypeID", projectFileTypeID).setAttr("projectID", getParaToLong("projectID")).render("riskTrackingManagement.html");
+        List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
+        boolean mRole = false, fRole = false;
+        for (UserRole u : list) {
+            if (roleService.findById(u.getRoleID()).getName().equals("管理机构")) {
+                mRole = true;
+            } else if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
+                fRole = true;
+            }
+        }
+        setAttr("mRole", mRole).setAttr("fRole", fRole).
+                setAttr("projectFileTypeID", projectFileTypeID).setAttr("projectID", getParaToLong("projectID")).render("riskTrackingManagement.html");
     }
 
     /**
@@ -102,7 +121,17 @@ public class TrackController extends BaseController {
      */
     public void toTrackData() {
         Long projectFileTypeID = projectFileTypeService.findByName("跟踪资料移交表").getId();
-        setAttr("projectFileTypeID", projectFileTypeID).render("trackingDataTransfer.html");
+        List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
+        boolean mRole = false, fRole = false;
+        for (UserRole u : list) {
+            if (roleService.findById(u.getRoleID()).getName().equals("管理机构")) {
+                mRole = true;
+            } else if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
+                fRole = true;
+            }
+        }
+        setAttr("mRole", mRole).setAttr("fRole", fRole).
+                setAttr("projectFileTypeID", projectFileTypeID).render("trackingDataTransfer.html");
     }
 
     /**
@@ -110,7 +139,17 @@ public class TrackController extends BaseController {
      */
     public void toRecordData() {
         Long projectFileTypeID = projectFileTypeService.findByName("备案资料移交表").getId();
-        setAttr("projectFileTypeID", projectFileTypeID).render("recordDataTransfer.html");
+        List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
+        boolean mRole = false, fRole = false;
+        for (UserRole u : list) {
+            if (roleService.findById(u.getRoleID()).getName().equals("管理机构")) {
+                mRole = true;
+            } else if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
+                fRole = true;
+            }
+        }
+        setAttr("mRole", mRole).setAttr("fRole", fRole).
+                setAttr("projectFileTypeID", projectFileTypeID).render("recordDataTransfer.html");
     }
 
 
