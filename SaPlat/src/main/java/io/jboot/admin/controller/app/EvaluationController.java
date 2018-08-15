@@ -72,22 +72,42 @@ public class EvaluationController extends BaseController {
         }
 
         User u = AuthUtils.getLoginUser();
+        // 如果为委评
         if ("委评".equals(project.getAssessmentMode())) {
+            // 当前项目是否是由他自己创建
             if (!project.getUserId().equals(u.getId())) {
+                // 通过项目 id 和状态查询承接表
                 ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
+                // 如果查不到
                 if (projectUndertake == null) {
                     throw new BusinessException("当前项目无人承接！");
                 }
+                // 查找角色
                 Role role = roleService.findByName("服务机构");
                 UserRole userRole = userRoleService.findByUserIdAndRoleId(u.getId(), role.getId());
+                // 验证角色
                 if (userRole == null) {
                     throw new BusinessException("请先认证服务机构！");
                 }
                 User user = AuthUtils.getLoginUser();
                 Organization organization = organizationService.findById(user.getUserID());
                 FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-                if (facAgency == null || !projectUndertake.getFacAgencyID().equals(facAgency.getId())) {
-                    throw new BusinessException("当前用户与项目承接人身份不对应！");
+                if (facAgency == null) {
+                    throw new BusinessException("找不到对应服务机构的身份信息！");
+                }
+//                if (projectUndertake.getFacAgencyID().equals(projectUndertake.getCreateUserID())) {
+//                    throw new BusinessException("当前项目是自评项目！");
+//                }
+                if (projectUndertake.getApplyOrInvite()) {
+                    // 当他为邀请的时候，通过服务机构 id 和查出的 服务机构 id 进行验证
+                    if (!facAgency.getId().equals(projectUndertake.getFacAgencyID())) {
+                        throw new BusinessException("当前用户与项目承接人身份不对应！");
+                    }
+                } else {
+                    // 当他为申请的时候，通过用户 id 和查出的 创建用户 id 进行验证
+                    if (!projectUndertake.getCreateUserID().equals(user.getId())) {
+                        throw new BusinessException("当前用户与项目承接人身份不对应！");
+                    }
                 }
                 setAttr("isSelf", "false");
             } else {
@@ -97,6 +117,7 @@ public class EvaluationController extends BaseController {
         } else if (!project.getUserId().equals(u.getId())) {
             throw new BusinessException("这个不是你的项目哦~！");
         } else if ("自评".equals(project.getAssessmentMode())) {
+            // 如果为自评
             setAttr("method", "true");
         }
 
