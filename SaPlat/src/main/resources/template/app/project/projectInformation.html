@@ -436,6 +436,8 @@
          * 自评、委评按钮事件
          */
         $('.submit').click(function () {
+            var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+            $('body').prepend(bg);
             $.getJSON("#(ctxPath)/app/project/projectUploading?saveOrUpdate=0&" + $(this).attr('name') + "=" + $(this).val() + '&projectId=' + projectId + '&judgeFile=' + judgeFile,
                 function (data) {
                     layer.open({
