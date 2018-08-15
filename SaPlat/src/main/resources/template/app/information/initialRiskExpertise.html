@@ -340,7 +340,7 @@
             if (flag) {
                 layer.msg("保存成功！");
                 setTimeout(function () {
-                    window.location.reload();
+                    window.location.href = document.referrer;
                 }, 1000);
             }
         });

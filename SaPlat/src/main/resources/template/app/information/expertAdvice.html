@@ -103,17 +103,21 @@
                 }
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
-                $.post("#(ctxPath)/app/information/expertAdvicePost", data, function (res) {
-                    $('.loading-bg').remove();
-                    if (res == '0'){
-                        layer.msg("提交成功！正在跳转...");
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/information/expertAdvicePost',
+                    data: data,
+                    loadFlag: true,
+                    success: function () {
+                        $('.loading-bg').remove();
                         setTimeout(function () {
-                            window.location.href = document.referrer;
+                           window.location.href = document.referrer;
                         }, 1000);
-                    }else {
-                        layer.msg(res.msg);
+                    },
+                    error: function () {
+                        layer.msg("保存失败");
                     }
-                });
+                })
                 return false;
             }
         });

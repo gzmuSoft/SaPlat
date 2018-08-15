@@ -408,7 +408,10 @@ public class ProjectUndertakeController extends BaseController {
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
         FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
-        FileForm fileForm2 = fileFormService.findById(getParaToLong("fileFormId2"));
+        String file2Id = getPara("fileFormId2");
+        FileForm fileForm2 = null;
+        if (file2Id != null)
+            fileForm2 = fileFormService.findById(file2Id);
         List<ScheduledPlan> scheduledPlans = new ArrayList<>();
         for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
