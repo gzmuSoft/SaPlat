@@ -14,7 +14,13 @@
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery;
-
+        form.verify({
+            oneVerify : function(value) {
+                if (value.length >0) {
+                    return '只能输入一位字符';
+                }
+            }
+        });
         form.on('submit(sub)', function (data) {
 
             util.sendAjax({
@@ -47,7 +53,7 @@
             <label class="layui-form-label"><em class="require-mark">*</em>编码</label>
             <div class="layui-input-block">
                 <input type="text" name="model.code" placeholder="编码" class="layui-input" value="" required
-                       lay-verify="required" style="width: 280px"  autocomplete="off"/>
+                       lay-verify="required|oneVerify" style="width: 280px"  autocomplete="off"/>
             </div>
         </div>
         <div class="layui-form-item">
