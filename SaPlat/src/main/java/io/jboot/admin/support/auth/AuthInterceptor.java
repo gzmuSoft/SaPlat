@@ -66,16 +66,6 @@ public class AuthInterceptor implements Interceptor {
             ai.invoke();
         }
 
-        User user = AuthUtils.getLoginUser();
-        if (user.getId() != null){
-            user = userService.findById(user.getId());
-            String status = user.getStatus();
-            if ("3".equals(status)){
-                ShiroCacheUtils.clearAuthorizationInfoAll();
-                user.setStatus("1");
-                userService.update(user);
-            }
-        }
     }
 
 }

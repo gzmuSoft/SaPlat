@@ -197,8 +197,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                     return false;
                 }
             }
-            user.setStatus("3");
-            return userService.update(user);
+            return true;
         });
     }
 
