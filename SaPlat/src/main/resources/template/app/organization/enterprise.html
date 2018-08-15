@@ -181,14 +181,12 @@
 
 #define js()
 <script type="text/javascript">
+    var fileID, fileFromID;
     layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
             , upload = layui.upload;
-
-        var fileFromID;
-        var fileID;
 
         upload.render({
             elem: '#upload'

@@ -192,15 +192,12 @@
 
 #define js()
 <script type="text/javascript">
-
-    var fileID, fileID1;
+    var fileID, fileID1, fileFromID, fileFromID1;
     layui.use(['form', 'layer', 'upload'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
             , upload = layui.upload;
-
-        var fileFromID, fileFromID1;
 
         form.verify({
             mLength: [

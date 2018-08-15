@@ -321,12 +321,23 @@ public class InformationController extends BaseController {
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
         User user = AuthUtils.getLoginUser();
         Organization organization;
+        /**
+         * 自评的时候
+         * projectUndertake的facAgencyID是
+         */
         if ("自评".equals(project.getAssessmentMode())) {
             user = userService.findById(projectUndertake.getFacAgencyID());
             organization = organizationService.findById(user.getUserID());
         } else if ("委评".equals(project.getAssessmentMode())) {
-            organization = organizationService.findById(user.getUserID());
-            user = userService.findByUserIdAndUserSource(user.getUserID(), 1);
+            if(projectUndertake.getApplyOrInvite()){
+                FacAgency facAgency=facAgencyService.findById(projectUndertake.getFacAgencyID());
+                organization = organizationService.findById(facAgency.getOrgID());
+                user=userService.findByUserIdAndUserSource(organization.getId(),1);
+            }
+            else{
+                user=userService.findById(projectUndertake.getCreateUserID());
+                organization=organizationService.findById(user.getUserID());
+            }
         } else {
             throw new BusinessException("请求错误");
         }
