@@ -52,7 +52,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                pop_max_show('查看个人信息', '#(ctxPath)/system/person/update?id=' + data.id, function () {
+                pop_show('查看个人信息', '#(ctxPath)/system/person/update?id=' + data.id, '700', '440', function () {
                 });
             } else if (obj.event === 'use') {
                 util.sendAjax({
