@@ -1,0 +1,143 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    .pdfobject-container {
+        width: 48%;
+        height: 100%;
+        padding: 5em 0;
+    }
+
+    html, body {
+        height: 97%;
+    }
+
+    ul {
+        padding: 0px 10px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
+<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
+<script type="text/javascript">
+    //设置PDFObject
+    var options = {
+        forcePDFJS: true,
+        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
+    };
+    PDFObject.embed("", "#pdfviewer", options);
+
+    layui.use('layer', function () {
+        var $ = layui.jquery;
+        var ul;
+
+        /**
+         * 获取列表的数据，参考information edit.html
+         */
+        $.get("#(ctxPath)/app/information/editData", {projectId: "#(projectId)"}, function (res) {
+            var data = res.list;
+            var liTagS = '<li class="layui-timeline-item">';
+            var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+            var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+            var timeTxtTagS = '<h3 class="layui-timeline-title">';
+            var timeTxtTagE = '</h3>';
+            var reTitle = '评估审查意见：';
+            var timeLineContentDivE = '</div>';
+            var liTagE = '</li>';
+            var liItem = '';
+            ul = $('<ul class="layui-timeline"></ul>');
+            data.forEach(function (ele) {
+                liItem = '';
+                liItem += liTagS;
+                liItem += timeLineIcon;
+                liItem += timeLineContentDivS;
+                liItem += timeTxtTagS;
+                liItem += ele.createTime;
+                liItem += timeTxtTagE;
+                liItem += reTitle;
+                liItem += ele.recomment;
+                liItem += '<hr class="layui-bg-gray">';
+                liItem += '意见反馈：';
+                if (ele.feedback) {
+                    liItem += ele.feedback;
+                } else {
+                    liItem += '暂无';
+                }
+                liItem += timeLineContentDivE;
+                liItem += liTagE;
+                $("ul#recomment").append(liItem);
+            });
+        });
+    });
+    //渲染表单，
+    layui.use('form', function(){
+         var form = layui.form ,layer = layui.layer,$ = layui.jquery;
+         form.render();
+         form.on('switch(switchS)', function(data){
+            $("input[name='model.isPass']").val(this.checked ? '1' : '0');
+          });
+    });
+
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(add)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/ass_review/postAdd',
+                data: $('#rec').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                }
+            });
+            alert($('#rec').serialize());
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid" style="height:100%;">
+    <div class="layui-row" style="min-height:600px">
+        <div id="pdfviewer" class="layui-col-md8" style="min-height:500px"></div>
+        <div class="layui-col-md4">
+            <ul id="recomment"></ul>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div id="" class="layui-col-md12">
+            <form id="rec" class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否通过</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="isPassS" lay-skin="switch" lay-filter="switchS" lay-text="通过|不通过">
+                        <input class="layui-hide" type="text" value="0" name="model.isPass">
+                        <input class="layui-hide" type="text" value="test" name="model.name">
+                        <input class="layui-hide" type="text" value="6" name="model.sort">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">审查意见</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" class="layui-textarea" name="model.recomment"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="add">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+#end
