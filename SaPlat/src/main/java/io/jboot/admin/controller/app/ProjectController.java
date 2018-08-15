@@ -630,40 +630,49 @@ public class ProjectController extends BaseController {
         // 初始化评估列表
         List<Project> undertake = Collections.synchronizedList(new ArrayList<>());
         // 如果是服务机构,查找委评的项目
-        if (flag){
+        if (flag) {
             // 查找服务机构
             Organization organization = organizationService.findById(loginUser.getUserID());
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency != null) {
-                // 查找承接表
-                List<ProjectUndertake> projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
-                // 通过承接表查找他已经承接的项目
-                undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList,ProjectStatus.REVIEW);
+
+            // 当他为申请的时候,以当前用户登录的 id 作为创建者 id 查找 申请 成功的项目
+            List<ProjectUndertake> projectUndertakeList1 = projectUndertakeService.findByCreateUserIDAndStatusAndAOI(loginUser.getId(), ProjectUndertakeStatus.ACCEPT,false);
+            undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList1, ProjectStatus.REVIEW);
+            if (undertake == null) {
+                undertake = Collections.synchronizedList(new ArrayList<>());
+            }
+
+            // 当他为邀请的时候,以当前用户的服务机构 id 作为服务机构 id 查找 邀请 成功的项目
+            List<ProjectUndertake> projectUndertakeList2 = projectUndertakeService.findListByFacAgencyIdAndStatusAndAOI(facAgency.getId(), ProjectUndertakeStatus.ACCEPT,true);
+            List<Project> undertakeTmp = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList2, ProjectStatus.REVIEW);
+            if (undertakeTmp != null && undertakeTmp.size() > 0){
+                undertake.addAll(undertakeTmp);
             }
         }
 
-        // 不论是不是服务机构，都要查找自评的项目
+        // 不论是不是服务机构，都要查找自评的项目。
         List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
                 new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
+
         // 防止查出的是 null 的情况
-        if (undertake == null){
-            undertake = Collections.synchronizedList(new ArrayList<>());
-        }
-        if (projects == null){
+        if (projects == null) {
             projects = Collections.synchronizedList(new ArrayList<>());
         }
-        if (projects.size() < 1 && undertake.size() > 0){
+        if (projects.size() < 1 && undertake.size() > 0) {
             // 当委评的不为空，自评的为空
             renderJson(RestResult.buildSuccess(undertake));
-        } else if (projects.size() > 0 && undertake.size() < 1){
+        } else if (projects.size() > 0 && undertake.size() < 1) {
             // 当委评的为空，自评的不为空
             renderJson(RestResult.buildSuccess(projects));
-        } else if (projects.size() > 0){
-            // 合并两个列表
+        } else if (projects.size() > 0 && undertake.size() > 0) {
+            // 当委评的不为空，自评的不为空
             if (!projects.addAll(undertake)) {
                 // 合并失败
                 throw new BusinessException("数据加载失败。。。");
             }
+            renderJson(RestResult.buildSuccess(projects));
+        } else {
+            // 当两个都为空
             renderJson(RestResult.buildSuccess(projects));
         }
     }
@@ -845,7 +854,7 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Page<FacAgency> page = facAgencyService.findPage(user.getUserID(),pageNumber, pageSize);
+        Page<FacAgency> page = facAgencyService.findPage(user.getUserID(), pageNumber, pageSize);
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setIsInvite(projectUndertakeService.findIsInvite(page.getList().get(i).getId(), getParaToLong("id")));
         }

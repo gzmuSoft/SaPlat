@@ -35,11 +35,11 @@
 
         <div class="layui-col-md6">
             <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>预计金额：</label>
-                <div class="layui-input-block">
-                    <input value="#(project.amount)" id="model.amount" name="project.amount" lay-verify="required"
-                           autocomplete="off" placeholder="￥" class="layui-input" type="tel" style="width: 300px" >
-                </div>
+                    <label class="layui-form-label" for="project.amount" ><em class="require-mark">*</em>预计金额：</label>
+                    <div class="layui-input-inline" >
+                        <input type="number"  autocomplete="off" placeholder="￥"id="project.amount" name="project.amount" value="#(project.amount)"  class="layui-input" style="width: 230px" lay-verify="required" >
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="margin:0 40px">（￥）元</div>
             </div>
         </div>
     </div>
@@ -186,7 +186,7 @@
 <!--js start-->
 <script type="text/javascript">
 
-    var assessmentMode = '';
+    var assessmentMode = '#(project.assessmentMode)';
 
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
@@ -201,6 +201,17 @@
 
         var index = layedit.build('demo'); //建立编辑器
 
+
+        (function () {
+            console.log("s"+assessmentMode);
+            if (assessmentMode === "委评") {
+                $("#zp").css("color", '#d9cfdc');
+                $("#wp").css("color", '#0fae7f');
+            } else{
+                $("#zp").css("color", '#0fae7f');
+                $("#wp").css("color", '#d9cfdc');
+            }
+        })()
         /**
          * 判断是否填写完整
          */
