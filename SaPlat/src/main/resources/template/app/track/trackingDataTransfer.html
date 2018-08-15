@@ -15,7 +15,7 @@
 <div class="layui-row">
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
-#if(fRole)
+#if(fRole && !mRole )
 <script type="text/html" id="barOption">
     #[[
     {{#  if(d.isUpload && d.remark == '1'){ }}
@@ -25,19 +25,42 @@
     #[[
     {{# } else if(!d.isUpload && d.remark == '1'){ }}
     ]]#
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">上传跟踪资料移交表</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">上传备案资料移交表</a>
     #[[
     {{#  } }}
     ]]#
 </script>
-#else
+#else if(mRole && !fRole)
 <script type="text/html" id="barOption">
     #[[
-    {{# if(d.isUpload){ }}
+    {{#  if(d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
     #[[
-    {{# } else if(!d.isUpload ){ }}
+    {{# } else if(!d.isUpload){ }}
+    ]]#
+    <a class="layui-disabled layui-btn-normal layui-btn-xs" disabled="disabled">暂无资料</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#else if(mRole && fRole)
+<script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.isUpload && d.remark == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">重新上传</a>
+    #[[
+    {{# } else if(!d.isUpload && d.remark == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="upload">上传备案资料移交表</a>
+    #[[
+    {{# } else if(d.isUpload && d.remark != '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
+    #[[
+    {{# } else if(!d.isUpload && d.remark != '1'){ }}
     ]]#
     <a class="layui-disabled layui-btn-normal layui-btn-xs" disabled="disabled">暂无资料</a>
     #[[

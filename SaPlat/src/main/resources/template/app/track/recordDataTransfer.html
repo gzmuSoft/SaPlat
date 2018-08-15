@@ -15,7 +15,7 @@
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
 
-#if(fRole)
+#if(fRole && !mRole )
 <script type="text/html" id="barOption">
     #[[
     {{#  if(d.isUpload && d.remark == '1'){ }}
@@ -30,7 +30,7 @@
     {{#  } }}
     ]]#
 </script>
-#else if(mRole)
+#else if(mRole && !fRole)
 <script type="text/html" id="barOption">
     #[[
     {{#  if(d.isUpload){ }}
@@ -38,6 +38,29 @@
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
     #[[
     {{# } else if(!d.isUpload){ }}
+    ]]#
+    <a class="layui-disabled layui-btn-normal " disabled="disabled">暂无资料</a>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#else if(mRole && fRole)
+<script type="text/html" id="barOption">
+    #[[
+    {{#  if(d.isUpload && d.remark == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="upload">重新上传</a>
+    #[[
+    {{# } else if(!d.isUpload && d.remark == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="upload">上传备案资料移交表</a>
+    #[[
+    {{# } else if(d.isUpload && d.remark != '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</a>
+    #[[
+    {{# } else if(!d.isUpload && d.remark != '1'){ }}
     ]]#
     <a class="layui-disabled layui-btn-normal layui-btn-xs" disabled="disabled">暂无资料</a>
     #[[
