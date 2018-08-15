@@ -326,65 +326,70 @@
             var not = true;
             if (this.id === "nextPage1") {
                 if (notNull()) {
+                    var data = {};
+
                     not = true;
-                    var string = "?", valueArray = [], nameArray = [];
+                    valueArray = [], nameArray = [];
                     paTypeID = $("#project\\.paTypeID").val();
                     if (maxPage < 2) maxPage = 2 , saveOrUpdate = 1;
                     presentPage = 2;
-                    string += "saveOrUpdate=" + saveOrUpdate + "&";
-
+                    data.saveOrUpdate = saveOrUpdate;
                     $(".project").each(function (key) {
                         nameArray[key] = $(this).attr('name');
                         valueArray[key] = $(this).val();
                         if (nameArray[key] == "project.amount")
                             valueArray[key] *= $('#units').val();
-                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                        data[nameArray[key]] = valueArray[key];
                     });
-                    string += "project.brief=" + layedit.getContent(index);
-                    console.log(string);//删除
+                    data['project.brief'] = layedit.getContent(index)
                     if (saveOrUpdate === 1) {
+                        data.projectId = projectId;
                         $.getJSON(
-                            "#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId,
-                            function (data) {
-                                projectId = data.projectId;
+                            "#(ctxPath)/app/project/projectUploading", data,
+                            function (res) {
+                                projectId = res.projectId;
                             });
                     } else if (saveOrUpdate === 0) {
-                        $.get("#(ctxPath)/app/project/projectUploading" + string + '&projectId=' + projectId + '&judgeFile=' + false);
+                        data.projectId = projectId;
+                        data.judgeFile = false;
+                        $.get("#(ctxPath)/app/project/projectUploading", data);
                     }
                 } else {
                     not = false;
                     layer.msg("数据为空或格式不正确！");
                 }
-                /**
-                 * 加载文件列表
-                 */
+                //加载文件列表
                 table.reload('dateTable', {
                     url: '#(ctxPath)/app/project/fileTable?paTypeID=' + paTypeID + '&id=' + projectId
                 });
             } else if (this.id === "nextPage2") {
                 if (notNull_2()) {
+                    var data = {};
                     not = true;
-                    var string = "?", valueArray = [], nameArray = [];
+                    valueArray = [], nameArray = [];
                     if (maxPage < 3) maxPage = 3, saveOrUpdate = 1;
                     presentPage = 3;
-                    string += "saveOrUpdate=" + saveOrUpdate + "&";
+                    data.saveOrUpdate = saveOrUpdate;
                     $(".leaderGroup").each(function (key) {
                         nameArray[key] = $(this).attr('name');
                         valueArray[key] = $(this).val();
-                        string += nameArray[key] + "=" + valueArray[key] + "&";
+                        data[nameArray[key]] = valueArray[key];
                     });
-                    string += "leaderGroup.crew=" + $("#crew").val();
-                    $.get("#(ctxPath)/app/project/leaderGroupUploading" + string + '&projectId=' + projectId);
+                    data['leaderGroup.crew'] = $("#crew").val();
+                    data.projectId = projectId;
+                    $.get("#(ctxPath)/app/project/leaderGroupUploading", data);
                 }
                 else {
                     not = false;
                     layer.msg("数据为空以及格式错误！");
                 }
             } else if (this.id === "nextPage3") {
-                var string = "?", valueArray = [], nameArray = [];
+                var data = {}, valueArray = [], nameArray = [];
+                data.projectId = projectId;
+                data.paTypeID = paTypeID;
                 if (maxPage < 4) maxPage = 4 , saveOrUpdate = 1;
                 presentPage = 4;
-                $.getJSON("#(ctxPath)/app/project/judgeFile?projectId=" + projectId + '&paTypeID=' + paTypeID,
+                $.getJSON("#(ctxPath)/app/project/judgeFile", data,
                     function (data) {
                         judgeFile = data.judgeFile;
                         if (judgeFile === true) {

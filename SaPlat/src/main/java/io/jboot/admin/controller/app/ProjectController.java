@@ -426,6 +426,7 @@ public class ProjectController extends BaseController {
             } else if ("自评".equals(project.getAssessmentMode())) {
                 authProject.setStatus(ProjectStatus.REVIEW);
                 project.setStatus(ProjectStatus.REVIEW);
+                project.setIsEnable(true);
 
                 projectUndertake = new ProjectUndertake();
                 projectUndertake.setName(projectService.findById(getParaToLong("id")).getName());
@@ -625,40 +626,47 @@ public class ProjectController extends BaseController {
                 break;
             }
         }
-        List<ProjectUndertake> projectUndertakeList = null;
-        if (flag) {
+
+        // 初始化评估列表
+        List<Project> undertake = Collections.synchronizedList(new ArrayList<>());
+        // 如果是服务机构,查找委评的项目
+        if (flag){
+            // 查找服务机构
             Organization organization = organizationService.findById(loginUser.getUserID());
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
             if (facAgency != null) {
-                projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
+                // 查找承接表
+                List<ProjectUndertake> projectUndertakeList = projectUndertakeService.findListByFacAgencyIdAndStatus(facAgency.getId(), ProjectUndertakeStatus.ACCEPT);
+                // 通过承接表查找他已经承接的项目
+                undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList,ProjectStatus.REVIEW);
             }
         }
-        Project project = new Project();
-        project.setUserId(loginUser.getId());
-        project.setStatus(ProjectStatus.REVIEW);
-        project.setIsEnable(true);
-        List<Project> projectList = null;
-        if (projectUndertakeList != null) {
-            projectList = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList, ProjectStatus.REVIEW);
-        }
+
+        // 不论是不是服务机构，都要查找自评的项目
         List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
                 new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
-        if (projectList == null) {
-            projectList = Collections.synchronizedList(new ArrayList<>());
+        // 防止查出的是 null 的情况
+        if (undertake == null){
+            undertake = Collections.synchronizedList(new ArrayList<>());
         }
-        if (projects == null) {
+        if (projects == null){
             projects = Collections.synchronizedList(new ArrayList<>());
         }
-        if (projectList.size() > 0 && !projects.addAll(projectList)) {
-            throw new BusinessException("数据加载失败。。。");
-        }
-        for (int i = 0; i < projects.size(); i++) {
-            if (projects.get(i) == null){
-                projects.remove(i);
+        if (projects.size() < 1 && undertake.size() > 0){
+            // 当委评的不为空，自评的为空
+            renderJson(RestResult.buildSuccess(undertake));
+        } else if (projects.size() > 0 && undertake.size() < 1){
+            // 当委评的为空，自评的不为空
+            renderJson(RestResult.buildSuccess(projects));
+        } else if (projects.size() > 0){
+            // 合并两个列表
+            if (!projects.addAll(undertake)) {
+                // 合并失败
+                throw new BusinessException("数据加载失败。。。");
             }
+            renderJson(RestResult.buildSuccess(projects));
         }
         renderJson(RestResult.buildSuccess(projects));
-
     }
 
     /**

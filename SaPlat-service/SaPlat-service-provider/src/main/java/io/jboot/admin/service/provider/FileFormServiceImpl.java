@@ -12,6 +12,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -33,6 +34,15 @@ public class FileFormServiceImpl extends JbootServiceBase<FileForm> implements F
         columns.like("fieldName", "%" + fieldName.trim() + "%");
         columns.eq("recordID", recordID);
         return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<FileForm> findFirstByTableNameAndRecordID(String tableName, Long recordID) {
+        Columns columns = Columns.create();
+        columns.like("tableName", "%" + tableName.trim() + "%");
+        columns.eq("recordID", recordID);
+        return DAO.findListByColumns(columns);
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Db;
 import io.jboot.admin.service.api.EvaSchemeService;
+import io.jboot.admin.service.api.FileFormService;
 import io.jboot.admin.service.api.ImpTeamService;
 import io.jboot.admin.service.api.ScheduledPlanService;
 import io.jboot.admin.service.entity.model.*;
@@ -22,6 +23,8 @@ import java.util.List;
 public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements ImpTeamService {
     @Inject
     ScheduledPlanService scheduledPlanService;
+    @Inject
+    FileFormService fileFormService;
 
     @Override
     public List<ImpTeam> findByUserID(Long id) {
@@ -86,8 +89,10 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
         });
     }
 
+    @Override
     public boolean update(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> newScheduledPlans, FileForm fileForm1, FileForm fileForm2) {
         List<ScheduledPlan> oldScheduledPlan = scheduledPlanService.findListByEvaSchemeID(evaScheme.getId());
+        List<FileForm> oldFileForm = fileFormService.findFirstByTableNameAndRecordID("eva_scheme", evaScheme.getId());
         return Db.tx(() -> {
             if (!evaScheme.update()) {
                 return false;
@@ -102,6 +107,12 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
                 for (ScheduledPlan scheduledPlan : newScheduledPlans) {
                     scheduledPlan.setEvaSchemeID(evaScheme.getId());
                     if (!scheduledPlan.save()) {
+                        return false;
+                    }
+                }
+                for (FileForm fileForm : oldFileForm) {
+                    fileForm.setIsEnable(false);
+                    if (!fileForm.update()) {
                         return false;
                     }
                 }
