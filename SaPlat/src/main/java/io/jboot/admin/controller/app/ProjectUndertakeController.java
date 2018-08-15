@@ -102,12 +102,10 @@ public class ProjectUndertakeController extends BaseController {
         Page<Project> page = projectService.findPageByIsPublic(user.getId(),project, pageNumber, pageSize);
         if (page.getList().size() > 0) {
             page.getList().forEach(p -> {
-                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectId(p.getId());
+                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndCreateUserID(p.getId(), user.getId());
                 if (projectUndertake != null){
                     Integer status = projectUndertake.getStatus();
-                    if (status == null) {
-                        p.setRemark("未承接");
-                    } else if (status == 0) {
+                    if (status == 0) {
                         p.setRemark("待确认");
                     } else if (status == 1) {
                         p.setRemark("已拒绝");
@@ -410,7 +408,10 @@ public class ProjectUndertakeController extends BaseController {
         String[] sEndDate = getParaValues("ScheduledPlan.endDate");
         String[] sContent = getParaValues("ScheduledPlan.content");
         FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
-        FileForm fileForm2 = fileFormService.findById(getParaToLong("fileFormId2"));
+        String file2Id = getPara("fileFormId2");
+        FileForm fileForm2 = null;
+        if (file2Id != null)
+            fileForm2 = fileFormService.findById(file2Id);
         List<ScheduledPlan> scheduledPlans = new ArrayList<>();
         for (int i = 0; i < sName.length; i++) {
             scheduledPlan = new ScheduledPlan();
@@ -550,10 +551,10 @@ public class ProjectUndertakeController extends BaseController {
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(project.getId());
         Person leader = personService.findById(impTeam.getLeaderID());
         String[] asLeaderIds = impTeam.getAssLeaderIDs().split(",");
-        List<LeaderGroup> asLeaderGroups = Collections.synchronizedList(new ArrayList<LeaderGroup>());
+        List<Person> asLeaderGroups = Collections.synchronizedList(new ArrayList<Person>());
         for (String asLeaderId : asLeaderIds) {
             if (!"".equals(asLeaderId.trim())) {
-                asLeaderGroups.add(leaderGroupService.findById(asLeaderId));
+                asLeaderGroups.add(personService.findById(asLeaderId));
             }
         }
         String[] expertIds = impTeam.getExpertGroupIDs().split(",");

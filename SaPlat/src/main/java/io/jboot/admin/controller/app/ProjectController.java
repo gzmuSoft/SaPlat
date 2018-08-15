@@ -165,7 +165,7 @@ public class ProjectController extends BaseController {
                     ProjectUndertake projectUndertake = new ProjectUndertake();
                     projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());
                     projectUndertake.setCreateUserID(loginUser.getId());
-                    projectUndertake.setProjectID(project.getId());
+                    projectUndertake.setProjectID(getParaToLong("projectId"));
                     projectUndertake.setFacAgencyID(loginUser.getId());
                     projectUndertake.setApplyOrInvite(true);
                     projectUndertake.setStatus(2);
@@ -412,6 +412,7 @@ public class ProjectController extends BaseController {
         ProjectFileType projectFileType = projectFileTypeService.findByName(projectAssType.getName());
         List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(projectFileType.getId());
         JSONObject json = new JSONObject();
+        ProjectUndertake projectUndertake = null;
         if (project != null && leaderGroup != null && projectFileTypes.size() == fileProjects.size()) {
             AuthProject authProject = new AuthProject();
             authProject.setProjectId(id);
@@ -425,10 +426,23 @@ public class ProjectController extends BaseController {
             } else if ("自评".equals(project.getAssessmentMode())) {
                 authProject.setStatus(ProjectStatus.REVIEW);
                 project.setStatus(ProjectStatus.REVIEW);
+
+                projectUndertake = new ProjectUndertake();
+                projectUndertake.setName(projectService.findById(getParaToLong("id")).getName());
+                projectUndertake.setCreateUserID(user.getId());
+                projectUndertake.setProjectID(getParaToLong("id"));
+                projectUndertake.setFacAgencyID(user.getId());
+                projectUndertake.setApplyOrInvite(true);
+                projectUndertake.setStatus(2);
+                projectUndertake.setCreateTime(new Date());
+                projectUndertake.setDeadTime(new Date());
+                projectUndertake.setLastAccessTime(new Date());
+                projectUndertake.setLastUpdateUserID(user.getId());
+                projectUndertake.setIsEnable(true);
             } else {
                 json.put("status", false);
             }
-            if (!projectService.saveOrUpdate(project, authProject)) {
+            if (!projectService.saveOrUpdate(project, authProject, projectUndertake)) {
                 renderJson(RestResult.buildError("保存失败"));
                 throw new BusinessException("保存失败");
             } else {

@@ -89,27 +89,30 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 150px">项目名</label>
                 <div class="layui-input-inline">
-                    <p>#(project.name)</p>
+                    <p style="margin-left: 20px;margin-top: 5px">#(project.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">小组名称</label>
                 <div class="layui-input-inline">
-                    <p>#(impTeam.name)</p>
+                    <p style="margin-left: 20px;margin-top: 5px">#(impTeam.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">组长</label>
                 <div class="layui-input-inline">
-                    <p>#(leader.name)</p>
+                    <p style="margin-left: 20px;margin-top: 5px">#(leader.name)</p>
                 </div>
-                <label class="layui-form-label"style="width: 150px">副组长</label>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 150px">副组长</label>
                 <div class="layui-input-inline">
-                    <p>
+                    <p style="margin-left: 20px;margin-top: 5px">
                         #for(asLeaderGroup : asLeaderGroups)
-                        #(asLeaderGroup.deputy) &nbsp;&nbsp;&nbsp;&nbsp;
+                        #(asLeaderGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end
                     </p>
                 </div>
@@ -118,7 +121,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">专家成员</label>
                 <div class="layui-input-inline">
-                    <p>
+                    <p style="margin-left: 20px;margin-top: 5px">
                         #for(expertGroup : expertGroups)
                         #(expertGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end
@@ -130,7 +133,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">现场调查成员</label>
                 <div class="layui-input-inline">
-                    <p>
+                    <p style="margin-left: 20px;margin-top: 5px">
                         #for(invTeam : invTeams)
                         #(invTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end
@@ -141,7 +144,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 150px">报告编制成员</label>
                 <div class="layui-input-inline">
-                    <p>
+                    <p style="margin-left: 20px;margin-top: 5px">
                         #for(repTeam : repTeams)
                         #(repTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end
@@ -152,11 +155,8 @@
 
         <h2 style="margin-top: 50px;">方案依据填写</h2>
         <hr class="layui-bg-red">
-        <label for="gist"></label>
-        <textarea id="gist" name="EvaScheme.gist" style="display: none;">
-
-        </textarea>
-
+        <label></label>
+        <p>#(evaScheme.gist)</p>
         <h2 style="margin-top: 50px;">风险评估工作拟采取的工作方式填写</h2>
         <hr class="layui-bg-orange">
         <label></label>
@@ -173,7 +173,6 @@
         <p>#(evaScheme.measure)</p>
 
         <h2 style="margin-top: 50px;">风险评估工作时间安排和进度计划表填写</h2>
-        <p class="layui-form-mid layui-word-aux">首行不可操作</p>
         <hr class="layui-bg-black">
 
 
