@@ -5,6 +5,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -1164,10 +1165,20 @@ public class ProjectController extends BaseController {
         }
         renderJson(new DataTable<Project>(page));
     }
+
+    /**
+     * 审查汇总主页
+     */
     @Before(GET.class)
     public void collectView(){
         render("collect.html");
     }
+
+    /**
+     * 审查汇总
+     */
+
+
     @Before(GET.class)
     @NotNullPara({"pageNumber","pageSize"})
     public void collectTableData(){
@@ -1175,6 +1186,33 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Project project=new Project();
         project.setStatus(ProjectStatus.REVIEWED);
+        project.setUserId(AuthUtils.getLoginUser().getId());
+        project.setIsEnable(true);
+        Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
+        renderJson(new DataTable<Project>(page));
+    }
+/**
+ *  项目汇总
+ */
+
+    @Before(GET.class)
+    public void projectCollect(){
+        BaseStatus baseStatus=new BaseStatus() {};
+        baseStatus.add("4","评估中");
+        baseStatus.add("5","审查中");
+        baseStatus.add("7","审查完成");
+        setAttr("statusList",baseStatus);
+        render("projectCollect.html");
+    }
+
+    @Before(GET.class)
+    @NotNullPara({"pageNumber","pageSize"})
+    public void projectCollectTableData(){
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project=new Project();
+        project.setStatus(getPara("status"));
+        project.setUserId(AuthUtils.getLoginUser().getId());
         project.setIsEnable(true);
         Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
         renderJson(new DataTable<Project>(page));
