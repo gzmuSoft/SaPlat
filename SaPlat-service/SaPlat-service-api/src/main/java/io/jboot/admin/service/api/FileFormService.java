@@ -35,6 +35,8 @@ public interface FileFormService {
      */
     public FileForm findFirstByTableNameAndRecordIDAndFileName(String tableName, String fieldName, Long recordID);
 
+    public List<FileForm> findFirstByTableNameAndRecordID(String tableName,Long recordID);
+
     /**
      * delete model by primary key
      *
