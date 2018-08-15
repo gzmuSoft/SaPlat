@@ -548,10 +548,10 @@ public class ProjectUndertakeController extends BaseController {
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(project.getId());
         Person leader = personService.findById(impTeam.getLeaderID());
         String[] asLeaderIds = impTeam.getAssLeaderIDs().split(",");
-        List<LeaderGroup> asLeaderGroups = Collections.synchronizedList(new ArrayList<LeaderGroup>());
+        List<Person> asLeaderGroups = Collections.synchronizedList(new ArrayList<Person>());
         for (String asLeaderId : asLeaderIds) {
             if (!"".equals(asLeaderId.trim())) {
-                asLeaderGroups.add(leaderGroupService.findById(asLeaderId));
+                asLeaderGroups.add(personService.findById(asLeaderId));
             }
         }
         String[] expertIds = impTeam.getExpertGroupIDs().split(",");
