@@ -37,7 +37,7 @@
         /**
          * 获取列表的数据，参考information edit.html
          */
-        $.get("#(ctxPath)/app/ass_review/recData", {projectId: "#(projectId)"}, function (res) {
+        $.get("#(ctxPath)/app/ass_review/recDataFilterCreatorId", {projectId: "#(projectId)"}, function (res) {
             var data = res.list;
             if(data&&0 !=data.length){
                 $("ul#recomment").find("li").remove();

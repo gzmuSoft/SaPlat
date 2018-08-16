@@ -13,12 +13,14 @@ import io.jboot.admin.service.api.ProjectFileTypeService;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.ProAssReview;
 import io.jboot.admin.service.entity.model.ProjectFileType;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.app.ProAssReviewValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +57,12 @@ public class ProAssReviewController extends BaseController {
         switch (roleType){
             //服务机构页面，有文件目录和提交意见的表单，加载所有项目相关文件
             case 1:
+                setAttr("projectId",projectId).
                 render("main_srv.html");
                 break;
             //管理机构页面，有文件目录，加载所有项目相关文件
             case 2:
+                setAttr("projectId",projectId).
                 render("main_mgr.html");
                 break;
             //专家页面，有提交意见的表单，只有预审报告文件
@@ -74,13 +78,16 @@ public class ProAssReviewController extends BaseController {
      * index
      */
     public void index() {
-        render("main.html");
+        setAttr("projectId",1).
+        render("main_mgr.html");
     }
 
 
     //渲染文件目录
+    @NotNullPara("projectId")
     public void fileTree() {
-        renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(28L)));
+        Long projectId = getParaToLong("projectId");
+        renderJson(RestResult.buildSuccess(proAssReviewService.findFileTreeByProject(projectId)));
     }
 
     public void findProAssReviewByFileIdAndProjectId() {
@@ -104,7 +111,32 @@ public class ProAssReviewController extends BaseController {
         res.put("code", ResultCode.SUCCESS);
         res.put("projectId", projectId);
         renderJson(res);
+    }
 
+    /**
+     * 加载预审报告审查意见与反馈列表
+     */
+    @NotNullPara("projectId")
+    public void recDataFilterCreatorId() {
+        Long projectId = getParaToLong("projectId");
+       User user = AuthUtils.getLoginUser();
+        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
+
+        List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileProject.getFileID(), projectId);
+
+        List<ProAssReview> pars = new ArrayList<ProAssReview>();
+        for(ProAssReview item : proAssReviews){
+            if(user.getId().longValue() == item.getCreateUserID().longValue()){
+                pars.add(item);
+            }
+        }
+
+        Map<String, Object> res = new ConcurrentHashMap<>();
+        res.put("list", pars);
+        res.put("code", ResultCode.SUCCESS);
+        res.put("projectId", projectId);
+        renderJson(res);
     }
 
 

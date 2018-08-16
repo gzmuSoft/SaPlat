@@ -51,17 +51,59 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
         FilesService filesService = new FilesServiceImpl();
         ProjectFileTypeService projectFileTypeService = new ProjectFileTypeServiceImpl();
         for (FileProject item : fileProjects) {
+
             ProjectFileType projectFileType = projectFileTypeService.findById(item.getFileTypeID());
-            if (null == item.getFileID()) {
-                //文件分类，没有对应的文件
-                zTree.add(new ZTree(projectFileType.getId(), projectFileType.getName(), projectFileType.getParentID()));
-            } else {
-                Files file = filesService.findById(item.getFileID());
-                zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getId(), file.getPath()));
-            }
+            Files file = filesService.findById(item.getFileID());
+
+            //构造叶子节点
+            zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getParentID(), file.getPath()));
+            do{
+                projectFileType = projectFileTypeService.findById(projectFileType.getParentID());
+                if(null != projectFileType) {
+                    ZTree ztree = new ZTree(projectFileType.getId(), projectFileType.getName(), projectFileType.getParentID());
+                    boolean isContains = false;
+                    for(ZTree zt : zTree) {
+                        if(zTrreEq(zt,ztree)){
+                            isContains = true;
+                            break;
+                        }
+                    }
+                    if(!isContains){
+                        zTree.add(ztree);
+                    }
+                }
+            }while(null != projectFileType);
         }
         return zTree;
     }
+
+    private boolean zTrreEq(ZTree zt1,ZTree zt2){
+        if(null == zt2){
+            return false;
+        }
+
+        if(!zt1.getId().equals(zt2.getId())){
+            return false;
+        }
+
+        if(!zt1.getpId().equals(zt2.getpId())){
+            return false;
+        }
+
+        if(null !=zt1.getName() &&(!zt1.getName().equals(zt2.getName()))){
+            return false;
+        }else if(null == zt1.getName() && null != zt2.getName()){
+            return false;
+        }
+
+        if(null !=zt1.getTitle() &&(!zt1.getTitle().equals(zt2.getTitle()))){
+            return false;
+        }else if(null == zt1.getTitle() && null != zt2.getTitle()){
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
