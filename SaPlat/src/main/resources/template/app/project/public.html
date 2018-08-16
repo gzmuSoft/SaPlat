@@ -14,12 +14,45 @@
 
 #define js()
 <script type="text/javascript">
+    var now = new Date();
+    var start = now.getTime();  // 将当前时间转换为时间戳
+    var end = start + 24*60*60*1000*30; //结束时间
+
     layui.use(['form', 'layer'], function () {
         // 操作对象
         var form = layui.form
             , layer = layui.layer
             , $ = layui.jquery;
-        
+
+        laydate = layui.laydate;
+        laydate.render({
+            elem: '#publicTime',
+            type: 'datetime',  // 可选择年、月、日、时、分、秒
+            value: new Date(),// 设定初始日期为当前日期
+            min: start,   // 规定最小日期
+            max: end,     // 规定最大日期
+            done: function(value){
+                // value为第一个日期选择框选择的日期
+                const start2 = new Date(value).getTime();
+                const end2 = start2 + 24*60*60*1000*30;
+                $('.endTime').empty().append('<input type="text" class="layui-input" id="endTime">');
+                $("#endTime").val(value);
+                laydate.render({
+                    elem: '#endTime',
+                    type: 'datetime',
+                    min: start2,  // 最小日期不得小于第一个日期选择框的值
+                    max: end2     // 最大日期在30天内
+                })
+            }
+        });
+        laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            value: new Date(new Date().getTime() + 24*60*60*1000),// 设定初始日期为当前日期的后1天
+            min: 0,   // 该值为第一个日期框的值，一般是从服务器端获取
+            max: 30   // 该值为第一个日期框值的30天内，可用时间戳来解决
+        })
+
         function sanityn() {
             var publicTime = $('#publicTime').val();
             var endTime = $('#endTime').val();
@@ -71,7 +104,7 @@
                    class="layui-input layui-disabled layui-hide" value="#(id)"/>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">发起日期</label>
+                <label class="layui-form-label">发布日期</label>
                 <div class="layui-input-inline">
                     <input type="date" id="publicTime" name="publicTime" class="layui-input" lay-verify="required"/>
                 </div>
