@@ -17,6 +17,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -197,6 +198,9 @@ public class OrgStructureController extends BaseController {
         }
         if (!isPerson(user.getUserID())) {
             throw new BusinessException("该用户不是个人群体账户！");
+        }
+        if(isJoined(orgStructure.getId(),user.getId())){
+            throw new BusinessException("该用户已经被邀请！");
         }
         if (isStructPerson(orgStructure.getId(), user.getUserID())) {
             throw new BusinessException("该用户已经加入了架构！");
@@ -590,15 +594,78 @@ public class OrgStructureController extends BaseController {
         }
     }
 
-/*    public void test() {
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-        Long structureID = getParaToLong("structureID",(long)12);
-        Page<Record> page = orgStructureService.findMainList(pageNumber,pageSize,(long)12,5,"机构");
-        renderJson(new DataTable<Record>(page));
-    }*/
-    public void test(){
-        render("test.html");
+    /**
+     * 批量邀请页面
+     */
+    public void batchInvite(){
+        int orgType = getParaToInt("orgType");
+        int structID = getParaToInt("structID");
+        setAttr("orgType",orgType)
+                .setAttr("structID",structID)
+                .render("batchInvite.html");
+    }
+
+    /**
+     * 处理批量邀请数据提交
+     */
+    public void batchPostAddPerson(){
+        //获取人员列表
+        String personLists = getPara("invitePersons");
+        //获取类型
+        int orgType = getParaToInt("orgType");
+        //获取要加入的架构id
+        Long structID = getParaToLong("structID");
+        //System.out.println(personLists);
+        String[] persons = personLists.split("\r\n");
+        String username = null;
+        OrgStructure orgStructure = orgStructureService.findById(structID);
+        int success = 0;
+        int failed = 0;
+        for(String person : persons){
+            //获取账户名称
+            username = person.trim();
+            //判断用户名是否可用
+            if(username != null){
+                ApplyInvite applyInvite = new ApplyInvite();
+                Date nowTime = new Date();
+                Calendar threeDaysLater = Calendar.getInstance();
+                //获取三天以后的日期作为申请的失效日期
+                threeDaysLater.setTime(nowTime);
+                threeDaysLater.add(Calendar.DATE, 3);
+
+                applyInvite.setStructID(structID);
+                applyInvite.setDeadTime(threeDaysLater.getTime());
+                applyInvite.setCreateUserID(AuthUtils.getLoginUser().getId());
+                applyInvite.setCreateTime(new Date());
+                applyInvite.setApplyOrInvite(1);
+                applyInvite.setModule(0);
+                applyInvite.setStatus(ApplyInviteStatus.WAITE);
+                applyInvite.setUserSource(orgType);
+                applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
+                User user = userService.findByName(username);
+
+                if(orgStructure != null && user != null && isPerson(user.getUserID()) == true && isStructPerson(orgStructure.getId(), user.getUserID()) == false && isJoined(orgStructure.getId(),user.getId()) == false){
+                    applyInvite.setName(orgStructure.getName());
+                    applyInvite.setUserID(user.getId());
+                    Notification notification = sendMessage("邀请加入架构通知", "你好！" + AuthUtils.getLoginUser().getName() + "组织架构（" + applyInvite.getName() + "）的管理员邀请你加入该架构，请前往组织架构 -> 通知消息 处理！", "/app/OrgStructure/showMessage", user.getId(), AuthUtils.getLoginUser());
+                    if (applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
+                        success++;
+                    }else{
+                        failed++;
+                    }
+                }else{
+                    failed++;
+                }
+            }else{
+                failed++;
+                continue;
+            }
+        }
+        Map<String,String> map = new ConcurrentHashMap<String,String>();
+        map.put("code","0");
+        map.put("data","成功" + success + "人,失败" + failed + "人！");
+        map.put("msg","成功" + success + "人,失败" + failed + "人！");
+        renderJson(map);
     }
 
 }

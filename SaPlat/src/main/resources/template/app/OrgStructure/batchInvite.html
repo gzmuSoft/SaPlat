@@ -1,0 +1,57 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+
+        form.on('submit(sub)', function(data){
+
+            util.sendAjax ({
+                type: 'POST',
+                url: '#(ctxPath)/app/OrgStructure/batchPostAddPerson',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success : function(data){
+                    pop_close();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form id="addForm" class="layui-form" action="">
+            <input type="hidden" name="orgType" value="#(orgType)">
+            <input type="hidden" name="structID" value="#(structID)">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label"><em class="require-mark">*</em>输入帐号 批量邀请 一行一个）</label>
+                <div class="layui-input-block">
+                    <textarea name="invitePersons" placeholder="输入待邀请的人员帐号,一行一个" class="layui-textarea" rows="20"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button  class="layui-btn" lay-filter="sub" lay-submit>邀请</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+#end

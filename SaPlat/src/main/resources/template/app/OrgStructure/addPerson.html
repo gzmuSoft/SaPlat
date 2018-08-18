@@ -26,8 +26,10 @@
                     pop_close();
                 }
             });
-
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        $("#batch").click(function () {
+            window.location.href = '#(ctxPath)/app/OrgStructure/batchInvite?orgType=#(orgType)&structID=#(id)';
         });
     });
 </script>
@@ -72,7 +74,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"></label>
             <button  class="layui-btn" lay-filter="sub" lay-submit>邀请加入</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重填</button>
+            <button id="batch" class="layui-btn layui-btn-primary">批量邀请</button>
         </div>
     </form>
 </div>
