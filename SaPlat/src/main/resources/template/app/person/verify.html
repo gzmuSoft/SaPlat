@@ -27,11 +27,11 @@
         form.on('submit(sub)', function (data) {
             $('#uploadBtn1').click();
             if (file1 == "") {
-                layer.msg("工作证件照片上传失败，请重新选择上传！");
+                layer.msg("工作证件照片未上传或上传失败，请重新选择上传！");
                 return false;
             }
             if (file2 == "") {
-                layer.msg("专业资格证书上传失败，请重新选择上传！");
+                layer.msg("专业资格证书未上传或上传失败，请重新选择上传！");
                 return false;
             }
 
@@ -195,9 +195,10 @@
 
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.workstate" style="width: 180px">在职状态</label>
+            <label class="layui-form-label" for="expertGroup.workstate" style="width: 180px"><em
+                    class="require-mark">*</em>在职状态</label>
             <div class="layui-input-inline" style="width: 210px">
-                <select name="expertGroup.workstate" id="expertGroup.workstate">
+                <select name="expertGroup.workstate" id="expertGroup.workstate" lay-verify="required">
                     <option value="">请选择</option>
                     #if(expertGroup.wokstate == 0)
                     <option value="在职">在职</option>
@@ -211,23 +212,28 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.worktime" style="width: 180px">工作时间</label>
+            <label class="layui-form-label" for="expertGroup.worktime" style="width: 180px">
+                <em class="require-mark">*</em>工作时间
+            </label>
             <div class="layui-input-block">
                 <input type="text" name="expertGroup.worktime" id="expertGroup.worktime" autocomplete="off"
                        value="#(expertGroup.worktime)" class="layui-input" lay-verify="required" style="width: 210px">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.department" style="width: 180px">部门名称</label>
+            <label class="layui-form-label" for="expertGroup.department" style="width: 180px">
+                <em class="require-mark">*</em>部门名称
+            </label>
             <div class="layui-input-block">
                 <input type="text" name="expertGroup.department" id="expertGroup.department" autocomplete="off"
-                       value="#(expertGroup.department)" class="layui-input" style="width: 210px">
+                       value="#(expertGroup.department)" class="layui-input" lay-verify="required" style="width: 210px">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload1" style="width: 180px"><em
-                    class="require-mark">*</em>工作证件照片</label>
+            <label class="layui-form-label" for="upload1" style="width: 180px">
+                <em class="require-mark">*</em>工作证件照片
+            </label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
@@ -236,7 +242,6 @@
                         </button>
                         <button type="button" class="layui-hide" id="uploadBtn1"></button>
                         <button type="button" class="layui-btn" id="see1">浏览</button>
-
                     </div>
                 </div>
             </div>
@@ -245,7 +250,9 @@
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label" for="expertGroup.profess">
-                <h style="margin: 0 30px">专业资格内容</h>
+                <p style="margin: 0 30px">
+                    <em class="require-mark">*</em>专业资格内容
+                </p>
             </label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.profess" id="expertGroup.profess"
@@ -254,8 +261,9 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="upload2" style="width: 180px"><em
-                    class="require-mark">*</em>专业资格证书</label>
+            <label class="layui-form-label" for="upload2" style="width: 180px">
+                <em class="require-mark">*</em>专业资格证书
+            </label>
             <div class="layui-input-block">
                 <div class="layui-upload">
                     <div class="layui-upload">
@@ -272,7 +280,9 @@
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label" for="expertGroup.project">
-                <h style="margin: 0 30px">参与项目经历</h>
+                <p style="margin: 0 30px">
+                    <em class="require-mark">*</em>参与项目经历
+                </p>
             </label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" name="expertGroup.project" id="expertGroup.project"

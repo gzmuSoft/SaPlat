@@ -18,19 +18,17 @@ import io.jboot.admin.support.auth.AuthUtils;
  */
 public class PersonPostUpdateValidator extends JsonValidator {
 
-
     @Override
     protected void validate(Controller c) {
         validateDate("affectedGroup.birthday", "请输入合法出生日期");
         validateMobile("person.phone", "请输入合法的手机号");
-        validateString("person.identity", 1, 10, "请上传身份证证件照");
-        AffectedGroup affectedGroup = c.getBean(AffectedGroup.class, "affectedGroup");
-        validateLong(affectedGroup.getNationalityID().toString(), 1, 10, "请选择 个人资料 - 国籍");
-        validateLong(affectedGroup.getNationID().toString(), 1, 10, "请选择 个人资料 - 民族");
-        validateLong(affectedGroup.getPoliticsID().toString(), 1, 10, "请选择 个人资料 - 政治面貌");
-        validateLong(affectedGroup.getEducationID().toString(), 1, 10, "请选择 个人资料 - 学历");
-        validateLong(affectedGroup.getOccupationID().toString(), 1, 10, "请填写 工作信息 - 职业");
-        validateLong(affectedGroup.getDutyID().toString(), 1, 10, "请填写 工作信息 - 职务");
-        validateString(affectedGroup.getResidence().trim(), 1, 255, "请填写 联系方式 - 长期居住地址，1-255字符");
+        validateRequiredString("person.identity", "请上传身份证证件照");
+        validateRequiredString("affectedGroup.nationalityID", "请选择 个人资料 - 国籍");
+        validateRequiredString("affectedGroup.nationID", "请选择 个人资料 - 民族");
+        validateRequiredString("affectedGroup.politicsID", "请选择 个人资料 - 政治面貌");
+        validateRequiredString("affectedGroup.educationID", "请选择 个人资料 - 学历");
+        validateRequiredString("affectedGroup.occupationID", "请填写 工作信息 - 职业");
+        validateRequiredString("affectedGroup.dutyID", "请填写 工作信息 - 职务");
+        validateRequiredString("affectedGroup.residence", "请填写 联系方式 - 长期居住地址，1-255字符");
     }
 }

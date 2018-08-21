@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>400 发生了点小错误</title>
+    <title>提示页面</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -11,6 +11,7 @@
           media="all">
     <link rel="stylesheet" href="../../static/css/register/style/admin.css" media="all">
     <link rel="stylesheet" href="../../static/js/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/style.css" media="all">
     <style>
         .layadmin-tips h1 {
             font-size: 60px;
@@ -95,7 +96,7 @@
         var type2 = "#(type2)";
         if (type1 === "ajax") {
             $('#btn1').unbind("click").click(function () {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico" style="font-size: 120px;color: gray;"></i></div>');
                 $('body').prepend(bg);
                 var da = $(this).attr("data-data");
                 $.post($(this).attr("data-href"), da, function (res) {
@@ -114,7 +115,7 @@
 
         if (type2 === "ajax") {
             $('#btn2').unbind("click").click(function () {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico" style="font-size: 120px;color: gray;"></i></div>');
                 $('body').prepend(bg);
                 var da = $(this).attr("data-data");
                 $.post($(this).attr("data-href"), da, function (res) {

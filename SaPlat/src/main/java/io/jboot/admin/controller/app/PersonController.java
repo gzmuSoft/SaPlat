@@ -11,6 +11,7 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.person.ExpertGroupVerifyValidator;
 import io.jboot.admin.validator.app.person.PersonPostUpdateValidator;
 import io.jboot.admin.validator.app.person.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -289,7 +290,7 @@ public class PersonController extends BaseController {
     /**
      * 专家团体认证
      */
-    @Before(POST.class)
+    @Before({POST.class, ExpertGroupVerifyValidator.class})
     public void expertGroupVerify() throws IOException {
         ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
         User user = AuthUtils.getLoginUser();
@@ -305,7 +306,7 @@ public class PersonController extends BaseController {
         expertGroup.setPersonID(person.getId());
         expertGroup.setName(person.getName());
         expertGroup.setIsEnable(true);
-        ExpertGroup name = expertGroupService.findByName(expertGroup.getName());
+        ExpertGroup name = expertGroupService.findByPersonId(person.getId());
         if (name != null) {
             expertGroup.setId(name.getId());
         }
@@ -330,7 +331,6 @@ public class PersonController extends BaseController {
             auth.setId(userAndRole.getId());
         }
         if (!expertGroupService.saveOrUpdate(expertGroup, auth, files)) {
-            renderJson(RestResult.buildError("专家团体认证上传失败"));
             throw new BusinessException("专家团体认证上传失败");
         }
 
