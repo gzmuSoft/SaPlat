@@ -51,7 +51,7 @@
                 }
             }
             , error: function (index, upload) {
-                alert("工作证件照片文件上传错误！请重新尝试！");
+                layer.msg("工作证件照片文件上传错误，请重新选择上传！");
             }
         });
 
@@ -181,7 +181,6 @@
                                 <input type="text" id="affectedGroup.birthday" name="affectedGroup.birthday"
                                        value="#(affectedGroup.birthday)" class="layui-input" required
                                        lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off"/>
-
                             </div>
                         </div>
                         <div class="layui-form-item">

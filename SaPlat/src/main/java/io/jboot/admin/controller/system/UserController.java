@@ -14,7 +14,7 @@ import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.UserValidator;
+import io.jboot.admin.validator.system.UserValidator;
 import io.jboot.admin.validator.system.ChangePwdValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;

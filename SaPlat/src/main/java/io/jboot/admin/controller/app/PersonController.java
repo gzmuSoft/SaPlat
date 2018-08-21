@@ -2,10 +2,8 @@ package io.jboot.admin.controller.app;
 
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.upload.UploadFile;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
-import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
@@ -13,17 +11,15 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.PersonRegisterValidator;
+import io.jboot.admin.validator.app.person.PersonPostUpdateValidator;
+import io.jboot.admin.validator.app.person.PersonRegisterValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.utils.StringUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.joda.time.DateTime;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * -----------------------------
@@ -199,7 +195,7 @@ public class PersonController extends BaseController {
     /**
      * 更新用户资料
      */
-    @Before(POST.class)
+    @Before({POST.class, PersonPostUpdateValidator.class})
     public void postUpdate() {
         User loginUser = AuthUtils.getLoginUser();
         loginUser.setPhone(getPara("person.phone"));
@@ -207,20 +203,27 @@ public class PersonController extends BaseController {
         Long file = getParaToLong("person.identity");
         person.setPhone(getPara("person.phone"));
         person.setAge(DateTime.now().getYear() - DateTime.parse(getPara("affectedGroup.birthday")).getYear());
-        person.setAddr(getPara("person.addr"));
         Files files = null;
-        Files fileNow = filesService.findById(file);
+        Files fileNow = null;
+        // 第一次，没有上传身份证证件照
+        if (file == null) {
+            throw new BusinessException("请上传身份证证件照");
+        }
+        // 如果文件上传了，查找出来修改状态
+        fileNow = filesService.findById(file);
         fileNow.setIsEnable(true);
+        person.setIdentity(file.toString());
+        // 并查一下以前是否上传过，如果上传过修改状态，将它禁用
         if (StringUtils.isNotBlank(person.getIdentity())) {
             files = filesService.findById(person.getIdentity());
             files.setIsEnable(false);
         }
-        person.setIdentity(file.toString());
         AffectedGroup affectedGroup = getBean(AffectedGroup.class, "affectedGroup");
         affectedGroup.setName(person.getName());
         affectedGroup.setPersonID(person.getId());
         affectedGroup.setMail(loginUser.getEmail());
         affectedGroup.setLastAccessTime(new Date());
+        person.setAddr(affectedGroup.getResidence());
         if (affectedGroup.getResidence() == null) {
             affectedGroup.setResidence(person.getAddr());
         }
@@ -231,10 +234,9 @@ public class PersonController extends BaseController {
         if (group != null) {
             affectedGroup.setId(group.getId());
         }
-        if (personService.update(person, loginUser, affectedGroup, files,fileNow)) {
+        if (personService.update(person, loginUser, affectedGroup, files, fileNow)) {
             renderJson(RestResult.buildSuccess());
         } else {
-            renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
         }
     }

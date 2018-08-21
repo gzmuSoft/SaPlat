@@ -9,12 +9,10 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.OccupationService;
-import io.jboot.admin.service.api.OccupationService;
-import io.jboot.admin.service.entity.model.Occupation;
 import io.jboot.admin.service.entity.model.Occupation;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.OccupationValidator;
+import io.jboot.admin.validator.system.OccupationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

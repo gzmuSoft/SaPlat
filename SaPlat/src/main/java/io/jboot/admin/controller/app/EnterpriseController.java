@@ -12,7 +12,7 @@ import io.jboot.admin.service.api.EnterpriseService;
 import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.EnterpriseValidator;
+import io.jboot.admin.validator.system.EnterpriseValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

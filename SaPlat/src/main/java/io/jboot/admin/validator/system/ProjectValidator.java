@@ -1,4 +1,4 @@
-package io.jboot.admin.validator.app;
+package io.jboot.admin.validator.system;
 
 import com.jfinal.core.Controller;
 import io.jboot.admin.base.web.base.JsonValidator;

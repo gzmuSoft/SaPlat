@@ -12,8 +12,7 @@ import io.jboot.admin.service.api.EducationalService;
 import io.jboot.admin.service.entity.model.Educational;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.CountryValidator;
-import io.jboot.admin.validator.app.EducationValidator;
+import io.jboot.admin.validator.system.EducationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

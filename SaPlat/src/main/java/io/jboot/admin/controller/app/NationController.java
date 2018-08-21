@@ -12,7 +12,7 @@ import io.jboot.admin.service.api.NationService;
 import io.jboot.admin.service.entity.model.Nation;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.NationValidator;
+import io.jboot.admin.validator.system.NationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

@@ -30,13 +30,13 @@
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                            for="LAY-user-login-user-name"></label>
-                    <input type="text" name="user.name" id="LAY-user-login-user-name"
+                    <input type="text" name="user.name" id="LAY-user-login-user-name" lay-verify="required"
                            placeholder="账号名称" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password"
                            for="LAY-user-login-password"></label>
-                    <input type="password" name="user.pwd" id="LAY-user-login-password"
+                    <input type="password" name="user.pwd" id="LAY-user-login-password" lay-verify="required"
                            placeholder="密码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
@@ -49,7 +49,7 @@
                     <label class="layadmin-user-login-icon layui-icon layui-icon-user" style="z-index: 10;"
                            for="LAY-user-login-sex"></label>
                     <select class="layadmin-user-login-icon layui-icon layui-icon-username" name="person.sex"
-                            id="LAY-user-login-sex">
+                            id="LAY-user-login-sex" lay-verify="required">
                         <option value="" selected="">性别</option>
                         <option value="男">男</option>
                         <option value="女">女</option>
@@ -65,7 +65,7 @@
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                            for="LAY-user-login-person-name"></label>
                     <input type="text" name="person.name" id="LAY-user-login-person-name"
-                           placeholder="姓名" class="layui-input">
+                           placeholder="姓名" class="layui-input" lay-verify="required">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-water"
@@ -96,13 +96,14 @@
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                            for="LAY-organization-login-user-name"></label>
-                    <input type="text" name="user.name" id="LAY-organization-login-user-name"
+                    <input type="text" name="user.name" id="LAY-organization-login-user-name" lay-verify="required"
                            placeholder="账号名称" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password"
                            for="LAY-organization-login-password"></label>
-                    <input type="password" name="user.pwd" id="LAY-organization-login-password" lay-verify="pass"
+                    <input type="password" name="user.pwd" id="LAY-organization-login-password"
+                           lay-verify="required|pass"
                            placeholder="密码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
@@ -114,37 +115,39 @@
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                            for="LAY-organization-login-name"></label>
-                    <input type="text" name="organization.name" id="LAY-organization-login-name"
+                    <input type="text" name="organization.name" id="LAY-organization-login-name" lay-verify="required"
                            placeholder="组织机构名称" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-fonts-code"
                            for="LAY-organization-login-code"></label>
-                    <input type="text" name="organization.code" id="LAY-organization-login-code"
+                    <input type="text" name="organization.code" id="LAY-organization-login-code" lay-verify="required"
                            placeholder="组织机构代码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-dialogue"
                            for="LAY-organization-login-addr"></label>
-                    <input type="text" name="organization.addr" id="LAY-organization-login-addr"
+                    <input type="text" name="organization.addr" id="LAY-organization-login-addr" lay-verify="required"
                            placeholder="组织机构地址" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-friends"
                            for="LAY-organization-login-principal"></label>
                     <input type="text" name="organization.principal" id="LAY-organization-login-principal"
+                           lay-verify="required"
                            placeholder="委办负责人名称" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone"
                            for="LAY-organization-contact"></label>
-                    <input type="text" name="organization.contact" id="LAY-organization-contact" lay-verify="phone"
+                    <input type="text" name="organization.contact" id="LAY-organization-contact"
+                           lay-verify="required|phone"
                            placeholder="委办负责人联系方式" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-water"
                            for="LAY-organization-login-email"></label>
-                    <input type="email" name="user.email" id="LAY-organization-login-email" lay-verify="email"
+                    <input type="email" name="user.email" id="LAY-organization-login-email" lay-verify="required|email"
                            placeholder="邮箱"
                            class="layui-input email">
                 </div>

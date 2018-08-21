@@ -13,8 +13,7 @@ import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.RoleValidator;
-import io.jboot.admin.validator.app.UserValidator;
+import io.jboot.admin.validator.system.RoleValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

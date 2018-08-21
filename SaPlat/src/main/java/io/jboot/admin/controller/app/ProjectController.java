@@ -14,7 +14,7 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.*;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.ProjectValidator;
+import io.jboot.admin.validator.system.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

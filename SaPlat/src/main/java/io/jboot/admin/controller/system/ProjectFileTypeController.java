@@ -12,7 +12,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectFileTypeService;
 import io.jboot.admin.service.entity.model.ProjectFileType;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.ProjectFileTypeValidator;
+import io.jboot.admin.validator.system.ProjectFileTypeValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

@@ -12,7 +12,7 @@ import io.jboot.admin.service.api.PoliticalStatusService;
 import io.jboot.admin.service.entity.model.PoliticalStatus;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.PoliticalStatusValidator;
+import io.jboot.admin.validator.system.PoliticalStatusValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 

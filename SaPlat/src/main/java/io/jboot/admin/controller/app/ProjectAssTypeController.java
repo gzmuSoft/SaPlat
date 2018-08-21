@@ -11,7 +11,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.validator.app.ProjectAssTypeValidator;
+import io.jboot.admin.validator.system.ProjectAssTypeValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.admin.service.entity.model.ProjectAssType;

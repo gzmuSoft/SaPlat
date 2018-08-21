@@ -80,7 +80,10 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
             if (files != null && !files.update()) {
                 return false;
             }
-            return fileNow.update() && person.update() && user.update() && affectedGroupService.saveOrUpdate(affectedGroup);
+            if (fileNow != null && !fileNow.update()) {
+                return false;
+            }
+            return person.update() && user.update() && affectedGroupService.saveOrUpdate(affectedGroup);
         });
     }
 

@@ -1,4 +1,4 @@
-package io.jboot.admin.validator.app;
+package io.jboot.admin.validator.system;
 
 import com.jfinal.core.Controller;
 import io.jboot.admin.base.web.base.JsonValidator;
@@ -13,9 +13,6 @@ public class RoleValidator extends JsonValidator {
 
     @Override
     protected void validate(Controller c) {
-
-        if (!c.getPara("role.sort").equals("")) {
-            validateInteger("role.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间的整数", Integer.MAX_VALUE));
-        }
+        validateInteger("role.sort", 1, Integer.MAX_VALUE, String.format("排序必须是介于1至%d之间的整数", Integer.MAX_VALUE));
     }
 }
