@@ -8,22 +8,18 @@ import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FileProjectService;
+import io.jboot.admin.service.api.FilesService;
 import io.jboot.admin.service.api.ProAssReviewService;
 import io.jboot.admin.service.api.ProjectFileTypeService;
-import io.jboot.admin.service.entity.model.FileProject;
-import io.jboot.admin.service.entity.model.ProAssReview;
-import io.jboot.admin.service.entity.model.ProjectFileType;
-import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.ProAssReviewValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,6 +42,9 @@ public class ProAssReviewController extends BaseController {
     @JbootrpcService
     private FileProjectService fileProjectService;
 
+    @JbootrpcService
+    private FilesService filesService;
+
     /**
      * 根据角色类型和项目id打开相关界面
      * 只接收3种角色类型：1->服务机构，2->管理机构和3->专家
@@ -67,7 +66,7 @@ public class ProAssReviewController extends BaseController {
                 break;
             //专家页面，有提交意见的表单，只有预审报告文件
             case 3:
-                setAttr("projectId",projectId).
+                setAttr("projectId",projectId).setAttr("reportPath",getPrepReport(projectId)).
                 render("main_expert.html");
                 break;
             default:
@@ -111,6 +110,13 @@ public class ProAssReviewController extends BaseController {
         res.put("code", ResultCode.SUCCESS);
         res.put("projectId", projectId);
         renderJson(res);
+    }
+
+    private String getPrepReport(Long projectId){
+        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
+        Files file = filesService.findById(fileProject.getFileID());
+        return file.getPath().trim();
     }
 
     /**
@@ -165,6 +171,8 @@ public class ProAssReviewController extends BaseController {
     @Before({POST.class, ProAssReviewValidator.class})
     public void postAdd() {
         ProAssReview model = getBean(ProAssReview.class, "model");
+        UUID.randomUUID().toString().replace("-", "").toLowerCase();
+        model.setName(UUID.randomUUID().toString().replace("-", "").toLowerCase());
         if (proAssReviewService.isExisted(model.getName())) {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }

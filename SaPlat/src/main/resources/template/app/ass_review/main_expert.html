@@ -30,7 +30,8 @@
     };
     PDFObject.embed("", "#pdfviewer", options);
 
-    layui.use('layer', function () {
+    function loadRecData(){
+        layui.use('layer', function () {
         var $ = layui.jquery;
         var ul;
 
@@ -60,22 +61,24 @@
                     liItem += timeTxtTagE;
                     liItem += reTitle;
                     liItem += ele.recomment;
-                    liItem += '<hr class="layui-bg-gray">';
+                    /*liItem += '<hr class="layui-bg-gray">';
                     liItem += '意见反馈：';
                     if (ele.feedback) {
                         liItem += ele.feedback;
                     } else {
                         liItem += '暂无';
-                    }
+                    }*/
                     liItem += timeLineContentDivE;
                     liItem += liTagE;
                     $("ul#recomment").append(liItem);
                 });
             } else {
                 $("ul#recomment").append("<div>暂无评审意见</div>");
-            }
+            }});
         });
-    });
+    }
+
+
     //渲染表单，
     layui.use('form', function(){
          var form = layui.form ,layer = layui.layer,$ = layui.jquery;
@@ -83,6 +86,11 @@
          form.on('switch(switchS)', function(data){
             $("input[name='model.isPass']").val(this.checked ? '1' : '0');
           });
+    });
+
+    $(document).ready(function () {
+        PDFObject.embed("#(reportPath)", "#pdfviewer", options);
+        loadRecData();
     });
 
     layui.use(['form', 'layer'], function () {
@@ -98,6 +106,8 @@
                 data: $('#rec').serialize(),
                 loadFlag: true,
                 success: function (data) {
+                   //loadRecData();
+                    window.location.reload();
                     pop_close();
                 }
             });
