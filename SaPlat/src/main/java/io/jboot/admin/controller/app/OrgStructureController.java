@@ -375,7 +375,7 @@ public class OrgStructureController extends BaseController {
         applyInvite.setStructID(orgStructure.getId());
         //设置状态标识：0待确认，1已拒绝，2已同意
         applyInvite.setStatus(ApplyInviteStatus.WAITE);
-        Notification notification = sendMessage("申请加入架构通知", "你好！" + AuthUtils.getLoginUser().getName() + "申请加入组织架构（" + applyInvite.getName() + "），请前往组织架构->申请管理中心处理！", "/app/OrgStructure/showMessage", applyInvite.getBelongToID(), AuthUtils.getLoginUser());
+        Notification notification = sendMessage("申请加入架构通知", "你好！\"" + AuthUtils.getLoginUser().getName() + "\" 申请加入组织架构（" + applyInvite.getName() + "），请前往组织架构->申请管理中心处理！", "/app/OrgStructure/showMessage", applyInvite.getBelongToID(), AuthUtils.getLoginUser());
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
             throw new BusinessException("申请请求发送失败！");
         }

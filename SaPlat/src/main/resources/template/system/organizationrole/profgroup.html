@@ -21,22 +21,18 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-120'    //容器高度
 //            ,cellMinWidth: 30
             , cols: [[                  //标题栏
 //                {checkbox: false,  fixed: true, space: true}
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 150,sort:true}
                 , {field: 'scope', title: '服务范围', minWidth: 150,sort:true}
-                , {field: 'performance', title: '服务业绩', minWidth: 100,sort:true}
-                , {field: 'framework', title: '人员架构', minWidth: 150,sort:true}
                 , {field: 'content', title: '专业内容', minWidth: 120,sort:true}
-                , {field: 'capital', title: '注册资金', minWidth: 150,sort:true}
-                , {field: 'administrator', title: '管理员姓名', minWidth: 120,sort:true}
-                , {field: 'contact', title: '管理员联系方式', minWidth: 150,sort:true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
-
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 180} //这里的toolbar值是模板元素的选择器
+                , {field: 'capital', title: '注册资金(单位：万元)', minWidth: 150,sort:true}
+                , {field: 'administrator', title: '管理员', minWidth: 120,sort:true}
+                , {field: 'contact', title: '联系方式', width: 110,sort:true}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width: 160} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/profgroupTableData'
             , method: 'get'
