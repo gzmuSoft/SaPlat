@@ -134,7 +134,7 @@ public class ProjectController extends BaseController {
         project.setStatus(ProjectStatus.BUILDING);
         project.setCreateUserID(loginUser.getId());
         project.setLastUpdateUserID(loginUser.getId());
-        project.setIsEnable(false);
+        project.setIsEnable(true);
         int saveOrUpdate = getParaToInt("saveOrUpdate");
         if (saveOrUpdate == 1) {
             Project model = projectService.saveProject(project);
@@ -164,7 +164,6 @@ public class ProjectController extends BaseController {
                 if ("自评".equals(project.getAssessmentMode())) {
                     authProject.setStatus(ProjectStatus.REVIEW);
                     project.setStatus(ProjectStatus.REVIEW);
-                    project.setIsEnable(true);
 
                     ProjectUndertake projectUndertake = new ProjectUndertake();
                     projectUndertake.setName(projectService.findById(getParaToLong("projectId")).getName());

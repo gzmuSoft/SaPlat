@@ -44,6 +44,55 @@
         }
     };
 
+    function loadRecData(fileId){
+        layui.use('layer', function () {
+            var $ = layui.jquery;
+            var ul;
+
+            /**
+             * 获取列表的数据，参考information edit.html
+             */
+            $.get("#(ctxPath)/app/ass_review/recData", {projectId:"#(projectId)",fileId:fileId}, function (res) {
+                var data = res.list;
+                $("ul#recomment").find("div").remove();
+                $("ul#recomment").find("li").remove();
+                if(data&&0 !=data.length){
+                    var liTagS = '<li class="layui-timeline-item">';
+                    var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+                    var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+                    var timeTxtTagS = '<h3 class="layui-timeline-title">';
+                    var timeTxtTagE = '</h3>';
+                    var reTitle = '评估审查意见：';
+                    var timeLineContentDivE = '</div>';
+                    var liTagE = '</li>';
+                    var liItem = '';
+                    data.forEach(function (ele) {
+                        liItem = '';
+                        liItem += liTagS;
+                        liItem += timeLineIcon;
+                        liItem += timeLineContentDivS;
+                        liItem += timeTxtTagS;
+                        liItem += ele.createTime;
+                        liItem += timeTxtTagE;
+                        liItem += reTitle;
+                        liItem += ele.recomment;
+                        /*liItem += '<hr class="layui-bg-gray">';
+                        liItem += '意见反馈：';
+                        if (ele.feedback) {
+                            liItem += ele.feedback;
+                        } else {
+                            liItem += '暂无';
+                        }*/
+                        liItem += timeLineContentDivE;
+                        liItem += liTagE;
+                        $("ul#recomment").append(liItem);
+                    });
+                } else {
+                    $("ul#recomment").append("<li><div>暂无评审意见</div></li>");
+                }});
+        });
+    }
+
     function zTreeOnClick(event, treeId, treeNode) {
         PDFObject.embed(treeNode.title, "#pdfviewer", options);
         layui.use('flow', function () {
@@ -52,45 +101,7 @@
             flow.load({
                 elem: '#recomment'
                 , done: function (page, next) {
-                    var lis = [];
-                    $.get("#(ctxPath)/app/ass_review/recData", {projectId: "#(projectId)"}, function (res) {
-                        var data = res.list;
-                        if(data&&0 !=data.length){
-                            $("ul#recomment").find("li").remove();
-                            var liTagS = '<li class="layui-timeline-item">';
-                            var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
-                            var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
-                            var timeTxtTagS = '<h3 class="layui-timeline-title">';
-                            var timeTxtTagE = '</h3>';
-                            var reTitle = '评估审查意见：';
-                            var timeLineContentDivE = '</div>';
-                            var liTagE = '</li>';
-                            var liItem = '';
-                            data.forEach(function (ele) {
-                                liItem = '';
-                                liItem += liTagS;
-                                liItem += timeLineIcon;
-                                liItem += timeLineContentDivS;
-                                liItem += timeTxtTagS;
-                                liItem += ele.createTime;
-                                liItem += timeTxtTagE;
-                                liItem += reTitle;
-                                liItem += ele.recomment;
-                                liItem += '<hr class="layui-bg-gray">';
-                                liItem += '意见反馈：';
-                                if (ele.feedback) {
-                                    liItem += ele.feedback;
-                                } else {
-                                    liItem += '暂无';
-                                }
-                                liItem += timeLineContentDivE;
-                                liItem += liTagE;
-                                $("ul#recomment").append(liItem);
-                            });
-                        } else {
-                            $("ul#recomment").append("<div>暂无评审意见</div>");
-                        }
-                    });
+                    loadRecData(treeNode.fileId);
                 }
             });
         });

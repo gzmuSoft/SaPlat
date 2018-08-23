@@ -335,13 +335,25 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Management model = managementService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        Auth auth1 = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
         model.setIsEnable(false);
-        if (!managementService.saveOrUpdate(model, auth)) {
-            renderJson(RestResult.buildError("修改认证状态"));
-            throw new BusinessException("修改认证状态");
+        if (auth != null) {
+            auth.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!managementService.saveOrUpdate(model, auth)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
+        } else if (auth1 != null) {
+            auth1.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!managementService.saveOrUpdate(model, auth1)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
     }
 
     /**
@@ -418,13 +430,25 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Enterprise model = enterpriseService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        Auth auth1 = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
         model.setIsEnable(false);
-        if (!enterpriseService.saveOrUpdate(model, auth)) {
-            renderJson(RestResult.buildError("修改认证状态"));
-            throw new BusinessException("修改认证状态");
+        if (auth != null) {
+            auth.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!enterpriseService.saveOrUpdate(model, auth)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
+        } else if (auth1 != null) {
+            auth1.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!enterpriseService.saveOrUpdate(model, auth1)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
     }
 
     /**
@@ -512,13 +536,25 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         FacAgency model = facAgencyService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        Auth auth1 = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
         model.setIsEnable(false);
-        if (!facAgencyService.saveOrUpdate(model, auth)) {
-            renderJson(RestResult.buildError("修改认证状态"));
-            throw new BusinessException("修改认证状态");
+        if (auth != null) {
+            auth.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!facAgencyService.saveOrUpdate(model, auth)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
+        } else if (auth1 != null) {
+            auth1.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!facAgencyService.saveOrUpdate(model, auth1)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
     }
 
 
@@ -596,13 +632,25 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         ProfGroup model = profGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        Auth auth1 = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
         model.setIsEnable(false);
-        if (!profGroupService.saveOrUpdate(model, auth)) {
-            renderJson(RestResult.buildError("修改认证状态"));
-            throw new BusinessException("修改认证状态");
+        if (auth != null) {
+            auth.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!profGroupService.saveOrUpdate(model, auth)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
+        } else if (auth1 != null) {
+            auth1.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!profGroupService.saveOrUpdate(model, auth1)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
     }
 
     /**
@@ -668,13 +716,25 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         ReviewGroup model = reviewGroupService.findByOrgId(organizationService.findById(user.getUserID()).getId());
         Auth auth = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.VERIFIING, TypeStatus.ORGANIZATION);
-        auth.setStatus(AuthStatus.CANCEL_VERIFY);
+        Auth auth1 = authService.findByUserIdAndStatusAndType(user.getId(), ProjectStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
         model.setIsEnable(false);
-        if (!reviewGroupService.saveOrUpdate(model, auth)) {
-            renderJson(RestResult.buildError("修改认证状态"));
-            throw new BusinessException("修改认证状态");
+        if (auth != null) {
+            auth.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!reviewGroupService.saveOrUpdate(model, auth)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
+        } else if (auth1 != null) {
+            auth1.setStatus(AuthStatus.CANCEL_VERIFY);
+            if (!reviewGroupService.saveOrUpdate(model, auth1)) {
+                renderJson(RestResult.buildError("修改认证状态"));
+                throw new BusinessException("修改认证状态");
+            } else {
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
     }
 
     /**
