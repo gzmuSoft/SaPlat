@@ -18,40 +18,45 @@
     var start = now.getTime();  // 将当前时间转换为时间戳
     var end = start + 24*60*60*1000*30; //结束时间
 
-    layui.use(['form', 'layer'], function () {
+    layui.use(['form', 'layer', 'laydate', 'layedit'], function () {
         // 操作对象
         var form = layui.form
             , layer = layui.layer
+            , laydate = layui.laydate
+            , layedit = layui.layedit
             , $ = layui.jquery;
 
-        laydate = layui.laydate;
-        laydate.render({
-            elem: '#publicTime',
-            type: 'datetime',  // 可选择年、月、日、时、分、秒
-            value: new Date(),// 设定初始日期为当前日期
-            min: start,   // 规定最小日期
-            max: end,     // 规定最大日期
-            done: function(value){
-                // value为第一个日期选择框选择的日期
-                const start2 = new Date(value).getTime();
-                const end2 = start2 + 24*60*60*1000*30;
-                $('.endTime').empty().append('<input type="text" class="layui-input" id="endTime">');
-                $("#endTime").val(value);
-                laydate.render({
-                    elem: '#endTime',
-                    type: 'datetime',
-                    min: start2,  // 最小日期不得小于第一个日期选择框的值
-                    max: end2     // 最大日期在30天内
-                })
+        layedit.build('brief', {
+            height: 180 //设置编辑器高度
+        }); //建立编辑器
+
+        var startDate = laydate.render({
+            elem: '#publicTime'
+            ,type: 'datetime'
+            ,format: 'yyyy-MM-dd HH:mm:ss'
+            ,min: start
+            ,max: end
+            ,done: function(value, date){
+                endDate.config.value = value;
+                endDate.config.min ={
+                    year:date.year,
+                    month:date.month-1,
+                    date: date.date+1
+                };
+                endDate.config.max ={
+                    year:date.year,
+                    month:date.month,
+                    date: date.date-1
+                };
             }
         });
-        laydate.render({
-            elem: '#endTime',
-            type: 'datetime',
-            value: new Date(new Date().getTime() + 24*60*60*1000),// 设定初始日期为当前日期的后1天
-            min: 0,   // 该值为第一个日期框的值，一般是从服务器端获取
-            max: 30   // 该值为第一个日期框值的30天内，可用时间戳来解决
-        })
+        var endDate = laydate.render({
+            elem: '#endTime'
+            ,type: 'datetime'
+            ,format: 'yyyy-MM-dd HH:mm:ss'
+            ,min: start
+            ,max: end
+        });
 
         function sanityn() {
             var publicTime = $('#publicTime').val();
@@ -62,7 +67,7 @@
                 return "时间不能小于当前时间！";
             return null;
         }
-        
+
         form.on('submit(sub)', function (data) {
             var msg;
             if ((msg = sanityn()) == null){
@@ -98,22 +103,49 @@
     </fieldset>
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
-
             <!--隐藏id-->
-            <input type="text" id="id" name="id"
-                   class="layui-input layui-disabled layui-hide" value="#(id)"/>
+            <input type="text" id="id" name="id" class="layui-input layui-disabled layui-hide" value="#(model.id)"/>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">发布日期</label>
+                <label class="layui-form-label" style="width: 120px">发布期限</label>
                 <div class="layui-input-inline">
-                    <input type="date" id="publicTime" name="publicTime" class="layui-input" lay-verify="required"/>
+                    <input type="text" id="publicTime" name="publicTime" class="layui-input" lay-verify="datetime" lay-verify="required" placeholder=" - "/>
+                </div>
+                <div class="layui-form-mid">至</div>
+                <div class="layui-input-inline">
+                    <input type="text" id="endTime" name="endTime" class="layui-input" lay-verify="datetime" lay-verify="required" placeholder=" - ">
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">截止日期</label>
-                <div class="layui-input-inline">
-                    <input type="date" id="endTime" name="endTime" class="layui-input" lay-verify="required"/>
+                <label class="layui-form-label" style="width: 120px">项目名称</label>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.name)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 120px">项目类型</label>
+                <div class="layui-inline" style="float: left; width: 180px">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.typeName)</p>
+                </div>
+                <label class="layui-form-label"style="width: 120px">预计金额</label>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#number(model.amount, ",###")元</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"style="width: 120px">地址</label>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.site)</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"style="width: 120px">简介</label>
+                <div class="layui-inline">
+                    <textarea class="layui-textarea" id="brief" name="brief" disabled>#(model.brief)</textarea>
                 </div>
             </div>
 

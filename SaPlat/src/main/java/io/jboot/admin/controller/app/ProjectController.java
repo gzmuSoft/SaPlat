@@ -849,7 +849,8 @@ public class ProjectController extends BaseController {
     @NotNullPara({"id"})
     public void isPublicMessage() {
         Long id = getParaToLong("id");
-        setAttr("id", id).render("public.html");
+        Project model = projectService.findById(id);
+        setAttr("model", model).render("public.html");
     }
 
     /**
