@@ -54,15 +54,15 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                pop_show('审核结果', '#(ctxPath)/system/projectauth/verifyUpdate?id=' + data.id, '', '', function () {
+                pop_show('审核结果', '#(ctxPath)/system/projectauth/verifyUpdate?id=' + data.id, '440', '265', function () {
                     reloadTable(null, null, null, null);
                 });
             } else if (obj.event === 'view') {
-                pop_max_show('认证信息', '#(ctxPath)/system/projectauth/verifyView?id=' + data.id, '', '', function () {
+                pop_max_show('认证信息', '#(ctxPath)/system/projectauth/verifyView?id=' + data.id, '440', '265', function () {
                 });
             } else if (obj.event === 'warning') {
                 layer.confirm('该认证已审核，确定要重新审核', function (index) {
-                    pop_show('审核结果', '#(ctxPath)/system/projectauth/verifyUpdate?id=' + data.id, '', '', function () {
+                    pop_show('审核结果', '#(ctxPath)/system/projectauth/verifyUpdate?id=' + data.id, '440', '265', function () {
                         reloadTable(null, null, null, null);
                         layer.close(index);
                     });

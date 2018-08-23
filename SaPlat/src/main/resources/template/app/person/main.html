@@ -35,23 +35,23 @@
             , accept: 'file'
             , exts: 'pdf'
             , data: {
-                description: "工作证件照片"
+                description: "身份证证件照片"
             }, before: function (res) {
                 var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
                 $('body').prepend(bg);
             }, done: function (res) {
                 $('.loading-bg').remove();
                 if (res.code == 0) {
-                    layer.msg("工作证件照片上传成功");
+                    layer.msg("身份证证件照片上传成功");
                     $('#person\\.identity').val(res.data.fileId);
                     identity = res.data.fileId;
                     $('#upload').text("已上传");
                 } else if (res.code == 1) {
-                    layer.msg("工作证件照片文件上传错误，请重新选择上传！");
+                    layer.msg("身份证证件照片文件上传错误，请重新选择上传！");
                 }
             }
             , error: function (index, upload) {
-                layer.msg("工作证件照片文件上传错误，请重新选择上传！");
+                layer.msg("身份证证件照片文件上传错误，请重新选择上传！");
             }
         });
 
@@ -108,7 +108,7 @@
 
         $('#see').removeClass('layui-hide layui-disabled').prop("disabled", "").click(function () {
             if (identity == null || identity === "") {
-                layer.msg("对不起，您当前没有上传身份证件照！");
+                layer.msg("对不起，您当前没有上传身份证证件照片！");
             } else {
                 pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + identity, '', '', function () {});
             }

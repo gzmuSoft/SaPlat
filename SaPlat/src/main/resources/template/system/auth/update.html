@@ -16,7 +16,12 @@
             , $ = layui.jquery;
 
         form.on('submit(sub)', function (data) {
-
+            if(data.form[2].checked == "true") {
+                data.form[2].value = "2";
+            }
+            else{
+                data.form[2].value = "1";
+            }
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/system/auth/postupdate',
@@ -46,11 +51,8 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-inline">
-                <select id='status' name="auth.status" lay-verify="required">
-                    <option></option>
-                    #statusOption(authStatus)
-                </select>
+            <div class="layui-input-block">
+                <input type="checkbox" name="auth.status" lay-filter="switchTest" lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required">
             </div>
         </div>
 

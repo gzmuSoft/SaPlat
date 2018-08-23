@@ -150,11 +150,12 @@ public class AuthController extends BaseController {
         if(auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)){
             throw new BusinessException("用户已取消审核");
         }
-        BaseStatus authStatus = new BaseStatus() {
+        /*BaseStatus authStatus = new BaseStatus() {
         };
         authStatus.add("2", "审核成功");
         authStatus.add("1", "审核失败");
-        setAttr("authStatus", authStatus).setAttr("auth", auth).render("update.html");
+        setAttr("authStatus", authStatus).setAttr("auth", auth).render("update.html");*/
+        setAttr("auth", auth).render("update.html");
     }
 
     @Before(POST.class)
@@ -164,19 +165,24 @@ public class AuthController extends BaseController {
         if (model == null) {
             throw new BusinessException("没有这个审核");
         }
-        if (!(auth.getStatus().equals(AuthStatus.IS_VERIFY) || auth.getStatus().equals(AuthStatus.NOT_VERIFY))) {
+/*        if (!(auth.getStatus().equals(AuthStatus.IS_VERIFY) || auth.getStatus().equals(AuthStatus.NOT_VERIFY))) {
             throw new BusinessException("请求参数非法");
-        }
+        }*/
         User user = AuthUtils.getLoginUser();
         model.setLastUpdUser(user.getName());
         model.setReply(auth.getReply());
-        model.setStatus(auth.getStatus());
+        if(auth.getStatus() == null) {
+            model.setStatus("1");
+        }
+        else{
+            model.setStatus("2");
+        }
         if (!authService.update(model)) {
             throw new BusinessException("审核失败");
         }
 
         //角色审核成功后删除所有缓存
-        if(auth.getStatus().equals(AuthStatus.IS_VERIFY)) {
+        if(model.getStatus().equals(AuthStatus.IS_VERIFY)) {
             ShiroCacheUtils.clearAuthorizationInfoAll();
         }
         renderJson(RestResult.buildSuccess());

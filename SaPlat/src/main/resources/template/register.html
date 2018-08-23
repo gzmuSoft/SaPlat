@@ -46,6 +46,12 @@
                            placeholder="确认密码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                           for="LAY-user-login-person-name"></label>
+                    <input type="text" name="person.name" id="LAY-user-login-person-name"
+                           placeholder="姓名" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-user" style="z-index: 10;"
                            for="LAY-user-login-sex"></label>
                     <select class="layadmin-user-login-icon layui-icon layui-icon-username" name="person.sex"
@@ -60,12 +66,6 @@
                            for="LAY-user-login-phone"></label>
                     <input type="text" name="person.phone" id="LAY-user-login-phone" lay-verify="phone" placeholder="手机"
                            class="layui-input">
-                </div>
-                <div class="layui-form-item">
-                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"
-                           for="LAY-user-login-person-name"></label>
-                    <input type="text" name="person.name" id="LAY-user-login-person-name"
-                           placeholder="姓名" class="layui-input" lay-verify="required">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-water"
