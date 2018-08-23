@@ -25,16 +25,16 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 // , {field: 'id', title: 'ID', minWidth: 80}
-                , {field: 'code', title: '代码', minWidth: 180, sort: true}
+                , {field: 'code', title: '代码', width: 80, sort: true}
                 , {field: 'codeDesc', title: '代码描述', minWidth: 120, sort: true}
                 , {field: 'type', title: '类型代码', minWidth: 180, sort: true}
                 , {field: 'typeDesc', title: '类型描述', minWidth: 180, sort: true}
-                , {field: 'orderNo', title: '排序', minWidth: 60, sort: true}
-                , {field: 'createDate', title: '创建时间', minWidth: 150, sort: true}
+                , {field: 'orderNo', title: '排序', width: 80, sort: true}
+                , {field: 'createDate', title: '创建时间', width: 150, sort: true}
                 , {field: 'lastUpdAcct', title: '最后更新人', minWidth: 100, sort: true}
-                , {field: 'lastUpdTime', title: '最后更新时间', minWidth: 150, sort: true}
+                , {field: 'lastUpdTime', title: '最后更新时间', width: 150, sort: true}
                 , {field: 'note', title: '备注', minWidth: 150}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/data/tableData'
             , method: 'get'

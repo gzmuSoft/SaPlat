@@ -61,9 +61,11 @@
 <div class="x-body">
     <form class="layui-form layui-form-pane" action="" id="addForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">新闻标题</label>
-            <div class="layui-input-block">
-                <input type="text" name="model.title" placeholder="请输入标题" class="layui-input" style="width:1026px">
+            <div class="layui-inline">
+                <label class="layui-form-label">新闻标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="model.title" placeholder="请输入新闻标题" class="layui-input" style="width:1030px;">
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
@@ -79,27 +81,27 @@
                     <input name="model.editer" id="editer" autocomplete="off" class="layui-input" type="text">
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">新闻内容</label>
-            <div class="layui-input-block">
-                <!--<textarea id="layContent" style="display: none;"></textarea>-->
-                <script id="container" name="content" type="text/plain"></script>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">新闻类型</label>
-            <div class="layui-input-block">
-                <select name="model.type" lay-filter="newsType" style="width:1026px">
-                    <option value="0" selected="">政要文件</option>
-                    <option value="1">跟踪动态</option>
-                    <option value="2">最新政策</option>
-                </select>
+            <div class="layui-inline">
+                <label class="layui-form-label">新闻类型</label>
+                <div class="layui-input-block">
+                    <select name="model.type" lay-filter="newsType" style="z-index: 2;">
+                        <option value="0" selected="">政要文件</option>
+                        <option value="1">跟踪动态</option>
+                        <option value="2">最新政策</option>
+                    </select>
+                </div>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">新闻属性</label>
+            <label class="layui-form-label">新闻内容</label>
+            <div class="layui-input-block" style="z-index:1;">
+                <script id="container" name="content" type="text/plain"></script>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">目标群体</label>
             <div class="layui-input-block">
                 <input type="radio" name="model.isPublish" value="0" title="全体" lay-filter="pub_object" checked="">
                 <input type="radio" name="model.isPublish" value="1" title="角色" lay-filter="pub_object">
@@ -127,7 +129,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item layui-layer-btn-c">
             <button class="layui-btn" lay-filter="sub" lay-submit>提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>

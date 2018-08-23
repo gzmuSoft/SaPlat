@@ -25,10 +25,10 @@
             , initSort: {field:'sort', type:'desc'}
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称',minWidth: 200,sort:true}
-                , {field: 'sort', title: '顺序',minWidth: 120,sort:true}
-                , {field: 'createTime', title: '创建时间',minWidth: 150,sort:true}
-                , {fixed: 'right', title: '操作', minWidth: 280, align: 'center', toolbar: '#barOption'}
+                , {field: 'name', title: '名称', minWidth: 200,sort:true}
+                , {field: 'sort', title: '顺序', width: 80,sort:true}
+                , {field: 'createTime', title: ' 创建时间',width: 150,sort:true}
+                , {fixed: 'right', title: '操作', width: 210, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/system/projectfiletype/tableData?parentID=' + parentID
             , method: 'get'

@@ -126,11 +126,8 @@ public class ProjectAuthController extends BaseController {
         if (auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)) {
             throw new BusinessException("用户已取消审核");
         }
-        BaseStatus authStatus = new BaseStatus() {
-        };
-        authStatus.add("2", "审核成功");
-        authStatus.add("1", "审核失败");
-        setAttr("authStatus", authStatus).setAttr("auth", auth).render("verifyupdate.html");
+
+        setAttr("auth", auth).render("verifyupdate.html");
     }
 
     @Before(GET.class)
@@ -141,11 +138,7 @@ public class ProjectAuthController extends BaseController {
         if (authProject == null) {
             throw new BusinessException("没有这个审核");
         }
-        BaseStatus authStatus = new BaseStatus() {
-        };
-        authStatus.add("2", "审核成功");
-        authStatus.add("1", "审核失败");
-        setAttr("authStatus", authStatus).setAttr("authProject", authProject).render("dataupdate.html");
+        setAttr("authProject", authProject).render("dataupdate.html");
     }
 
 
@@ -156,13 +149,16 @@ public class ProjectAuthController extends BaseController {
         if (model == null) {
             throw new BusinessException("没有这个审核");
         }
-        if (!(auth.getStatus().equals(AuthStatus.IS_VERIFY) || auth.getStatus().equals(AuthStatus.NOT_VERIFY))) {
-            throw new BusinessException("请求参数非法");
-        }
+
         User user = AuthUtils.getLoginUser();
         model.setLastUpdUser(user.getName());
         model.setReply(auth.getReply());
-        model.setStatus(auth.getStatus());
+        if(auth.getStatus() == null) {
+            model.setStatus("1");
+        }
+        else{
+            model.setStatus("2");
+        }
         if (!authService.update(model)) {
             throw new BusinessException("审核失败");
         }
@@ -176,13 +172,16 @@ public class ProjectAuthController extends BaseController {
         if (model == null) {
             throw new BusinessException("没有这个审核");
         }
-        if (!(authProject.getStatus().equals(AuthStatus.IS_VERIFY) || authProject.getStatus().equals(AuthStatus.NOT_VERIFY))) {
-            throw new BusinessException("请求参数非法");
-        }
+
         User user = AuthUtils.getLoginUser();
         model.setLastUpdUser(user.getName());
         model.setReply(authProject.getReply());
-        model.setStatus(authProject.getStatus());
+        if(authProject.getStatus() == null) {
+            model.setStatus("1");
+        }
+        else{
+            model.setStatus("2");
+        }
         model.setRemark(user.getId().toString());
         if (!authProjectService.update(model)) {
             throw new BusinessException("审核失败");

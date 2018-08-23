@@ -46,11 +46,8 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-inline"style="width: 500px">
-                <select id='status' name="authProject.status" lay-verify="required"  >
-                    <option></option>
-                    #statusOption(authStatus)
-                </select>
+            <div class="layui-input-block">
+                <input type="checkbox" name="authProject.status" lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required">
             </div>
         </div>
 

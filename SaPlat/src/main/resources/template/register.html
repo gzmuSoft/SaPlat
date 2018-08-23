@@ -9,7 +9,6 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     #include("/template/common/include/_css.html")
-    <link rel="stylesheet" href="../static/css/register/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="../static/css/register/style/admin.css" media="all">
     <link rel="stylesheet" href="../static/css/register/style/login.css" media="all">
 </head>
@@ -17,15 +16,14 @@
 <body>
 <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
     <div class="layadmin-user-login-main layui-tab layui-tab-brief" lay-filter="register">
+        <div class="layadmin-user-login-box layadmin-user-login-header">
+            <h2 style="font-size: 26px;">#(APP.name)</h2>
+        </div>
         <ul class="layui-tab-title">
             <li class="layui-this">个人用户注册</li>
             <li>组织机构注册</li>
         </ul>
         <div class="layui-tab-content">
-            <div class="layadmin-user-login-box layadmin-user-login-header">
-                <h2 style="font-size: 26px;">#(APP.name)</h2>
-                <p>#(APP.name)<b>个人用户</b>注册</p>
-            </div>
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
@@ -88,10 +86,6 @@
         </div>
 
         <div class="layui-tab-content" style="display: none;">
-            <div class="layadmin-user-login-box layadmin-user-login-header">
-                <h2 style="font-size: 26px;">#(APP.name)</h2>
-                <p>#(APP.name)<b>组织机构</b>注册</p>
-            </div>
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
@@ -159,7 +153,7 @@
                     </button>
                 </div>
                 <div class="layui-trans layui-form-item layadmin-user-login-other">
-                    <a href="#(ctxPath)/login.html" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+                    <a href="#(ctxPath)/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
                     <a href="#(ctxPath)/login"
                        class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
                 </div>

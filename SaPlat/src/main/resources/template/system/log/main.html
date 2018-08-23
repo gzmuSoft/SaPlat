@@ -25,14 +25,13 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 // , {field: 'id', title: 'ID', minWidth: 80}
-                , {field: 'lastUpdAcct', title: '用户', minWidth: 120, sort: true}
+                , {field: 'lastUpdAcct', title: '用户', width: 120, sort: true}
                 , {field: 'url', title: '请求url', minWidth: 200, sort: true}
                 , {field: 'from', title: '来源', minWidth: 320, sort: true}
-                , {field: 'ip', title: 'ip', minWidth: 140, sort: true}
+                , {field: 'ip', title: 'ip', width: 140, sort: true}
                 , {field: 'browser', title: '浏览器', minWidth: 120, sort: true}
-                , {field: 'operation', title: '操作', minWidth: 80, sort: true}
+                , {field: 'operation', title: '操作', width: 80, sort: true}
                 , {field: 'createDate', title: '访问时间', minWidth: 150, sort: true}
-                , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
             ]]
             , url: '#(ctxPath)/system/log/tableData'
             , method: 'get'

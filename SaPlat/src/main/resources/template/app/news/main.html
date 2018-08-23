@@ -36,16 +36,20 @@
             , cellMinWidth: 60       //单元格最小宽度
             , cols: [[               //标题栏
                 {type: 'numbers', title: '序号'}
-                , {field: 'title', title: '新闻标题', minWidth: 250,sort: true}
+                , {field: 'title', title: '标题', minWidth: 250,sort: true}
+                , {field: 'type', title: '类型', width: 150,sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.NewsType::me(), "type")'}
+                , {field: 'source', title: '来源', minWidth: 150,sort: true}
+                , {field: 'editer', title: '编辑', minWidth: 150,sort: true}
                 , {field: 'createUserID', title: '创建用户', minWidth: 150,sort: true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
+                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                 , {field: 'lastUpdateUserID', title: '更新用户', minWidth: 150,  sort: true}
-                , {field: 'lastAccessTime', title: '访问日期', minWidth: 150,  sort: true}
+                , {field: 'lastAccessTime', title: '访问日期', width: 150,  sort: true}
                 , {
-                    field: 'isPublish', title: '是否公开', minWidth: 100,sort: true, templet:
-                        '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'
+                    field: 'isPublish', title: '目标群体', width: 150,sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.PublicStatus::ps(), "isPublish")'
                 }
-                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/news/tableData'
             , method: 'get'
@@ -80,7 +84,7 @@
                     })
                 });
             } else if (obj.event === 'edit') {
-                pop_show('编辑新闻', '#(ctxPath)/app/news/update?id=' + data.id, '1200', '700', function () {
+                pop_show('编辑新闻', '#(ctxPath)/app/news/update?id=' + data.id, '1200', '750', function () {
                     reloadTable($('#title').val());
                 });
             }

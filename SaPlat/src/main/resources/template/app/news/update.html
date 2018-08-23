@@ -77,24 +77,18 @@
 #define content()
 <div class="x-body">
     <form class="layui-form layui-form-pane" action="" id="addForm">
-        <div class="layui-form-item">
-            <label class="layui-form-label">序号</label>
-            <div class="layui-input-block">
-                <input type="text" name="model.id" value="#(model.id)" class="layui-input" style="width:1026PX">
-            </div>
-        </div>
+        <input type="hidden" name="model.id" value="#(model.id)">
         <div class="layui-form-item">
             <label class="layui-form-label">新闻标题</label>
             <div class="layui-input-block">
-                <input type="text" name="model.title" value="#(model.title)" class="layui-input" style="width:1026px">
+                <input type="text" name="model.title" value="#(model.title)" placeholder="请输入新闻标题" class="layui-input" style="width:1030px;">
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">来源</label>
                 <div class="layui-input-block">
-                    <input name="model.source" value="#(model.source)" autocomplete="off" class="layui-input"
-                           type="text" style="width:1026px">
+                    <input name="model.source" value="#(model.source)" autocomplete="off" class="layui-input" type="text">
                 </div>
             </div>
             <div class="layui-inline">
@@ -104,21 +98,21 @@
                            type="text">
                 </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">新闻内容</label>
-            <div class="layui-input-block">
-                <script id="container" name="content" type="text/plain">#(model.content)</script>
+            <div class="layui-inline">
+                <label class="layui-form-label">新闻类型</label>
+                <div class="layui-input-block">
+                    <select name="model.type" lay-filter="newsType" id="newsType" style="z-index: 2;">
+                        <option value="0">政要文件</option>
+                        <option value="1">跟踪动态</option>
+                        <option value="2">最新政策</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">新闻类型</label>
-            <div class="layui-input-block">
-                <select name="model.type" lay-filter="newsType" id="newsType" style="width:1026px">
-                    <option value="0">政要文件</option>
-                    <option value="1">跟踪动态</option>
-                    <option value="2">最新政策</option>
-                </select>
+            <label class="layui-form-label">新闻内容</label>
+            <div class="layui-input-block" style="z-index: 1;">
+                <script id="container" name="content" type="text/plain">#(model.content)</script>
             </div>
         </div>
 
@@ -151,7 +145,7 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item layui-layer-btn-c">
             <button class="layui-btn" lay-filter="sub" lay-submit>提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
