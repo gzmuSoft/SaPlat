@@ -100,10 +100,11 @@ public class ProAssReviewController extends BaseController {
     @NotNullPara("projectId")
     public void recData() {
         Long projectId = getParaToLong("projectId");
-        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
-        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
+        Long fileId = getParaToLong("fileId");
+        //ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        //FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
-        List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileProject.getFileID(), projectId);
+        List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileId, projectId);
 
         Map<String, Object> res = new ConcurrentHashMap<>();
         res.put("list", proAssReviews);

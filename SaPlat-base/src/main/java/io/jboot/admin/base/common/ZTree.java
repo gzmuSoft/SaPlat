@@ -31,6 +31,14 @@ public class ZTree implements java.io.Serializable {
 		this.title = title;
 	}
 
+	public ZTree(Long id, String name, Long pid,String title,Long fileId){
+        this.id = id;
+        this.name = name;
+        this.pId = pid;
+        this.title = title;
+	    this.fileId = fileId;
+    }
+
 	public void setDisCheck(boolean b) {
 		if (b) {
 			checked = true;
@@ -75,6 +83,10 @@ public class ZTree implements java.io.Serializable {
 	public String getTitle(){return this.title;}
 
 	public void setTitle(String title){this.title = title;}
+
+    public Long getFileId(){return this.fileId;}
+
+    public void setFileId(Long fileId){this.fileId = fileId;}
 
 	public boolean isOpen() {
 		return open;
