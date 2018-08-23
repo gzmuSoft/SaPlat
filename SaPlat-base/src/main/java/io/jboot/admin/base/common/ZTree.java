@@ -13,6 +13,7 @@ public class ZTree implements java.io.Serializable {
 	private Long pId;
 	private String name;
 	private String title;
+	private Long fileId;
 	private boolean open = true;
 	private boolean checked = false;
 	private boolean chkDisabled = false;
