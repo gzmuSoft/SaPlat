@@ -62,7 +62,7 @@
                     var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
                     var timeTxtTagS = '<h3 class="layui-timeline-title">';
                     var timeTxtTagE = '</h3>';
-                    var reTitle = '评估审查意见：';
+                    var reTitle = '：';
                     var timeLineContentDivE = '</div>';
                     var liTagE = '</li>';
                     var liItem = '';
@@ -74,6 +74,7 @@
                         liItem += timeTxtTagS;
                         liItem += ele.createTime;
                         liItem += timeTxtTagE;
+                        liItem += ele.remark;
                         liItem += reTitle;
                         liItem += ele.recomment;
                         /*liItem += '<hr class="layui-bg-gray">';

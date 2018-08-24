@@ -7,10 +7,7 @@ import io.jboot.admin.base.common.ResultCode;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
-import io.jboot.admin.service.api.FileProjectService;
-import io.jboot.admin.service.api.FilesService;
-import io.jboot.admin.service.api.ProAssReviewService;
-import io.jboot.admin.service.api.ProjectFileTypeService;
+import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.DataStatus;
 import io.jboot.admin.support.auth.AuthUtils;
@@ -44,6 +41,12 @@ public class ProAssReviewController extends BaseController {
 
     @JbootrpcService
     private FilesService filesService;
+
+    @JbootrpcService
+    private UserService userService;
+
+    @JbootrpcService
+    private PersonService personService;
 
     /**
      * 根据角色类型和项目id打开相关界面
@@ -105,6 +108,16 @@ public class ProAssReviewController extends BaseController {
         //FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileId, projectId);
+
+        for(ProAssReview par: proAssReviews){
+            User user = userService.findById(par.getCreateUserID());
+            if(null != user){
+                Person person = personService.findByUser(user);
+                if(null != person) {
+                    par.setRemark(person.getName());
+                }
+            }
+        }
 
         Map<String, Object> res = new ConcurrentHashMap<>();
         res.put("list", proAssReviews);
