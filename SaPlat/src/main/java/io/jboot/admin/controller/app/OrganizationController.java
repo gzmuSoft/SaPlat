@@ -13,6 +13,7 @@ import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.TypeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.validator.app.organization.OrganizationUpdateValidator;
 import io.jboot.admin.validator.app.organization.OrganizationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -215,7 +216,7 @@ public class OrganizationController extends BaseController {
      * 组织机构信息编辑
      * 更新提交至数据库
      */
-    @Before({POST.class, OrganizationValidator.class})
+    @Before({POST.class, OrganizationUpdateValidator.class})
     public void update() {
         User loginUser = AuthUtils.getLoginUser();
         loginUser.setEmail(getPara("user.email"));
