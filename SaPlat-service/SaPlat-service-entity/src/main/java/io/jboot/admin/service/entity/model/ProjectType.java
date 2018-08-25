@@ -8,5 +8,5 @@ import io.jboot.admin.service.entity.model.base.BaseProjectType;
  */
 @Table(tableName = "project_type", primaryKey = "id")
 public class ProjectType extends BaseProjectType<ProjectType> {
-	
+
 }

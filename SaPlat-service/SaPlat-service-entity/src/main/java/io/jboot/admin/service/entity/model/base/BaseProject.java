@@ -8,7 +8,6 @@ import com.jfinal.plugin.activerecord.IBean;
  */
 @SuppressWarnings("serial")
 public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M> implements IBean {
-
 	public void setId(java.lang.Long id) {
 		set("id", id);
 	}

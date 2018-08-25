@@ -8,5 +8,19 @@ import io.jboot.admin.service.entity.model.base.BaseProjectUndertake;
  */
 @Table(tableName = "project_undertake", primaryKey = "id")
 public class ProjectUndertake extends BaseProjectUndertake<ProjectUndertake> {
-	
+    private Project project;
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+//    public static final ProjectUndertake dao = new ProjectUndertake();
+//
+//    public ProjectType getProjectType() {
+//        return ProjectType.dao.findById(new Object[]{get("projectID")});
+//    }
 }

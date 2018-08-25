@@ -5,6 +5,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
+import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
@@ -129,7 +130,17 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if(project.getIsEnable()!=null){
             columns.eq("IsEnable", project.getIsEnable());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        //return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        if(projects != null) {
+            ProjectAssTypeServiceImpl projectAssTypeService = new ProjectAssTypeServiceImpl();
+            List<Project> pList = projects.getList();
+            for (Project item :
+                    pList) {
+                item.setProjectAssType(projectAssTypeService.findById(item.getPaTypeID()));
+            }
+        }
+        return projects;
     }
 
     @Override

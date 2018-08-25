@@ -8,6 +8,8 @@ import io.jboot.admin.service.entity.model.base.BaseProject;
  */
 @Table(tableName = "project", primaryKey = "id")
 public class Project extends BaseProject<Project> {
+    public static final Project dao = new Project().dao();
+
     private String typeName;
     private String reply;
     private boolean isReceive;
@@ -15,6 +17,16 @@ public class Project extends BaseProject<Project> {
     private double minAmount;
     private boolean isUpload;
     private Long fileID;
+    private ProjectAssType projectAssType;
+
+    public ProjectAssType getProjectAssType() {
+        return ProjectAssType.dao.findByIdLoadColumns(2, "*");
+        //return this.projectAssType;
+    }
+
+    public void setProjectAssType(ProjectAssType projectAssType) {
+        this.projectAssType = projectAssType;
+    }
 
     public Long getFileID() {
         return fileID;
