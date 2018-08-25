@@ -3,6 +3,7 @@ package io.jboot.admin.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
@@ -253,6 +254,7 @@ public class ProjectController extends BaseController {
         Organization organization=organizationService.findById(user.getUserID());
         setAttr("organization",organization);
         setAttr("model", model).render("update.html");
+
     }
 
     /**
@@ -1265,10 +1267,17 @@ public class ProjectController extends BaseController {
     @Before(GET.class)
     public void projectCollect(){
         BaseStatus baseStatus=new BaseStatus() {};
-        baseStatus.add("4","评估中");
-        baseStatus.add("5","审查中");
-        baseStatus.add("7","审查通过");
-        setAttr("statusList",baseStatus);
+//        baseStatus.add("4","评估中");
+//        baseStatus.add("5","审查中");
+//        baseStatus.add("7","审查通过");
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        for (ProjectAssType item:
+             PaTypeList) {
+            baseStatus.add(item.getId().toString(), item.getName());
+        }
+        setAttr("PaTypeNameList",baseStatus);
         render("projectCollect.html");
     }
 
@@ -1279,7 +1288,9 @@ public class ProjectController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project=new Project();
-        project.setStatus(getPara("status"));
+        if(StrKit.notBlank(getPara("projectType"))) {
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
         project.setUserId(AuthUtils.getLoginUser().getId());
         project.setIsEnable(true);
         Page<Project> page=projectService.findPage(project,pageNumber,pageSize);

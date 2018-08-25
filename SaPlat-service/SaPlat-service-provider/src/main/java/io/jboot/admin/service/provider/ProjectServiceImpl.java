@@ -123,6 +123,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (StrKit.notBlank(project.getStatus())) {
             columns.eq("status", project.getStatus());
         }
+        if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
+            columns.eq("paTypeID", project.getPaTypeID());
+        }
         if(project.getIsEnable()!=null){
             columns.eq("IsEnable", project.getIsEnable());
         }
