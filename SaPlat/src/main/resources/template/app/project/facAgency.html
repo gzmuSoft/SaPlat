@@ -15,11 +15,6 @@
 
 
 #define content()
-<div class="x-body">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px; color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">服务机构详细信息</legend>
-    </fieldset>
-
     <div style="padding: 20px; background-color: #F2F2F2;">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md12">
@@ -28,16 +23,74 @@
                     <div class="layui-card-body">
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
-                                <div class="layui-col-lg6">
-                                    <label class="layui-form-label">机构名称：</label>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">名称：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" value="#(facAgency.name)" autocomplete="off" class="layui-input" />
+                                        <input type="text" value="#(facAgency.name)" autocomplete="off" class="layui-input" readonly/>
                                     </div>
                                 </div>
-                                <div class="layui-col-lg6">
+                                <div class="layui-inline">
                                     <label class="layui-form-label">公司类型：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" value="#(facAgency.type)" autocomplete="off" class="layui-input" />
+                                        <input type="text" value="#(facAgency.type)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 130px;">统一社会信用代码：</label>
+                                    <div class="layui-input-block" style="margin-left:160px; width:200px;">
+                                        <input type="text" value="#(facAgency.credit)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">创办日期：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.start)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">注册资本：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#number(facAgency.capital, ',###')" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 130px;">企业规模：</label>
+                                    <div class="layui-input-block" style="margin-left:160px;width:200px;">
+                                        <input type="text" value="#(facAgency.scale)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                    <label class="layui-form-label">业务范围：</label>
+                                    <div class="layui-input-block" style="width:845px;">
+                                        <input type="text" value="#(facAgency.scope)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">法人信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">姓名：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.person)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 90px;">身份证照片：</label>
+                                    <div class="layui-input-block" style="margin-left:120px;">
+                                        <input type="text" value="#(facAgency.pictrue)" autocomplete="off" class="layui-input" />
                                     </div>
                                 </div>
                             </div>
@@ -45,129 +98,71 @@
                     </div>
                 </div>
             </div>
+
             <div class="layui-col-md12">
                 <div class="layui-card">
-                    <div class="layui-card-header">标题</div>
+                    <div class="layui-card-header">负责人信息</div>
                     <div class="layui-card-body">
-                        内容
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">姓名：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.principal)" autocomplete="off" class="layui-input" />
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">联系电话：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.phone)" autocomplete="off" class="layui-input" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md6">
-            <div class="layui-card">
-                <div class="layui-card-header">卡片面板</div>
-                <div class="layui-card-body">
-                    结合 layui 的栅格系统<br>
-                    轻松实现响应式布局
-                </div>
-            </div>
-        </div>
-            <div class="layui-col-md6">
+
+            <div class="layui-col-md12">
                 <div class="layui-card">
-                    <div class="layui-card-header">卡片面板</div>
+                    <div class="layui-card-header">通讯信息</div>
                     <div class="layui-card-body">
-                        结合 layui 的栅格系统<br>
-                        轻松实现响应式布局
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">通讯地址：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.address)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">座机电话：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.landline)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">网站：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#(facAgency.website)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">公司简介</div>
+                    <div class="layui-card-body">
+                        <p style="margin-left: 20px;margin-top: 8px">#(facAgency.resume)</p>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">统一社会信用代码：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.credit)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">企业法人：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.person)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">法人身份证照片：</label>
-        <div class="layui-input-block">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.pictrue)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">创办日期：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.start)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">注册资本：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#number(facAgency.capital, ",###")</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">企业规模：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.scale)</p>人
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">业务范围：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.scope)</p>
-        </div>
-    </div>
-
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">负责人：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.principal)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">负责人联系方式：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.phone)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">地址：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.address)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">企业网站：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.website)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">座机电话：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.landline)</p>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px">简介：</label>
-        <div class="layui-input-inline">
-            <p style="margin-left: 20px;margin-top: 8px">#(facAgency.resume)</p>
-        </div>
-    </div>
-
-</div>
 </div>
 #end
 

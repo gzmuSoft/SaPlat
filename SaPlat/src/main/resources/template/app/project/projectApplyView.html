@@ -22,6 +22,7 @@
             , height: 'full-90'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'},
                 {field: 'name', title: '项目名称', minWidth: 200, sort: true},
                 {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {
@@ -32,7 +33,7 @@
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                 }
                 , {field: 'reply', title: '回复', minWidth: 300}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', width: 280, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
             , method: 'get'
@@ -55,10 +56,10 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see1') {
-                pop_show('查看服务机构资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.createUserID + '&flag=' + false, '', '', function () {
+                pop_show('查看服务机构资料', '#(ctxPath)/app/project/seeFacAgency?id=' + data.createUserID + '&flag=' + false, '1075', '', function () {
                 });
             } else if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.projectID, '1200', '725', function () {
                 });
             } else if (obj.event === 'agree') {
                 if (button == 1) {
@@ -136,6 +137,7 @@
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , where: {applyOrInvite: true, flag: true} //设定异步数据接口的额外参数
                 , cols: [[                  //标题栏
+                    {type: 'numbers', fixed: true, unresize: 'true'},
                     {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                     , {
                         field: 'status',
@@ -145,7 +147,7 @@
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
                     , {field: 'reply', title: '回复', minWidth: 300}
-                    , {fixed: 'right', title: '操作', minWidth: 280, align: 'center', toolbar: '#barOption'}
+                    , {fixed: 'right', title: '操作', width: 280, align: 'center', toolbar: '#barOption'}
                 ]]
             });
         });
@@ -155,6 +157,7 @@
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectUndertakeList'
                 , cols: [[                  //标题栏
+                    {type: 'numbers', fixed: true, unresize: 'true'},
                     {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                     , {
                         field: 'status',
@@ -164,7 +167,7 @@
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus::me(), "status")'
                     }
                     , {field: 'reply', title: '回复', minWidth: 300}
-                    , {fixed: 'right', title: '操作', minWidth: 280, align: 'center', toolbar: '#barOptionInvite'}
+                    , {fixed: 'right', title: '操作', width: 280, align: 'center', toolbar: '#barOptionInvite'}
                 ]]
                 , where: {applyOrInvite: false, flag: false} //设定异步数据接口的额外参数
             });
@@ -189,7 +192,7 @@
 </div>
 
 <script type="text/html" id="barOption">
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目资料</a>
 </script>
 
 <script type="text/html" id="barOptionInvite">

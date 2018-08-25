@@ -27,7 +27,7 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/project/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目资料</a>
     #end
 
     #shiroHasPermission('/app/project/buildProject')
@@ -53,14 +53,13 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '项目名称', minWidth: 140, sort: true}
-                , {field: 'roleName', title: '角色名称', minWidth: 140, sort: true}
-                , {field: 'amount', title: '预计金额（元）', minWidth: 100, sort: true}
-                , {field: 'site', title: '地址', minWidth: 100}
-                , {field: 'brief', title: '简介', align: 'center', minWidth: 100}
+                , {field: 'name', title: '项目名称', minWidth: 140,sort: true}
+                , {field: 'roleName', title: '机构名称', minWidth: 140,sort: true}
+                , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true}
+                , {field: 'brief', title: '简介', minWidth: 200, sort: true}
                 , {field: 'reply', title: '审核未通过原因', minWidth: 200, sort: true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/verfedDefeat'
             , method: 'get'
@@ -89,7 +88,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '725', function () {
                 });
             } else if (obj.event === 'build') {
                 window.location.href = '#(ctxPath)/app/project/projectMessage?id=' + data.id;

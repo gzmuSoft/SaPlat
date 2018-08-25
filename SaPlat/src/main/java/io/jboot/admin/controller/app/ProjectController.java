@@ -253,7 +253,6 @@ public class ProjectController extends BaseController {
         Organization organization=organizationService.findById(user.getUserID());
         setAttr("organization",organization);
         setAttr("model", model).render("update.html");
-
     }
 
     /**
