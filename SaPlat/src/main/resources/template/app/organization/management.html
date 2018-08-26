@@ -29,10 +29,10 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.name" style="width: 180px">管理机构名称</label>
+                <label class="layui-form-label" for="management.name" style="width: 180px"><em class="require-mark">*</em>管理机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.name" name="management.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px"required/>
+                           class="layui-input " style="width: 500px"required lay-verify="required"/>
                 </div>
             </div>
 
@@ -44,26 +44,26 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.responsibility"style="width: 180px">部门职责</label>
+                <label class="layui-form-label" for="management.responsibility"style="width: 180px"><em class="require-mark">*</em>部门职责</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.responsibility" name="management.responsibility"
-                           value="#(management.responsibility)" class="layui-input" style="width: 500px" required/>
+                           value="#(management.responsibility)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.superior"style="width: 180px">上级部门</label>
+                <label class="layui-form-label" for="management.superior"style="width: 180px"><em class="require-mark">*</em>上级部门</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.superior" name="management.superior"
-                           value="#(management.superior)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.superior)" class="layui-input"style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.principal"style="width: 180px">上级负责人</label>
+                <label class="layui-form-label" for="management.principal"style="width: 180px"><em class="require-mark">*</em>上级负责人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.principal" name="management.principal"
-                           value="#(management.principal)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.principal)" class="layui-input"style="width: 500px" required lay-verify="required" lay-verify="required"/>
                 </div>
             </div>
 
@@ -76,23 +76,23 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.party"style="width: 180px">党政信息</label>
+                <label class="layui-form-label" for="management.party"style="width: 180px"><em class="require-mark">*</em>党政信息</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.party" name="management.party"
-                           value="#(management.party)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.party)" class="layui-input"style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.manager"style="width: 180px">部门主管姓名</label>
+                <label class="layui-form-label" for="management.manager"style="width: 180px"><em class="require-mark">*</em>部门主管姓名</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.manager" name="management.manager"
-                           value="#(management.manager)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.manager)" class="layui-input"style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.managercon"style="width: 180px">主管联系方式</label>
+                <label class="layui-form-label" for="management.managercon"style="width: 180px"><em class="require-mark">*</em>主管联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="management.managercon" name="management.managercon"
                            value="#(management.managercon)" class="layui-input"style="width: 500px" lay-verify="required|phone"/>
@@ -100,10 +100,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="management.detailedaddr"style="width: 180px">部门详细地址</label>
+                <label class="layui-form-label" for="management.detailedaddr"style="width: 180px"><em class="require-mark">*</em>部门详细地址</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.detailedaddr" name="management.detailedaddr"
-                           value="#(management.detailedaddr)" class="layui-input"style="width: 500px" required/>
+                           value="#(management.detailedaddr)" class="layui-input"style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
                 <label class="layui-form-label" for="management.num"style="width: 180px">部门人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="management.num" name="management.num"
-                           value="#(management.num)" class="layui-input"style="width: 500px" lay-verify="required|length"/>
+                           value="#(management.num)" class="layui-input"style="width: 500px" lay-verify="length"/>
                 </div>
             </div>
 
@@ -119,7 +119,7 @@
                 <label class="layui-form-label" for="management.lower"style="width: 180px">下级部门</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.lower" name="management.lower"
-                           value="#(management.lower)" class="layui-input" style="width: 500px" required/>
+                           value="#(management.lower)" class="layui-input" style="width: 500px" />
                 </div>
             </div>
 

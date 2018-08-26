@@ -31,10 +31,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.name" style="width: 180px">服务机构名称</label>
+                <label class="layui-form-label" for="facAgency.name" style="width: 180px"><em class="require-mark">*</em>服务机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" required/>
+                           class="layui-input " style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
@@ -56,16 +56,16 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.address"style="width: 180px">公司地址</label>
+                <label class="layui-form-label" for="facAgency.address"style="width: 180px"><em class="require-mark">*</em>公司地址</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.address" name="facAgency.address"
-                           value="#(facAgency.address)" class="layui-input" style="width: 500px" required/>
+                           value="#(facAgency.address)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="facAgency.resume" style="width: 680px;">
-                    <h style="margin: 0 50px">公司简介</h>
+                    <h style="margin: 0 50px"><em class="require-mark">*</em>公司简介</h>
                 </label>
                 <div class="layui-input-block">
 					<textarea id="facAgency.resume" name="facAgency.resume" lay-verify="required" placeholder=""
@@ -75,15 +75,15 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.principal"style="width: 180px">公司负责人</label>
+                <label class="layui-form-label" for="facAgency.principal"style="width: 180px"><em class="require-mark">*</em>公司负责人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.principal" name="facAgency.principal"
-                           value="#(facAgency.principal)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.principal)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.phone"style="width: 180px">公司负责人联系方式</label>
+                <label class="layui-form-label" for="facAgency.phone"style="width: 180px"><em class="require-mark">*</em>公司负责人联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="facAgency.phone" name="facAgency.phone"
                            value="#(facAgency.phone)" class="layui-input"style="width: 500px"  lay-verify="required|phone"/>
@@ -91,42 +91,42 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.type"style="width: 180px">主体类型</label>
+                <label class="layui-form-label" for="facAgency.type"style="width: 180px"><em class="require-mark">*</em>主体类型</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.type" name="facAgency.type"
-                           value="#(facAgency.type)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.type)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.credit"style="width: 180px">统一社会信用代码</label>
+                <label class="layui-form-label" for="facAgency.credit"style="width: 180px"><em class="require-mark">*</em>统一社会信用代码</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.credit" name="facAgency.credit"
-                           value="#(facAgency.credit)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.credit)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.scope"style="width: 180px">业务范围</label>
+                <label class="layui-form-label" for="facAgency.scope"style="width: 180px"><em class="require-mark">*</em>业务范围</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.scope" name="facAgency.scope"
-                           value="#(facAgency.scope)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.scope)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.start"style="width: 180px">创办日期</label>
+                <label class="layui-form-label" for="facAgency.start"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="date" id="facAgency.start" name="facAgency.start"
-                           value="#(facAgency.start)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.start)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.person"style="width: 180px">企业法人</label>
+                <label class="layui-form-label" for="facAgency.person"style="width: 180px"><em class="require-mark">*</em>企业法人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.person" name="facAgency.person"
-                           value="#(facAgency.person)" class="layui-input"style="width: 500px"  required/>
+                           value="#(facAgency.person)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
@@ -141,7 +141,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.capital" style="width: 180px">注册资本</label>
+                <label class="layui-form-label" for="facAgency.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
                 <div class="layui-input-inline" >
                     <input type="number" id="facAgency.capital" name="facAgency.capital" value="#(facAgency.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
@@ -160,7 +160,7 @@
                 <label class="layui-form-label" for="facAgency.landline"style="width: 180px">座机电话</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="facAgency.landline" name="facAgency.landline"
-                           value="#(facAgency.landline)" class="layui-input" style="width: 500px" lay-verify="tel"/>
+                           value="#(facAgency.landline)" class="layui-input" style="width: 500px" />
                 </div>
             </div>
 
@@ -168,7 +168,7 @@
                 <label class="layui-form-label" for="facAgency.scale"style="width: 180px">企业人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="facAgency.scale" name="facAgency.scale"
-                           value="#(facAgency.scale)" class="layui-input" style="width: 500px" lay-verify="required|pLength"/>
+                           value="#(facAgency.scale)" class="layui-input" style="width: 500px" lay-verify="pLength"/>
                 </div>
             </div>
 
@@ -205,6 +205,7 @@
                 ,'注册资金不能大于11位'
             ]
             ,tel: [
+
                 /0\d{2,3}-\d{7,8}/
                 ,'座机电话格式为000-00000000'
             ]
