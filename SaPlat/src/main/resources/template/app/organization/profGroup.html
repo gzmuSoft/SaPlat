@@ -31,10 +31,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.name"style="width: 180px">专业团体名称</label>
+                <label class="layui-form-label" for="profGroup.name"style="width: 180px"><em class="require-mark">*</em>专业团体名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" required/>
+                           class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
@@ -46,25 +46,25 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.scope"style="width: 180px">服务范围</label>
+                <label class="layui-form-label" for="profGroup.scope"style="width: 180px"><em class="require-mark">*</em>服务范围</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.scope" name="profGroup.scope"
-                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.performance"style="width: 180px">服务业绩</label>
+                <label class="layui-form-label" for="profGroup.performance"style="width: 180px"><em class="require-mark">*</em>服务业绩</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.performance" name="profGroup.performance"
-                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="profGroup.resume" style="width: 680px;">
-                    <h style="margin: 0 50px">人员简历</h>
+                    <h style="margin: 0 50px"><em class="require-mark">*</em>人员简历</h>
                 </label>
                 <div class="layui-input-block">
 					<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""
@@ -73,15 +73,15 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.content"style="width: 180px">专业内容</label>
+                <label class="layui-form-label" for="profGroup.content"style="width: 180px"><em class="require-mark">*</em>专业内容</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.content" name="profGroup.content"
-                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.capital" style="width: 180px">注册资本</label>
+                <label class="layui-form-label" for="profGroup.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
                 <div class="layui-input-inline" >
                     <input type="number" id="profGroup.capital" name="profGroup.capital" value="#(profGroup.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
@@ -90,10 +90,10 @@
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px">管理员姓名</label>
+                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px"><em class="require-mark">*</em>管理员姓名</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.administrator" name="profGroup.administrator"
-                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.contact" style="width: 180px">管理员联系方式</label>
+                <label class="layui-form-label" for="profGroup.contact" style="width: 180px"><em class="require-mark">*</em>管理员联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="profGroup.contact" name="profGroup.contact"
                            value="#(profGroup.contact)" class="layui-input" style="width: 500px" lay-verify="required|phone"/>
