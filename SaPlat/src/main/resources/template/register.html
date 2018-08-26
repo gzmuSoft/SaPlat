@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>注册</title>
+    <title>#(APP.name) - 用户注册</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -11,6 +11,8 @@
     #include("/template/common/include/_css.html")
     <link rel="stylesheet" href="../static/css/register/style/admin.css" media="all">
     <link rel="stylesheet" href="../static/css/register/style/login.css" media="all">
+    <script src="../static/js/jquery-3.3.1.min.js"></script>
+    <script src="../static/js/layer/layer.js"></script>
 </head>
 
 <body>
@@ -28,7 +30,7 @@
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                            for="LAY-user-login-user-name"></label>
-                    <input type="text" name="user.name" id="LAY-user-login-user-name" lay-verify="required"
+                    <input type="text" name="user.name" id="LAY-user-login-user-name"
                            placeholder="账号名称" class="layui-input">
                 </div>
                 <div class="layui-form-item">
@@ -72,15 +74,15 @@
                            class="layui-input email">
                 </div>
                 <div class="layui-form-item">
-                    <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+                    <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议">
                 </div>
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
                 </div>
                 <div class="layui-trans layui-form-item layadmin-user-login-other">
-                    <a href="#(ctxPath)/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+                    <a href="#(ctxPath)/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登录</a>
                     <a href="#(ctxPath)/login"
-                       class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+                       class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登录</a>
                 </div>
             </div>
         </div>
@@ -115,7 +117,7 @@
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-fonts-code"
                            for="LAY-organization-login-code"></label>
-                    <input type="text" name="organization.code" id="LAY-organization-login-code" lay-verify="required"
+                    <input type="text" name="organization.code" id="LAY-organization-login-code"
                            placeholder="组织机构代码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
@@ -128,34 +130,31 @@
                     <label class="layadmin-user-login-icon layui-icon layui-icon-friends"
                            for="LAY-organization-login-principal"></label>
                     <input type="text" name="organization.principal" id="LAY-organization-login-principal"
-                           lay-verify="required"
-                           placeholder="委办负责人名称" class="layui-input">
+                           lay-verify="required" placeholder="委办负责人姓名" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone"
                            for="LAY-organization-contact"></label>
                     <input type="text" name="organization.contact" id="LAY-organization-contact"
-                           lay-verify="required|phone"
-                           placeholder="委办负责人联系方式" class="layui-input">
+                           lay-verify="required|phone" placeholder="委办负责人手机号码" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-water"
                            for="LAY-organization-login-email"></label>
                     <input type="email" name="user.email" id="LAY-organization-login-email" lay-verify="required|email"
-                           placeholder="邮箱"
-                           class="layui-input email">
+                           placeholder="邮箱" class="layui-input email">
                 </div>
                 <div class="layui-form-item">
-                    <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+                    <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议">
                 </div>
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-organization-reg-submit">注 册
                     </button>
                 </div>
                 <div class="layui-trans layui-form-item layadmin-user-login-other">
-                    <a href="#(ctxPath)/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+                    <a href="#(ctxPath)/login" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登录</a>
                     <a href="#(ctxPath)/login"
-                       class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+                       class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登录</a>
                 </div>
             </div>
         </div>
@@ -165,6 +164,94 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    $('#LAY-user-login-user-name').on('mouseover', function() {
+        layer.tips('5-25个字符，推荐使用中文，请勿包含姓名/身份证/银行卡等隐私信息，一旦设置成功无法修改', '#LAY-user-login-user-name', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-user-login-password').on('mouseover', function() {
+        layer.tips('6-20个字符，密码不能和账号名称相同<br>只能包含字母、数字以及标点符号（除空格）<br>字母、数字和标点符号至少包含2种', '#LAY-user-login-password', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-user-login-rePwd').on('mouseover', function() {
+        layer.tips('请再次输入你的密码', '#LAY-user-login-rePwd', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-user-login-person-name').on('mouseover', function() {
+        layer.tips('请输入你的真实姓名', '#LAY-user-login-person-name', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-user-login-phone').on('mouseover', function() {
+        layer.tips('手机号码（11位数字）', '#LAY-user-login-phone', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-user-login-email').on('mouseover', function() {
+        layer.tips('在各邮件服务商处注册和经常使用的邮箱<br>邮箱长度最大为60个字符<br>例如：demo@qq.com', '#LAY-user-login-email', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+
+    $('#LAY-organization-login-user-name').on('mouseover', function() {
+        layer.tips('5-25个字符，推荐使用中文，请勿包含姓名/身份证/银行卡等隐私信息，一旦设置成功无法修改', '#LAY-organization-login-user-name', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-organization-login-password').on('mouseover', function() {
+        layer.tips('6-20个字符，密码不能和账号名称相同<br>只能包含字母、数字以及标点符号（除空格）<br>字母、数字和标点符号至少包含2种', '#LAY-organization-login-password', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-organization-login-rePwd').on('mouseover', function() {
+        layer.tips('请再次输入你的密码', '#LAY-organization-login-rePwd', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-organization-login-name').on('mouseover', function() {
+        layer.tips('由1-50个字符构成的组织机构名称', '#LAY-organization-login-name', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-organization-login-code').on('mouseover', function() {
+        layer.tips('全国组织机构统一社会信用代码<br>由十八位的阿拉伯数字或大写英文字母组成<br>例如：91512081MA62K0260E', '#LAY-organization-login-code', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-organization-login-addr').on('mouseover', function() {
+        layer.tips('包含省市区县等信息的详细组织机构注册所在地址<br>组织机构地址由3-128个字符构成<br>例如：贵州省贵阳市南明区**路**大厦', '#LAY-organization-login-addr', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+    $('#LAY-organization-login-principal').on('mouseover', function() {
+        layer.tips('组织机构的委办负责人的真实姓名，由1-50个字符构成', '#LAY-organization-login-principal', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-organization-contact').on('mouseover', function() {
+        layer.tips('手机号码（11位数字）', '#LAY-organization-contact', {
+            tips: [2, '#5FB878'], time:10000
+        });
+    });
+    $('#LAY-organization-login-email').on('mouseover', function() {
+        layer.tips('在各邮件服务商处注册和经常使用的邮箱<br>邮箱长度最大为60个字符<br>例如：demo@qq.com', '#LAY-organization-login-email', {
+            tips: [2, '#5FB878'], time:10000,
+            area: ['270px', 'auto']
+        });
+    });
+</script>
 #include("/template/common/include/_all_js.html")
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/mailCompletion.js"></script>
 <script>
@@ -174,7 +261,6 @@
             element = layui.element;
 
         form.render();
-
 
         $(".email").each(function () {
             var mail = new hcMailCompletion($(this).attr("id"));
@@ -257,12 +343,10 @@
                     $('.layui-tab-content').last().fadeToggle('normal');
                 });
             }
-
         });
-
-
     });
 </script>
+
 </body>
 
 </html>
