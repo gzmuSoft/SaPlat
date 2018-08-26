@@ -11,5 +11,7 @@ public class RegexKey {
 
     public final static String EMAIL = "\\w+@(\\w+.)+[a-z]{2,3}";
 
-    public final static String OgCode="^(([0-9]{8})-[0-9]{1})$";
+    public final static String PASSWORD="^(?!^\\\\d+$)(?!^[a-zA-Z]+$)(?!^[_#@]+$).{6,20}$";
+
+    public final static String OgCode="^[1,5,9,Y]\\w\\d{6}\\w{9}\\w$";
 }
