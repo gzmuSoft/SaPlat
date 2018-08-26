@@ -7,6 +7,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.api.ProjectService;
+import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -23,7 +24,21 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService {
+public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService, SaPlatService<Project> {
+
+    ProjectAssTypeServiceImpl projectAssTypeService = new ProjectAssTypeServiceImpl();
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    @Override
+    public Project fitModel(Project model){
+        model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+        return model;
+    }
+
     /**
      * find all model
      *
@@ -42,17 +57,17 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (model.getId() != null) {
             columns.eq("id", model.getId());
         }
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
     public List<Project> findListByColumn(String columnName, Object value) {
-        return DAO.findListByColumn(Column.create(columnName, value));
+        return fitList(DAO.findListByColumn(Column.create(columnName, value)));
     }
 
     @Override
     public Project findFirstByColumn(String columnName, Object value) {
-        return DAO.findFirstByColumn(Column.create(columnName, value));
+        return fitModel(DAO.findFirstByColumn(Column.create(columnName, value)));
     }
 
     @Override
@@ -64,7 +79,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         for (int i = 0; i < columnNames.length; i++) {
             columns.eq(columnNames[i], values[i]);
         }
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -77,7 +92,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         for (int i = 0; i < columnNames.length; i++) {
             columns.eq(columnNames[i], values[i]);
         }
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -90,7 +105,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                 projects.add(byId);
             }
         }
-        return projects;
+        return fitList(projects);
     }
 
     @Override
@@ -131,16 +146,8 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.eq("IsEnable", project.getIsEnable());
         }
         //return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
-        Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
-        if(projects != null) {
-            ProjectAssTypeServiceImpl projectAssTypeService = new ProjectAssTypeServiceImpl();
-            List<Project> pList = projects.getList();
-            for (Project item :
-                    pList) {
-                item.setProjectAssType(projectAssTypeService.findById(item.getPaTypeID()));
-            }
-        }
-        return projects;
+        //Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
@@ -161,7 +168,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         }
         columns.ne("userId", userId);
 
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
@@ -173,7 +180,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.eq("id", projectUndertake.getProjectID());
             list.add(DAO.findFirstByColumns(columns));
         }
-        return list;
+        return fitList(list);
     }
 
     @Override
@@ -208,7 +215,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
 
     @Override
     public List<Project> findByIsPublic(boolean isPublic) {
-        return DAO.findListByColumn("isPublic", isPublic);
+        return fitList(DAO.findListByColumn("isPublic", isPublic));
     }
 
     @Override
@@ -222,7 +229,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
 
     @Override
     public List<Project> findByUserId(Long userId) {
-        return DAO.findListByColumn("userId", userId);
+        return fitList(DAO.findListByColumn("userId", userId));
     }
 
     @Override
@@ -233,6 +240,6 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus()).set("userID", projectUndertake.getCreateUserID());
             sqlPara = Db.getSqlPara("app-project.project-xxx", c);
         }
-        return DAO.paginate(pageNumber, pageSize, sqlPara);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 }

@@ -26,7 +26,8 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 // , {field: 'id', title: 'ID', minWidth: 80}
-                , {field: 'name', title: '个人群体名称', minWidth: 150, sort: true}
+                , {field: 'name', title: '姓名', minWidth: 150, sort: true}
+                , {field: 'userName', title: '用户账号', minWidth: 150, sort: true}
                 , {field: 'sex', title: '性别', minWidth: 60,sort:true}
                 , {field: 'phone', title: '电话号码', minWidth: 120, sort: true}
                 , {field: 'address', title: '地址', minWidth: 120, sort: true}
@@ -99,9 +100,9 @@
     <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label">个人名称</label>
+                <label class="layui-form-label">姓名</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="name" name="name" placeholder="个人群体名称" class="layui-input"/>
+                    <input type="text" id="name" name="name" placeholder="姓名" class="layui-input"/>
                 </div>
                 <label class="layui-form-label">电话号码</label>
                 <div class="layui-input-inline">
