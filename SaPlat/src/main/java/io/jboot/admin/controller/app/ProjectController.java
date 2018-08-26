@@ -1273,9 +1273,11 @@ public class ProjectController extends BaseController {
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        for (ProjectAssType item:
-             PaTypeList) {
-            baseStatus.add(item.getId().toString(), item.getName());
+        if(PaTypeList != null) {
+            for (ProjectAssType item :
+                    PaTypeList) {
+                baseStatus.add(item.getId().toString(), item.getName());
+            }
         }
         setAttr("PaTypeNameList",baseStatus);
         render("projectCollect.html");

@@ -150,7 +150,7 @@ public class PersonController extends BaseController {
         Post thisPost = postService.findById(affectedGroup.getDutyID());
         Occupation thisOccupation = occupationService.findById(affectedGroup.getOccupationID());
 
-        setAttr("user", loginUser).
+        //setAttr("user", loginUser).
                 setAttr("person", person).
                 setAttr("affectedGroup", affectedGroup).
                 setAttr("politicalOpts", politicalOpts).

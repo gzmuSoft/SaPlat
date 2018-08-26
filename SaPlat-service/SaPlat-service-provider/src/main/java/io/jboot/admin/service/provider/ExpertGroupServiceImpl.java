@@ -9,6 +9,7 @@ import io.jboot.admin.service.api.FilesService;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -21,13 +22,43 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implements ExpertGroupService {
+public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implements ExpertGroupService{
 
     @Inject
     private AuthService authService;
 
     @Inject
     private FilesService filesService;
+
+    UserServiceImpl userServiceNew = new UserServiceImpl();
+    /**
+     * 装配完善Page对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<ExpertGroup> fitPage(Page<ExpertGroup> page){
+        if(page != null){
+            List<ExpertGroup> tList = page.getList();
+            for (ExpertGroup item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public ExpertGroup fitModel(ExpertGroup model){
+        User user = new User();
+        user.setUserID(model.getId());
+        user.setUserSource(0);// 0 代表个人
+
+        model.setUser(userServiceNew.findModel(user));
+        return model;
+    }
 
     @Override
     public Page<ExpertGroup> findPage(ExpertGroup model, int pageNumber, int pageSize) {
@@ -38,12 +69,12 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
     public Page<ExpertGroup> findPage(int pageNumber, int pageSize) {
-        return DAO.paginate(pageNumber, pageSize, "id desc");
+        return fitPage(DAO.paginate(pageNumber, pageSize, "id desc"));
     }
 
     @Override
@@ -56,7 +87,7 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         Columns columns = Columns.create();
         columns.eq("personID", id);
         columns.eq("isEnable",1);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -79,11 +110,11 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
 
     @Override
     public ExpertGroup findByName(String name) {
-        return DAO.findFirstByColumn("name", name);
+        return fitModel(DAO.findFirstByColumn("name", name));
     }
 
     @Override
     public ExpertGroup findByOrgId(Long orgId) {
-        return DAO.findFirstByColumn("orgID", orgId);
+        return fitModel(DAO.findFirstByColumn("orgID", orgId));
     }
 }

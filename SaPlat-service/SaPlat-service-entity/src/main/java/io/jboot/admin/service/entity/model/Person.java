@@ -8,6 +8,8 @@ import io.jboot.admin.service.entity.model.base.BasePerson;
  */
 @Table(tableName = "person", primaryKey = "id")
 public class Person extends BasePerson<Person> {
+    private User user;
+
     public void setPower(java.lang.String power) {
         set("power", power);
     }
@@ -16,4 +18,15 @@ public class Person extends BasePerson<Person> {
         return getStr("power");
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserName() {
+        return user.getName();
+    }
 }
