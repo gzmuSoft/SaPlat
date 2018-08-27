@@ -18,6 +18,14 @@ public class ProjectUndertake extends BaseProjectUndertake<ProjectUndertake> {
         this.project = project;
     }
 
+    public String getProjectAssTypeName()
+    {
+        if(null != project){
+            return this.project.getProjectAssTypeName();
+        }
+        return "";
+    }
+
 //    public static final ProjectUndertake dao = new ProjectUndertake();
 //
 //    public ProjectType getProjectType() {

@@ -96,8 +96,12 @@ public class ProjectController extends BaseController {
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
         List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
-        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
-        List<ProjectStep> projectStepList = projectStepService.findAll();
+        ProjectAssType paTypeModel = new ProjectAssType();
+        paTypeModel.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(paTypeModel);
+        ProjectStep psModel = new ProjectStep();
+        psModel.setIsEnable(true);
+        List<ProjectStep> projectStepList = projectStepService.findAll(psModel);
         List<String> roleNameList = new ArrayList<>();
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
