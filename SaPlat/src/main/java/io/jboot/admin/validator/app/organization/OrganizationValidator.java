@@ -21,7 +21,8 @@ public class OrganizationValidator extends JsonValidator {
         }
         validateString("organization.principal", 2, 7, "委办负责人姓名请在2-7位");
         validateRequiredString("organization.addr", "请输入组织机构地址");
-        validateString("organization.code", 18, 18, "请输入18位组织机构代码");
+        //注册时可不输入组织机构代码，认证时必须输入，刘英伟，2018.08.27
+        //validateString("organization.code", 18, 18, "请输入18位组织机构代码");
         validateMobile("organization.contact", "电话号码格式不正确");
         validateEmail("user.email", "邮箱格式不正确");
     }
