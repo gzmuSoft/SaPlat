@@ -47,10 +47,12 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
      * @return
      */
     public Organization fitModel(Organization model){
-        User user = new User();
-        user.setUserID(model.getId());
-        user.setUserSource(1);// 1 代表组织机构
-        model.setUser(userServiceNew.findModel(user));
+        if(model!=null) {
+            User user = new User();
+            user.setUserID(model.getId());
+            user.setUserSource(1);// 1 代表组织机构
+            model.setUser(userServiceNew.findModel(user));
+        }
         return model;
     }
 
