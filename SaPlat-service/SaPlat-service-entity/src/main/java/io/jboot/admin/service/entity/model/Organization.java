@@ -9,6 +9,20 @@ import io.jboot.admin.service.entity.model.base.BaseOrganization;
  */
 @Table(tableName = "organization", primaryKey = "id")
 public class Organization extends BaseOrganization<Organization> {
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserName() {
+        return user.getName();
+    }
+
     /**
      * 设置状态 启用 或 禁用
      * @param status
@@ -32,5 +46,4 @@ public class Organization extends BaseOrganization<Organization> {
             return DataStatus.UNUSED;
         }
     }
-
 }
