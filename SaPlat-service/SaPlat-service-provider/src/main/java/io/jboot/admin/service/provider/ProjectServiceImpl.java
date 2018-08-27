@@ -35,7 +35,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
      */
     @Override
     public Project fitModel(Project model){
-        model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+        if(null != model && model.getPaTypeID()>0) {
+            model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+        }
         return model;
     }
 

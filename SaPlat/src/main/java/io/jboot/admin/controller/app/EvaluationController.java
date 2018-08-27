@@ -147,7 +147,7 @@ public class EvaluationController extends BaseController {
             }
         }
 
-        setAttr("project", project.toJson())
+        setAttr("project", project)
                 .setAttr("evaScheme", evaScheme.toJson())
                 .render("evaluation.html");
     }
