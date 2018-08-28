@@ -29,7 +29,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     private NotificationService notificationService;
 
     ProjectServiceImpl projectService = new ProjectServiceImpl();
-
+    FacAgencyServiceImpl faService = new FacAgencyServiceImpl();
     /**
      * 装配完善List对象中所有对象的数据
      * @param list
@@ -67,6 +67,9 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     public ProjectUndertake fitModel(ProjectUndertake model){
         if(model.getProjectID() > 0) {
             model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
+        }
+        if(model.getFacAgencyID() > 0){
+            model.setFacAgency(faService.findByOrgId(model.getFacAgencyID()));
         }
         return model;
     }
