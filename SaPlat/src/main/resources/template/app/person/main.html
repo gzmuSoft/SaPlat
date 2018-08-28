@@ -107,7 +107,8 @@
         });
 
         laydate.render({
-            elem: document.getElementById('affectedGroup.birthday')
+            elem: document.getElementById('affectedGroup.birthday'),
+            max:0
         });
 
         $('#reset').click(function () {
@@ -119,6 +120,7 @@
         $(":input").addClass("layui-disabled").prop("disabled", "disabled");
         $('#perfect').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
+            $('#affectedGroup.birthday').removeClass("layui-disabled");
             $(".layui-btn").removeClass("layui-hide");
             $(this).addClass("layui-hide");
             se.addClass("layui-select-title");
@@ -204,7 +206,7 @@
                             <div class="layui-input-inline">
                                 <input type="text" id="affectedGroup.birthday" name="affectedGroup.birthday"
                                        value="#(affectedGroup.birthday)" class="layui-input" required
-                                       lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off"/>
+                                       lay-verify="date" autocomplete="off"/>
                             </div>
                         </div>
 

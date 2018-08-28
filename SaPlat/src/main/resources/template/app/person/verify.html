@@ -18,6 +18,7 @@
             , upload = layui.upload;
         laydate.render({
             elem: document.getElementById('expertGroup.worktime')
+            , max: 0
         });
         laydate.render({
             elem: document.getElementById('expertGroup.birthday')
@@ -214,7 +215,7 @@
 <div class="layui-fluid">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
-        <legend style="font-size: 20px;font-weight: 500;">专家</legend>
+        <legend style="font-size: 20px;font-weight: 500;">申请成为专家</legend>
     </fieldset>
 
     <form class="layui-form layui-form-pane" action="" id="content" method="post">
