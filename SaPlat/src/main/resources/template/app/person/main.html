@@ -26,6 +26,8 @@
             , "affectedGroup.nationality": $('#nationalitySelected').val()
         });
 
+         var identity = '#(person.identity)';
+
         upload.render({
             elem: '#upload'
             , url: '#(ctxPath)/util/uploadFile'
@@ -99,7 +101,6 @@
             return false;
         }).removeClass("layui-hide layui-disabled").prop("disabled", "");
 
-        var identity = '#(person.identity)';
         // if (identity)
         if (identity != null || identity !== "") {
             $('#person\\.identity').val(identity);

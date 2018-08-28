@@ -28,8 +28,12 @@ public class Project extends BaseProject<Project> {
 
     public String getProjectAssTypeName()
     {
-        return this.projectAssType.getName();
+        if(null != projectAssType){
+            return this.projectAssType.getName();
+        }
+        return "";
     }
+
     public Long getFileID() {
         return fileID;
     }

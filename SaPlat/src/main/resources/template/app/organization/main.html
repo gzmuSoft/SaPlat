@@ -193,7 +193,8 @@
         $('#edit').click(function () {
             $(":input[disabled='disabled']").removeClass("layui-disabled").removeProp("disabled");
             $(".layui-btn").removeClass("layui-hide");
-            $("#upload").removeClass("layui-disabled").removeProp("disabled");
+            $("button[name='upload']").removeClass("layui-disabled").removeProp("disabled");
+            document.getElementById("upload").disabled=false;
             $(this).addClass("layui-hide");
             return false;
         });
