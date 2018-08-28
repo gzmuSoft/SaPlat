@@ -70,6 +70,9 @@ public class OrganizationController extends BaseController {
     @JbootrpcService
     private FilesService filesService;
 
+    @JbootrpcService
+    private NotificationService notificationService;
+
 
     /**
      * 跳转注册页面
@@ -270,9 +273,7 @@ public class OrganizationController extends BaseController {
                         .render("proveing.html");
             }
         }
-
     }
-
     /**
      * 跳转认证管理机构填写信息页面
      * flag = 0时未在认证状态，页面不禁用
@@ -294,7 +295,6 @@ public class OrganizationController extends BaseController {
                     .setAttr("flag", 1).render("management.html");
         }
     }
-
     /**
      * 提交认证管理机构数据并进入待审核状态
      */
@@ -302,33 +302,50 @@ public class OrganizationController extends BaseController {
     public void managementProve() {
         User loginUser = AuthUtils.getLoginUser();
         Management model = getBean(Management.class, "management");
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
+        String management = "管理机构";
+        Date date =new Date();
+        model.setCreateTime(date);
+        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Management name = managementService.findByName(model.getName());
         Auth auth;
+        Long roleid = roleService.findByName(management).getId();
         if (name != null) {
             model.setId(name.getId());
-            auth = authService.findByUserAndRole(loginUser, roleService.findByName("管理机构").getId());
+            auth = authService.findByUserAndRole(loginUser, roleid);
         } else {
             auth = new Auth();
         }
-        auth.setRoleId(roleService.findByName("管理机构").getId());
+        auth.setRoleId(roleid);
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(new Date());
-        auth.setType("1");
+        auth.setLastUpdTime(date);
+        auth.setType(TypeStatus.ORGANIZATION);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (managementService.saveOrUpdate(model, auth)) {
+
+        Notification notification = new Notification();
+        notification.setName(management);
+        notification.setSource("/app/organization/management");
+        notification.setContent("申请" + management + "认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(loginUser.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+
+        if (managementService.saveOrUpdate(model, auth, notification)) {
             renderJson(RestResult.buildSuccess("提交审核成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
             throw new BusinessException("认证失败");
         }
     }
-
     /**
      * 取消管理机构认证状态并返回编辑信息
      */
@@ -353,6 +370,76 @@ public class OrganizationController extends BaseController {
                 throw new BusinessException("修改认证状态");
             } else {
                 renderJson(RestResult.buildSuccess());
+            }
+        }
+    }
+
+    public void managementVerify(){
+        int createUserID = getParaToInt("createUserID", 0);
+        int notiId = getParaToInt("notiId", 0);
+        Management model = managementService.findByCreateUserID(createUserID);
+        Notification noti = notificationService.findById(notiId);
+        Long roleid = roleService.findByName(noti.getName()).getId();
+        Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
+        setAttr("notiId", notiId)
+                .setAttr("organization", model.getName())
+                .setAttr("management", model)
+                .setAttr("flag", auth.getStatus())
+                .setAttr("source", noti.getSource())
+                .render("managementVerify.html");
+    }
+
+    public void managementReview(){
+        User loginUser = AuthUtils.getLoginUser();
+        int notiId = getParaToInt("notiId", 0);
+        String verify = getPara("verify", "0");
+        Management model = getBean(Management.class, "management");
+        Date date = new Date();
+        Management name = managementService.findByName(model.getName());
+        Auth auth;
+        if (name != null) {
+            Notification noti = notificationService.findById(notiId);
+            noti.setStatus(1);
+            Long roleid = roleService.findByName(noti.getName()).getId();
+            auth = authService.findByUserIDAndRole(name.getCreateUserID(), roleid);
+            auth.setLastUpdTime(date);
+            auth.setLastUpdUser(loginUser.getName());
+            auth.setStatus(verify);
+            if (verify.equals("2")){
+                auth.setReply("审核成功");
+            }else{
+                auth.setReply("审核失败");
+            }
+
+            name.setLastUpdateUserID(loginUser.getId());
+            if (managementService.saveOrUpdate(name, auth, noti)) {
+                Notification notification = new Notification();
+                notification.setName(noti.getName());
+                notification.setRecModule(loginUser.getName());
+                notification.setSource("/app/organization/management");
+                if (verify.equals("2")){
+                    notification.setContent(noti.getName() + "审核成功");
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleID(roleid);
+                    userRole.setUserID(name.getCreateUserID());
+                    userRoleService.saveOrUpdate(userRole);
+                }else{
+                    notification.setContent(noti.getName() + "审核失败");
+                    userRoleService.deleteByUserId(loginUser.getId());
+                }
+                notification.setReceiverID(name.getCreateUserID().intValue());
+                notification.setCreateUserID(loginUser.getId());
+                notification.setCreateTime(date);
+                notification.setLastUpdateUserID(loginUser.getId());
+                notification.setLastAccessTime(date);
+                notification.setIsEnable(true);
+                notification.setRemark(auth.getType());
+                notification.setStatus(0);
+                notificationService.save(notification);
+                renderJson(RestResult.buildSuccess("审核成功"));
+            } else {
+                renderJson(RestResult.buildError("认证失败"));
+                throw new BusinessException("认证失败");
             }
         }
     }
@@ -387,26 +474,43 @@ public class OrganizationController extends BaseController {
     public void enterpriseProve() {
         User loginUser = AuthUtils.getLoginUser();
         Enterprise model = getBean(Enterprise.class, "enterprise");
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
+        Date date = new Date();
+        model.setCreateTime(date);
+        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
         Enterprise name = enterpriseService.findByName(model.getName());
+        String enterprise = "企业机构";
         Auth auth;
         if (name != null) {
             model.setId(name.getId());
-            auth = authService.findByUserAndRole(loginUser, roleService.findByName("企业机构").getId());
+            auth = authService.findByUserAndRole(loginUser, roleService.findByName(enterprise).getId());
         } else {
             auth = new Auth();
         }
-        auth.setRoleId(roleService.findByName("企业机构").getId());
+        auth.setRoleId(roleService.findByName(enterprise).getId());
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(new Date());
-        auth.setType("1");
+        auth.setLastUpdTime(date);
+        auth.setType(TypeStatus.ORGANIZATION);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (enterpriseService.saveOrUpdate(model, auth)) {
+
+        Notification notification = new Notification();
+        notification.setName(enterprise);
+        notification.setSource("/app/organization/enterprise");
+        notification.setContent("申请" + enterprise + "认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(loginUser.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+
+        if (enterpriseService.saveOrUpdate(model, auth, notification)) {
             renderJson(RestResult.buildSuccess("认证成功"));
             FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
             fileForm.setRecordID(enterpriseService.findByOrgId(loginUser.getUserID()).getId());
@@ -452,6 +556,75 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    public void enterpriseVerify(){
+        int createUserID = getParaToInt("createUserID", 0);
+        int notiId = getParaToInt("notiId", 0);
+        Enterprise model = enterpriseService.findByCreateUserID(createUserID);
+        Notification noti = notificationService.findById(notiId);
+        Long roleid = roleService.findByName(noti.getName()).getId();
+        Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
+        setAttr("notiId", notiId)
+                .setAttr("organization", model.getName())
+                .setAttr("enterprise", model)
+                .setAttr("flag", auth.getStatus())
+                .setAttr("source", noti.getSource())
+                .render("enterpriseVerify.html");
+    }
+
+    public void enterpriseReview(){
+        User loginUser = AuthUtils.getLoginUser();
+        int notiId = getParaToInt("notiId", 0);
+        String verify = getPara("verify", "0");
+        Enterprise model = getBean(Enterprise.class, "enterprise");
+        Date date = new Date();
+        Enterprise name = enterpriseService.findByName(model.getName());
+        Auth auth;
+        if (name != null) {
+            Notification noti = notificationService.findById(notiId);
+            noti.setStatus(1);
+            Long roleid = roleService.findByName(noti.getName()).getId();
+            auth = authService.findByUserIDAndRole(name.getCreateUserID(), roleid);
+            auth.setLastUpdTime(date);
+            auth.setLastUpdUser(loginUser.getName());
+            auth.setStatus(verify);
+            if (verify.equals("2")){
+                auth.setReply("审核成功");
+            }else{
+                auth.setReply("审核失败");
+            }
+            name.setLastUpdateUserID(loginUser.getUserID());
+            if (enterpriseService.saveOrUpdate(name, auth, noti)) {
+                Notification notification = new Notification();
+                notification.setName(noti.getName());
+                notification.setRecModule(loginUser.getName());
+                notification.setSource("/app/organization/enterprise");
+                if (verify.equals("2")){
+                    notification.setContent(noti.getName() + "审核成功");
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleID(roleid);
+                    userRole.setUserID(name.getCreateUserID());
+                    userRoleService.saveOrUpdate(userRole);
+                }else{
+                    notification.setContent(noti.getName() + "审核失败");
+                    userRoleService.deleteByUserId(loginUser.getId());
+                }
+                notification.setReceiverID(name.getCreateUserID().intValue());
+                notification.setCreateUserID(loginUser.getId());
+                notification.setCreateTime(date);
+                notification.setLastUpdateUserID(loginUser.getId());
+                notification.setLastAccessTime(date);
+                notification.setIsEnable(true);
+                notification.setRemark(auth.getType());
+                notification.setStatus(0);
+                notificationService.save(notification);
+                renderJson(RestResult.buildSuccess("提交审核成功"));
+            } else {
+                renderJson(RestResult.buildError("认证失败"));
+                throw new BusinessException("认证失败");
+            }
+        }
+    }
+
     /**
      * 跳转认证服务机构信息填写页面
      * flag = 0时未在认证状态，页面不禁用
@@ -482,8 +655,10 @@ public class OrganizationController extends BaseController {
     public void facAgencyProve() {
         User loginUser = AuthUtils.getLoginUser();
         FacAgency model = getBean(FacAgency.class, "facAgency");
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
+        String facAgency = "服务机构";
+        Date date = new Date();
+        model.setCreateTime(date);
+        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
@@ -491,17 +666,31 @@ public class OrganizationController extends BaseController {
         Auth auth;
         if (name != null) {
             model.setId(name.getId());
-            auth = authService.findByUserAndRole(loginUser, roleService.findByName("服务机构").getId());
+            auth = authService.findByUserAndRole(loginUser, roleService.findByName(facAgency).getId());
         } else {
             auth = new Auth();
         }
-        auth.setRoleId(roleService.findByName("服务机构").getId());
+        auth.setRoleId(roleService.findByName(facAgency).getId());
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(new Date());
-        auth.setType("1");
+        auth.setLastUpdTime(date);
+        auth.setType(TypeStatus.ORGANIZATION);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (facAgencyService.saveOrUpdate(model, auth)) {
+
+        Notification notification = new Notification();
+        notification.setName(facAgency);
+        notification.setSource("/app/organization/facAgency");
+        notification.setContent("申请" + facAgency + "认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(loginUser.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+        if (facAgencyService.saveOrUpdate(model, auth, notification)) {
             renderJson(RestResult.buildSuccess("认证成功"));
             Long recordId = loginUser.getUserID();
             FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
@@ -558,7 +747,74 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    public void facAgencyVerify(){
+        int createUserID = getParaToInt("createUserID", 0);
+        int notiId = getParaToInt("notiId", 0);
+        FacAgency model = facAgencyService.findByCreateUserID(createUserID);
+        Notification noti = notificationService.findById(notiId);
+        Long roleid = roleService.findByName(noti.getName()).getId();
+        Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
+        setAttr("notiId", notiId)
+                .setAttr("organization", model.getName())
+                .setAttr("facAgency", model)
+                .setAttr("flag", auth.getStatus())
+                .setAttr("source", noti.getSource())
+                .render("facAgencyVerify.html");
+    }
 
+    public void facAgencyReview(){
+        User loginUser = AuthUtils.getLoginUser();
+        int notiId = getParaToInt("notiId", 0);
+        String verify = getPara("verify", "0");
+        FacAgency model = getBean(FacAgency.class, "facAgency");
+        Date date = new Date();
+        FacAgency name = facAgencyService.findByName(model.getName());
+        Auth auth;
+        if (name != null) {
+            Notification noti = notificationService.findById(notiId);
+            noti.setStatus(1);
+            Long roleid = roleService.findByName(noti.getName()).getId();
+            auth = authService.findByUserIDAndRole(name.getCreateUserID(), roleid);
+            auth.setLastUpdTime(date);
+            auth.setLastUpdUser(loginUser.getName());
+            auth.setStatus(verify);
+            if (verify.equals("2")){
+                auth.setReply("审核成功");
+            }else{
+                auth.setReply("审核失败");
+            }
+            name.setLastUpdateUserID(loginUser.getId());
+            if (facAgencyService.saveOrUpdate(name, auth, noti)) {
+                Notification notification = new Notification();
+                notification.setName(noti.getName());
+                notification.setRecModule(loginUser.getName());
+                notification.setSource("/app/organization/facAgency");
+                if (verify.equals("2")){
+                    notification.setContent(noti.getName() + "审核成功");
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleID(roleid);
+                    userRole.setUserID(name.getCreateUserID());
+                    userRoleService.saveOrUpdate(userRole);
+                }else{
+                    notification.setContent(noti.getName() + "审核失败");
+                    userRoleService.deleteByUserId(loginUser.getId());
+                }
+                notification.setReceiverID(name.getCreateUserID().intValue());
+                notification.setCreateUserID(loginUser.getId());
+                notification.setCreateTime(date);
+                notification.setLastUpdateUserID(loginUser.getId());
+                notification.setLastAccessTime(date);
+                notification.setIsEnable(true);
+                notification.setRemark(auth.getType());
+                notification.setStatus(0);
+                notificationService.save(notification);
+                renderJson(RestResult.buildSuccess("审核成功"));
+            } else {
+                renderJson(RestResult.buildError("认证失败"));
+                throw new BusinessException("认证失败");
+            }
+        }
+    }
     /**
      * 跳转认证审查团体信息填写页面
      * flag = 0时未在认证状态，页面不禁用
@@ -589,8 +845,10 @@ public class OrganizationController extends BaseController {
     public void profGroupProve() {
         User loginUser = AuthUtils.getLoginUser();
         ProfGroup model = getBean(ProfGroup.class, "profGroup");
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
+        String profGroup = "专业团体";
+        Date date = new Date();
+        model.setCreateTime(date);
+        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
@@ -598,17 +856,31 @@ public class OrganizationController extends BaseController {
         Auth auth;
         if (name != null) {
             model.setId(name.getId());
-            auth = authService.findByUserAndRole(loginUser, roleService.findByName("专业团体").getId());
+            auth = authService.findByUserAndRole(loginUser, roleService.findByName(profGroup).getId());
         } else {
             auth = new Auth();
         }
-        auth.setRoleId(roleService.findByName("专业团体").getId());
+        auth.setRoleId(roleService.findByName(profGroup).getId());
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(new Date());
-        auth.setType("1");
+        auth.setLastUpdTime(date);
+        auth.setType(TypeStatus.ORGANIZATION);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
-        if (profGroupService.saveOrUpdate(model, auth)) {
+
+        Notification notification = new Notification();
+        notification.setName(profGroup);
+        notification.setSource("/app/organization/profGroup");
+        notification.setContent("申请" + profGroup + "认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(loginUser.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+        if (profGroupService.saveOrUpdate(model, auth, notification)) {
             renderJson(RestResult.buildSuccess("认证成功"));
             FileForm fileForm = fileFormService.findById(getParaToLong("fileFromID"));
             fileForm.setRecordID(profGroupService.findByOrgId(loginUser.getUserID()).getId());
@@ -654,6 +926,75 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    public void profGroupVerify(){
+        int createUserID = getParaToInt("createUserID", 0);
+        int notiId = getParaToInt("notiId", 0);
+        ProfGroup model = profGroupService.findByCreateUserID(createUserID);
+        Notification noti = notificationService.findById(notiId);
+        Long roleid = roleService.findByName(noti.getName()).getId();
+        Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
+        setAttr("notiId", notiId)
+                .setAttr("organization", model.getName())
+                .setAttr("profGroup", model)
+                .setAttr("flag", auth.getStatus())
+                .setAttr("source", noti.getSource())
+                .render("profGroupVerify.html");
+    }
+
+    public void profGroupReview(){
+        User loginUser = AuthUtils.getLoginUser();
+        int notiId = getParaToInt("notiId", 0);
+        String verify = getPara("verify", "0");
+        ProfGroup model = getBean(ProfGroup.class, "profGroup");
+        Date date = new Date();
+        ProfGroup name = profGroupService.findByName(model.getName());
+        Auth auth;
+        if (name != null) {
+            Notification noti = notificationService.findById(notiId);
+            noti.setStatus(1);
+            Long roleid = roleService.findByName(noti.getName()).getId();
+            auth = authService.findByUserIDAndRole(name.getCreateUserID(), roleid);
+            auth.setLastUpdTime(date);
+            auth.setLastUpdUser(loginUser.getName());
+            auth.setStatus(verify);
+            if (verify.equals("2")){
+                auth.setReply("审核成功");
+            }else{
+                auth.setReply("审核失败");
+            }
+            name.setLastUpdateUserID(loginUser.getId());
+            if (profGroupService.saveOrUpdate(name, auth, noti)) {
+                Notification notification = new Notification();
+                notification.setName(noti.getName());
+                notification.setRecModule(loginUser.getName());
+                notification.setSource("/app/organization/profGroup");
+                if (verify.equals("2")){
+                    notification.setContent(noti.getName() + "审核成功");
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleID(roleid);
+                    userRole.setUserID(name.getCreateUserID());
+                    userRoleService.saveOrUpdate(userRole);
+                }else{
+                    notification.setContent(noti.getName() + "审核失败");
+                    userRoleService.deleteByUserId(loginUser.getId());
+                }
+                notification.setReceiverID(name.getCreateUserID().intValue());
+                notification.setCreateUserID(loginUser.getId());
+                notification.setCreateTime(date);
+                notification.setLastUpdateUserID(loginUser.getId());
+                notification.setLastAccessTime(date);
+                notification.setIsEnable(true);
+                notification.setRemark(auth.getType());
+                notification.setStatus(0);
+                notificationService.save(notification);
+                renderJson(RestResult.buildSuccess("审核成功"));
+            } else {
+                renderJson(RestResult.buildError("认证失败"));
+                throw new BusinessException("认证失败");
+            }
+        }
+    }
+
     /**
      * 跳转认证审查团体信息填写页面
      * flag = 0时未在认证状态，页面不禁用
@@ -683,8 +1024,10 @@ public class OrganizationController extends BaseController {
     public void reviewGroupProve() {
         User loginUser = AuthUtils.getLoginUser();
         ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
-        model.setCreateTime(new Date());
-        model.setLastAccessTime(new Date());
+        String reviewGroup = "审查团体";
+        Date date = new Date();
+        model.setCreateTime(date);
+        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
@@ -692,17 +1035,31 @@ public class OrganizationController extends BaseController {
         Auth auth;
         if (name != null) {
             model.setId(name.getId());
-            auth = authService.findByUserAndRole(loginUser, roleService.findByName("审查团体").getId());
+            auth = authService.findByUserAndRole(loginUser, roleService.findByName(reviewGroup).getId());
         } else {
             auth = new Auth();
         }
-        auth.setRoleId(roleService.findByName("审查团体").getId());
+        auth.setRoleId(roleService.findByName(reviewGroup).getId());
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(new Date());
+        auth.setLastUpdTime(date);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
-        auth.setType("1");
-        if (reviewGroupService.saveOrUpdate(model, auth)) {
+        auth.setType(TypeStatus.ORGANIZATION);
+
+        Notification notification = new Notification();
+        notification.setName(reviewGroup);
+        notification.setSource("/app/organization/reviewGroup");
+        notification.setContent("申请" + reviewGroup + "认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(loginUser.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+        if (reviewGroupService.saveOrUpdate(model, auth, notification)) {
             renderJson(RestResult.buildSuccess("认证成功"));
         } else {
             renderJson(RestResult.buildError("认证失败"));
@@ -738,6 +1095,75 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    public void reviewGroupVerify(){
+        int createUserID = getParaToInt("createUserID", 0);
+        int notiId = getParaToInt("notiId", 0);
+        ReviewGroup model = reviewGroupService.findByCreateUserID(createUserID);
+        Notification noti = notificationService.findById(notiId);
+        Long roleid = roleService.findByName(noti.getName()).getId();
+        Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
+        setAttr("notiId", notiId)
+                .setAttr("organization", model.getName())
+                .setAttr("reviewGroup", model)
+                .setAttr("flag", auth.getStatus())
+                .setAttr("source", noti.getSource())
+                .render("reviewGroupVerify.html");
+    }
+
+    public void reviewGroupReview(){
+        User loginUser = AuthUtils.getLoginUser();
+        int notiId = getParaToInt("notiId", 0);
+        String verify = getPara("verify", "0");
+        ReviewGroup model = getBean(ReviewGroup.class, "reviewGroup");
+        Date date = new Date();
+        ReviewGroup name = reviewGroupService.findByName(model.getName());
+        Auth auth;
+        if (name != null) {
+            Notification noti = notificationService.findById(notiId);
+            noti.setStatus(1);
+            Long roleid = roleService.findByName(noti.getName()).getId();
+            auth = authService.findByUserIDAndRole(name.getCreateUserID(), roleid);
+            auth.setLastUpdTime(date);
+            auth.setLastUpdUser(loginUser.getName());
+            auth.setStatus(verify);
+            if (verify.equals("2")){
+                auth.setReply("审核成功");
+            }else{
+                auth.setReply("审核失败");
+            }
+            name.setLastUpdateUserID(loginUser.getId());
+            if (reviewGroupService.saveOrUpdate(name, auth, noti)) {
+                Notification notification = new Notification();
+                notification.setName(noti.getName());
+                notification.setRecModule(loginUser.getName());
+                notification.setSource("/app/organization/reviewGroup");
+                if (verify.equals("2")){
+                    notification.setContent(noti.getName() + "审核成功");
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleID(roleid);
+                    userRole.setUserID(name.getCreateUserID());
+                    userRoleService.saveOrUpdate(userRole);
+                }else{
+                    notification.setContent(noti.getName() + "审核失败");
+                    userRoleService.deleteByUserId(loginUser.getId());
+                }
+                notification.setReceiverID(name.getCreateUserID().intValue());
+                notification.setCreateUserID(loginUser.getId());
+                notification.setCreateTime(date);
+                notification.setLastUpdateUserID(loginUser.getId());
+                notification.setLastAccessTime(date);
+                notification.setIsEnable(true);
+                notification.setRemark(auth.getType());
+                notification.setStatus(0);
+                notificationService.save(notification);
+                renderJson(RestResult.buildSuccess("提交审核成功"));
+            } else {
+                renderJson(RestResult.buildError("认证失败"));
+                throw new BusinessException("认证失败");
+            }
+        }
+    }
+
     /**
      * 立项资格申请
      */
@@ -754,7 +1180,7 @@ public class OrganizationController extends BaseController {
         authList.forEach(auth -> {
             for (int i = 0; i < roleList.size(); i++) {
                 Role role = roleList.get(i);
-                if (role.getId().equals(auth.getRoleId())) {
+                if (role.getId().equals(auth.getRoleId()) && (!auth.getStatus().equals("0"))) {
                     auth.setRemark(role.getName());
                     roleList.remove(i);
                 }
@@ -776,7 +1202,8 @@ public class OrganizationController extends BaseController {
 
         List<UserRole> userRole = userRoleService.findListByUserId(user.getId());
         if (userRole.size() != 1) {
-            setAttr("noVerify", noVerify).setAttr("flag", true)
+            setAttr("noVerify", noVerify)
+                    .setAttr("flag", true)
                     .setAttr("verify", verify)
                     .setAttr("verifying", verifying)
                     .setAttr("roleList", roleList)
@@ -810,7 +1237,31 @@ public class OrganizationController extends BaseController {
         if (!authService.saveOrUpdate(auth)) {
             renderJson(RestResult.buildError("申请失败"));
             throw new BusinessException("申请失败");
+        }else{
+            Notification notification = new Notification();
+            notification.setName(role.getName());
+            notification.setRecModule(user.getName());
+            notification.setSource("/app/organization/projectVerify?roleId=" + id);
+            notification.setReceiverID(1);
+            notification.setContent("申请" + role.getName() + "认证");
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(new Date());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(new Date());
+            notification.setIsEnable(true);
+            notification.setRemark(auth.getType());
+            notification.setStatus(0);
+            notificationService.save(notification);
         }
         renderJson(RestResult.buildSuccess());
+    }
+
+    public void projectVerify() {
+        Long roleId = getParaToLong("roleId");
+        Long notiId = getParaToLong("notiId");
+        Notification notification = notificationService.findById(notiId);
+        setAttr("roleId", roleId)
+                .setAttr("notification", notification)
+                .render("verify.html");
     }
 }

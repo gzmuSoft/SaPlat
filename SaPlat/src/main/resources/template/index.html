@@ -152,7 +152,8 @@
         vipNav.top_left('#(ctxPath)/system/res/menuTop', 'side-top-left', false);
 
         $("#msg").click(function () {
-            pop_show('查看通知信息', '#(ctxPath)/view', '1000', '600', function () {
+            //window.location.href = '#(ctxPath)/view';
+            pop_show('查看通知信息', '#(ctxPath)/view', '1000', '900', function () {
                 reloadMessage();
             });
         });

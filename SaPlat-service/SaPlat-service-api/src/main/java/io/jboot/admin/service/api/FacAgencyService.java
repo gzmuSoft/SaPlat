@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.FacAgency;
+import io.jboot.admin.service.entity.model.Notification;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public interface FacAgencyService  {
     public FacAgency findById(Object id);
 
     public FacAgency findByOrgId(Long orgId);
+    public FacAgency findByCreateUserID(Object createUserID);
 
     /**
      * 关联组织和管理机构
@@ -104,7 +106,7 @@ public interface FacAgencyService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(FacAgency model, Auth auth);
-
+    public boolean saveOrUpdate(FacAgency model, Auth auth, Notification notification);
 
     /**
      * update data model

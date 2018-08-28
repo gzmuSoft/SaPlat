@@ -62,6 +62,11 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
     }
 
     @Override
+    public Auth findByUserIDAndRole(Object id, long role) {
+        return DAO.findFirstByColumns(Columns.create("userId", id).eq("roleId", role));
+    }
+
+    @Override
     public List<Auth> findByUserAndType(User user, String typeStatus) {
         Columns columns = Columns.create();
         columns.eq("userId", user.getId());
@@ -129,7 +134,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             Role role1 = roleService.findById(model.getRoleId());
             Notification notification = new Notification();
             notification.setName("认证结果通知 ");
-            notification.setSource("/app/project/invite");
+            notification.setSource("/app/auth/invite");
             if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
                 notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
             } else {

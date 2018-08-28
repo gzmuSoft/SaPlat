@@ -1,0 +1,238 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
+#end
+
+
+#define content()
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">
+        <legend style="font-size: 20px;font-weight: 500;">专业团体</legend>
+    </fieldset>
+
+    <form id="person" class="layui-form" action="">
+        <div class="layui-form-pane">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="organization"style="width: 180px">组织机构名称</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="organization" name="organization" placeholder="#(organization)"value="#(organization)"
+                           class="layui-input " style="width: 500px" disabled/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.name"style="width: 180px">专业团体名称</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization)"
+                           class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.scope"style="width: 180px">服务范围</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="profGroup.scope" name="profGroup.scope"
+                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.performance"style="width: 180px">服务业绩</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="profGroup.performance" name="profGroup.performance"
+                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" for="profGroup.resume" style="width: 680px;">
+                    <h style="margin: 0 50px">人员简历</h>
+                </label>
+                <div class="layui-input-block">
+					<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""
+                              class="layui-textarea"
+                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(profGroup.resume)</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.content"style="width: 180px">专业内容</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="profGroup.content" name="profGroup.content"
+                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.capital" style="width: 180px">注册资本</label>
+                <div class="layui-input-inline" >
+                    <input type="number" id="profGroup.capital" name="profGroup.capital" value="#(profGroup.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
+                </div>
+                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px">管理员姓名</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="profGroup.administrator" name="profGroup.administrator"
+                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>管理员身份证照片</label>
+                <div class="layui-input-block layui-upload" style="align-content: center;">
+                    <button type="button" class="layui-btn" id="upload" style="margin: 0 100px"><i
+                            class="layui-icon"></i>上传文件
+                    </button>
+                    <button type="button" class="layui-btn layui-hide " id="see">查看</button>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.contact" style="width: 180px">管理员联系方式</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="tel" id="profGroup.contact" name="profGroup.contact"
+                           value="#(profGroup.contact)" class="layui-input" style="width: 500px" lay-verify="required|phone"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label" for="source"style="width: 180px">部门资源</label>
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <input type="text" id="source" name="source"
+                           value="#(source)" class="layui-input" style="width: 500px" required/>
+                </div>
+            </div>
+
+            <!--隐藏flag作为界面是否禁用的方法-->
+            <input type="text" id="flag" name="flag"
+                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+            <input type="text" id="notiId" name="notiId"
+                   class="layui-input layui-disabled layui-hide" value="#(notiId)" required/>
+
+            <br>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin: 0 180px">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="pass" id="pass">通过</button>
+                    <button type="button" class="layui-btn layui-btn-warm" lay-submit lay-filter="fail" id="fail">不通过</button>
+                    <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+#end
+
+#define js()
+<script type="text/javascript">
+    var fileFromID, fileID;
+    layui.use(['form', 'layer', 'upload'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form
+            , upload = layui.upload;
+
+        upload.render({
+            elem: '#upload'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf'
+            , data: {
+                description: "管理员身份证照片"
+            }, before: function (res) {
+                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
+                $('body').prepend(bg);
+            }, done: function (res) {
+                if (res.code == 0) {
+                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=profGroup&fieldName=管理员身份证照片', function (data) {
+                        $('.loading-bg').remove();
+                        fileFromID = data.fileFromID;
+                        layer.msg("上传成功");
+                        fileID = res.data.fileId;
+                        $('#see').removeClass('layui-hide');
+                    });
+                } else if (res.code == 1) {
+                    $('.loading-bg').remove();
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
+                }
+            }
+            , error: function (index, upload) {
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
+
+        form.verify({
+            mLength: [
+                /^[\S]{0,11}$/
+                ,'注册资金不能大于11位'
+            ]
+        });
+
+        form.on('submit(pass)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)'+$("#source").val()+'Review?verify=2',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    history.go(-1);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+        form.on('submit(fail)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)'+$("#source").val()+'Review?verify=1',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    history.go(-1);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+    });
+
+    if ($('#flag').val() == 2) {
+        $("#pass").addClass("layui-disabled");
+        $("#pass").attr("disabled", "disabled");
+    }else if($('#flag').val() == 1){
+        $("#fail").addClass("layui-disabled");
+        $("#fail").attr("disabled", "disabled");
+    }
+
+    $('#back').click(function () {
+        history.back();
+    });
+    $('#reset').click(function () {
+        history.back();
+    });
+    $("#see").click(function () {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
+        });
+    });
+</script>
+#end

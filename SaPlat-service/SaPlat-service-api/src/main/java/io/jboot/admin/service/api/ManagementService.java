@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Management;
+import io.jboot.admin.service.entity.model.Notification;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public interface ManagementService  {
     public Management findById(Object id);
 
     public Management findByOrgId(Long orgId);
+    public Management findByCreateUserID(Object userId);
     /**
      * find all model
      *
@@ -96,6 +98,7 @@ public interface ManagementService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(Management model, Auth auth);
+    public boolean saveOrUpdate(Management model, Auth auth, Notification notification);
 
 
     public Page<Management> findPage(Management management, int pageNumber, int pageSize);
