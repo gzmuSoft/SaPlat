@@ -119,10 +119,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.start"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
+                <label class="layui-form-label" for="facAgencyStart"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="date" id="facAgency.start" name="facAgency.start"
-                           value="#(facAgency.start)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
+                    <input type="text" id="facAgencyStart" name="facAgency.start"
+                           value="#(facAgency.start)" class="layui-input" style="width: 500px"  required lay-verify="required"/>
                 </div>
             </div>
 
@@ -201,12 +201,17 @@
 #define js()
 <script type="text/javascript">
     var fileID, fileID1, fileFromID, fileFromID1;
-    layui.use(['form', 'layer', 'upload','element'], function () {
+    layui.use(['form', 'layer', 'laydate', 'upload', 'element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
             , element = layui.element
+            , laydate = layui.laydate
             , upload = layui.upload;
+
+        laydate.render({
+            elem: '#facAgencyStart' //指定元素
+        });
 
         //创建监听函数
          var xhrOnProgress=function(fun) {
@@ -254,8 +259,6 @@
             , data: {
                 description: "服务机构维稳备案文件照片"
             }, before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 $('#upload-progress').addClass('layui-hide');
@@ -293,8 +296,6 @@
                 element.progress('upload-progress1', value+'%')//设置页面进度条
             }
             , before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress1').removeClass('layui-hide');
             }, done: function (res) {
                 $('#upload-progress1').addClass('layui-hide');
