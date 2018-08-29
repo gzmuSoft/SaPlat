@@ -93,7 +93,7 @@ public class ProjectUndertakeController extends BaseController {
      */
     public void projectList() {
         User user = AuthUtils.getLoginUser();
-        FacAgency facAgency = facAgencyService.findByOrgId(user.getId());//找到当前用户所属组织机构对应的服务机构信息
+        FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
         if (facAgency != null) {
             int pageNumber = getParaToInt("pageNumber", 1);
             int pageSize = getParaToInt("pageSize", 30);
@@ -129,6 +129,9 @@ public class ProjectUndertakeController extends BaseController {
                 });
             }
             renderJson(new DataTable<Project>(page));
+        }
+        else{
+            renderJson(new DataTable<Project>(null));
         }
     }
 

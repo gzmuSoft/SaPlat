@@ -21,11 +21,11 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-140'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '申请人', minWidth: 150,sort:true}
-                , {field: 'roleId', title: '申请角色', minWidth: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")'}
+                , {field: 'roleId', title: '申请角色权限', minWidth: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")'}
                 , {field: 'reply', title: '回复信息', minWidth: 150}
                 , {field: 'lastUpdTime', title: '最后更新时间', width: 150,sort:true}
                 , {field: 'status', title: '状态', width: 100, sort:true,
