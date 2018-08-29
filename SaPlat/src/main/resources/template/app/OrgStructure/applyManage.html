@@ -11,7 +11,7 @@
 #define js()
 <script type="text/javascript">
 
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer','form'], function () {
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
@@ -35,8 +35,8 @@
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
+            }                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+
             , page: true
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30
