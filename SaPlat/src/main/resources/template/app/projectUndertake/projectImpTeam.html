@@ -166,7 +166,7 @@
                 <div class="layui-input-inline">
                     <label for="expertGroupIDs"></label><select lay-filter="clickOption31" id="expertGroupIDs"
                                                                 name="expertGroupIDs" lay-search>
-                    #for(List : expertGroups)
+                    #for(List : persons)
                     <option value="#(List.id)" name="#(List.name)">#(List.name)</option>
                     #end
                 </select>
@@ -467,16 +467,7 @@
                     $.each(data.persons, function (i, item) {
                         optionString += '<option value= "' + item.id + '">' + item.name + '</option>';
                     });
-                    $.each(data.expertGroups, function (i, item) {
-                        string += '<option value= "' + item.id + '">' + item.name + '</option>';
-                    });
-                    if (string !== "" && flag) {
-                        $(id).html('<option value=""></option>' + string);
-                    } else if (flag && string === "") {
-                        $(id).html('<option value=""></option>');
-                    } else {
-                        $(id).html('<option value=""></option>' + optionString);
-                    }
+                    $(id).html('<option value=""></option>' + optionString);
                     form.render('select'); //这个很重要
                 }
             );
