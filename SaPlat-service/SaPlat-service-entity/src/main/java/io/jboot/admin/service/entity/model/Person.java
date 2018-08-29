@@ -27,6 +27,9 @@ public class Person extends BasePerson<Person> {
     }
 
     public String getUserName() {
-        return user.getName();
+        if(null != user) {
+            return user.getName();
+        }
+        return "";
     }
 }

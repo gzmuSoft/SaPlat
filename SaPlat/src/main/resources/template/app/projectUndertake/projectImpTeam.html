@@ -621,7 +621,7 @@
             elem: '.upFile'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            , exts: 'pdf'
+            , exts: 'pdf|png|jpeg|jpg'
             ,xhr:xhrOnProgress
             ,progress:function(value){//上传进度回调 value进度值
                 element.progress('upload-progress', value+'%')//设置页面进度条

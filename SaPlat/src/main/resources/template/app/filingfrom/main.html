@@ -119,7 +119,7 @@
             //,multiple: true
             , bindAction: '#upload'
             , accept: 'file'
-            , exts: 'doc|docx|pdf'
+            , exts: 'doc|docx|pdf|png|jpeg|jpg'
             , data: {description: "审定报告", fileid: fileid}
             ,xhr:xhrOnProgress
             ,progress:function(value){//上传进度回调 value进度值
@@ -161,7 +161,7 @@
             elem: '#update'
             , url: '#(ctxPath)/app/filingfrom/updateFile'
             , accept: 'file'
-            , exts: 'doc|docx|pdf'
+            , exts: 'doc|docx|pdf|png|jpeg|jpg'
             , data: {description: "审定报告", fileid: fileid}
             ,xhr:xhrOnProgress
             ,progress:function(value){//上传进度回调 value进度值

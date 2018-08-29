@@ -16,6 +16,7 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.support.auth.LoginAuth;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.authz.annotation.Logical;
@@ -343,14 +344,16 @@ public class ProjectUndertakeController extends BaseController {
         }
         Project project = projectService.findById(id);//点击的当前项目
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
-        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<OrgStructure> orgStructures = new ArrayList<>();
-        for (StructPersonLink structPersonLink : structPersonLinks) {
-            string.append(structPersonLink.getStructID());
-        }
-        for (int i = 0; i < sub(string.toString()).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
-        }
+        User user = AuthUtils.getLoginUser();
+        Organization org = organizationService.findById(user.getUserID());
+        //List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
+        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+//        for (StructPersonLink structPersonLink : structPersonLinks) {
+//            string.append(structPersonLink.getStructID());
+//        }
+//        for (int i = 0; i < sub(string.toString()).length(); i++) {
+//            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
+//        }
         if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }
