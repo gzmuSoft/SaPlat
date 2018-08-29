@@ -14,6 +14,7 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -50,4 +51,13 @@ public class OrgStructureServiceImpl extends JbootServiceBase<OrgStructure> impl
         Page<Record> page = Db.paginate(pageNumber,pageSize,sqlPara);
         return page;
     }
+
+    @Override
+    public List<OrgStructure> findByOrgIdAndType(Object orgId, int orgType){
+        Columns columns = Columns.create();
+        columns.eq("orgId",orgId);
+        columns.eq("orgType",orgType);
+        return DAO.findListByColumns(columns);
+    }
+
 }
