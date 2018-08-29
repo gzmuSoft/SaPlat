@@ -88,7 +88,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '725', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '685', function () {
                 });
             } else if (obj.event === 'build') {
                 window.location.href = '#(ctxPath)/app/project/projectMessage?id=' + data.id;

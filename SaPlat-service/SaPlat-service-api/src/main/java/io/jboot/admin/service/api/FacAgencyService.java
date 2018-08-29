@@ -40,11 +40,11 @@ public interface FacAgencyService  {
     public Page<FacAgency> findPage(FacAgency model, int pageNumber, int pageSize);
 
     /**
-     * 分页查询 服务机构 信息
+     * 分页查询 指定服务机构之外的所有服务机构 信息
      *
      * @return 页
      */
-    public Page<FacAgency> findPage(long id,int pageNumber, int pageSize);
+    public Page<FacAgency> findPageExcludeByOrgID(long orgID,int pageNumber, int pageSize);
 
     /**
      * 根据名称查询 项目阶段 信息

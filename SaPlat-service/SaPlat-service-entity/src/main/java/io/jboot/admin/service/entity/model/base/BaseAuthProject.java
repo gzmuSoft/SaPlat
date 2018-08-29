@@ -49,6 +49,14 @@ public abstract class BaseAuthProject<M extends BaseAuthProject<M>> extends Jboo
 		return getStr("reply");
 	}
 
+	public void setCreateTime(java.util.Date createTime) {
+		set("createTime", createTime);
+	}
+
+	public java.util.Date getCreateTime() {
+		return get("createTime");
+	}
+
 	public void setLastUpdTime(java.util.Date lastUpdTime) {
 		set("lastUpdTime", lastUpdTime);
 	}

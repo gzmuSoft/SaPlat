@@ -81,12 +81,21 @@ public interface ProjectUndertakeService {
     public Page<ProjectUndertake> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
-     * 通过项目id和创建用户id
-     * @param id
-     * @param userId
+     * 通过创建项目的用户编号获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
+     * @param buildProjectUserID 创建项目的用户编号
+     * @param pageNumber 页码
+     * @param pageSize 分页大小
      * @return
      */
-    public ProjectUndertake findByProjectIdAndCreateUserID(Long id, Long userId);
+    public Page<ProjectUndertake> findPageOfApplyIn(Long buildProjectUserID, int pageNumber, int pageSize);
+
+    /**
+     * 通过项目id和创建用户id
+     * @param id
+     * @param facAgencyID
+     * @return
+     */
+    public ProjectUndertake findByProjectIdAndFacAgencyID(Long id, Long facAgencyID);
 
     /**
      * 通过项目编号和服务机构编号查询项目承接

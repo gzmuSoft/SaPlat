@@ -27,7 +27,8 @@ import java.util.List;
 public class ProjectServiceImpl extends JbootServiceBase<Project> implements ProjectService, SaPlatService<Project> {
 
     ProjectAssTypeServiceImpl projectAssTypeService = new ProjectAssTypeServiceImpl();
-
+    UserServiceImpl userService = new UserServiceImpl();
+    OrganizationServiceImpl organizationService = new OrganizationServiceImpl();
     /**
      * 装配单个实体对象的数据
      * @param model
@@ -37,6 +38,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public Project fitModel(Project model){
         if(null != model && model.getPaTypeID()>0) {
             model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+            User user = userService.findById(model.getUserId());
+            if(user != null) {
+                model.setBuildUserName(user.getName());
+                model.setBuildOrgName(organizationService.findById(user.getUserID()).getName());
+            }
         }
         return model;
     }

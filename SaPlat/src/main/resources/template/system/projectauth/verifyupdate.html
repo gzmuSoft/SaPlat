@@ -15,6 +15,10 @@
             , layer = layui.layer
             , $ = layui.jquery;
 
+        form.val("verifyForm", {
+            "auth.reply": "资料完善，审核通过"
+        });
+
         form.on('submit(sub)', function (data) {
 
             util.sendAjax({
@@ -35,20 +39,20 @@
 
 #define content()
 <div class="x-body">
-    <form id="addForm" class="layui-form" action="">
+    <form id="addForm" class="layui-form" lay-filter="verifyForm" action="">
         <input type="hidden" name="auth.id" value="#(auth.id)">
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>回复信息</label>
             <div class="layui-input-block">
                 <input type="text" name="auth.reply" placeholder="回复信息" class="layui-input" value="#(auth.reply)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off"/>
+                       required lay-verify="required" autocomplete="off"/>
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="auth.status" lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required">
+                <input type="checkbox" name="auth.status" lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required" checked>
             </div>
         </div>
 

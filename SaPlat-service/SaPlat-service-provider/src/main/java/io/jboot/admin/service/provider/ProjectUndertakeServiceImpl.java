@@ -65,11 +65,13 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
      * @return
      */
     public ProjectUndertake fitModel(ProjectUndertake model){
-        if(model.getProjectID() > 0) {
-            model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
-        }
-        if(model.getFacAgencyID() > 0){
-            model.setFacAgency(faService.findByOrgId(model.getFacAgencyID()));
+        if(model != null) {
+            if (model.getProjectID() > 0) {
+                model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
+            }
+            if (model.getFacAgencyID() > 0) {
+                model.setFacAgency(faService.findById(model.getFacAgencyID()));
+            }
         }
         return model;
     }
@@ -115,20 +117,20 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
         }
         if (projectUndertake.getCreateUserID() != null) {
-            columns.like("createUserID", "%" + projectUndertake.getCreateUserID() + "%");
+            columns.eq("createUserID", projectUndertake.getCreateUserID());
         }
         if (projectUndertake.getFacAgencyID() != null) {
-            columns.like("facAgencyID", "%" + projectUndertake.getFacAgencyID() + "%");
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
 
     }
 
     @Override
-    public ProjectUndertake findByProjectIdAndCreateUserID(Long id, Long userId) {
+    public ProjectUndertake findByProjectIdAndFacAgencyID(Long id, Long facAgencyID) {
         Columns columns = Columns.create();
         columns.eq("projectID", id);
-        columns.eq("createUserID", userId);
+        columns.eq("facAgencyID", facAgencyID);
         return fitModel(DAO.findFirstByColumns(columns));
     }
 
@@ -209,6 +211,15 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             c = Kv.by("ID", projectUndertake.getCreateUserID());
             sqlPara = Db.getSqlPara("app-project.project-self", c);
         }
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+    }
+
+    @Override
+    public Page<ProjectUndertake> findPageOfApplyIn(Long buildProjectUserID, int pageNumber, int pageSize) {
+        Kv c = null;
+        SqlPara sqlPara = null;
+        c = Kv.by("buildProjectUserID", buildProjectUserID);
+        sqlPara = Db.getSqlPara("app-project.project-undertake-ApplyIn", c);
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 }
