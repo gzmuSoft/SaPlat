@@ -429,21 +429,30 @@ public class ProjectUndertakeController extends BaseController {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
         List<ExpertGroup> expertGroups = new ArrayList<>();
         List<Person> persons = new ArrayList<>();
+        boolean isGetExpert = getParaToBoolean("flag");
         for (StructPersonLink structPersonLink : structPersonLinks) {
-            persons.add(personService.findById(structPersonLink.getPersonID()));
+            Person person = personService.findById(structPersonLink.getPersonID());
+            if(false == isGetExpert) {
+                persons.add(person);
+            }else {
+                ExpertGroup expertGroupModel = expertGroupService.findByPersonId(person.getId());
+                if (expertGroupModel != null) {
+                    persons.add(person);
+                }
+            }
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
-        if (getParaToBoolean("flag")) {
-            ExpertGroup expertGroupModel;
-            for (int i = 0; i < persons.size(); i++) {
-                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
-                if (expertGroupModel != null) {
-                    expertGroups.add(expertGroupModel);
-                }
-            }
-            json.put("expertGroups", expertGroups);
-        }
+//        if (getParaToBoolean("flag")) {
+//            ExpertGroup expertGroupModel;
+//            for (int i = 0; i < persons.size(); i++) {
+//                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
+//                if (expertGroupModel != null) {
+//                    expertGroups.add(expertGroupModel);
+//                }
+//            }
+//            json.put("expertGroups", expertGroups);
+//        }
         renderJson(json);
     }
 
