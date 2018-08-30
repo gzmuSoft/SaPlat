@@ -288,6 +288,7 @@ public class ProjectController extends BaseController {
         setAttr("organization", organization)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
+                .setAttr("entry","mgr")
                 .render("update.html");
     }
 

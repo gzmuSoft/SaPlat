@@ -24,6 +24,30 @@
         layedit.build('brief', {
             height: 180 //设置编辑器高度
         }); //建立编辑器
+        var entry = "#(entry)";
+        if("mgr" === entry){
+            $("#entries-mgr").removeClass("layui-hide");
+            var status = "#(model.status)"
+            switch(status){
+                case "7":
+                    break;
+                case "6":
+                    break;
+                case "5":
+                    break;
+                case "4":
+                    $("#eva-scheme").removeClass("layui-hide");
+                    $("#eva-scheme-process").removeClass("layui-hide");
+                    $("#pretrial-report").removeClass("layui-hide");
+                    break;
+                case "3":
+                    break;
+                case "2":
+                    break;
+                case "1":
+                    break;
+            }
+        }
 
         $("#eva-scheme").click(function(){
             pop_show("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)");
@@ -60,13 +84,13 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">项目信息
-                    <div class="layui-btn-group" style="float:right">
-                        <button class="layui-btn layui-btn-sm" id="eva-scheme">评估方案</button>
-                        <button class="layui-btn layui-btn-sm" id="eva-scheme-process">评估过程资料</button>
-                        <button class="layui-btn layui-btn-sm" id="pretrial-report">预审报告</button>
-                        <button class="layui-btn layui-btn-sm" id="final-report">终审报告</button>
-                        <button class="layui-btn layui-btn-sm" id="project-record">项目备案</button>
-                        <button class="layui-btn layui-btn-sm" id="project-track">项目跟踪</button>
+                    <div class="layui-btn-group layui-hide" style="float:right" id="entries-mgr">
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme">评估方案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme-process">评估过程资料</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="pretrial-report">预审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="final-report">终审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-record">项目备案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-track">项目跟踪</button>
                     </div>
                 </div>
                 <div class="layui-card-body">
