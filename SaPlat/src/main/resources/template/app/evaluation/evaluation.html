@@ -36,11 +36,12 @@
             , layer = layui.layer
             , util = layui.util;
         var evaSchemeStatus = '#(evaSchemeStatus)';
+        var evaScheme = '#(evaScheme)';
         var percent = 0;
 
         var flag = "true";
         var isSelf = "#(isSelf)";
-        if (typeof(evaSchemeStatus) === "undefined") {
+        if (evaSchemeStatus === "") {
             if (isSelf === "true") {
                 layer.msg("承接当前项目的服务机构尚未填写稳评资料");
             } else {

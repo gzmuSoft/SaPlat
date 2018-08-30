@@ -148,7 +148,6 @@ public class EvaluationController extends BaseController {
         }
 
         setAttr("project", project)
-                .setAttr("evaScheme", evaScheme)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
                 .render("evaluation.html");
     }
