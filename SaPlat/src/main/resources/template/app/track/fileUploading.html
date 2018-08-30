@@ -13,8 +13,8 @@
         //操作对象
         var upload = layui.upload;
         var element = layui.element;
-        var id = "#(model.id)";
         var projectId = "#(projectId)";
+        var fileTypeId = "#(fileTypeId)";
 
         //创建监听函数
          var xhrOnProgress=function(fun) {
@@ -54,7 +54,7 @@
                 $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     pop_close();
-                    $.post('#(ctxPath)/app/project/upFile?fileId=' + res.data.fileId + '&fileTypeId=' + id + '&projectId=' + projectId);
+                    $.post('#(ctxPath)/app/track/upFile?fileId=' + res.data.fileId + '&projectId=' + projectId + '&fileTypeId=' + fileTypeId);
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
@@ -80,7 +80,7 @@
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
             <div class="layui-form-item x-center">
-                <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">#(model.name)</p>
+                <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">备案文件上传</p>
             </div>
             <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
                 <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>

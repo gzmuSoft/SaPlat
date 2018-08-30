@@ -42,24 +42,39 @@
 SELECT
     a.*
 FROM
-    project
-  as
-    a,
-    project_undertake
-  as
-    b
+    project as a, project_undertake as b
 where
-    a.isEnable = 1
-and
     a.id = b.projectID
 and
     a.status = #para(status)
 and
-    ((b.facAgencyID = #para(facAgencyID)
-or
-    (b.createUserID = b.facAgencyID
-  and
-    b.createUserID = #para(userID))))
+    (b.facAgencyID = #para(facAgencyID)
+    or (b.createUserID = b.facAgencyID and b.createUserID = #para(userID))
+    )
+#end
+
+#sql("project-backRecord")
+SELECT
+    a.*
+FROM
+    project as a, project_undertake as b
+where
+    a.id = b.projectID
+and
+    a.status = #para(status)
+and
+    b.facAgencyID = #para(facAgencyID)
+#end
+
+#sql("project-Reviewed")
+SELECT
+    a.*
+FROM
+    project as a, project_undertake as b
+where
+    a.id = b.projectID
+and
+    a.status = #para(status)
 #end
 
 #sql("project-undertake-ApplyIn")

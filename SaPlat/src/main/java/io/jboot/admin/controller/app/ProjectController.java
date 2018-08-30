@@ -531,7 +531,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -543,7 +543,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -552,7 +552,6 @@ public class ProjectController extends BaseController {
             }
         }
         renderJson(RestResult.buildSuccess());
-
     }
 
     /**
@@ -808,15 +807,14 @@ public class ProjectController extends BaseController {
 //        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());//找到组织机构信息
-        if (organization != null) {
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
-            if (facAgency != null) {
-                projectUndertake.setFacAgencyID(facAgency.getId());
-            }
-        } else {
-            projectUndertake.setFacAgencyID(loginUser.getId());
+
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
         }
+        /*else {
+            projectUndertake.setFacAgencyID(Long.parseLong("0"));
+        }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
@@ -1286,15 +1284,13 @@ public class ProjectController extends BaseController {
      * 审查汇总主页
      */
     @Before(GET.class)
-    public void collectView() {
+    public void collectView(){
         render("collect.html");
     }
 
     /**
      * 审查汇总
      */
-
-
     @Before(GET.class)
     @NotNullPara({"pageNumber", "pageSize"})
     public void collectTableData() {
