@@ -46,6 +46,7 @@ public class NotificationController extends BaseController {
         notification.setContent(getPara("content"));
         notification.setReceiverID((loginUser.getId().intValue()));
         notification.setStatus(getParaToInt("status"));
+        notification.setIsEnable(true);
         Page<Notification> page = notificationService.findPage(notification, pageNumber, pageSize);
         renderJson(new DataTable<Notification>(page));
     }
@@ -75,7 +76,9 @@ public class NotificationController extends BaseController {
     @NotNullPara({"id"})
     public void delete() {
         Long id = getParaToLong("id");
-        if (!notificationService.deleteById(id)) {
+        Notification model = notificationService.findById(id);
+        model.setIsEnable(false);
+        if (!notificationService.update(model)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

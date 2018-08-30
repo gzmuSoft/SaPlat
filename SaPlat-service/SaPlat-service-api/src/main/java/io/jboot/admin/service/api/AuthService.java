@@ -48,7 +48,7 @@ public interface AuthService  {
      * @return 认证信息
      */
     public Auth findByUserAndRole(User user,long role);
-
+    public Auth findByUserIDAndRole(Object id,long role);
     /**
      * 通过用户和类型查找权限
      * @param user 用户

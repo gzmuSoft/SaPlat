@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.ProfGroup;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface ProfGroupService  {
     public List<ProfGroup> findAll();
 
     public ProfGroup findByOrgId(Long orgId);
+    public ProfGroup findByCreateUserID(Object createUserID);
     /**
      * delete model by primary key
      *
@@ -98,6 +100,7 @@ public interface ProfGroupService  {
      * @return if save or update success
      */
     public boolean saveOrUpdate(ProfGroup model, Auth auth);
+    public boolean saveOrUpdate(ProfGroup model, Auth auth, Notification notification);
 
     public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize);
 

@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Enterprise;
+import io.jboot.admin.service.entity.model.Notification;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public interface EnterpriseService {
      * @return
      */
     public Enterprise findByOrgId(Long orgID);
+    public Enterprise findByCreateUserID(Object createUserID);
 
     /**
      * find all model
@@ -102,6 +104,7 @@ public interface EnterpriseService {
      * @return if save or update success
      */
     public boolean saveOrUpdate(Enterprise model, Auth auth);
+    public boolean saveOrUpdate(Enterprise model, Auth auth, Notification notification);
 
     /**
      * update data model

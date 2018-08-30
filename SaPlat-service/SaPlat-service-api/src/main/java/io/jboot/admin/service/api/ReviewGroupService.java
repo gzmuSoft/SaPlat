@@ -3,6 +3,7 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
+import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.ReviewGroup;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface ReviewGroupService {
     public ReviewGroup findById(Object id);
 
     public ReviewGroup findByOrgId(Long orgId);
-
+    public ReviewGroup findByCreateUserID(Object createUserID);
     /**
      * find all model
      *
@@ -98,6 +99,7 @@ public interface ReviewGroupService {
      * @return if save or update success
      */
     public boolean saveOrUpdate(ReviewGroup model, Auth auth);
+    public boolean saveOrUpdate(ReviewGroup model, Auth auth, Notification notification);
 
     public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize);
 
