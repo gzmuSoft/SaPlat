@@ -54,6 +54,69 @@
                        autocomplete="off"/>
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin: 0 180px">
+                <button type="button" class="layui-btn" lay-submit lay-filter="pass" id="pass">通过</button>
+                <button type="button" class="layui-btn layui-btn-warm" lay-submit lay-filter="fail" id="fail">不通过</button>
+                <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
+            </div>
+        </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        var layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        form.on('submit(pass)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)'+$("#source").val()+'Review?verify=2',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    history.go(-1);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+        form.on('submit(fail)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)'+$("#source").val()+'Review?verify=1',
+                data: $.param(data.field),
+                loadFlag: true,
+                success: function (data) {
+                    history.go(-1);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+    });
+
+    if ($('#flag').val() == 2) {
+        $("#pass").addClass("layui-disabled");
+        $("#pass").attr("disabled", "disabled");
+    }else if($('#flag').val() == 1){
+        $("#fail").addClass("layui-disabled");
+        $("#fail").attr("disabled", "disabled");
+    }
+
+    $('#back').click(function () {
+        history.back();
+    });
+    $('#reset').click(function () {
+        history.back();
+    });
+</script>
 #end
