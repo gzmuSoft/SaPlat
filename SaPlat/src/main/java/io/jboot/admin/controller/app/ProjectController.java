@@ -259,8 +259,9 @@ public class ProjectController extends BaseController {
 //        setAttr("organization",organization);
 //        setAttr("model", model).render("update.html");
 
-        AuthProject apModel = authProjectService.findByProjectId(getParaToLong("id"));//获取项目的立项审核信息
-        Project pModel = projectService.findById(apModel.getProjectId()); //获取项目信息
+        Long id = getParaToLong("id");
+        AuthProject apModel = authProjectService.findByProjectId(id);//获取项目的立项审核信息
+        Project pModel = projectService.findById(id); //获取项目信息
         pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
         Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
         String strRoleName = roleService.findById(apModel.getRoleId()).getName();
