@@ -248,6 +248,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus()).set("userID", projectUndertake.getCreateUserID());
             sqlPara = Db.getSqlPara("app-project.project-xxx", c);
         }
+        else {
+            c = Kv.by("status", projectUndertake.getStatus());
+            sqlPara = Db.getSqlPara("app-project.project-Reviewed", c);
+        }
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+
     }
 }

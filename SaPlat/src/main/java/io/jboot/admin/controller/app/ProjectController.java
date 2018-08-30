@@ -788,15 +788,14 @@ public class ProjectController extends BaseController {
 //        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());//找到组织机构信息
-        if(organization != null) {
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
-            if (facAgency != null) {
-                projectUndertake.setFacAgencyID(facAgency.getId());
-            }
-        }else {
-            projectUndertake.setFacAgencyID(loginUser.getId());
+
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
         }
+        /*else {
+            projectUndertake.setFacAgencyID(Long.parseLong("0"));
+        }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
