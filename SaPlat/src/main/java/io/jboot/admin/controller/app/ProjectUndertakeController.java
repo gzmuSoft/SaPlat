@@ -16,6 +16,7 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
+import io.jboot.admin.support.auth.LoginAuth;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.authz.annotation.Logical;
@@ -31,6 +32,8 @@ public class ProjectUndertakeController extends BaseController {
     InitialRiskExpertiseService initialRiskExpertiseService;
     @JbootrpcService
     private ProjectService projectService;
+    @JbootrpcService
+    private ProjectAssTypeService projectAssTypeService;
     @JbootrpcService
     private ProjectUndertakeService projectUndertakeService;
     @JbootrpcService
@@ -90,37 +93,46 @@ public class ProjectUndertakeController extends BaseController {
      */
     public void projectList() {
         User user = AuthUtils.getLoginUser();
-        int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("pageSize", 30);
-        Project project = new Project();
-        project.setIsPublic(true);
-        if (getPara("maxAmount") != null || getPara("maxAmount") != null) {
-            project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
-            project.setMinAmount(Double.parseDouble(getPara("minAmount")));
-        }
-        project.setIsPublic(true);
-        project.setStatus(ProjectStatus.IS_VERIFY);
-        Page<Project> page = projectService.findPageByIsPublic(user.getId(), project, pageNumber, pageSize);
-        if (page.getList().size() > 0) {
-            page.getList().forEach(p -> {
-                ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndCreateUserID(p.getId(), user.getId());
-                if (projectUndertake != null) {
-                    Integer status = projectUndertake.getStatus();
-                    if (status == 0) {
-                        p.setRemark("待确认");
-                    } else if (status == 1) {
-                        p.setRemark("已拒绝");
-                    } else if (status == 2) {
-                        p.setRemark("已同意");
-                    } else if (status == 3) {
-                        p.setRemark("已被承接");
+        FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
+        if (facAgency != null) {
+            int pageNumber = getParaToInt("pageNumber", 1);
+            int pageSize = getParaToInt("pageSize", 30);
+            Project project = new Project();
+            project.setIsPublic(true);
+            if (getPara("maxAmount") != null) {
+                project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
+            }
+            if (getPara("maxAmount") != null) {
+                project.setMinAmount(Double.parseDouble(getPara("minAmount")));
+            }
+            project.setStatus(ProjectStatus.IS_VERIFY);
+            //获取不是当前用户发布的满足指定条件的项目榜单
+            Page<Project> page = projectService.findPageByIsPublic(user.getId(), project, pageNumber, pageSize);
+            if (page != null && page.getList().size() > 0) {
+                page.getList().forEach(p -> {
+                    //查找当前用户是否与当前项目有承接关系
+                    ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyID(p.getId(), facAgency.getId());
+                    if (projectUndertake != null) {
+                        Integer status = projectUndertake.getStatus();
+                        if (status == 0) {
+                            p.setRemark("待确认");
+                        } else if (status == 1) {
+                            p.setRemark("已拒绝");
+                        } else if (status == 2) {
+                            p.setRemark("已同意");
+                        } else if (status == 3) {
+                            p.setRemark("已被承接");
+                        }
+                    } else {
+                        p.setRemark("未承接");
                     }
-                } else {
-                    p.setRemark("未承接");
-                }
-            });
+                });
+            }
+            renderJson(new DataTable<Project>(page));
         }
-        renderJson(new DataTable<Project>(page));
+        else{
+            renderJson(new DataTable<Project>(null));
+        }
     }
 
     /**
@@ -130,8 +142,8 @@ public class ProjectUndertakeController extends BaseController {
     public void see() {
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
-        User user = userService.findById(model.getUserId());
-        Organization organization = organizationService.findById(user.getUserID());
+        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
+        Organization organization = organizationService.findById(userService.findById(model.getUserId()).getUserID());
         setAttr("organization",organization)
                 .setAttr("model", model)
                 .render("see.html");
@@ -145,11 +157,15 @@ public class ProjectUndertakeController extends BaseController {
     public void agency() {
         Long id = getParaToLong("id");
         User user = AuthUtils.getLoginUser();
-        Organization organization = organizationService.findById(user.getUserID());
-        FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        Organization organization = organizationService.findById(user.getUserID());//找到组织机构信息
+        FacAgency facAgency = null;
+        if(organization != null) {
+            facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
+        }
 
-        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndCreateUserID(id, user.getId());
-        Project project = projectService.findById(id);
+        //获取项目id为id，创建用户编号为当前用户编号的项目承接信息
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyID(id, facAgency.getId());
+        Project project = projectService.findById(id);//获取项目信息
         if (projectUndertake != null) {
             if (projectUndertake.getApplyOrInvite()) {
                 if (projectUndertake.getStatus() != Integer.parseInt(ProjectUndertakeStatus.REFUSE)) {
@@ -165,7 +181,9 @@ public class ProjectUndertakeController extends BaseController {
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
-            projectUndertake.setFacAgencyID(projectService.findById(id).getUserId());
+            if(facAgency != null) {
+                projectUndertake.setFacAgencyID(facAgency.getId());
+            }
         }
         projectUndertake.setName(project.getName());
         projectUndertake.setDeadTime(project.getEndPublicTime());
@@ -180,7 +198,7 @@ public class ProjectUndertakeController extends BaseController {
         Notification notification = new Notification();
         notification.setName("项目承接通知");
         notification.setSource("/app/projectAndServiceOrg");
-        notification.setContent("您好，" + organization.getName() + "希望承接您的项目委评，请及时处理！");
+        notification.setContent("您好，\"" + organization.getName() + "\"希望承接您的项目委评，请及时处理！");
         notification.setRecModule("");
         notification.setReceiverID(Math.toIntExact(project.getUserId()));
         notification.setCreateTime(new Date());
@@ -219,17 +237,61 @@ public class ProjectUndertakeController extends BaseController {
         Boolean flag = getParaToBoolean("flag");
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        ProjectUndertake projectUndertake = new ProjectUndertake();
-        projectUndertake.setApplyOrInvite(applyOrInvite);
-        projectUndertake.setIsEnable(true);
-        if (flag) {
-            projectUndertake.setCreateUserID(user.getId());
-        } else if (!flag && applyOrInvite) {
-            projectUndertake.setFacAgencyID(facAgencyService.findByOrgId(user.getUserID()).getId());
-        } else {
-            projectUndertake.setFacAgencyID(user.getId());
+        Page<ProjectUndertake> page = null;
+        /*
+        //注：邀请介入时，CreateUserID为创建项目的用户ID；申请介入时，CreateUserID为申请介入项目评估的服务机构对应用户ID
+        if(applyOrInvite && flag) {//applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)
+            // 此时，createUserID为创建项目的用户ID，可以通过createUserID来获取列表
+            page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         }
-        Page<ProjectUndertake> page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        else if (applyOrInvite && !flag) {//applyOrInvite: true, flag: false：查看邀请您介入的项目(已通过验证)
+            projectUndertake.setSort(0); // 此时createUserID为创建项目的用户ID，需要通过facAgencyID来获取列表
+            FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
+            if (facAgency != null) {
+                projectUndertake.setFacAgencyID(facAgency.getId());
+            }
+            page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        }
+        else if(!applyOrInvite && flag){//applyOrInvite: false, flag: true：查看申请介入项目的状态(已通过验证)
+            FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
+            if (facAgency != null) {
+                projectUndertake.setFacAgencyID(facAgency.getId());
+            }
+            page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        }
+        else if(!applyOrInvite && !flag){//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
+            //此时，CreateUserID为申请介入项目评估的服务机构对应用户ID，需要通过user.getUserID()获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
+            page = projectUndertakeService.findPageOfApplyIn(user.getId(), pageNumber, pageSize);
+        }
+        */
+
+        if(!applyOrInvite && !flag){//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
+            //此时，CreateUserID为申请介入项目评估的服务机构对应用户ID，需要通过user.getUserID()获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
+            page = projectUndertakeService.findPageOfApplyIn(user.getId(), pageNumber, pageSize);
+        }
+        else {
+            ProjectUndertake projectUndertake = new ProjectUndertake();
+
+            projectUndertake.setApplyOrInvite(applyOrInvite);
+            projectUndertake.setIsEnable(true);
+            if(applyOrInvite && flag) {//applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)，无需做特殊处理
+                projectUndertake.setCreateUserID(user.getId());
+            }
+            else {
+                //applyOrInvite: true, flag: false：查看邀请您介入的项目(已通过验证)
+                FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
+                if (facAgency != null) {
+                    projectUndertake.setFacAgencyID(facAgency.getId());
+                }
+
+                if (!applyOrInvite && flag) {//applyOrInvite: false, flag: true：查看申请介入项目的状态，需额外设置用户id(已通过验证)
+                    projectUndertake.setCreateUserID(user.getId());
+                }
+            }
+
+            page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
+        }
+
         renderJson(new DataTable<ProjectUndertake>(page));
     }
 
@@ -343,14 +405,16 @@ public class ProjectUndertakeController extends BaseController {
         }
         Project project = projectService.findById(id);//点击的当前项目
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
-        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<OrgStructure> orgStructures = new ArrayList<>();
-        for (StructPersonLink structPersonLink : structPersonLinks) {
-            string.append(structPersonLink.getStructID());
-        }
-        for (int i = 0; i < sub(string.toString()).length(); i++) {
-            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
-        }
+        User user = AuthUtils.getLoginUser();
+        Organization org = organizationService.findById(user.getUserID());
+        //List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
+        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+//        for (StructPersonLink structPersonLink : structPersonLinks) {
+//            string.append(structPersonLink.getStructID());
+//        }
+//        for (int i = 0; i < sub(string.toString()).length(); i++) {
+//            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
+//        }
         if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }
@@ -365,21 +429,30 @@ public class ProjectUndertakeController extends BaseController {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
         List<ExpertGroup> expertGroups = new ArrayList<>();
         List<Person> persons = new ArrayList<>();
+        boolean isGetExpert = getParaToBoolean("flag");
         for (StructPersonLink structPersonLink : structPersonLinks) {
-            persons.add(personService.findById(structPersonLink.getPersonID()));
+            Person person = personService.findById(structPersonLink.getPersonID());
+            if(false == isGetExpert) {
+                persons.add(person);
+            }else {
+                ExpertGroup expertGroupModel = expertGroupService.findByPersonId(person.getId());
+                if (expertGroupModel != null) {
+                    persons.add(person);
+                }
+            }
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
-        if (getParaToBoolean("flag")) {
-            ExpertGroup expertGroupModel;
-            for (int i = 0; i < persons.size(); i++) {
-                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
-                if (expertGroupModel != null) {
-                    expertGroups.add(expertGroupModel);
-                }
-            }
-            json.put("expertGroups", expertGroups);
-        }
+//        if (getParaToBoolean("flag")) {
+//            ExpertGroup expertGroupModel;
+//            for (int i = 0; i < persons.size(); i++) {
+//                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
+//                if (expertGroupModel != null) {
+//                    expertGroups.add(expertGroupModel);
+//                }
+//            }
+//            json.put("expertGroups", expertGroups);
+//        }
         renderJson(json);
     }
 

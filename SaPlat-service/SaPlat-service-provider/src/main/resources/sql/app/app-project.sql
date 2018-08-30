@@ -61,3 +61,17 @@ or
   and
     b.createUserID = #para(userID))))
 #end
+
+#sql("project-undertake-ApplyIn")
+SELECT
+  *
+FROM
+  project_undertake
+WHERE
+  applyOrInvite = 0
+  and projectID in
+  (
+    SELECT ID FROM project where userId=#para(buildProjectUserID)
+  )
+  order by projectID, createTime desc
+#end

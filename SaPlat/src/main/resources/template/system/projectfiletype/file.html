@@ -22,7 +22,7 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-210'    //容器高度
             , initSort: {field:'sort', type:'desc'}
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
@@ -50,7 +50,7 @@
             if (obj.event === 'editfile') {
                 window.location.href = '#(ctxPath)/system/projectfiletype/file?id=' + data.id;
             }else if (obj.event === 'edit') {
-                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
+                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '500', '265', function () {
                     window.location.reload();
                 });
             } else if (obj.event === 'use') {
@@ -82,7 +82,7 @@
             }
         });
         $("#add").click(function () {
-            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
+            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '500', '265', function () {
                 window.location.reload();
             });
         });

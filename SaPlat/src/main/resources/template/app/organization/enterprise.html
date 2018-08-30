@@ -104,9 +104,9 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.start"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
+                <label class="layui-form-label" for="enterpriseStart"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="date" id="enterprise.start" name="enterprise.start"
+                    <input type="text" id="enterpriseStart" name="enterprise.start"
                            value="#(enterprise.start)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
@@ -127,6 +127,9 @@
                 <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
             </div>
 
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
@@ -182,39 +185,68 @@
 #define js()
 <script type="text/javascript">
     var fileID, fileFromID;
-    layui.use(['form', 'layer', 'upload'], function () {
+    layui.use(['form', 'layer', 'upload', 'laydate', 'element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
+            , element = layui.element
+            , laydate = layui.laydate
             , upload = layui.upload;
+
+        laydate.render({
+            elem: '#enterpriseStart' //指定元素
+        });
+
+        //创建监听函数
+         var xhrOnProgress=function(fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+             //使用闭包实现监听绑
+            return function() {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                 //判断监听函数是否为函数
+                  if (typeof xhrOnProgress.onprogress !== 'function')
+                       return xhr;
+                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                    if (xhrOnProgress.onprogress && xhr.upload) {
+                          xhr.upload.onprogress = xhrOnProgress.onprogress;
+                    }
+                    return xhr;
+             }
+         }
 
         upload.render({
             elem: '#upload'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            , exts: 'doc|docx|pdf'
+            , exts: 'doc|docx|pdf|png|jpeg|jpg'
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress', value+'%')//设置页面进度条
+            }
             , data: {
                 description: "法人身份证照片"
             }, before: function (res) {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
-                $('body').prepend(bg);
+                $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
+                $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=enterprise&fieldName=法人身份证照片', function (data) {
-                        $('.loading-bg').remove();
+                        <!--$('.loading-bg').remove();-->
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
-                    $('.loading-bg').remove();
+                    <!--$('.loading-bg').remove();-->
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);
                 }
             }
             , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
                 alert("文件上传错误！请重新尝试！");
             }
         });

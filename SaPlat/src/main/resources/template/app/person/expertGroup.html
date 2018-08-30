@@ -16,7 +16,7 @@
 #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
-        <legend style="font-size: 20px;font-weight: 500;">专家团体认证</legend>
+        <legend style="font-size: 20px;font-weight: 500;">专家认证</legend>
     </fieldset>
 
     #if(auth.status.equals("3"))
@@ -25,7 +25,7 @@
     </script>
     #else if(auth.status.equals("2"))
     <script>
-        window.location.href = "#(ctxPath)/util/tip?content=您已经成功认证专家团体&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-auz";
+        window.location.href = "#(ctxPath)/util/tip?content=您已经成功认证专家&btn1=点击查看&url1=#(ctxPath)/app/person/verify&icon=layui-icon-auz";
     </script>
     #else if(auth.status.equals("1"))
     <script>
@@ -38,7 +38,7 @@
     </script>
     #else
     <script>
-        window.location.href = "#(ctxPath)/util/tip?content=您还没有认证专家团体&btn1=点击认证&url1=#(ctxPath)/app/person/verify&title=专家团体认证&icon=layui-icon-add-circle-fine";
+        window.location.href = "#(ctxPath)/util/tip?content=您还没有认证专家&btn1=点击认证&url1=#(ctxPath)/app/person/verify&title=专家认证&icon=layui-icon-add-circle-fine";
     </script>
     #end
     #end

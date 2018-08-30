@@ -10,7 +10,6 @@ import com.jfinal.plugin.activerecord.Model;
  */
 @Table(tableName = "project_ass_type", primaryKey = "id")
 public class ProjectAssType extends BaseProjectAssType<ProjectAssType> {
-    public static final ProjectAssType dao = new ProjectAssType().dao();
 
     public void setStatus(java.lang.String status) {
         if (status == DataStatus.USED) {

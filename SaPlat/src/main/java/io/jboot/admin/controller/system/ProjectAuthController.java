@@ -302,52 +302,11 @@ public class ProjectAuthController extends BaseController {
     @NotNullPara("id")
     public void dataView() {
         Long id = getParaToLong("id");
-        Project project = projectService.findById(id);
-        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
-        if (leaderGroup == null) {
-            leaderGroup = new LeaderGroup();
-        }
-//        List<Auth> authList = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.PROJECT_VERIFY);
-        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll();
-        List<ProjectStep> projectStepList = projectStepService.findAll();
-//        List<String> roleNameList = new ArrayList<>();
-//        for (int i = 0; i < authList.size(); i++) {
-//            roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
-//        }
-        String paTypeName = projectAssTypeService.findById(project.getPaTypeID()).getName();
-        String pStepName = projectStepService.findById(project.getPStepID()).getName();
-        int i = 0;
-        for (ProjectAssType p : PaTypeList) {
-            if (p.getName().equals(paTypeName)) {
-                PaTypeList.remove(i);
-                break;
-            }
-            i++;
-        }
-        i = 0;
-        for (ProjectStep p : projectStepList) {
-            if (p.getName().equals(pStepName)) {
-                projectStepList.remove(i);
-                break;
-            }
-            i++;
-        }
-//        i = 0;
-//        for (String p : roleNameList) {
-//            if (p.equals(project.getRoleName())) {
-//                roleNameList.remove(i);
-//                break;
-//            }
-//            i++;
-//        }
-        User user=userService.findById(project.getUserId());
-        Organization organization=organizationService.findById(user.getUserID());
-        setAttr("organization",organization);
-        setAttr("paTypeName", paTypeName).setAttr("pStepName", pStepName)
-                .setAttr("paTypeId", project.getPaTypeID()).setAttr("pStepId", project.getPStepID())
-                .setAttr("projectID", id)
-                .setAttr("PaTypeNameList", PaTypeList).setAttr("projectStepNameList", projectStepList)
-                .setAttr("project", project).setAttr("leaderGroup", leaderGroup)
+        Project model = projectService.findById(id);
+        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
+        Organization organization = organizationService.findById(userService.findById(model.getUserId()).getUserID());
+        setAttr("organization",organization)
+                .setAttr("model", model)
                 .render("project.html");
     }
 }

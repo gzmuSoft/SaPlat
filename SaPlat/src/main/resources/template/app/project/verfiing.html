@@ -19,7 +19,7 @@
 
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/project/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目资料</a>
     #end
 
     #shiroHasPermission('/app/project/cancel')
@@ -43,7 +43,8 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 140,sort: true}
-                , {field: 'roleName', title: '机构名称', minWidth: 140,sort: true}
+                , {field: 'buildUserName', title: '立项用户账号', minWidth: 140,sort: true}
+                , {field: 'buildOrgName', title: '立项机构名称', minWidth: 140,sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', align: 'center', minWidth: 200, sort: true}
@@ -68,7 +69,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '685', function () {
                 });
             } else if (obj.event === 'cancel') {
                 util.sendAjax({

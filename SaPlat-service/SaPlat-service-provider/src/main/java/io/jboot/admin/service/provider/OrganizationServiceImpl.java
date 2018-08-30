@@ -15,13 +15,46 @@ import io.jboot.service.JbootServiceBase;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Date;
+import java.util.List;
 
 @Bean
 @Singleton
 @JbootrpcService
-public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService {
+public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService{
     @Inject
     private UserService userService;
+
+    UserServiceImpl userServiceNew = new UserServiceImpl();
+
+    /**
+     * 装配完善Page对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<Organization> fitPage(Page<Organization> page){
+        if(page != null){
+            List<Organization> tList = page.getList();
+            for (Organization item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public Organization fitModel(Organization model){
+        if(model!=null) {
+            User user = new User();
+            user.setUserID(model.getId());
+            user.setUserSource(1);// 1 代表组织机构
+            model.setUser(userServiceNew.findModel(user));
+        }
+        return model;
+    }
 
     /**
      * 分页查询
@@ -37,7 +70,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
         if (StrKit.notBlank(organization.getName())) {
             columns.like("name", "%" + organization.getName() + "%");
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
@@ -66,7 +99,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
 
     @Override
     public Organization findByName(String name) {
-        return DAO.findFirstByColumn("name", name);
+        return fitModel(DAO.findFirstByColumn("name", name));
     }
 
     @Override

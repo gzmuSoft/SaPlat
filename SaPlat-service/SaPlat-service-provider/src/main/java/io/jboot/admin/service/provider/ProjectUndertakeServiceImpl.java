@@ -8,6 +8,7 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.ProjectUndertakeService;
 import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -27,6 +28,54 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     @Inject
     private NotificationService notificationService;
 
+    ProjectServiceImpl projectService = new ProjectServiceImpl();
+    FacAgencyServiceImpl faService = new FacAgencyServiceImpl();
+    /**
+     * 装配完善List对象中所有对象的数据
+     * @param list
+     * @return
+     */
+    public List<ProjectUndertake> fitList(List<ProjectUndertake> list){
+        if(list != null){
+            for (ProjectUndertake item: list) {
+                fitModel(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 装配完善Page对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<ProjectUndertake> fitPage(Page<ProjectUndertake> page){
+        if(page != null){
+            List<ProjectUndertake> tList = page.getList();
+            for (ProjectUndertake item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public ProjectUndertake fitModel(ProjectUndertake model){
+        if(model != null) {
+            if (model.getProjectID() > 0) {
+                model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
+            }
+            if (model.getFacAgencyID() > 0) {
+                model.setFacAgency(faService.findById(model.getFacAgencyID()));
+            }
+        }
+        return model;
+    }
+
     @Override
     public boolean findIsInvite(Long facAgencyID, Long projectID) {
         Columns columns = Columns.create();
@@ -41,7 +90,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("facAgencyID", facAgencyId);
         columns.eq("status", status);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -68,21 +117,21 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
         }
         if (projectUndertake.getCreateUserID() != null) {
-            columns.like("createUserID", "%" + projectUndertake.getCreateUserID() + "%");
+            columns.eq("createUserID", projectUndertake.getCreateUserID());
         }
         if (projectUndertake.getFacAgencyID() != null) {
-            columns.like("facAgencyID", "%" + projectUndertake.getFacAgencyID() + "%");
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
 
     }
 
     @Override
-    public ProjectUndertake findByProjectIdAndCreateUserID(Long id, Long userId) {
+    public ProjectUndertake findByProjectIdAndFacAgencyID(Long id, Long facAgencyID) {
         Columns columns = Columns.create();
         columns.eq("projectID", id);
-        columns.eq("createUserID", userId);
-        return DAO.findFirstByColumns(columns);
+        columns.eq("facAgencyID", facAgencyID);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -90,7 +139,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("projectID", projectId);
         columns.eq("facAgencyID", facAgencyId);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -99,7 +148,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         columns.eq("facAgencyID",facAgencyId);
         columns.eq("status",status);
         columns.eq("isEnable",aoi);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -107,7 +156,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("projectID", projectId);
         columns.eq("status", projectStatus);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -117,12 +166,12 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         columns.eq("status",status);
         columns.eq("applyOrInvite",aoi);
         columns.eq("isEnable",true);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
     public ProjectUndertake findByProjectId(Long projectId) {
-        return DAO.findFirstByColumn(Column.create("projectID", projectId));
+        return fitModel(DAO.findFirstByColumn(Column.create("projectID", projectId)));
     }
 
     @Override
@@ -135,7 +184,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("status", status);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -162,8 +211,15 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             c = Kv.by("ID", projectUndertake.getCreateUserID());
             sqlPara = Db.getSqlPara("app-project.project-self", c);
         }
-        return DAO.paginate(pageNumber, pageSize, sqlPara);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 
-
+    @Override
+    public Page<ProjectUndertake> findPageOfApplyIn(Long buildProjectUserID, int pageNumber, int pageSize) {
+        Kv c = null;
+        SqlPara sqlPara = null;
+        c = Kv.by("buildProjectUserID", buildProjectUserID);
+        sqlPara = Db.getSqlPara("app-project.project-undertake-ApplyIn", c);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+    }
 }

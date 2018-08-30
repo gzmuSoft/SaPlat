@@ -16,9 +16,10 @@ public class Project extends BaseProject<Project> {
     private boolean isUpload;
     private Long fileID;
     private ProjectAssType projectAssType;
+    private String buildOrgName;
+    private String buildUserName;
 
     public ProjectAssType getProjectAssType() {
-        //return projectAssType = ProjectAssType.dao.findByIdLoadColumns(2, "*");
         return this.projectAssType;
     }
 
@@ -28,8 +29,12 @@ public class Project extends BaseProject<Project> {
 
     public String getProjectAssTypeName()
     {
-        return this.projectAssType.getName();
+        if(null != projectAssType){
+            return this.projectAssType.getName();
+        }
+        return "";
     }
+
     public Long getFileID() {
         return fileID;
     }
@@ -82,7 +87,19 @@ public class Project extends BaseProject<Project> {
         this.reply = reply;
     }
 
+    public String getBuildOrgName() {
+        return buildOrgName;
+    }
 
+    public void setBuildOrgName(String buildOrgName) {
+        this.buildOrgName = buildOrgName;
+    }
+
+    public String getBuildUserName() {
+        return buildUserName;
+    }
+
+    public void setBuildUserName(String buildUserName) {
+        this.buildUserName = buildUserName;
+    }
 }
-
-

@@ -9,14 +9,17 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
+    layui.use(['form', 'laydate', 'layer'], function () {
         // 操作对象
         var form = layui.form
             , layer = layui.layer
+            , laydate = layui.laydate
             , $ = layui.jquery;
 
+        laydate.render({
+            elem: '#start' //指定元素
+        });
         form.on('submit(sub)', function (data) {
-
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/fac_agency/postAdd',

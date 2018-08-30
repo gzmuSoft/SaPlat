@@ -35,24 +35,22 @@
             , $ = layui.jquery
             , layer = layui.layer
             , util = layui.util;
-        var evaScheme = '#(evaScheme)';
-        var project = '#(project)';
+        var evaSchemeStatus = '#(evaSchemeStatus)';
         var percent = 0;
-        evaScheme = JSON.parse(evaScheme);
-        project = JSON.parse(project);
+
         var flag = "true";
         var isSelf = "#(isSelf)";
-        if (typeof(evaScheme.status) === "undefined") {
+        if (typeof(evaSchemeStatus) === "undefined") {
             if (isSelf === "true") {
                 layer.msg("承接当前项目的服务机构尚未填写稳评资料");
             } else {
-                $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+                $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + #(project.id));
             }
-        } else if (evaScheme.status === "1") {
+        } else if (evaSchemeStatus === "1") {
             $('#next').remove();
             layer.msg("您的项目正在审核中，请耐心等待。。。");
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
-        } else if (evaScheme.status === "2") {
+        } else if (evaSchemeStatus === "2") {
             var method = "#(method)";
             add(flag, 20);
             add("#(siteSurveyExpertAdvice)", 15);
@@ -66,24 +64,24 @@
                 if (isSelf === "true") {
                     setTimeout(function () {
                         element.progress('tip', percent + '%');
-                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=true");
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=true");
                     }, 500);
                 } else if (isSelf === "false") {
                     layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
                     setTimeout(function () {
                         element.progress('tip', percent + '%');
-                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=false");
                     }, 500);
                 }
             } else if (method === "true") {
                 setTimeout(function () {
                     element.progress('tip', percent + '%');
-                    $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + project.id + "&percent=" + percent + "&flag=false");
+                    $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=false");
                 }, 500);
             }
-        } else if (evaScheme.status === "3") {
+        } else if (evaSchemeStatus === "3") {
             layer.msg("您的项目未通过审核，请重新填写资料。");
-            $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + project.id);
+            $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + #(project.id));
         }
 
         function add(name, num) {

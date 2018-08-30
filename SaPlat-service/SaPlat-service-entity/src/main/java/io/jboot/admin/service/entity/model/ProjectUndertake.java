@@ -9,7 +9,7 @@ import io.jboot.admin.service.entity.model.base.BaseProjectUndertake;
 @Table(tableName = "project_undertake", primaryKey = "id")
 public class ProjectUndertake extends BaseProjectUndertake<ProjectUndertake> {
     private Project project;
-
+    private FacAgency facAgency;
     public Project getProject() {
         return project;
     }
@@ -18,9 +18,35 @@ public class ProjectUndertake extends BaseProjectUndertake<ProjectUndertake> {
         this.project = project;
     }
 
-//    public static final ProjectUndertake dao = new ProjectUndertake();
-//
-//    public ProjectType getProjectType() {
-//        return ProjectType.dao.findById(new Object[]{get("projectID")});
-//    }
+    public String getProjectAssTypeName()
+    {
+        if(null != project){
+            return this.project.getProjectAssTypeName();
+        }
+        return "";
+    }
+
+    public String getProjectAssessmentMode()
+    {
+        if(null != project){
+            return this.project.getAssessmentMode();
+        }
+        return "";
+    }
+
+    public FacAgency getFacAgency() {
+        return facAgency;
+    }
+
+    public void setFacAgency(FacAgency facAgency) {
+        this.facAgency = facAgency;
+    }
+
+    public String getFacAgencyName()
+    {
+        if(null != facAgency){
+            return this.facAgency.getName();
+        }
+        return "";
+    }
 }

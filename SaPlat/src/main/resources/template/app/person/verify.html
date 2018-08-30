@@ -9,18 +9,38 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'laydate', 'upload'], function () {
+    layui.use(['form', 'layer', 'laydate', 'upload','element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
+            , element = layui.element
             , laydate = layui.laydate
             , upload = layui.upload;
         laydate.render({
             elem: document.getElementById('expertGroup.worktime')
+            , max: 0
         });
         laydate.render({
             elem: document.getElementById('expertGroup.birthday')
         });
+
+        //创建监听函数
+         var xhrOnProgress=function(fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+             //使用闭包实现监听绑
+            return function() {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                 //判断监听函数是否为函数
+                  if (typeof xhrOnProgress.onprogress !== 'function')
+                       return xhr;
+                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                    if (xhrOnProgress.onprogress && xhr.upload) {
+                          xhr.upload.onprogress = xhrOnProgress.onprogress;
+                    }
+                    return xhr;
+             }
+         }
 
         var file1 = "";
         var file2 = "";
@@ -105,14 +125,21 @@
             elem: '#upload1'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            , exts: 'pdf'
+            , exts: 'pdf|png|jpeg|jpg'
             , data: {
                 description: "工作证件照片"
-            }, before: function (res) {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
-                $('body').prepend(bg);
+            }
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress', value+'%')//设置页面进度条
+            }
+            , before: function (res) {
+                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
+                <!--$('body').prepend(bg);-->
+                $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
-                $('.loading-bg').remove();
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     layer.msg("工作证件照片上传成功");
                     file1 = res.data.fileId;
@@ -124,6 +151,7 @@
                 }
             }
             , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
                 alert("工作证件照片文件上传错误！请重新尝试！");
             }
         });
@@ -133,15 +161,22 @@
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
             //,multiple: true
-            , exts: 'pdf'
+            , exts: 'pdf|png|jpeg|jpg'
             , data: {
                 description: "专业资格证书"
-            }, before: function (res) {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
-                $('body').prepend(bg);
+            }
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress2', value+'%')//设置页面进度条
+            }
+            , before: function (res) {
+                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
+                <!--$('body').prepend(bg);-->
+                $('#upload-progress2').removeClass('layui-hide');
             }, done: function (res) {
+                $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
-                    $('.loading-bg').remove();
+                    <!--$('.loading-bg').remove();-->
                     layer.msg("专业资格证书上传成功");
                     file2 = res.data.fileId;
                     certificate = res.data.fileId;
@@ -152,6 +187,7 @@
                 }
             }
             , error: function (index, upload) {
+                $('#upload-progress2').addClass('layui-hide');
                 alert("专业资格证书文件上传错误！请重新尝试！");
             }
         });
@@ -179,17 +215,17 @@
 <div class="layui-fluid">
 
     <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
-        <legend style="font-size: 20px;font-weight: 500;">专家团体</legend>
+        <legend style="font-size: 20px;font-weight: 500;">申请成为专家</legend>
     </fieldset>
 
     <form class="layui-form layui-form-pane" action="" id="content" method="post">
 
         <div class="layui-form-item">
-            <label class="layui-form-label" for="expertGroup.name" style="width: 180px">专家团体名称</label>
+            <label class="layui-form-label" for="expertGroup.name" style="width: 180px">专家名称</label>
             <div class="layui-input-block">
                 <input type="text" name="expertGroup.name" id="expertGroup.name" required lay-verify="required"
                        value="#(person.name)" class="layui-input layui-disabled"
-                       placeholder="请输入专家团体名称" autocomplete="off" style="width: 210px" disabled>
+                       placeholder="请输入专家名称" autocomplete="off" style="width: 210px" disabled>
             </div>
         </div>
 
@@ -230,6 +266,9 @@
             </div>
         </div>
 
+        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="upload1" style="width: 180px">
                 <em class="require-mark">*</em>工作证件照片
@@ -260,6 +299,9 @@
             </div>
         </div>
 
+        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress2" lay-filter="upload-progress2" >
+            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="upload2" style="width: 180px">
                 <em class="require-mark">*</em>专业资格证书
