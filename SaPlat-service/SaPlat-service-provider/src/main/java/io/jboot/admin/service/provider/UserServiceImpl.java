@@ -4,6 +4,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.User;
@@ -26,10 +27,31 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class UserServiceImpl extends JbootServiceBase<User> implements UserService {
+public class UserServiceImpl extends JbootServiceBase<User> implements UserService{
 
     @Inject
     private UserRoleService userRoleService;
+
+    /**
+     * find all model
+     *
+     * @param model 项目主体
+     * @return all <Project>
+     */
+    @Override
+    public User findModel(User model) {
+        Columns columns = Columns.create();
+        if (StrKit.notNull(model.getIsEnable())) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", model.getUserID());
+        }
+        if (model.getUserSource() != null) {
+            columns.eq("userSource", model.getUserSource());
+        }
+        return DAO.findFirstByColumns(columns);
+    }
 
     @Override
     public Page<User> findPage(User user, int pageNumber, int pageSize) {

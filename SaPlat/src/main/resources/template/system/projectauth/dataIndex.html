@@ -34,27 +34,17 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-140'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'projectName', title: '项目名称', minWidth: 100,sort:true}
+                , {field: 'projectName', title: '项目名称', minWidth: 150,sort:true}
                 , {field: 'name', title: '申请人', minWidth: 100,sort:true}
-                , {field: 'roleId', title: '申请所用身份', minWidth: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")',sort:true}
-//                , {
-//                    field: 'type',
-//                    title: '申请类型',
-//                    width: 150,
-//                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.TypeStatus::me(), "type")'}
-                , {field: 'lastUpdTime', title: '最后时间', minWidth: 150,sort:true}
-                , {field: 'reply', title: '回复信息', minWidth: 150}
-                , {
-                    field: 'status',
-                    title: '状态',
-                    minWidth: 100,
-                    sort:true,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")',
-                }
-                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'roleId', title: '立项所用身份', minWidth: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")',sort:true}
+                , {field: 'createTime', title: '申请时间', width: 150,sort:true}
+                , {field: 'reply', title: '回复信息', minWidth: 100}
+                , {field: 'status', title: '状态', width: 100, sort:true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'}
+                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/projectauth/dataTableData'
             , method: 'get'
@@ -77,24 +67,21 @@
                     reloadTable();
                 });
             } else if (obj.event === 'view') {
-                pop_max_show('认证信息', '#(ctxPath)/system/projectauth/dataView?id=' + data.projectId, '', '', function () {
+                pop_max_show('查看项目资料', '#(ctxPath)/system/projectauth/dataView?id=' + data.projectId, '1200', '685', function () {
                 });
             } else if (obj.event === 'warning') {
-                layer.confirm('该认证已审核，确定要重新审核', function (index) {
+                layer.confirm('该申请已审核，确定要重新审核', function (index) {
                     pop_show('审核结果', '#(ctxPath)/system/projectauth/dataUpdate?id=' + data.id, '440', '265', function () {
                         reloadTable();
                         layer.close(index);
                     });
                 });
             }
-
-
         });
 
         $("#back").click(function () {
             window.location.href = '#(ctxPath)/system/projectauth/index';
         });
-
 
         reloadTable = function (_name, _type, _userId, _status,_cTime,_roleId) {
             table.reload('dateTable', {
@@ -110,14 +97,11 @@
             });
         };
 
-
         form.on('submit(search)', function (data) {
             reloadTable(data.field.name, data.field.type, null, data.field.status,cTime,data.field.roleId);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
-
-
 </script>
 #end
 
@@ -165,7 +149,7 @@
 <script type="text/html" id="barOption">
 
     #shiroHasPermission('/system/projectauth/dataView')
-    <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看项目资料</a>
     #end
     #shiroHasPermission('/system/projectauth/dataUpdate')
     #[[

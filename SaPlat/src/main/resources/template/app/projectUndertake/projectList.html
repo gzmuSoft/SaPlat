@@ -83,7 +83,7 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="agency">申请介入</a>
     #end
     #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目详情</a>
     #end
     #[[
     {{#  } }}
@@ -121,13 +121,13 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {field: 'name', title: '项目名称', minWidth: 100, sort: true}
-                , {field: 'roleName', title: '角色名称', minWidth: 100}
-                , {field: 'amount', title: '预计金额（元）', minWidth: 100, sort: true}
+                , {field: 'buildOrgName', title: '立项机构', minWidth: 100}
+                , {field: 'amount', title: '预计金额（元）', width: 140, sort: true}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
-                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                , {field: 'remark', title: '状态', minWidth: 100}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
+                , {field: 'remark', title: '状态', width: 120}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/projectUndertake/projectList'
             , method: 'get'
@@ -147,7 +147,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '', '', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '1200', '685', function () {
                 });
             } else if (obj.event === 'agency') {
                 var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
@@ -175,9 +175,6 @@
                 } //设定异步数据接口的额外参数
             });
         };
-
     });
-
-
 </script>
 #end

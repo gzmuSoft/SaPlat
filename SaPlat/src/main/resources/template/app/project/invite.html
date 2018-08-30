@@ -96,7 +96,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_max_show('查看服务机构详情', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id + '&flag=' + true, function () {
+                pop_max_show('查看服务机构详情', '#(ctxPath)/app/project/seeFacAgency?id=' + data.id, function () {
                 });
             } else if (obj.event === 'invite') {
                 $.ajax({

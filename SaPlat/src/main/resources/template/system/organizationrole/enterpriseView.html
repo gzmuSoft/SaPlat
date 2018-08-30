@@ -101,9 +101,9 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.start" style="width: 180px">创办日期</label>
+                <label class="layui-form-label" for="enterpriseStart" style="width: 180px">创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.start" name="enterprise.start"
+                    <input type="text" id="enterpriseStart" name="enterprise.start"
                            value="#(enterprise.start)" class="layui-input " style="width: 500px" disabled/>
                 </div>
             </div>
@@ -170,11 +170,16 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['table', 'layer','jquery','form'], function () {
+    layui.use(['table', 'layer', 'laydate', 'jquery', 'form'], function () {
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
+            , laydate = layui.laydate
             , form = layui.form;
+
+        laydate.render({
+            elem: '#enterpriseStart' //指定元素
+        });
 
         $("button").click(function () {
             pop_show('查看图片', '#(ctxPath)/util/pdfView?fileID='+$(this).val(),'', '', function () {

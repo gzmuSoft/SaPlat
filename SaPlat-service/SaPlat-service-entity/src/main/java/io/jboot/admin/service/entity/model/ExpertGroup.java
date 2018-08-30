@@ -9,6 +9,7 @@ import io.jboot.db.annotation.Table;
 @Table(tableName = "expert_group", primaryKey = "id")
 public class ExpertGroup extends BaseExpertGroup<ExpertGroup> {
 
+    private User user;
     private boolean isInvite;
 
     public void setIsInvite(boolean isInvite) {
@@ -19,4 +20,15 @@ public class ExpertGroup extends BaseExpertGroup<ExpertGroup> {
         return this.isInvite;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserName() {
+        return user.getName();
+    }
 }

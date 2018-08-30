@@ -29,7 +29,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.name" style="width: 180px">企业机构名称</label>
+                <label class="layui-form-label" for="enterprise.name" style="width: 180px"> <em class="require-mark">*</em>企业机构名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.name" name="enterprise.name" value="#(organization.name)"
                            class="layui-input " style="width: 500px" lay-verify="required"/>
@@ -45,7 +45,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.address"style="width: 180px">公司地址</label>
+                <label class="layui-form-label" for="enterprise.address"style="width: 180px"><em class="require-mark">*</em>公司地址</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.address" name="enterprise.address"
                            value="#(enterprise.address)" lay-verify="required" class="layui-input" style="width: 500px"/>
@@ -54,7 +54,7 @@
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label" for="enterprise.resume" style="width: 680px;">
-                    <h style="margin: 0 50px">公司简介</h>
+                    <h style="margin: 0 50px"><em class="require-mark">*</em>公司简介</h>
                 </label>
                 <div class="layui-input-block">
 					<textarea id="enterprise.resume" name="enterprise.resume" lay-verify="required" placeholder=""
@@ -64,7 +64,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.principal" style="width: 180px">公司负责人</label>
+                <label class="layui-form-label" for="enterprise.principal" style="width: 180px"><em class="require-mark">*</em>公司负责人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.principal" name="enterprise.principal"
                            value="#(enterprise.principal)" class="layui-input" style="width: 500px" lay-verify="required"/>
@@ -72,7 +72,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.phone"style="width: 180px">公司负责人联系方式</label>
+                <label class="layui-form-label" for="enterprise.phone"style="width: 180px"><em class="require-mark">*</em>公司负责人联系方式</label>
               <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="enterprise.phone" name="enterprise.phone"
                            value="#(enterprise.phone)" lay-verify="required|phone" class="layui-input" style="width: 500px"/>
@@ -80,7 +80,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.type"style="width: 180px">主体类型</label>
+                <label class="layui-form-label" for="enterprise.type"style="width: 180px"><em class="require-mark">*</em>主体类型</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.type" name="enterprise.type"
                            value="#(enterprise.type)" class="layui-input" style="width: 500px" lay-verify="required"/>
@@ -88,7 +88,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.credit"style="width: 180px">统一社会信用代码</label>
+                <label class="layui-form-label" for="enterprise.credit"style="width: 180px"><em class="require-mark">*</em>统一社会信用代码</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.credit" name="enterprise.credit"
                            value="#(enterprise.credit)" class="layui-input" style="width: 500px" lay-verify="required"/>
@@ -96,7 +96,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.scope"style="width: 180px">业务范围</label>
+                <label class="layui-form-label" for="enterprise.scope"style="width: 180px"><em class="require-mark">*</em>业务范围</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.scope" name="enterprise.scope"
                            value="#(enterprise.scope)" class="layui-input" style="width: 500px" lay-verify="required"/>
@@ -104,15 +104,15 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.start"style="width: 180px">创办日期</label>
+                <label class="layui-form-label" for="enterpriseStart"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
                 <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="date" id="enterprise.start" name="enterprise.start"
+                    <input type="text" id="enterpriseStart" name="enterprise.start"
                            value="#(enterprise.start)" class="layui-input" style="width: 500px" lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.person"style="width: 180px">企业法人</label>
+                <label class="layui-form-label" for="enterprise.person"style="width: 180px"><em class="require-mark">*</em>企业法人</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.person" name="enterprise.person"
                            value="#(enterprise.person)" class="layui-input" style="width: 500px" lay-verify="required"/>
@@ -120,13 +120,16 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.capital" style="width: 180px">注册资本</label>
+                <label class="layui-form-label" for="enterprise.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
                 <div class="layui-input-inline" >
                     <input type="number" id="enterprise.capital" name="enterprise.capital" value="#(enterprise.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
                 <div class="layui-form-mid layui-word-aux" style="margin:0 240px">（￥）元</div>
             </div>
 
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
@@ -142,7 +145,7 @@
                 <label class="layui-form-label" for="enterprise.website"style="width: 180px">企业网站</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.website" name="enterprise.website"
-                           value="#(enterprise.website)" class="layui-input" style="width: 500px" lay-verify="required"/>
+                           value="#(enterprise.website)" class="layui-input" style="width: 500px" />
                 </div>
             </div>
 
@@ -150,7 +153,7 @@
                 <label class="layui-form-label" for="enterprise.landline"style="width: 180px">座机电话</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="enterprise.landline" name="enterprise.landline"
-                           value="#(enterprise.landline)" class="layui-input" style="width: 500px" lay-verify="tel"/>
+                           value="#(enterprise.landline)" class="layui-input" style="width: 500px" />
                 </div>
             </div>
 
@@ -158,7 +161,7 @@
                 <label class="layui-form-label" for="enterprise.scale" style="width: 180px">企业人数</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="number" id="enterprise.scale" name="enterprise.scale"
-                           value="#(enterprise.scale)" class="layui-input" style="width: 500px" lay-verify="required|pLength"/>
+                           value="#(enterprise.scale)" class="layui-input" style="width: 500px" lay-verify="Length"/>
                 </div>
             </div>
 
@@ -182,39 +185,68 @@
 #define js()
 <script type="text/javascript">
     var fileID, fileFromID;
-    layui.use(['form', 'layer', 'upload'], function () {
+    layui.use(['form', 'layer', 'upload', 'laydate', 'element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
+            , element = layui.element
+            , laydate = layui.laydate
             , upload = layui.upload;
+
+        laydate.render({
+            elem: '#enterpriseStart' //指定元素
+        });
+
+        //创建监听函数
+         var xhrOnProgress=function(fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+             //使用闭包实现监听绑
+            return function() {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                 //判断监听函数是否为函数
+                  if (typeof xhrOnProgress.onprogress !== 'function')
+                       return xhr;
+                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                    if (xhrOnProgress.onprogress && xhr.upload) {
+                          xhr.upload.onprogress = xhrOnProgress.onprogress;
+                    }
+                    return xhr;
+             }
+         }
 
         upload.render({
             elem: '#upload'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            , exts: 'doc|docx|pdf'
+            , exts: 'doc|docx|pdf|png|jpeg|jpg'
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress', value+'%')//设置页面进度条
+            }
             , data: {
                 description: "法人身份证照片"
             }, before: function (res) {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
-                $('body').prepend(bg);
+                $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
+                $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=enterprise&fieldName=法人身份证照片', function (data) {
-                        $('.loading-bg').remove();
+                        <!--$('.loading-bg').remove();-->
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
-                    $('.loading-bg').remove();
+                    <!--$('.loading-bg').remove();-->
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);
                 }
             }
             , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
                 alert("文件上传错误！请重新尝试！");
             }
         });

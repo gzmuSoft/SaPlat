@@ -31,10 +31,10 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.name"style="width: 180px">专业团体名称</label>
+                <label class="layui-form-label" for="profGroup.name"style="width: 180px"><em class="require-mark">*</em>专业团体名称</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" required/>
+                           class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
@@ -46,42 +46,65 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.scope"style="width: 180px">服务范围</label>
+                <label class="layui-form-label" for="profGroup.scope"style="width: 180px"><em class="require-mark">*</em>服务范围</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.scope" name="profGroup.scope"
-                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.performance"style="width: 180px">服务业绩</label>
+                <label class="layui-form-label" for="profGroup.performance"style="width: 180px"><em class="require-mark">*</em>服务业绩</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.performance" name="profGroup.performance"
-                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="profGroup.resume" style="width: 680px;">
-                    <h style="margin: 0 50px">人员简历</h>
-                </label>
-                <div class="layui-input-block">
-					<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""
-                              class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(profGroup.resume)</textarea>
-                </div>
+            <!--应公司要求，人员简历由填写改为上传文件-->
+            <!--修改者：刘英伟-->
+            <!--修改时间：2018年8月27日-->
+            <!--<div class="layui-form-item layui-form-text">-->
+                <!--<label class="layui-form-label" for="profGroup.resume" style="width: 680px;">-->
+                    <!--<h style="margin: 0 50px"><em class="require-mark">*</em>人员简历</h>-->
+                <!--</label>-->
+                <!--<div class="layui-input-block">-->
+					<!--<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""-->
+                              <!--class="layui-textarea"-->
+                              <!--cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(profGroup.resume)</textarea>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.content"style="width: 180px">专业内容</label>
+                <label class="layui-form-label" for="upload-resume" style="width: 160px"><em
+                        class="require-mark">*</em>人员简历</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload ">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" name="upload-resume" id="upload-resume">
+                                <i class="layui-icon"></i>上传文件
+                            </button>
+                            <input class="layui-hide" type="text" value="#(profGroup.resume)"
+                                   id="profGroup.resume" name="profGroup.resume">
+                            <button type="button" class="layui-btn" id="see-resume">查看</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="profGroup.content"style="width: 180px"><em class="require-mark">*</em>专业内容</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.content" name="profGroup.content"
-                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.capital" style="width: 180px">注册资本</label>
+                <label class="layui-form-label" for="profGroup.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
                 <div class="layui-input-inline" >
                     <input type="number" id="profGroup.capital" name="profGroup.capital" value="#(profGroup.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
                 </div>
@@ -90,17 +113,20 @@
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px">管理员姓名</label>
+                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px"><em class="require-mark">*</em>管理员姓名</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="profGroup.administrator" name="profGroup.administrator"
-                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required/>
+                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required lay-verify="required"/>
                 </div>
             </div>
 
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress1" lay-filter="upload-progress1" >
+                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+            </div>
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>管理员身份证照片</label>
                 <div class="layui-input-block layui-upload" style="align-content: center;">
-                    <button type="button" class="layui-btn" id="upload" style="margin: 0 100px"><i
+                    <button type="button" class="layui-btn" id="upload1" style="margin: 0 100px"><i
                             class="layui-icon"></i>上传文件
                     </button>
                     <button type="button" class="layui-btn layui-hide " id="see">查看</button>
@@ -108,7 +134,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.contact" style="width: 180px">管理员联系方式</label>
+                <label class="layui-form-label" for="profGroup.contact" style="width: 180px"><em class="require-mark">*</em>管理员联系方式</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="tel" id="profGroup.contact" name="profGroup.contact"
                            value="#(profGroup.contact)" class="layui-input" style="width: 500px" lay-verify="required|phone"/>
@@ -135,39 +161,118 @@
 #define js()
 <script type="text/javascript">
     var fileFromID, fileID;
-    layui.use(['form', 'layer', 'upload'], function () {
+    layui.use(['form', 'layer', 'upload','element'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form
+            , element = layui.element
             , upload = layui.upload;
 
+        //创建监听函数
+         var xhrOnProgress=function(fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+             //使用闭包实现监听绑
+            return function() {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                 //判断监听函数是否为函数
+                  if (typeof xhrOnProgress.onprogress !== 'function')
+                       return xhr;
+                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                    if (xhrOnProgress.onprogress && xhr.upload) {
+                          xhr.upload.onprogress = xhrOnProgress.onprogress;
+                    }
+                    return xhr;
+             }
+         }
+         //用于保存人员简历文件ID
+        var fileId = "";
+
+        //上传控件初始化
         upload.render({
-            elem: '#upload'
+            elem: '#upload-resume'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
-            , exts: 'doc|docx|pdf'
+            , exts: 'pdf|png|jpeg|jpg'
+            , data: {
+                description: "人员简历"
+            }
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress', value+'%')//设置页面进度条
+            }
+            , before: function (res) {
+                fileId = "";
+                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
+                <!--$('body').prepend(bg);-->
+                $('#upload-progress').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress').addClass('layui-hide');
+                if (res.code == 0) {
+                    layer.msg("人员简历上传成功");
+                    fileId = res.data.fileId;
+                    $('input[name="profGroup.resume"]').val(res.data.fileId);
+                    $('#upload-resume').text("已上传");
+                } else if (res.code == 1) {
+                    fileId = "";
+                    layer.msg("文件上传错误，请重新选择上传！");
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
+                fileId = "";
+                layer.msg("文件上传错误，请重新选择上传！");
+            }
+        });
+
+        //读取最新的人员简历文件ID
+        fileId = "#(profGroup.resume)";
+
+        //查看人员简历文件
+        $('#see-resume').removeClass('layui-hide layui-disabled').prop("disabled", "").click(function () {
+            if (fileId === null || fileId === "") {
+                layer.msg("对不起，您当前没有上传人员简历！");
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileId, '', '', function () {});
+            }
+        });
+
+
+        upload.render({
+            elem: '#upload1'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'doc|docx|pdf|png|jpeg|jpg'
+            ,xhr:xhrOnProgress
+            ,progress:function(value){//上传进度回调 value进度值
+                element.progress('upload-progress', value+'%')//设置页面进度条
+            }
             , data: {
                 description: "管理员身份证照片"
             }, before: function (res) {
-                var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');
-                $('body').prepend(bg);
+                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
+                <!--$('body').prepend(bg);-->
+                $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
+                $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=profGroup&fieldName=管理员身份证照片', function (data) {
-                        $('.loading-bg').remove();
+                        <!--$('.loading-bg').remove();-->
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
                 } else if (res.code == 1) {
-                    $('.loading-bg').remove();
+                    <!--$('.loading-bg').remove();-->
                     layer.msg("文件上传失败，请重新选择上传！");
                     setTimeout(function () {
                     }, 1000);
                 }
             }
             , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
                 alert("文件上传错误！请重新尝试！");
             }
         });

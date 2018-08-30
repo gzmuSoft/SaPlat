@@ -8,8 +8,6 @@ import io.jboot.admin.service.entity.model.base.BaseProject;
  */
 @Table(tableName = "project", primaryKey = "id")
 public class Project extends BaseProject<Project> {
-    public static final Project dao = new Project().dao();
-
     private String typeName;
     private String reply;
     private boolean isReceive;
@@ -18,14 +16,23 @@ public class Project extends BaseProject<Project> {
     private boolean isUpload;
     private Long fileID;
     private ProjectAssType projectAssType;
+    private String buildOrgName;
+    private String buildUserName;
 
     public ProjectAssType getProjectAssType() {
-        return ProjectAssType.dao.findByIdLoadColumns(2, "*");
-        //return this.projectAssType;
+        return this.projectAssType;
     }
 
     public void setProjectAssType(ProjectAssType projectAssType) {
         this.projectAssType = projectAssType;
+    }
+
+    public String getProjectAssTypeName()
+    {
+        if(null != projectAssType){
+            return this.projectAssType.getName();
+        }
+        return "";
     }
 
     public Long getFileID() {
@@ -80,7 +87,19 @@ public class Project extends BaseProject<Project> {
         this.reply = reply;
     }
 
+    public String getBuildOrgName() {
+        return buildOrgName;
+    }
 
+    public void setBuildOrgName(String buildOrgName) {
+        this.buildOrgName = buildOrgName;
+    }
+
+    public String getBuildUserName() {
+        return buildUserName;
+    }
+
+    public void setBuildUserName(String buildUserName) {
+        this.buildUserName = buildUserName;
+    }
 }
-
-
