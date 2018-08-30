@@ -42,7 +42,7 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 150, sort: true}
                 , {field: 'roleName', title: '组织机构名称', minWidth: 120, sort: true}
-                , {field: 'amount', title: '预计金额（元）', minWidth: 120, sort: true}
+                , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 150, sort: true}
                 , {field: 'brief', title: '简介', minWidth: 150}
                 ,{field: 'createTime', title: '创建时间', width: 150, sort: true}
@@ -74,7 +74,6 @@
             }
         });
     });
-
-
 </script>
+<script type="text/html" id="tplMoney">{{formatCurrency(d.amount)}}</script>
 #end

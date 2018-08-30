@@ -251,14 +251,23 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-        User user = AuthUtils.getLoginUser();
-        Long id = getParaToLong("id");
-        Project model = projectService.findById(id);
-        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
-        Organization organization=organizationService.findById(user.getUserID());
-        setAttr("organization",organization);
-        setAttr("model", model).render("update.html");
+//        User user = AuthUtils.getLoginUser();
+//        Long id = getParaToLong("id");
+//        Project model = projectService.findById(id);
+//        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
+//        Organization organization=organizationService.findById(user.getUserID());
+//        setAttr("organization",organization);
+//        setAttr("model", model).render("update.html");
 
+        AuthProject apModel = authProjectService.findByProjectId(getParaToLong("id"));//获取项目的立项审核信息
+        Project pModel = projectService.findById(apModel.getProjectId()); //获取项目信息
+        pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
+        Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
+        String strRoleName = roleService.findById(apModel.getRoleId()).getName();
+        setAttr("organization",organization)
+                .setAttr("model", pModel)
+                .setAttr("roleName", strRoleName)
+                .render("update.html");
     }
 
     /**
