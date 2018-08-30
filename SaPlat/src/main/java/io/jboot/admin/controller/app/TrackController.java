@@ -204,6 +204,48 @@ public class TrackController extends BaseController {
     }
 
     /**
+     *  项目列表
+     */
+    @Before(GET.class)
+    public void projectRiskList(){
+        BaseStatus baseStatus=new BaseStatus() {};
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if(PaTypeList != null) {
+            for (ProjectAssType item :
+                    PaTypeList) {
+                baseStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList",baseStatus);
+        render("projectRiskList.html");
+    }
+
+    @Before(GET.class)
+    @NotNullPara({"pageNumber","pageSize"})
+    public void projectRiskListTableData(){
+        User loginUser = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
+        }
+        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
+        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
+        if(page == null) {
+            renderJson(new DataTable<Project>(new Page<Project>()));
+        }
+        else{
+            renderJson(new DataTable<Project>(page));
+        }
+    }
+
+    /**
      * 备案文件上传页面
      */
     @NotNullPara({"projectId"})
@@ -239,36 +281,18 @@ public class TrackController extends BaseController {
         model.setFileID(getParaToLong("fileId"));
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
-/*
-        Long q_fileTypeId = projectFileTypeService.findByName("备案资料移交表").getId();
-        if (model.getFileTypeID().equals(q_fileTypeId)) {
-            model.setId(null);
-            model.setCreateTime(new Date());
-            if (!fileProjectService.save(model)) {
-                renderJson(RestResult.buildError("上传失败"));
-                throw new BusinessException("上传失败");
-            } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
-                files.setIsEnable(true);
-                if (!filesService.update(files)) {
-                    renderJson(RestResult.buildError("文件启用失败"));
-                    throw new BusinessException("文件启用失败");
-                }
-            }
+
+        if (!fileProjectService.saveOrUpdate(model)) {
+            renderJson(RestResult.buildError("上传失败"));
+            throw new BusinessException("上传失败");
         } else {
-            */
-            if (!fileProjectService.saveOrUpdate(model)) {
-                renderJson(RestResult.buildError("上传失败"));
-                throw new BusinessException("上传失败");
-            } else {
-                Files files = filesService.findById(getParaToLong("fileId"));
-                files.setIsEnable(true);
-                if (!filesService.update(files)) {
-                    renderJson(RestResult.buildError("文件启用失败"));
-                    throw new BusinessException("文件启用失败");
-                }
+            Files files = filesService.findById(getParaToLong("fileId"));
+            files.setIsEnable(true);
+            if (!filesService.update(files)) {
+                renderJson(RestResult.buildError("文件启用失败"));
+                throw new BusinessException("文件启用失败");
             }
-        //}
+        }
         renderJson(RestResult.buildSuccess());
     }
 }
