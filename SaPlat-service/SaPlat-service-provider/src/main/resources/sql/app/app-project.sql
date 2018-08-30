@@ -53,6 +53,19 @@ and
     )
 #end
 
+#sql("project-backRecord")
+SELECT
+    a.*
+FROM
+    project as a, project_undertake as b
+where
+    a.id = b.projectID
+and
+    a.status = #para(status)
+and
+    b.facAgencyID = #para(facAgencyID)
+#end
+
 #sql("project-Reviewed")
 SELECT
     a.*

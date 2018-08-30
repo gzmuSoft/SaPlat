@@ -511,7 +511,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -523,7 +523,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -532,7 +532,6 @@ public class ProjectController extends BaseController {
             }
         }
         renderJson(RestResult.buildSuccess());
-
     }
 
     /**
@@ -1272,8 +1271,6 @@ public class ProjectController extends BaseController {
     /**
      * 审查汇总
      */
-
-
     @Before(GET.class)
     @NotNullPara({"pageNumber","pageSize"})
     public void collectTableData(){
