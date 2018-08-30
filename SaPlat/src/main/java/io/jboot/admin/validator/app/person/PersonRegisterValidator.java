@@ -21,7 +21,7 @@ public class PersonRegisterValidator extends JsonValidator {
         if (!c.getPara("user.pwd").equals(c.getPara("rePwd"))) {
             addError("两次输入的密码不一致，请重新输入");
         }
-        validateString("person.name", 2, 16, "姓名请在2-16位");
+        validateString("person.name", 2, 20, "姓名请在2-20位");
         validateString("person.sex",1,1,"请选择性别");
         validateMobile("person.phone", "手机格式不正确");
         validateEmail("user.email", "邮箱格式不正确");

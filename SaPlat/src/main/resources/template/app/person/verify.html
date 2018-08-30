@@ -134,8 +134,6 @@
                 element.progress('upload-progress', value+'%')//设置页面进度条
             }
             , before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
@@ -170,8 +168,6 @@
                 element.progress('upload-progress2', value+'%')//设置页面进度条
             }
             , before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress2').removeClass('layui-hide');
             }, done: function (res) {
                 $('#upload-progress').addClass('layui-hide');

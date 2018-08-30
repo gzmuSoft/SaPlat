@@ -224,9 +224,10 @@ public class OrganizationController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         loginUser.setEmail(getPara("user.email"));
         Organization organization = organizationService.findById(loginUser.getUserID());
-        organization.setContact(getPara("organization.contact"));
-        organization.setAddr(getPara("organization.addr"));
-        organization.setPrincipal(getPara("organization.principal"));
+        organization.setCode(getPara("organization.code"));//组织机构代码
+        organization.setAddr(getPara("organization.addr"));//组织机构地址
+        organization.setContact(getPara("organization.contact"));//委办负责人联系方式
+        organization.setPrincipal(getPara("organization.principal"));//委办负责人姓名
         if (!organizationService.update(organization, loginUser)) {
             renderJson(RestResult.buildError("用户更新失败"));
             throw new BusinessException("用户更新失败");
@@ -286,6 +287,14 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             model = new Management();
         }
+
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+        model.setDetailedaddr(organization.getAddr());
+
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("management", model)
@@ -378,6 +387,18 @@ public class OrganizationController extends BaseController {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         Management model = managementService.findByCreateUserID(createUserID);
+
+        /*
+        //获取当前登录组织机构的信息
+        Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+        model.setDetailedaddr(organization.getAddr());
+        */
+
         Notification noti = notificationService.findById(notiId);
         Long roleid = roleService.findByName(noti.getName()).getId();
         Auth auth = authService.findByUserIDAndRole(createUserID, roleid);
@@ -456,6 +477,15 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             model = new Enterprise();
         }
+
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+        model.setAddress(organization.getAddr());
+        model.setCredit(organization.getCode());
+
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("enterprise", model)
@@ -637,6 +667,14 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             model = new FacAgency();
         }
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+        model.setAddress(organization.getAddr());
+        model.setCredit(organization.getCode());
+
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("facAgency", model)
@@ -827,6 +865,12 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             model = new ProfGroup();
         }
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("profGroup", model)
@@ -1007,6 +1051,12 @@ public class OrganizationController extends BaseController {
         if (model == null) {
             model = new ReviewGroup();
         }
+        //获取初始数据
+        model.setName(organization.getName());
+        model.setSpell(organization.getSpell());
+        model.setRemark(organization.getRemark());
+        model.setOrgID(organization.getId());
+
         //flag = 0时未在认证状态，页面不禁用 flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
             setAttr("organization", organization).setAttr("reviewGroup", model)

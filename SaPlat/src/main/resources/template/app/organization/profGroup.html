@@ -16,7 +16,7 @@
 #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">专业团体</legend>
+        <legend style="font-size: 20px;font-weight: 500;">专业团体认证</legend>
     </fieldset>
 
     <form id="person" class="layui-form" action="">
@@ -203,8 +203,6 @@
             }
             , before: function (res) {
                 fileId = "";
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
@@ -251,8 +249,6 @@
             , data: {
                 description: "管理员身份证照片"
             }, before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 $('#upload-progress').addClass('layui-hide');

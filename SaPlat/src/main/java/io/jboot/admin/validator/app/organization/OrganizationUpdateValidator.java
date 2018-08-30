@@ -13,8 +13,8 @@ public class OrganizationUpdateValidator extends JsonValidator {
 
     @Override
     protected void validate(Controller c) {
-        validateString("user.name", 4, 16, "登录账号请在4-16位");
-        validateString("organization.name", 4, 16, "组织名请在4-16位");
+        validateString("user.name", 5, 25, "登录账号请在5-25位");
+        validateString("organization.name", 4, 50, "组织名请在4-50位");
         validateString("organization.principal", 2, 7, "委办负责人姓名请在2-7位");
         validateRequiredString("organization.addr", "请输入组织机构地址");
         validateString("organization.code", 18, 18, "请输入18位组织机构代码");

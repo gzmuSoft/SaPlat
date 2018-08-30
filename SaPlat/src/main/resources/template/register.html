@@ -165,7 +165,6 @@
 </div>
 
 <script type="text/javascript">
-
     $('#LAY-user-login-user-name').on('mouseover', function() {
         layer.tips('5-25个字符，推荐使用中文，请勿包含姓名/身份证/银行卡等隐私信息，一旦设置成功无法修改', '#LAY-user-login-user-name', {
             tips: [2, '#5FB878'], time:10000,
@@ -218,13 +217,13 @@
         });
     });
     $('#LAY-organization-login-name').on('mouseover', function() {
-        layer.tips('由1-50个字符构成的组织机构名称', '#LAY-organization-login-name', {
+        layer.tips('由4-50个字符构成的组织机构名称', '#LAY-organization-login-name', {
             tips: [2, '#5FB878'], time:10000,
             area: ['220px', 'auto']
         });
     });
     $('#LAY-organization-login-code').on('mouseover', function() {
-        layer.tips('全国组织机构统一社会信用代码<br>由十八位的阿拉伯数字或大写英文字母组成<br>例如：91512081MA62K0260E', '#LAY-organization-login-code', {
+        layer.tips('全国组织机构统一社会信用代码(选填)<br>由十八位的阿拉伯数字或大写英文字母组成<br>例如：91512081MA62K0260E', '#LAY-organization-login-code', {
             tips: [2, '#5FB878'], time:10000,
             area: ['270px', 'auto']
         });
@@ -236,7 +235,7 @@
         });
     });
     $('#LAY-organization-login-principal').on('mouseover', function() {
-        layer.tips('组织机构的委办负责人的真实姓名，由1-50个字符构成', '#LAY-organization-login-principal', {
+        layer.tips('组织机构的委办负责人的真实姓名，由2-20个字符构成', '#LAY-organization-login-principal', {
             tips: [2, '#5FB878'], time:10000
         });
     });
