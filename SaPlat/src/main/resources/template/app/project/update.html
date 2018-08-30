@@ -24,6 +24,30 @@
         layedit.build('brief', {
             height: 180 //设置编辑器高度
         }); //建立编辑器
+
+        $("#eva-scheme").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)");
+        });
+
+        $("#eva-scheme-process").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+        });
+
+        $("#pretrial-report").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+        });
+
+        $("#final-report").click(function(){
+            alert("终审报告");
+        });
+
+        $("#project-record").click(function(){
+            alert("项目备案");
+        });
+
+        $("#project-track").click(function(){
+            alert("项目跟踪");
+        });
     });
 
 </script>
@@ -35,7 +59,16 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">项目信息</div>
+                <div class="layui-card-header">项目信息
+                    <div class="layui-btn-group" style="float:right">
+                        <button class="layui-btn layui-btn-sm" id="eva-scheme">评估方案</button>
+                        <button class="layui-btn layui-btn-sm" id="eva-scheme-process">评估过程资料</button>
+                        <button class="layui-btn layui-btn-sm" id="pretrial-report">预审报告</button>
+                        <button class="layui-btn layui-btn-sm" id="final-report">终审报告</button>
+                        <button class="layui-btn layui-btn-sm" id="project-record">项目备案</button>
+                        <button class="layui-btn layui-btn-sm" id="project-track">项目跟踪</button>
+                    </div>
+                </div>
                 <div class="layui-card-body">
                     <form class="layui-form" action="">
                         <div class="layui-row layui-col-space10 layui-form-item">
