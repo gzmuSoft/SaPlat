@@ -51,12 +51,14 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
      * @param model
      * @return
      */
-    public ExpertGroup fitModel(ExpertGroup model){
-        User user = new User();
-        user.setUserID(model.getId());
-        user.setUserSource(0);// 0 代表个人
+    public ExpertGroup fitModel(ExpertGroup model) {
+        if (model != null) {
+            User user = new User();
+            user.setUserID(model.getId());
+            user.setUserSource(0);// 0 代表个人
 
-        model.setUser(userServiceNew.findModel(user));
+            model.setUser(userServiceNew.findModel(user));
+        }
         return model;
     }
 

@@ -466,6 +466,7 @@ public class ProjectUndertakeController extends BaseController {
         Long id = getParaToLong("id");
 
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
+        impTeam.setName(impTeam.getName() + "  评估实施小组");
         impTeam.setProjectID(id);
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
