@@ -31,18 +31,18 @@
     </div>
 </div>
 
-<script type="text/html" id="backRecord">
+<script type="text/html" id="ridkTrack">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(!d.isBackRecordUpLoad){ }}
+    {{#  if(!d.isRidkTrackUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadBackRecord">上传</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadRidkTrack">上传</a>
 
     #[[
-    {{# } else if(d.isBackRecordUpLoad){ }}
+    {{# } else if(d.isRidkTrackUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs " lay-event="uploadBackRecord">√ 已上传</a>
-    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecord">查看</a>
+    <a class="layui-btn layui-btn-xs " lay-event="uploadRidkTrack">√ 已上传</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeRidkTrack">查看</a>
     #[[
     {{#  } }}
     ]]#
@@ -81,10 +81,10 @@
                 , {field: 'status', title: '状态', width: 100, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {title: '备案资料', width: 120, align: 'center', toolbar: '#backRecord'}
+                , {title: '风险跟踪', width: 120, align: 'center', toolbar: '#ridkTrack'}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/track/projectListTableData'
+            , url: '#(ctxPath)/app/track/projectRiskListTableData'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -99,7 +99,7 @@
         });
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'uploadBackRecord') {
+            if (obj.event === 'uploadRidkTrack') {
                 layer.open({
                     type: 2,
                     area: ['500px', '300px'],
@@ -111,7 +111,7 @@
                     content: '#(ctxPath)/app/track/fileUploading?projectId=' + data.id,
                     end: function () {
                         table.reload('dateTable', {
-                            url: '#(ctxPath)/app/track/projectListTableData'
+                            url: '#(ctxPath)/app/track/projectRiskListTableData'
                         });
                     }
                 });
@@ -126,7 +126,7 @@
 
         reloadTable = function (projectType) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/track/projectListTableData'
+                url: '#(ctxPath)/app/track/projectRiskListTableData'
                 , where: {
                     projectType: projectType
                 } //设定异步数据接口的额外参数
