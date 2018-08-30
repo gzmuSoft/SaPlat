@@ -66,10 +66,10 @@ public class EvaluationController extends BaseController {
         Long id = getParaToLong("id");
         Project project = projectService.findFirstByColumns(new String[]{"id", "status"},
                 new String[]{id.toString(), ProjectStatus.REVIEW});
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
         if (project == null) {
             throw new BusinessException("当前项目不符合要求！");
         }
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
 
         User u = AuthUtils.getLoginUser();
         // 如果为委评
@@ -149,6 +149,53 @@ public class EvaluationController extends BaseController {
 
         setAttr("project", project)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
+                .render("evaluation.html");
+    }
+
+    /**
+     * 评估详情
+     */
+    @NotNullPara({"id"})
+    public void evaluationInformation_mgr() {
+        Long id = getParaToLong("id");
+        Project project = projectService.findFirstByColumns(new String[]{"id", "status"},
+                new String[]{id.toString(), ProjectStatus.REVIEW});
+        if (project == null) {
+            throw new BusinessException("当前项目不符合要求！");
+        }
+        setAttr("isSelf", "true");
+        setAttr("method", "false");
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
+
+        if (evaScheme == null) {
+            evaScheme = new EvaScheme();
+        } else {
+            List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(id);
+            if (model == null || model.size() == 0) {
+                setAttr("siteSurveyExpertAdvice", "false");
+            } else {
+                setAttr("siteSurveyExpertAdvice", "true");
+            }
+            List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(id);
+            if (diagnoses == null || diagnoses.size() == 0) {
+                setAttr("diagnoses", "false");
+            } else {
+                setAttr("diagnoses", "true");
+            }
+        }
+        List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
+        for (ProjectFileType p : list) {
+            List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), id);
+            if (fileProjects != null && fileProjects.size() > 0) {
+                setAttr(p.getUrl(), "true");
+            } else {
+                setAttr(p.getUrl(), "false");
+            }
+        }
+
+        setAttr("project", project)
+                .setAttr("evaSchemeStatus", evaScheme.getStatus())
+                .setAttr("entry","mgr_agency")
                 .render("evaluation.html");
     }
 }
