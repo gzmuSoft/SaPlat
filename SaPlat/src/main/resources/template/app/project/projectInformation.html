@@ -51,8 +51,8 @@
             </div>
 
             <div>
-                <label for="project.site" style="padding-top: 5px;">项目地址:</label>
-                <input type="text" id="project.site" class="project" name="project.site"/>
+                <label for="project.site" style="padding-top: 5px; width: 100px;text-align: right;">项目地址:</label>
+                <input type="text" id="project.site" class="project" name="project.site" style="margin: 0 10px"/>
             </div>
             <br><br><br><br><br>
             <div>
@@ -76,8 +76,8 @@
             </div>
 
             <div>
-                <label for="project.paTypeID">项目评估类型:</label>
-                <select id="project.paTypeID" class="project" name="project.paTypeID">
+                <label for="project.paTypeID" style="width: 100px;margin-top: 5px">项目评估类型:</label>
+                <select id="project.paTypeID" class="project" name="project.paTypeID" style="margin: 0 10px">
                     <option value="">请选择项目评估类型</option>
                     #for(List : PaTypeNameList)
                     <option value="#(List.id)">#(List.name)</option>
