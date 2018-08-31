@@ -24,6 +24,54 @@
         layedit.build('brief', {
             height: 180 //设置编辑器高度
         }); //建立编辑器
+        var entry = "#(entry)";
+        if("mgr" === entry){
+            $("#entries-mgr").removeClass("layui-hide");
+            var status = "#(model.status)"
+            switch(status){
+                case "7":
+                    break;
+                case "6":
+                    break;
+                case "5":
+                    break;
+                case "4":
+                    $("#eva-scheme").removeClass("layui-hide");
+                    $("#eva-scheme-process").removeClass("layui-hide");
+                    $("#pretrial-report").removeClass("layui-hide");
+                    break;
+                case "3":
+                    break;
+                case "2":
+                    break;
+                case "1":
+                    break;
+            }
+        }
+
+        $("#eva-scheme").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)");
+        });
+
+        $("#eva-scheme-process").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+        });
+
+        $("#pretrial-report").click(function(){
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+        });
+
+        $("#final-report").click(function(){
+            alert("终审报告");
+        });
+
+        $("#project-record").click(function(){
+            alert("项目备案");
+        });
+
+        $("#project-track").click(function(){
+            alert("项目跟踪");
+        });
     });
 
     $('.money').on('input propertychange', function() {
@@ -62,7 +110,16 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-header">项目信息</div>
+                <div class="layui-card-header">项目信息
+                    <div class="layui-btn-group layui-hide" style="float:right" id="entries-mgr">
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme">评估方案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme-process">评估过程资料</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="pretrial-report">预审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="final-report">终审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-record">项目备案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-track">项目跟踪</button>
+                    </div>
+                </div>
                 <div class="layui-card-body">
                     <form class="layui-form" action="">
                         <div class="layui-row layui-col-space10 layui-form-item">
@@ -126,15 +183,35 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label" style="width: 130px;">组织机构代码</label>
-                                <div class="layui-input-block" style="margin-left:160px; width:200px;">
+                                <label class="layui-form-label" style="width: 110px;">组织机构代码</label>
+                                <div class="layui-input-block" style="margin-left:140px; width:200px;">
                                     <input type="text" value="#(organization.code)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">地址</label>
-                                <div class="layui-input-block" style="width: 290px;">
+                                <label class="layui-form-label" style="width: 110px;">地址</label>
+                                <div class="layui-input-block" style="margin-left:140px; width: 289px;">
                                     <input type="text" value="#(organization.addr)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">负责人姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" value="#(organization.principal)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 110px;">联系方式</label>
+                                <div class="layui-input-block" style="margin-left:140px; width:200px;">
+                                    <input type="text" value="#(organization.contact)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 110px;">立项所用身份</label>
+                                <div class="layui-input-block" style="margin-left:140px; width: 289px;">
+                                    <input type="text" value="#(roleName)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                         </div>

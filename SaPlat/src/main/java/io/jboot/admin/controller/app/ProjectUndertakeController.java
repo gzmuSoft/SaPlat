@@ -62,6 +62,10 @@ public class ProjectUndertakeController extends BaseController {
     private FilesService filesService;
     @JbootrpcService
     private UserService userService;
+    @JbootrpcService
+    private AuthProjectService authProjectService;
+    @JbootrpcService
+    private RoleService roleService;
 
     /**
      * 去重
@@ -140,6 +144,7 @@ public class ProjectUndertakeController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
+        /*
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
         model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
@@ -147,6 +152,19 @@ public class ProjectUndertakeController extends BaseController {
         setAttr("organization",organization)
                 .setAttr("model", model)
                 .render("see.html");
+        */
+
+        Long id = getParaToLong("id");
+        AuthProject apModel = authProjectService.findByProjectId(id);//获取项目的立项审核信息
+        Project pModel = projectService.findById(id); //获取项目信息
+        pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
+        Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
+        String strRoleName = roleService.findById(apModel.getRoleId()).getName();
+        setAttr("organization",organization)
+                .setAttr("model", pModel)
+                .setAttr("roleName", strRoleName)
+                .render("see.html");
+
     }
 
     /**
@@ -466,6 +484,7 @@ public class ProjectUndertakeController extends BaseController {
         Long id = getParaToLong("id");
 
         ImpTeam impTeam = getBean(ImpTeam.class, "impTeam");
+        impTeam.setName(impTeam.getName() + "  评估实施小组");
         impTeam.setProjectID(id);
         impTeam.setCreateTime(new Date());
         impTeam.setLastAccessTime(new Date());
@@ -638,10 +657,10 @@ public class ProjectUndertakeController extends BaseController {
             }
         }
         String[] expertIds = impTeam.getExpertGroupIDs().split(",");
-        List<ExpertGroup> expertGroups = Collections.synchronizedList(new ArrayList<ExpertGroup>());
+        List<Person> expertGroups = Collections.synchronizedList(new ArrayList<Person>());
         for (String expertId : expertIds) {
             if (!"".equals(expertId.trim())) {
-                expertGroups.add(expertGroupService.findById(expertId));
+                expertGroups.add(personService.findById(expertId));
             }
         }
         String[] invTeamIds = impTeam.getInvTeamIDs().split(",");

@@ -151,7 +151,7 @@
             , cols: [[                  //标题栏
                 {field: 'name', title: '项目名称', minWidth: 100, sort: true}
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 100}
-                , {field: 'amount', title: '预计金额（元）', width: 140, sort: true}
+                , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
@@ -176,7 +176,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '1200', '685', function () {
+                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '1200', '750', function () {
                 });
             } else if (obj.event === 'agency') {
                 var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
@@ -206,4 +206,5 @@
         };
     });
 </script>
+<script type="text/html" id="tplMoney">{{formatCurrency(d.amount)}}</script>
 #end

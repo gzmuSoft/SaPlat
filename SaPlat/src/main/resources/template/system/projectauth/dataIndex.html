@@ -44,7 +44,7 @@
                 , {field: 'reply', title: '回复信息', minWidth: 100}
                 , {field: 'status', title: '状态', width: 100, sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'}
-                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/projectauth/dataTableData'
             , method: 'get'
@@ -67,7 +67,7 @@
                     reloadTable();
                 });
             } else if (obj.event === 'view') {
-                pop_max_show('查看项目资料', '#(ctxPath)/system/projectauth/dataView?id=' + data.projectId, '1200', '685', function () {
+                pop_show('查看项目资料', '#(ctxPath)/system/projectauth/dataView?id=' + data.projectId, '1200', '750', function () {
                 });
             } else if (obj.event === 'warning') {
                 layer.confirm('该申请已审核，确定要重新审核', function (index) {

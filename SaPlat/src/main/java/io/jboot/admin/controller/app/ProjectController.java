@@ -274,14 +274,45 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-        User user = AuthUtils.getLoginUser();
+//        User user = AuthUtils.getLoginUser();
+//        Long id = getParaToLong("id");
+//        Project model = projectService.findById(id);
+//        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
+//        Organization organization=organizationService.findById(user.getUserID());
+//        setAttr("organization",organization);
+//        setAttr("model", model).render("update.html");
+        Organization organization = null;
+        Project pModel = null;
         Long id = getParaToLong("id");
-        Project model = projectService.findById(id);
-        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
-        Organization organization=organizationService.findById(user.getUserID());
-        setAttr("organization",organization);
-        setAttr("model", model).render("update.html");
+        String strRoleName = "";
+        if (null != id) {
+            pModel = projectService.findById(id); //获取项目信息
+            if (null == pModel) {
+                pModel = new Project();
+            }
 
+            pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
+            organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
+            if (null == organization) {
+                organization = new Organization();
+            }
+
+            AuthProject apModel = authProjectService.findByProjectId(id);//获取项目的立项审核信息
+            if (null != apModel) {
+                strRoleName = roleService.findById(apModel.getRoleId()).getName();
+            }else {
+                strRoleName = "";
+            }
+        } else {
+            organization = new Organization();
+            pModel = new Project();
+            strRoleName = "";
+        }
+        setAttr("organization", organization)
+                .setAttr("model", pModel)
+                .setAttr("roleName", strRoleName)
+                .setAttr("entry","mgr")
+                .render("update.html");
     }
 
     /**
@@ -524,7 +555,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -536,7 +567,7 @@ public class ProjectController extends BaseController {
                 renderJson(RestResult.buildError("上传失败"));
                 throw new BusinessException("上传失败");
             } else {
-                Files files = filesService.findById(getParaToLong("fileTypeId"));
+                Files files = filesService.findById(getParaToLong("fileId"));
                 files.setIsEnable(true);
                 if (!filesService.update(files)) {
                     renderJson(RestResult.buildError("文件启用失败"));
@@ -545,7 +576,6 @@ public class ProjectController extends BaseController {
             }
         }
         renderJson(RestResult.buildSuccess());
-
     }
 
     /**
@@ -669,16 +699,16 @@ public class ProjectController extends BaseController {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
 
             // 当他为申请的时候,以当前用户登录的 id 作为创建者 id 查找 申请 成功的项目
-            List<ProjectUndertake> projectUndertakeList1 = projectUndertakeService.findByCreateUserIDAndStatusAndAOI(loginUser.getId(), ProjectUndertakeStatus.ACCEPT,false);
+            List<ProjectUndertake> projectUndertakeList1 = projectUndertakeService.findByCreateUserIDAndStatusAndAOI(loginUser.getId(), ProjectUndertakeStatus.ACCEPT, false);
             undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList1, ProjectStatus.REVIEW);
             if (undertake == null) {
                 undertake = Collections.synchronizedList(new ArrayList<>());
             }
 
             // 当他为邀请的时候,以当前用户的服务机构 id 作为服务机构 id 查找 邀请 成功的项目
-            List<ProjectUndertake> projectUndertakeList2 = projectUndertakeService.findListByFacAgencyIdAndStatusAndAOI(facAgency.getId(), ProjectUndertakeStatus.ACCEPT,true);
+            List<ProjectUndertake> projectUndertakeList2 = projectUndertakeService.findListByFacAgencyIdAndStatusAndAOI(facAgency.getId(), ProjectUndertakeStatus.ACCEPT, true);
             List<Project> undertakeTmp = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList2, ProjectStatus.REVIEW);
-            if (undertakeTmp != null && undertakeTmp.size() > 0){
+            if (undertakeTmp != null && undertakeTmp.size() > 0) {
                 undertake.addAll(undertakeTmp);
             }
         }
@@ -728,13 +758,13 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        if(organization != null) {
+        if (organization != null) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
             if (facAgency != null) {// && facAgency.getIsEnable()
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
-        }else {
+        } else {
             projectUndertake.setCreateUserID(loginUser.getId());
         }
         Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
@@ -767,54 +797,22 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-//        Project project = new Project();
-//        project.setStatus(ProjectStatus.REVIEWED);
-//        project.setUserId(loginUser.getId());
-//        List<Project> pageList = projectService.findPage(project, pageNumber, pageSize).getList();
-//        for (Project p : pageList) {
-//            ApplyInvite applyInvite = applyInviteService.findByProjectID(p.getId());
-//            if (applyInvite != null && applyInvite.getDeadTime().before(new Date())) {
-//                float allNum, noPassNum, rate;
-//                applyInvite = new ApplyInvite();
-//                applyInvite.setModule(1);
-//                applyInvite.setProjectID(p.getId());
-//                applyInvite.setCreateUserID(loginUser.getId());
-//                applyInvite.setIsEnable(true);
-//                List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-//                allNum = list.size();
-//                applyInvite.setStatus(ApplyInviteStatus.NOPASS);
-//                list = applyInviteService.findList(applyInvite);
-//                noPassNum = list.size();
-//                rate = 1 - (noPassNum / allNum);
-//                if (rate > 0.8) {
-//                    p.setStatus(ProjectStatus.CHECKED);
-//                } else {
-//                    p.setStatus(ProjectStatus.REVIEW);
-//                }
-//                if (allNum <= 3) {
-//                    p.setStatus(ProjectStatus.REVIEW);
-//                }
-//                if (!projectService.update(p)) {
-//                    throw new BusinessException("更新失败！");
-//                }
-//            }
-//        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());//找到组织机构信息
-        if(organization != null) {
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
-            if (facAgency != null) {
-                projectUndertake.setFacAgencyID(facAgency.getId());
-            }
-        }else {
-            projectUndertake.setFacAgencyID(loginUser.getId());
+
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
         }
+        /*else {
+            projectUndertake.setFacAgencyID(Long.parseLong("0"));
+        }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
+
     @NotNullPara("id")
     public void finishUpload() {
         Project project = projectService.findById(getParaToLong("id"));
@@ -862,12 +860,12 @@ public class ProjectController extends BaseController {
     }
 
     @NotNullPara("id")
-    public void finishView(){
+    public void finishView() {
         Project project = projectService.findById(getParaToLong("id"));
         ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
-        FileProject fileProject=fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(),project.getId());
-        setAttr("fileProject",fileProject);
-        if(fileProject!=null) {
+        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
+        setAttr("fileProject", fileProject);
+        if (fileProject != null) {
             setAttr("fileID", fileProject.getFileID());
         }
         render("finishView.html");
@@ -985,7 +983,7 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        try{
+        try {
             Organization organization = organizationService.findById(user.getUserID());//找到组织机构信息
             //获取当前服务机构之外的其他所有服务机构信息
             Page<FacAgency> page = facAgencyService.findPageExcludeByOrgID(organization.getId(), pageNumber, pageSize);
@@ -995,9 +993,8 @@ public class ProjectController extends BaseController {
                 faList.get(i).setIsInvite(projectUndertakeService.findIsInvite(faList.get(i).getId(), getParaToLong("id")));
             }
             renderJson(new DataTable<FacAgency>(page));
-        }
-        catch (Exception ex){
-            System.out.println("渲染服务机构表格数据失败，原因："+ ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("渲染服务机构表格数据失败，原因：" + ex.getMessage());
         }
     }
 
@@ -1232,12 +1229,12 @@ public class ProjectController extends BaseController {
         ProjectUndertake projectUndertake = new ProjectUndertake();
         Organization organization = organizationService.findById(loginUser.getUserID());//找到组织机构信息
         FacAgency facAgency = null;
-        if(organization != null) {
+        if (organization != null) {
             facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
             if (facAgency != null) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
             }
-        }else {
+        } else {
             projectUndertake.setFacAgencyID(loginUser.getId());
         }
         projectUndertake.setCreateUserID(loginUser.getId());
@@ -1286,55 +1283,83 @@ public class ProjectController extends BaseController {
     /**
      * 审查汇总
      */
-
-
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void collectTableData(){
+    @NotNullPara({"pageNumber", "pageSize"})
+    public void collectTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Project project=new Project();
+        Project project = new Project();
         project.setStatus(ProjectStatus.CHECKED);
         project.setIsEnable(true);
-        Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
+        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
-/**
- *  项目汇总
- */
+
+    /**
+     * 项目汇总
+     */
 
     @Before(GET.class)
-    public void projectCollect(){
-        BaseStatus baseStatus=new BaseStatus() {};
+    public void projectCollect() {
+        BaseStatus baseStatus = new BaseStatus() {
+        };
 //        baseStatus.add("4","评估中");
 //        baseStatus.add("5","审查中");
 //        baseStatus.add("7","审查通过");
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        if(PaTypeList != null) {
+        if (PaTypeList != null) {
             for (ProjectAssType item :
                     PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList",baseStatus);
+        setAttr("PaTypeNameList", baseStatus);
         render("projectCollect.html");
     }
 
 
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void projectCollectTableData(){
+    @NotNullPara({"pageNumber", "pageSize"})
+    public void projectCollectTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Project project=new Project();
-        if(StrKit.notBlank(getPara("projectType"))) {
+        Project project = new Project();
+        if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
         }
-        project.setUserId(AuthUtils.getLoginUser().getId());
+
+        //如果当前用户是管理机构则不限定用户信息
+        if (!(isMgrAgency(AuthUtils.getLoginUser()))) {
+            project.setUserId(AuthUtils.getLoginUser().getId());
+        }
         project.setIsEnable(true);
-        Page<Project> page=projectService.findPage(project,pageNumber,pageSize);
+        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
+    }
+
+    //角色“管理机构”的ID
+    private final int MGR_AGENCY = 3;
+
+    /**
+     * 判断用户是不是“管理机构”
+     *
+     * @param user
+     * @return 是管理机构返回true，否则返回false
+     */
+    private boolean isMgrAgency(User user) {
+        if (null != user && 1 == user.getUserSource()) {
+            Organization organization = organizationService.findById(user.getUserID());
+            if (null != organization) {
+                List<UserRole> userRoles = userRoleService.findListByUserId(user.getId());
+                for (UserRole userRole : userRoles) {
+                    if (MGR_AGENCY == userRole.getRoleID()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

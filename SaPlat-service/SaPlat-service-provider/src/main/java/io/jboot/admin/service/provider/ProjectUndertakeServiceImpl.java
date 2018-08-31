@@ -118,6 +118,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         }
         if (projectUndertake.getCreateUserID() != null) {
             columns.eq("createUserID", projectUndertake.getCreateUserID());
+            columns.ne("facAgencyID", projectUndertake.getCreateUserID());//排除自评的项目
         }
         if (projectUndertake.getFacAgencyID() != null) {
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());

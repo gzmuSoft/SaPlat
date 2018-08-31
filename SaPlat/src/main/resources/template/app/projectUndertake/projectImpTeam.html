@@ -83,17 +83,17 @@
         <hr class="layui-bg-green">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label" for="impTeam.projectID" style="width: 150px">项目名</label>
+                <label class="layui-form-label" for="impTeam.projectID" style="width: 150px">项目名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="impTeam.projectID" name="impTeam.projectID"
                            class="layui-input layui-disabled" readonly="readonly" value="#(project.name)" required/>
                 </div>
             </div>
 
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="display: none">
                 <label class="layui-form-label" for="impTeamName" style="width: 150px">小组名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="impTeamName" name="impTeam.name" class="layui-input" lay-verify="required"/>
+                    <input type="text" id="impTeamName" name="impTeam.name" value="#(project.name)" class="layui-input" lay-verify="required"/>
                 </div>
             </div>
 
@@ -620,8 +620,6 @@
             , data: {
                 description: $('#modelName').text()
             }, before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
@@ -752,7 +750,7 @@
          */
         form.on('submit(sub)', function () {
             if (dateIsCorrect()) {
-                if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
+                //if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
                     if (tableNull()) {
                         if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
                             var ajaxTimeoutTest = $.ajax({
@@ -786,7 +784,7 @@
                     } else {
                         layer.msg("至少有一条计划！且计划不能为空");
                     }
-                }
+                //}
             } else {
                 layer.msg("计划日期填写错误！");
             }

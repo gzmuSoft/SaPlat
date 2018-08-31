@@ -2,7 +2,14 @@
 #@layout()
 
 #define css()
-
+<style>
+    button {
+        background: #758ef0;
+        color: #FFF;
+        border: none;
+        border-radius: 15px;
+    }
+</style>
 #end
 
 #define js()
@@ -23,6 +30,7 @@
 #end
 
 #define content()
+
 <div style="padding: 20px; background-color: #F2F2F2;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
@@ -91,15 +99,35 @@
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label" style="width: 130px;">组织机构代码</label>
-                                <div class="layui-input-block" style="margin-left:160px; width:200px;">
+                                <label class="layui-form-label" style="width: 110px;">组织机构代码</label>
+                                <div class="layui-input-block" style="margin-left:140px; width:200px;">
                                     <input type="text" value="#(organization.code)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                             <div class="layui-inline">
-                                <label class="layui-form-label">地址</label>
-                                <div class="layui-input-block" style="width: 290px;">
+                                <label class="layui-form-label" style="width: 110px;">地址</label>
+                                <div class="layui-input-block" style="margin-left:140px; width: 289px;">
                                     <input type="text" value="#(organization.addr)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">负责人姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" value="#(organization.principal)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 110px;">联系方式</label>
+                                <div class="layui-input-block" style="margin-left:140px; width:200px;">
+                                    <input type="text" value="#(organization.contact)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 110px;">立项所用身份</label>
+                                <div class="layui-input-block" style="margin-left:140px; width: 289px;">
+                                    <input type="text" value="#(roleName)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                         </div>

@@ -18,6 +18,8 @@ public class Project extends BaseProject<Project> {
     private ProjectAssType projectAssType;
     private String buildOrgName;
     private String buildUserName;
+    private boolean isBackRecordUpLoad;
+    private Long backRecordFileID;
 
     public ProjectAssType getProjectAssType() {
         return this.projectAssType;
@@ -101,5 +103,21 @@ public class Project extends BaseProject<Project> {
 
     public void setBuildUserName(String buildUserName) {
         this.buildUserName = buildUserName;
+    }
+
+    public boolean getIsBackRecordUpLoad() {
+        return isBackRecordUpLoad;
+    }
+
+    public void setIsBackRecordUpLoad(boolean backRecordUpLoad) {
+        isBackRecordUpLoad = backRecordUpLoad;
+    }
+
+    public Long getBackRecordFileID() {
+        return backRecordFileID;
+    }
+
+    public void setBackRecordFileID(Long backRecordFileID) {
+        this.backRecordFileID = backRecordFileID;
     }
 }

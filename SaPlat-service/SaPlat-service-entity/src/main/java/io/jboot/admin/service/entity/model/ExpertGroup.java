@@ -29,6 +29,11 @@ public class ExpertGroup extends BaseExpertGroup<ExpertGroup> {
     }
 
     public String getUserName() {
-        return user.getName();
+        if(user != null) {
+            return user.getName();
+        }
+        else{
+            return "";
+        }
     }
 }

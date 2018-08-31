@@ -109,7 +109,7 @@ public class FileUploadController extends BaseController {
         if (project == null) {
             throw new BusinessException("项目不存在");
         }
-        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
         if (fileProject == null) {
             fileProject = new FileProject();
