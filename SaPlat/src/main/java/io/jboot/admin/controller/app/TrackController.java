@@ -195,11 +195,22 @@ public class TrackController extends BaseController {
         }
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
-        if(page == null) {
-            renderJson(new DataTable<Project>(new Page<Project>()));
+        if(page != null) {
+            for (int i = 0; i < page.getList().size(); i++) {
+                ProjectFileType projectFileType = projectFileTypeService.findByName("备案资料移交表");
+                FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), page.getList().get(i).getId());
+
+                if (fileProject != null) {
+                    page.getList().get(i).setIsBackRecordUpLoad(true);
+                    page.getList().get(i).setBackRecordFileID(fileProject.getFileID());
+                } else {
+                    page.getList().get(i).setIsBackRecordUpLoad(false);
+                }
+            }
+            renderJson(new DataTable<Project>(page));
         }
         else{
-            renderJson(new DataTable<Project>(page));
+            renderJson(new DataTable<Project>(new Page<Project>()));
         }
     }
 
