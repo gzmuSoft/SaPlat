@@ -12,159 +12,200 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color:#009688;">
-        <legend style="font-size: 20px;font-weight: 500;">企业机构</legend>
+    <!--<fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color:#009688;">-->
+    <!--<legend style="font-size: 20px;font-weight: 500;">企业机构</legend>-->
+    <!--</fieldset>-->
+    <!--<br/>-->
+    <!--<form id="person" class="layui-form" action="">-->
+    <!--<div class="layui-form-pane" style="margin:0 20%">-->
+    <!--<div class="layui-form-item">-->
+    <!--<label class="layui-form-label" style="width: 180px;"><em class="require-mark">*</em>营业执照或相关文件</label>-->
+    <!--<div class="layui-input-block" style="margin: 0 180px">-->
+    <!--<button class="layui-btn" name="check" id="check1" style="margin: 0 200px">点击查看</button>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <fieldset class="layui-elem-field layui-field-title" style="color:#009688">
+        <legend>组织机构</legend>
     </fieldset>
-    <br/>
-    <form id="person" class="layui-form" action="">
-        <div class="layui-form-pane" style="margin:0 20%">
-            <!--<div class="layui-form-item">-->
-                <!--<label class="layui-form-label" style="width: 180px;"><em class="require-mark">*</em>营业执照或相关文件</label>-->
-                <!--<div class="layui-input-block" style="margin: 0 180px">-->
-                    <!--<button class="layui-btn" name="check" id="check1" style="margin: 0 200px">点击查看</button>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.name" style="width: 180px">企业机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.name" name="enterprise.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.orgID" style="width: 180px">企业机构代码</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.orgID" name="enterprise.orgID" value="#(organization.id)"
-                           class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.address" style="width: 180px">公司地址</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.address" name="enterprise.address"
-                           value="#(enterprise.address)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="enterprise.resume" style="width: 680px;">
-                    <h style="margin: 0 50px">公司简介</h>
-                </label>
-                <div class="layui-input-block">
-					<textarea id="enterprise.resume" name="enterprise.resume"
-                              required lay-verify="required" placeholder="" class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px"
-                              disabled/>#(enterprise.resume)</textarea>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.principal" style="width: 180px">公司负责人</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.principal" name="enterprise.principal"
-                           value="#(enterprise.principal)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.phone" style="width: 180px">公司负责人联系方式</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.phone" name="enterprise.contact"
-                           value="#(enterprise.contact)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.type" style="width: 180px">主体类型</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.type" name="enterprise.type"
-                           value="#(enterprise.type)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.credit" style="width: 180px">统一社会信用代码</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.credit" name="enterprise.credit"
-                           value="#(enterprise.credit)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.scope" style="width: 180px">业务范围</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.scope" name="enterprise.scope"
-                           value="#(enterprise.scope)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterpriseStart" style="width: 180px">创办日期</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterpriseStart" name="enterprise.start"
-                           value="#(enterprise.start)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.person" style="width: 180px">企业法人</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.person" name="enterprise.person"
-                           value="#(enterprise.person)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.capital" style="width: 180px">注册资本</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.capital" name="enterprise.capital"
-                           value='#number(enterprise.capital, ",###")' class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <button type="button" class="layui-btn" name="check" id="check2" style="margin: 0 200px" value="#(pictrue)">点击查看</button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.website" style="width: 180px">企业网站</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.website" name="enterprise.website"
-                           value="#(enterprise.website)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.coordinate" style="width: 180px">地址坐标</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.coordinate" name="enterprise.coordinate"
-                           value="#(enterprise.coordinate)" class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.landLine" style="width: 180px">座机电话</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.landLine" name="enterprise.landline"
-                           value="#(enterprise.landLine)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="enterprise.scale" style="width: 180px">企业人数</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="enterprise.scale" name="enterprise.scale"
-                           value="#(enterprise.scale)" class="layui-input " style="width: 500px" disabled/>
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.name" >名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.principal" >负责人：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="organization.principal" name="organization.principal" value="#(organization.principal)"
+                                               class="layui-input "  readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.contact" >联系方式：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="organization.contact" name="organization.contact" value="#(organization.contact)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </form>
-</div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="color:#009688">
+        <legend>申请成为认证的机构</legend>
+    </fieldset>
+    <div style="padding: 20px; background-color: #F2F2F2;margin-top:19px">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterprise.name" >名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="enterprise.name" name="enterprise.name" value="#(enterprise.name)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterprise.type" >主体类型：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="enterprise.type" name="enterprise.type" value="#(enterprise.type)"
+                                               class="layui-input "  readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 130px;">统一社会信用代码：</label>
+                                    <div class="layui-input-block" style="margin-left:160px; width:200px;">
+                                        <input type="text" value="#(enterprise.credit)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterpriseStart" >创办日期：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="enterpriseStart" name="enterprise.start"
+                                               value="#(enterprise.start)" class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterprise.capital" >注册资本：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="enterprise.capital" name="enterprise.capital"
+                                               value='#number(enterprise.capital, ",###")' class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 130px;">企业人数：</label>
+                                    <div class="layui-input-block" style="margin-left:160px; width:200px;">
+                                        <input type="text" value="#(enterprise.scale)" autocomplete="off" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <label class="layui-form-label">业务范围：</label>
+                                <div class="layui-input-block" style="width:890px;">
+                                    <input type="text" value="#(enterprise.scope)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">法人信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-col-md4">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" for="enterprise.person">姓名：</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="enterprise.person" name="enterprise.person"
+                                                   value="#(enterprise.person)" class="layui-input "readonly/>
+                                        </div></div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 100px">身份证照片：</label>
+                                        <div class="layui-input-block" >
+                                            <button type="button" class="layui-btn" name="check" id="check2" style="margin: 0 40px" value="#(pictrue)">点击查看</button>
+                                        </div></div>
+                                </div></div></form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">负责人信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterprise.principal">姓名：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="enterprise.principal" name="enterprise.principal"
+                                               value="#(enterprise.principal)" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="enterprise.phone" >联系方式：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="enterprise.phone" name="enterprise.phone"
+                                               value="#(enterprise.phone)" class="layui-input "  readonly/>
+                                    </div>
+                                </div></div></form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">通讯信息</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" >公司地址：</label>
+                                <div class="layui-input-block" >
+                                    <input type="text" id="enterprise.address" name="enterprise.address"
+                                           value="#(enterprise.address)" class="layui-input "  readonly/>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label" for="enterprise.landline">座机电话：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="enterprise.landLine" name="enterprise.landline"
+                                           value="#(enterprise.landline)" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" for="enterprise.website" >企业网站：</label>
+                                <div class="layui-input-block" >
+                                    <input type="text" id="enterprise.website" name="enterprise.website"
+                                           value="#(enterprise.website)" class="layui-input " readonly/>
+                                </div>
+                            </div>
+                        </div>
 
 #end
 

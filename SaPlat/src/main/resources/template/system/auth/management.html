@@ -27,7 +27,7 @@
                     <!--<button class="layui-btn" name="check" id="check1" style="margin: 0 200px">点击查看</button>-->
                 <!--</div>-->
             <!--</div>-->
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color:#009688">
+    <fieldset class="layui-elem-field layui-field-title" style="color:#009688">
         <legend>组织机构</legend>
     </fieldset>
     <div style="padding: 20px; background-color: #F2F2F2;">
@@ -92,37 +92,53 @@
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="management.party" >党政信息：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="management.party" name="management.party"
-                                               value="#(management.party)" class="layui-input"  readonly/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="layui-row layui-col-space10 layui-form-item">
-                                <div class="layui-inline">
                                     <label class="layui-form-label" for="management.num" >部门人数：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="management.num" name="management.num"
                                                value="#(management.num)" class="layui-input"  readonly/>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" >主管：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="management.manager" name="management.manager"
+                                               value="#(management.manager)" class="layui-input "  readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="management.managercon">联系电话：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="management.managercon" name="management.managercon"
+                                               value="#(management.managercon)" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="management.party" >党政信息：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="management.party" name="management.party"
+                                               value="#(management.party)" class="layui-input" style="width: 320px" readonly/>
+                                    </div>
+                                </div>
                                 <div class="layui-inline">
                                     <label class="layui-form-label" for="management.detailedaddr" style="width: 110px">部门详细地址：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="management.detailedaddr" name="management.detailedaddr"
-                                               value="#(management.detailedaddr)" class="layui-input" style="width: 470px;margin-left: 40px" readonly/>
+                                               value="#(management.detailedaddr)" class="layui-input" style="width: 335px;margin-left: 40px" readonly/>
                                     </div>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
             </div>
             <div class="layui-col-md12">
                 <div class="layui-card">
-                    <div class="layui-card-header">相关部门信息：</div>
+                    <div class="layui-card-header">上级部门信息：</div>
                     <div class="layui-card-body">
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
@@ -132,24 +148,6 @@
                                         <input type="text" id="management.superior" name="management.superior"
                                                value="#(management.superior)" class="layui-input" readonly/>
                                     </div></div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label" for="management.lower" >下级部门</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="management.lower" name="management.lower"
-                                               value="#(management.lower)" class="layui-input"  readonly/>
-                                    </div>
-                                </div>
-                            </div></form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-col-md12">
-                <div class="layui-card">
-                    <div class="layui-card-header">上级负责人信息</div>
-                    <div class="layui-card-body">
-                        <form class="layui-form" action="">
-                            <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label" for="management.principal">姓名：</label>
                                     <div class="layui-input-block" >
@@ -163,30 +161,25 @@
                                         <input type="text" id="management.principalcon)" name="management.principalcon)"
                                                value="#(management.principalcon))" class="layui-input "  readonly/>
                                     </div>
-                                </div></div></form>
+                                </div>
+                            </div></form>
                     </div>
                 </div>
             </div>
+
             <div class="layui-col-md12">
                 <div class="layui-card">
-                    <div class="layui-card-header">部门主管信息</div>
+                    <div class="layui-card-header">下级部门信息</div>
                     <div class="layui-card-body">
-                        <div class="layui-row layui-col-space10 layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label" >姓名：</label>
-                                <div class="layui-input-block" >
-                                    <input type="text" id="management.manager" name="management.manager"
-                                           value="#(management.manager)" class="layui-input "  readonly/>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label" for="management.managercon">联系电话：</label>
-                                <div class="layui-input-block">
-                                    <input type="text" id="management.managercon" name="management.managercon"
-                                           value="#(management.managercon)" class="layui-input" readonly/>
-                                </div>
-                            </div>
-                        </div>
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="management.lower" >下级部门</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="management.lower" name="management.lower"
+                                               value="#(management.lower)" class="layui-input"  readonly/>
+                                    </div>
+                                </div></div></form>
                     </div>
                 </div>
             </div>
