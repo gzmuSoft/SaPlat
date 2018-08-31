@@ -75,6 +75,9 @@ where
     a.id = b.projectID
 and
     a.status = #para(status)
+and
+	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
+	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
 #end
 
 #sql("project-undertake-ApplyIn")

@@ -774,38 +774,6 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-//        Project project = new Project();
-//        project.setStatus(ProjectStatus.REVIEWED);
-//        project.setUserId(loginUser.getId());
-//        List<Project> pageList = projectService.findPage(project, pageNumber, pageSize).getList();
-//        for (Project p : pageList) {
-//            ApplyInvite applyInvite = applyInviteService.findByProjectID(p.getId());
-//            if (applyInvite != null && applyInvite.getDeadTime().before(new Date())) {
-//                float allNum, noPassNum, rate;
-//                applyInvite = new ApplyInvite();
-//                applyInvite.setModule(1);
-//                applyInvite.setProjectID(p.getId());
-//                applyInvite.setCreateUserID(loginUser.getId());
-//                applyInvite.setIsEnable(true);
-//                List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-//                allNum = list.size();
-//                applyInvite.setStatus(ApplyInviteStatus.NOPASS);
-//                list = applyInviteService.findList(applyInvite);
-//                noPassNum = list.size();
-//                rate = 1 - (noPassNum / allNum);
-//                if (rate > 0.8) {
-//                    p.setStatus(ProjectStatus.CHECKED);
-//                } else {
-//                    p.setStatus(ProjectStatus.REVIEW);
-//                }
-//                if (allNum <= 3) {
-//                    p.setStatus(ProjectStatus.REVIEW);
-//                }
-//                if (!projectService.update(p)) {
-//                    throw new BusinessException("更新失败！");
-//                }
-//            }
-//        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
 
