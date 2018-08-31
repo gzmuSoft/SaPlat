@@ -294,6 +294,8 @@ public class PersonController extends BaseController {
     public void expertGroupVerify() throws IOException {
         ExpertGroup expertGroup = getBean(ExpertGroup.class, "expertGroup");
         User user = AuthUtils.getLoginUser();
+        String expertGroupStr = "专家团体";
+        Date date = new Date();
         Person person = personService.findByUser(user);
         AffectedGroup affectedGroup = affectedGroupService.findByPersonId(person.getId());
         if (affectedGroup == null) {
@@ -301,8 +303,8 @@ public class PersonController extends BaseController {
             throw new BusinessException("请先在个人资料中完善您的个人信息");
         }
         expertGroup.setAffectedGroupID(affectedGroup.getId());
-        expertGroup.setCreateTime(new Date());
-        expertGroup.setLastAccessTime(new Date());
+        expertGroup.setCreateTime(date);
+        expertGroup.setLastAccessTime(date);
         expertGroup.setPersonID(person.getId());
         expertGroup.setName(person.getName());
         expertGroup.setIsEnable(true);
@@ -322,15 +324,29 @@ public class PersonController extends BaseController {
         Auth auth = new Auth();
         auth.setUserId(user.getId());
         auth.setName(user.getName());
-        auth.setRoleId(roleService.findByName("专家团体").getId());
+        auth.setRoleId(roleService.findByName(expertGroupStr).getId());
         auth.setLastUpdTime(new Date());
         auth.setStatus(AuthStatus.VERIFYING);
         auth.setType(TypeStatus.PERSON);
-        Auth userAndRole = authService.findByUserAndRole(user, roleService.findByName("专家团体").getId());
+        Auth userAndRole = authService.findByUserAndRole(user, roleService.findByName(expertGroupStr).getId());
         if (userAndRole != null) {
             auth.setId(userAndRole.getId());
         }
-        if (!expertGroupService.saveOrUpdate(expertGroup, auth, files)) {
+
+        Notification notification = new Notification();
+        notification.setName("专家团体");
+        notification.setSource("/app/organization/reviewGroup");
+        notification.setContent("申请《" + expertGroupStr + "》认证");
+        notification.setReceiverID(1);
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(date);
+        notification.setRecModule(user.getName());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(date);
+        notification.setIsEnable(true);
+        notification.setRemark(auth.getType());
+        notification.setStatus(0);
+        if (!expertGroupService.saveOrUpdate(expertGroup, auth, files, notification)) {
             throw new BusinessException("专家团体认证上传失败");
         }
 

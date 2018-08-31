@@ -51,12 +51,15 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                if (data.remark == "1"){
-                    window.location.href = "#(ctxPath)" + data.source + "Verify?createUserID=" + data.createUserID + "&notiId=" + data.id;
-                }else if(data.remark == "2"){
-                    window.location.href = "#(ctxPath)" + data.source + "&notiId=" + data.id;
-                }
-
+                // if (data.remark == "1"){
+                //     window.location.href = "#(ctxPath)" + data.source + "Verify?createUserID=" + data.createUserID + "&notiId=" + data.id;
+                // }else if(data.remark == "2"){
+                //     window.location.href = "#(ctxPath)" + data.source + "&notiId=" + data.id;
+                // }
+                //window.location.href = '#(ctxPath)/system/notification/view?id=' + data.id;
+                pop_show('查看通知信息', '#(ctxPath)/system/notification/view?id=' + data.id, '700', '430', function () {
+                    reloadTable(null, null);
+                });
             } else if (obj.event == 'del') {
                 layer.confirm('真的删除通知信息么', function (index) {
                     util.sendAjax({

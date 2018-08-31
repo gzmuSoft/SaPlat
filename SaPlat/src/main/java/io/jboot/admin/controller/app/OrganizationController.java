@@ -425,7 +425,7 @@ public class OrganizationController extends BaseController {
                     userRoleService.saveOrUpdate(userRole);
                 }else{
                     notification.setContent(noti.getName() + "审核失败");
-                    userRoleService.deleteByUserId(loginUser.getId());
+                    userRoleService.deleteByUserId(name.getCreateUserID());
                 }
                 notification.setReceiverID(name.getCreateUserID().intValue());
                 notification.setCreateUserID(loginUser.getId());
@@ -606,7 +606,7 @@ public class OrganizationController extends BaseController {
                     userRoleService.saveOrUpdate(userRole);
                 }else{
                     notification.setContent(noti.getName() + "审核失败");
-                    userRoleService.deleteByUserId(loginUser.getId());
+                    userRoleService.deleteByUserId(name.getCreateUserID());
                 }
                 notification.setReceiverID(name.getCreateUserID().intValue());
                 notification.setCreateUserID(loginUser.getId());
@@ -797,7 +797,7 @@ public class OrganizationController extends BaseController {
                     userRoleService.saveOrUpdate(userRole);
                 }else{
                     notification.setContent(noti.getName() + "审核失败");
-                    userRoleService.deleteByUserId(loginUser.getId());
+                    userRoleService.deleteByUserId(name.getCreateUserID());
                 }
                 notification.setReceiverID(name.getCreateUserID().intValue());
                 notification.setCreateUserID(loginUser.getId());
@@ -976,7 +976,7 @@ public class OrganizationController extends BaseController {
                     userRoleService.saveOrUpdate(userRole);
                 }else{
                     notification.setContent(noti.getName() + "审核失败");
-                    userRoleService.deleteByUserId(loginUser.getId());
+                    userRoleService.deleteByUserId(name.getCreateUserID());
                 }
                 notification.setReceiverID(name.getCreateUserID().intValue());
                 notification.setCreateUserID(loginUser.getId());
@@ -1145,7 +1145,7 @@ public class OrganizationController extends BaseController {
                     userRoleService.saveOrUpdate(userRole);
                 }else{
                     notification.setContent(noti.getName() + "审核失败");
-                    userRoleService.deleteByUserId(loginUser.getId());
+                    userRoleService.deleteByUserId(name.getCreateUserID());
                 }
                 notification.setReceiverID(name.getCreateUserID().intValue());
                 notification.setCreateUserID(loginUser.getId());
@@ -1257,11 +1257,58 @@ public class OrganizationController extends BaseController {
     }
 
     public void projectVerify() {
-        Long roleId = getParaToLong("roleId");
         Long notiId = getParaToLong("notiId");
+        Long roleId = getParaToLong("roleId");
         Notification notification = notificationService.findById(notiId);
-        setAttr("roleId", roleId)
-                .setAttr("notification", notification)
+        Auth auth = authService.findByUserIDAndRole(notification.getCreateUserID(),roleId);
+        setAttr("notification", notification)
+                .setAttr("roleId", roleId)
+                .setAttr("flag", auth.getStatus())
                 .render("verify.html");
+    }
+
+    @Before(POST.class)
+    public void projectReview() {
+        User user = AuthUtils.getLoginUser();
+        Long notiId = getParaToLong("notiId");
+        Long roleId = getParaToLong("roleId");
+        String verify = getPara("verify", "0");
+
+        Notification model = notificationService.findById(notiId);
+        model.setStatus(1);
+        notificationService.saveOrUpdate(model);
+        Auth auth = authService.findByUserIDAndRole(model.getCreateUserID(),roleId);
+        auth.setStatus(verify);
+        auth.setLastUpdUser(user.getName());
+        if (verify.equals("2")){
+            auth.setReply("审核成功");
+        }else{
+            auth.setReply("审核失败");
+        }
+
+        if (!authService.saveOrUpdate(auth)) {
+            renderJson(RestResult.buildError("审核失败"));
+            throw new BusinessException("审核失败");
+        }else{
+            Notification notification = new Notification();
+            notification.setName(model.getName());
+            notification.setRecModule(user.getName());
+            notification.setSource("/app/organization/projectReview");
+            notification.setReceiverID(model.getCreateUserID().intValue());
+            if (verify.equals("2")){
+                notification.setContent(model.getName() + "审核成功");
+            }else{
+                notification.setContent(model.getName() + "审核失败");
+            }
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(new Date());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(new Date());
+            notification.setIsEnable(true);
+            notification.setRemark(auth.getType());
+            notification.setStatus(0);
+            notificationService.save(notification);
+            renderJson(RestResult.buildSuccess("提交成功"));
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Notification;
 
 import java.util.List;
 
@@ -105,6 +106,7 @@ public interface ExpertGroupService {
      * @return 结果
      */
     public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files);
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files, Notification noti);
 
     /**
      * save or update model

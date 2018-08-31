@@ -6,10 +6,8 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.AuthService;
 import io.jboot.admin.service.api.ExpertGroupService;
 import io.jboot.admin.service.api.FilesService;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.Files;
-import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.api.NotificationService;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -30,6 +28,8 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     @Inject
     private FilesService filesService;
 
+    @Inject
+    private NotificationService notificationService;
     UserServiceImpl userServiceNew = new UserServiceImpl();
     /**
      * 装配完善Page对象中所有对象的数据
@@ -94,6 +94,24 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files) {
         return Db.tx(() -> {
             if (!saveOrUpdate(model) || !authService.saveOrUpdate(auth)) {
+                return false;
+            }
+            if (files == null) {
+                return true;
+            }
+            for (Files file : files) {
+                if (!filesService.update(file)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    @Override
+    public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files, Notification noti) {
+        return Db.tx(() -> {
+            if (!saveOrUpdate(model) || !authService.saveOrUpdate(auth) || !notificationService.saveOrUpdate(noti)) {
                 return false;
             }
             if (files == null) {

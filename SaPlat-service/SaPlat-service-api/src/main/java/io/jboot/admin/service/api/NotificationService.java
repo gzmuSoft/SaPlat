@@ -81,7 +81,7 @@ public interface NotificationService {
      * @param id
      * @return
      */
-    public boolean findMessageByUserID(Object id);
+    public int findMessageByUserID(Object id);
 
     /**
      * 当前用户标记全部已读

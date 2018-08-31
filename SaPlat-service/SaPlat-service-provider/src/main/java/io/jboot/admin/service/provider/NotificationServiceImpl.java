@@ -39,14 +39,15 @@ public class NotificationServiceImpl extends JbootServiceBase<Notification> impl
     }
 
     @Override
-    public boolean findMessageByUserID(Object id) {
+    public int findMessageByUserID(Object id) {
         List<Notification> list = DAO.findListByColumn("receiverID", id);
+        int size = 0;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getStatus() == 0) {
-                return true;
+                size++;
             }
         }
-        return false;
+        return size;
     }
 
     @Override

@@ -47,7 +47,7 @@
             <li class="layui-nav-item" lay-unselect="">
                 <!-- 如果有新消息，则显示小圆点 -->
                 <a id="msg" href="javascript:;" layadmin-event="message" title="消息中心" lay-text="消息中心">
-                    <i class="layui-icon layui-icon-notice"></i><span id="dot" class=""></span>
+                    <i class="layui-icon layui-icon-notice"></i><span id="dot"></span>
                 </a>
             </li>
 
@@ -161,15 +161,14 @@
 
         function reloadMessage() {
             $.post("#(ctxPath)/message", function (res) {
+                if ($("#dot").hasClass("layui-badge")) {
+                    $("#dot").removeClass("layui-badge");
+                    $("#dot").html("");
+                }
                 if (res != null) {
-                    if (res['sta']) {
-                        if (!$("#dot").hasClass("layui-badge-dot")) {
-                            $("#dot").addClass("layui-badge-dot");
-                        }
-                    } else {
-                        if ($("#dot").hasClass("layui-badge-dot")) {
-                            $("#dot").removeClass("layui-badge-dot");
-                        }
+                    if (res['size']> 0){
+                        $("#dot").addClass("layui-badge");
+                        $("#dot").html(res['size']);
                     }
                 } else {
                     layer.msg("数据异常");

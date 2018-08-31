@@ -18,7 +18,7 @@ public class UserRoleServiceImpl extends JbootServiceBase<UserRole> implements U
 
     @Override
     public int deleteByUserId(Long userId) {
-        return Db.update("delete from sys_user_role where user_id = ?", userId);
+        return Db.update("delete from sys_user_role where userId = ?", userId);
     }
 
     /*

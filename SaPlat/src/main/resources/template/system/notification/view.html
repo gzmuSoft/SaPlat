@@ -12,10 +12,13 @@
     layui.use(['form', 'layer'], function () {
         // 操作对象
         var form = layui.form
-            , layer = layui.layer
             , $ = layui.jquery;
     });
 
+
+    // $('#back').click(function () {
+    //     window.location.href = "#(ctxPath)/view"
+    // });
 </script>
 #end
 
@@ -62,6 +65,11 @@
                        required lay-verify="required"  style="width: 500PX" autocomplete="off"/>
             </div>
         </div>
+        <!--<div class="layui-form-item">
+            <div class="layui-input-block" style="margin: 0 180px">
+                <button type="button" class="layui-btn" id="back">返回</button>
+            </div>
+        </div>-->
     </form>
 </div>
 #end

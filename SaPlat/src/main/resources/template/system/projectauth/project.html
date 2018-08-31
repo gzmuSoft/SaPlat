@@ -47,9 +47,10 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">预计金额</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
+                                    <input type="text"  name="digits" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">（单位：元）</div>
+                                <div id="digitsTip"></div>
                             </div>
                         </div>
 

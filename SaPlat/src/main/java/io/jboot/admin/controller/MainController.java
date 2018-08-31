@@ -267,9 +267,9 @@ public class MainController extends BaseController {
 
     public void message() {
         User loginUser = AuthUtils.getLoginUser();
-        boolean sta = notificationService.findMessageByUserID(loginUser.getId());
+        int size = notificationService.findMessageByUserID(loginUser.getId());
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sta", sta);
+        jsonObject.put("size", size);
         jsonObject.put("code", 0);
         renderJson(jsonObject);
     }

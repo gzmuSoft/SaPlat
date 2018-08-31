@@ -10,63 +10,6 @@
 #define js()
 <script type="text/javascript">
     layui.use(['form', 'layer'], function () {
-        // 操作对象
-        var form = layui.form
-            , layer = layui.layer
-            , $ = layui.jquery;
-    });
-
-</script>
-#end
-
-#define content()
-<div class="x-body">
-    <form id="addForm" class="layui-form" action="">
-        <input type="hidden" name="notification.id" value="#(notification.id)">
-        <div class="layui-form-item">
-            <label class="layui-form-label">标题</label>
-            <div class="layui-input-block">
-                <input type="text" name="title" autocomplete="off" placeholder="标题" readonly="readonly"
-                       value="#(notification.name)" class="layui-input" style="width: 500PX">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">申请人</label>
-            <div class="layui-input-block">
-                <input type="text" name="notification.name" readonly="readonly" placeholder="接收人" class="layui-input"
-                       value="#(notification.name)"
-                       required lay-verify="required"  style="width: 500PX" autocomplete="off"/>
-            </div>
-        </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">内容</label>
-            <div class="layui-input-block">
-                <textarea placeholder="内容" class="layui-textarea" value=""
-                          readonly="readonly"  style="width: 500PX">#(notification.content)</textarea>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">发送时间</label>
-            <div class="layui-input-block">
-                <input type="text" name="notification.createTime" placeholder="发送时间" readonly="readonly"
-                       class="layui-input" value="#(notification.createTime)"  style="width: 500PX"
-                       autocomplete="off"/>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-input-block" style="margin: 0 180px">
-                <button type="button" class="layui-btn" lay-submit lay-filter="pass" id="pass">通过</button>
-                <button type="button" class="layui-btn layui-btn-warm" lay-submit lay-filter="fail" id="fail">不通过</button>
-                <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script type="text/javascript">
-    layui.use(['form', 'layer'], function () {
         var layer = layui.layer
             , $ = layui.jquery
             , form = layui.form;
@@ -74,11 +17,11 @@
         form.on('submit(pass)', function (data) {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)'+$("#source").val()+'Review?verify=2',
+                url: '#(ctxPath)/app/organization/projectReview?verify=2',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
-                    history.go(-1);
+                    window.location.href = "#(ctxPath)/view";
                 },
                 error: function (data) {
                     console.log(data);
@@ -90,11 +33,11 @@
         form.on('submit(fail)', function (data) {
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)'+$("#source").val()+'Review?verify=1',
+                url: '#(ctxPath)/app/organization/projectReview?verify=1',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
-                    history.go(-1);
+                    window.location.href = "#(ctxPath)/view";
                 },
                 error: function (data) {
                     console.log(data);
@@ -119,4 +62,58 @@
         history.back();
     });
 </script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <!--隐藏flag作为界面是否禁用的方法-->
+        <input type="text" id="flag" name="flag"
+               class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+        <input type="hidden" name="roleId" value="#(roleId)">
+        <input type="hidden" name="notiId" value="#(notification.id)">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="notification.name" autocomplete="off" placeholder="标题" readonly="readonly"
+                       value="#(notification.name)" class="layui-input" style="width: 500PX">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请人</label>
+            <div class="layui-input-block">
+                <input type="text" name="notification.name" readonly="readonly" placeholder="接收人" class="layui-input"
+                       value="#(notification.name)"
+                       required lay-verify="required"  style="width: 500PX" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="内容" name="notification.content" class="layui-textarea" value=""
+                          readonly="readonly"  style="width: 500PX">#(notification.content)</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">发送时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="notification.createTime" placeholder="发送时间" readonly="readonly"
+                       class="layui-input" value="#(notification.createTime)"  style="width: 500PX"
+                       autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin: 0 180px">
+                <button type="button" class="layui-btn" lay-submit lay-filter="pass" id="pass">通过</button>
+                <button type="button" class="layui-btn layui-btn-warm" lay-submit lay-filter="fail" id="fail">不通过</button>
+                <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 #end
