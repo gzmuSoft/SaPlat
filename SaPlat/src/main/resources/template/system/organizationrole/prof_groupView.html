@@ -15,105 +15,149 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color:#009688;">
-        <legend style="font-size: 20px;font-weight: 500;">专业团体</legend>
+    <!--<fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color:#009688;">-->
+    <!--<legend style="font-size: 20px;font-weight: 500;">专业团体</legend>-->
+    <!--</fieldset>-->
+    <!--<br/>-->
+    <!--<form id="person" class="layui-form " action="">-->
+    <!--<div class="layui-form-pane" style="margin:0 20%">-->
+    <!--&lt;!&ndash;<div class="layui-form-item">&ndash;&gt;-->
+    <!--<label class="layui-form-label" for="check1" style="width: 180px;"><em class="require-mark">*</em>营业执照或相关文件</label>-->
+    <!--<div class="layui-input-block" style="margin: 0 180px">-->
+    <!--<button class="layui-btn" name="check1" id="check1" style="margin: 0 200px">点击查看</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <fieldset class="layui-elem-field layui-field-title" style="color:#009688">
+        <legend>组织机构</legend>
     </fieldset>
-    <br/>
-    <form id="person" class="layui-form " action="">
-        <div class="layui-form-pane" style="margin:0 20%">
-            <!--<div class="layui-form-item">-->
-                <!--<label class="layui-form-label" for="check1" style="width: 180px;"><em class="require-mark">*</em>营业执照或相关文件</label>-->
-                <!--<div class="layui-input-block" style="margin: 0 180px">-->
-                    <!--<button class="layui-btn" name="check1" id="check1" style="margin: 0 200px">点击查看</button>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.name" style="width: 180px">组织机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.name" style="width: 180px;">专业团体名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(profGroup.name)"
-                           class="layui-input " style="width: 500px" disabled/>
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.scope" style="width: 180px;">服务范围</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.scope" name="profGroup.scope"
-                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.performance" style="width: 180px;">服务业绩</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.performance" name="profGroup.performance"
-                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" style=" width: 680px;">
-                    <h style=" margin: 0 50px">人员简历</h>
-                </label>
-                <div class="layui-input-block">
-                    <textareaid id="profGroup.resume" name="profGroup.resume"
-                                required lay-verify="required" placeholder="" class="layui-textarea"
-                                cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px"
-                                disabled/>
-                    #(profGroup.resume)</textarea>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.content" style="width: 180px;">专业内容</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.content" name="profGroup.content"
-                           value="#(profGroup.content)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.capital" style="width: 180px;">注册资金</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.capital" name="profGroup.capital"
-                           value="#(profGroup.capital)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.administrator" style="width: 180px;">管理员姓名</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.administrator" name="profGroup.administrator"
-                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.contact" style="width: 180px;">管理员联系方式</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.contact" name="profGroup.contact"
-                           value="#(profGroup.contact)" class="layui-input" style="width: 500px" disabled/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="check2" style="width: 180px;"><em class="require-mark">*</em>管理员身份证照片</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <button  type="button" class="layui-btn" name="check" id="check2" style="margin: 0 200px" value="#(identity)">点击查看</button>
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.name" >名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.principal" >负责人：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="organization.principal" name="organization.principal" value="#(organization.principal)"
+                                               class="layui-input "  readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="organization.contact" >联系方式：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="organization.contact" name="organization.contact" value="#(organization.contact)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color:#009688">
+        <legend>申请成为认证的机构</legend>
+    </fieldset>
+    <div style="padding: 20px; background-color: #F2F2F2;margin-top:19px">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="profGroup.name" >名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="profGroup.name" name="profGroup.name" value="#(profGroup.name)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="profGroup.capital" >注册资金：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="profGroup.capital" name="profGroup.capital"
+                                               value="#(profGroup.capital)" class="layui-input" readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="profGroup.performance" >服务业绩：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="profGroup.performance" name="profGroup.performance"
+                                               value="#(profGroup.performance)" class="layui-input"  readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <label class="layui-form-label" for="profGroup.scope" >服务范围：</label>
+                                <div class="layui-input-block" >
+                                    <input type="text" id="profGroup.scope" name="profGroup.scope"
+                                           value="#(profGroup.scope)" class="layui-input" style="width: 830px" readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <label class="layui-form-label" for="profGroup.content" >专业内容：</label>
+                                <div class="layui-input-block" >
+                                    <input type="text" id="profGroup.content" name="profGroup.content"
+                                           value="#(profGroup.content)" class="layui-input" style="width: 830px" readonly/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">管理员信息：</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="profGroup.administrator" >姓名：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="profGroup.administrator" name="profGroup.administrator"
+                                               value="#(profGroup.administrator)" class="layui-input" readonly/>
+                                    </div></div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="profGroup.contact" >联系方式：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="profGroup.contact" name="profGroup.contact"
+                                               value="#(profGroup.contact)" class="layui-input"  readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-row layui-col-space10 layui-form-item">
+                                    <label class="layui-form-label" for="check2" >身份证照片</label>
+                                    <div class="layui-input-block" >
+                                        <button  type="button" class="layui-btn" name="check" id="check2" style="margin: 0 40px" value="#(identity)">点击查看</button>
+                                    </div>
+                                </div>
+                            </div></form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">人员简历</div>
+                    <div class="layui-card-body">
+                        <p style="margin-left: 20px;margin-top: 8px"> #(profGroup.resume)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 #end
