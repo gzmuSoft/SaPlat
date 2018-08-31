@@ -104,7 +104,7 @@ public class ProAssReviewController extends BaseController {
     public void recData() {
         Long projectId = getParaToLong("projectId");
         Long fileId = getParaToLong("fileId");
-        //ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        //ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         //FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileId, projectId);
@@ -127,7 +127,7 @@ public class ProAssReviewController extends BaseController {
     }
 
     private String getPrepReport(Long projectId){
-        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
         Files file = filesService.findById(fileProject.getFileID());
         return file.getPath().trim();
@@ -140,7 +140,7 @@ public class ProAssReviewController extends BaseController {
     public void recDataFilterCreatorId() {
         Long projectId = getParaToLong("projectId");
        User user = AuthUtils.getLoginUser();
-        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileProject.getFileID(), projectId);
@@ -191,7 +191,7 @@ public class ProAssReviewController extends BaseController {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
 
-        ProjectFileType projectFileType = projectFileTypeService.findByName("3.14 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), model.getProjectID());
         model.setFileID(fileProject.getFileID());
 
