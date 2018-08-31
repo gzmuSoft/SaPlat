@@ -139,12 +139,16 @@ public class ProAssReviewController extends BaseController {
     @NotNullPara("projectId")
     public void recDataFilterCreatorId() {
         Long projectId = getParaToLong("projectId");
-       User user = AuthUtils.getLoginUser();
+        User user = AuthUtils.getLoginUser();
+
+        //加载文件类型
         ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
+
+        //加载文件与项目的关联信息
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
+        //加载审查意见
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileProject.getFileID(), projectId);
-
         List<ProAssReview> pars = new ArrayList<ProAssReview>();
         for(ProAssReview item : proAssReviews){
             if(user.getId().longValue() == item.getCreateUserID().longValue()){
