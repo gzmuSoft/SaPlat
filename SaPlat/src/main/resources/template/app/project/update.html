@@ -54,23 +54,26 @@
         });
 
         $("#eva-scheme-process").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+            pop_show("评估过程","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
         });
 
         $("#pretrial-report").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            pop_show("预审报告","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
         });
 
         $("#final-report").click(function(){
-            alert("终审报告");
+            //alert("终审报告");
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
         });
 
         $("#project-record").click(function(){
-            alert("项目备案");
+            //alert("项目备案");
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
         });
 
         $("#project-track").click(function(){
-            alert("项目跟踪");
+            //alert("项目跟踪");
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
         });
     });
 
