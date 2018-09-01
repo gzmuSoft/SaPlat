@@ -26,9 +26,9 @@
             , layedit = layui.layedit
             , $ = layui.jquery;
 
-        // layedit.build('brief', {
-        //     height: 180 //设置编辑器高度
-        // }); //建立编辑器
+        layedit.build('brief', {
+            height: 180 //设置编辑器高度
+        }); //建立编辑器
 
         var startDate = laydate.render({
             elem: '#publicTime'
@@ -131,9 +131,8 @@
                 </div>
                 <label class="layui-form-label"style="width: 120px">预计金额</label>
                 <div class="layui-inline" style="float: left;">
-                    <p style="margin-left: 20px;margin-top: 8px" class="money">#number(model.amount, ",###")元</p>
+                    <p style="margin-left: 20px;margin-top: 8px">#number(model.amount, ",###")元</p>
                 </div>
-                <div id="digitsTip"></div>
             </div>
 
             <div class="layui-form-item">
