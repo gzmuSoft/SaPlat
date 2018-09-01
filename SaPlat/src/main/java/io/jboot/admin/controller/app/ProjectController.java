@@ -809,7 +809,7 @@ public class ProjectController extends BaseController {
         }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
-        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
+        Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
 
@@ -872,7 +872,6 @@ public class ProjectController extends BaseController {
 
     }
 
-
     /**
      * 项目公开-填写日期
      */
@@ -880,6 +879,7 @@ public class ProjectController extends BaseController {
     public void isPublicMessage() {
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
+        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
         setAttr("model", model).render("public.html");
     }
 

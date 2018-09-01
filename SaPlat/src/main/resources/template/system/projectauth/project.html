@@ -2,14 +2,7 @@
 #@layout()
 
 #define css()
-<style>
-    button {
-        background: #758ef0;
-        color: #FFF;
-        border: none;
-        border-radius: 15px;
-    }
-</style>
+
 #end
 
 #define js()
@@ -30,7 +23,6 @@
 #end
 
 #define content()
-
 <div style="padding: 20px; background-color: #F2F2F2;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
@@ -48,17 +40,16 @@
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">项目类型</label>
-                                <div class="layui-input-block">
+                                <div class="layui-input-block" style="width:190px;">
                                     <input type="text" value="#(model.typeName)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">预计金额</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"  name="digits" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
+                                    <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input"style="width: 170px" readonly/>
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">（单位：元）</div>
-                                <div id="digitsTip"></div>
+                                <div class="layui-form-mid layui-word-aux" style="margin-left: -25px">（单位：元）</div>
                             </div>
                         </div>
 
