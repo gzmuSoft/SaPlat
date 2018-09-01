@@ -10,7 +10,18 @@
     <meta name="format-detection" content="telephone=no">
     <title>#(APP.name)</title>
     #include("/template/common/include/_css.html")
-
+<style>
+    sup {
+      font-size: 50%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+      top: -0.7em;
+      background:red;
+      padding-left:2px;
+      padding-rignt:2px;
+    }
+</style>
 </head>
 <body>
 
@@ -44,32 +55,24 @@
         <!-- 顶部右侧添加选项卡监听 -->
         <ul class="layui-nav my-header-user-nav" lay-filter="side-top-right">
 
-            <li class="layui-nav-item" lay-unselect="">
+            <li class="layui-nav-item">
                 <!-- 如果有新消息，则显示小圆点 -->
-                <a id="msg" href="javascript:;" layadmin-event="message" title="消息中心" lay-text="消息中心">
-                    <i class="layui-icon layui-icon-notice"></i><span id="dot"></span>
+                <a id="msg" href="javascript:;" layadmin-event="message" title="" lay-text="">
+                    <i class="layui-icon layui-icon-notice"></i><sup id="dot">0</sup>
                 </a>
             </li>
-
-            <li class="layui-nav-item" lay-unselect="">
-                <!-- 如果有新消息，则显示小圆点 -->
-                <a id="help" href="#(ctxPath)/help" target="_blank" title="帮助中心" lay-text="帮助中心">
-                    <i class="layui-icon layui-icon-help"></i>
-                </a>
-            </li>
-
 
             <li class="layui-nav-item">
-                <a class="name" href="javascript:;"><i class="layui-icon">&#xe629;</i>主题</a>
+                <a class="name" href="javascript:;"><i class="layui-icon layui-icon-theme"></i>主题</a>
                 <dl class="layui-nav-child">
                     <dd data-skin="0"><a href="javascript:;">默认</a></dd>
                     <dd data-skin="1"><a href="javascript:;">纯白</a></dd>
                     <dd data-skin="2"><a href="javascript:;">蓝白</a></dd>
                 </dl>
             </li>
+            <!--<img class="layui-circle" src="#(RESOURCE_HOST)/static/img/user.png" alt="logo">-->
             <li class="layui-nav-item">
-                <a class="name" href="javascript:;"><img class="layui-circle" src="#(RESOURCE_HOST)/static/img/user.png"
-                                                         alt="logo">
+                <a class="name" href="javascript:;"><i class="layui-icon layui-icon-user"></i>
                     #shiroPrincipal()
                     #(principal)
                     #end
@@ -83,6 +86,12 @@
                     #end
                     <dd><a href="#(ctxPath)/logout"><i class="layui-icon">&#x1006;</i>退出</a></dd>
                 </dl>
+            </li>
+            <li class="layui-nav-item">
+                <!-- 如果有新消息，则显示小圆点 -->
+                <a id="help" href="#(ctxPath)/help" target="_blank" title="" lay-text="">
+                    <i class="layui-icon layui-icon-help"></i>
+                </a>
             </li>
         </ul>
 
@@ -161,14 +170,16 @@
 
         function reloadMessage() {
             $.post("#(ctxPath)/message", function (res) {
-                if ($("#dot").hasClass("layui-badge")) {
+                /*if ($("#dot").hasClass("layui-badge")) {
                     $("#dot").removeClass("layui-badge");
                     $("#dot").html("");
-                }
+                }*/
                 if (res != null) {
                     if (res['size']> 0){
-                        $("#dot").addClass("layui-badge");
+                        /*$("#dot").addClass("layui-badge");*/
                         $("#dot").html(res['size']);
+                    }else{
+                        $("#dot").addClass("layui-hide");
                     }
                 } else {
                     layer.msg("数据异常");
