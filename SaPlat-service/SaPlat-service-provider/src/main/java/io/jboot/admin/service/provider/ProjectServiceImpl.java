@@ -176,7 +176,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             Kv c = null;
             SqlPara sqlPara = null;
             c = Kv.by("mgr_list", str.toString());
-            sqlPara = Db.getSqlPara("app-project.project-undertake-ApplyIn", c);
+            sqlPara = Db.getSqlPara("project-by-mgr", c);
             return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
         }
         return  new Page<Project>();
