@@ -260,4 +260,18 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
 
     }
+
+    @Override
+    public Page<Project> findReviewedPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID()!=null && projectUndertake.getStatus()!=null) {
+            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus()).set("createUserID", projectUndertake.getCreateUserID());
+            sqlPara = Db.getSqlPara("app-project.project-Reviewed", c);
+            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+        }
+        else {
+            return new Page<Project>();
+        }
+    }
 }

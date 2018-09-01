@@ -62,6 +62,14 @@ public interface ProjectService  {
     public Page<Project> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
+     * @param projectUndertake
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Project> findReviewedPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
+
+    /**
      * 根据多个列名和多个列值查询
      * @param columnNames 列名
      * @param values 值
