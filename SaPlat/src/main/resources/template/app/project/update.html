@@ -24,33 +24,84 @@
         layedit.build('brief', {
             height: 180 //设置编辑器高度
         }); //建立编辑器
+        var entry = "#(entry)";
+        if("mgr" === entry){
+            $("#entries-mgr").removeClass("layui-hide");
+            var status = "#(model.status)"
+            switch(status){
+                case "7":
+                    $("#eva-scheme").removeClass("layui-hide");
+                    $("#eva-scheme-process").removeClass("layui-hide");
+                    $("#pretrial-report").removeClass("layui-hide");
+                    break;
+                case "6":
+                    break;
+                case "5":
+                    break;
+                case "4":
+                    $("#eva-scheme").removeClass("layui-hide");
+                    $("#eva-scheme-process").removeClass("layui-hide");
+                    $("#pretrial-report").removeClass("layui-hide");
+                    break;
+                case "3":
+                    break;
+                case "2":
+                    break;
+                case "1":
+                    break;
+            }
+        }
 
         $("#eva-scheme").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)");
+            pop_show_full("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)",function(){});
         });
 
         $("#eva-scheme-process").click(function(){
-            pop_show("评估过程","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+            pop_show_full("评估过程资料","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)"+ "&entry=mgr",function(){});
         });
 
         $("#pretrial-report").click(function(){
-            pop_show("预审报告","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            pop_show_full("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2",function(){});
         });
 
         $("#final-report").click(function(){
-            //alert("终审报告");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("终审报告");
         });
 
         $("#project-record").click(function(){
-            //alert("项目备案");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("项目备案");
         });
 
         $("#project-track").click(function(){
-            //alert("项目跟踪");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("项目跟踪");
         });
+    });
+
+    $('.money').on('input propertychange', function() {
+        var data = $('.money').val();
+        var str = digitsConversion(data);
+        var bid = parseInt(Math.random()*100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip"+bid);
+        var offset,h ,w ;
+        var timer;
+        clearInterval(timer);
+        offset = $(this).offset();
+        h = $(this).height();
+        w = $(this).width();
+        $(".cont").html(str);
+        $(".triangle-t").css('left',26);
+        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+    });
+
+
+    $('.money').live("mousemove",function(){
+        clearInterval(window.timer);
+        $("#digitsTip").show();
+    });
+
+    $('.money').live("mouseout",function(){
+        $("#digitsTip").hide();
     });
 
 </script>
@@ -63,13 +114,13 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">项目信息
-                    <div class="layui-btn-group" style="float:right">
-                        <button class="layui-btn layui-btn-sm" id="eva-scheme">评估方案</button>
-                        <button class="layui-btn layui-btn-sm" id="eva-scheme-process">评估过程资料</button>
-                        <button class="layui-btn layui-btn-sm" id="pretrial-report">预审报告</button>
-                        <button class="layui-btn layui-btn-sm" id="final-report">终审报告</button>
-                        <button class="layui-btn layui-btn-sm" id="project-record">项目备案</button>
-                        <button class="layui-btn layui-btn-sm" id="project-track">项目跟踪</button>
+                    <div class="layui-btn-group layui-hide" style="float:right" id="entries-mgr">
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme">评估方案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme-process">评估过程资料</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="pretrial-report">项目文件</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="final-report">终审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-record">项目备案</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="project-track">项目跟踪</button>
                     </div>
                 </div>
                 <div class="layui-card-body">
@@ -84,15 +135,16 @@
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">项目类型</label>
-                                <div class="layui-input-block" style="width:190px;">
+                                <div class="layui-input-block">
                                     <input type="text" value="#(model.typeName)" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">预计金额</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
+                                    <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input money" readonly/>
                                 </div>
+                                <div id="digitsTip"></div>
                                 <div class="layui-form-mid layui-word-aux">（单位：元）</div>
                             </div>
                         </div>

@@ -90,7 +90,6 @@
             <textarea name="project.brief" id="demo" class="layui-textarea">#(project.brief)</textarea>
         </div>
     </div>
-
     <br>
     <h2>领导小组基本资料</h2>
     <hr class="layui-bg-orange">
@@ -121,7 +120,6 @@
             </div>
         </div>
     </div>
-
     <br>
     <p><h2>相关资料文件上传</h2><em class="require-mark">*</em>需将信息填写完整以及文件上传完毕后才可发起审核哦！（文件上传错误可再次上传）</p>
     <hr class="layui-bg-blue">
@@ -157,10 +155,42 @@
     ]]#
     #end
 </script>
+<script type="text/javascript" src="/static/js/layui/layui.js"></script>
+<script type="text/javascript" src="/static/js/comm_notbar.js"></script>
+<script type="text/javascript" src="/static/js/utils.js"></script>
+<script type="text/javascript" src="/static/js/ztree/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>
 <!--js start-->
 <script type="text/javascript">
+
     var assessmentMode = '#(project.assessmentMode)';
+    $('.money').on('input propertychange', function() {
+        var data = $('.money').val();
+        var str = digitsConversion(data);
+        var bid = parseInt(Math.random()*100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip"+bid);
+        var offset,h ,w ;
+        var timer;
+        clearInterval(timer);
+        offset = $(this).offset();
+        h = $(this).height();
+        w = $(this).width();
+        $(".cont").html(str);
+        $(".triangle-t").css('left',26);
+        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+    });
+
+
+    $('.money').live("mousemove",function(){
+        clearInterval(window.timer);
+        $("#digitsTip").show();
+    });
+
+    $('.money').live("mouseout",function(){
+        $("#digitsTip").hide();
+    });
+
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
         var projectID = "#(projectID)";
@@ -260,13 +290,12 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: '400'    //容器高度
-            , width: '1275'
+            , height: '500'    //容器高度
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
-                {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '需上传的文件', minWidth: 800}
-                , {fixed: 'right', title: '操作', width: 140, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                {field: 'id', title: '编号', minWidth: 60}
+                , {field: 'name', title: '需上传的文件', minWidth: 600}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
             , method: 'get'
@@ -305,37 +334,16 @@
                 });
             }
         });
+
     });
     $("#res").click(function () {
         history.go(-1);
     });
-</script>
-<script type="text/javascript">
 
-    $('.money').on('input propertychange', function() {
-    var data = $('.money').val();
-    var str = digitsConversion(data);
-    var bid = parseInt(Math.random()*100000);
-    $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-    var $btip = $("#btip"+bid);
-    var offset,h ,w ;
-    var timer;
-    clearInterval(timer);
-    offset = $(this).offset();
-    h = $(this).height();
-    w = $(this).width();
-    $(".cont").html(str);
-    $(".triangle-t").css('left',26);
-    $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
-    });
 
-    $('.money').live("mousemove",function(){
-    clearInterval(window.timer);
-    $("#digitsTip").show();
-    });
-
-    $('.money').live("mouseout",function(){
-    $("#digitsTip").hide();
-    });
 </script>
 <!--js end-->
+
+</body>
+
+</html>

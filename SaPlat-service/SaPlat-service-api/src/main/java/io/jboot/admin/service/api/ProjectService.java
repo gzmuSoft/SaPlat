@@ -128,6 +128,16 @@ public interface ProjectService  {
     /**
      * find model by user and role and isEnable
      *
+     * @param pageNumber
+     * @param pageSize
+     * @param project
+     * @return project
+     */
+    public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize);
+
+    /**
+     * find model by user and role and isEnable
+     *
      * @param userId
      * @param pageNumber
      * @param pageSize

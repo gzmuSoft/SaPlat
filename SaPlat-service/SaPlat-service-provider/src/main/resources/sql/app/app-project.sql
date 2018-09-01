@@ -93,3 +93,13 @@ WHERE
   )
   order by projectID, createTime desc
 #end
+
+#sql("project-by-mgr")
+SELECT
+  *
+FROM
+  project
+WHERE
+  managementID in (#para(mgr_list))
+  order by createTime desc
+#end

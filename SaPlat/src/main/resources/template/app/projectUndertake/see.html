@@ -19,6 +19,34 @@
         }); //建立编辑器
     });
 
+    $('#digits').on('input propertychange', function() {
+        var data = $('#digits').val();
+        var str = digitsConversion(data);
+        var bid = parseInt(Math.random()*100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip"+bid);
+        var offset,h ,w ;
+        var timer;
+        clearInterval(timer);
+        offset = $(this).offset();
+        h = $(this).height();
+        w = $(this).width();
+        $(".cont").html(str);
+        $(".triangle-t").css('left',26);
+        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+    });
+
+
+    $('#digits').live("mousemove",function(){
+        clearInterval(window.timer);
+        $("#digitsTip").show();
+    });
+
+    $('#digits').live("mouseout",function(){
+        $("#digitsTip").hide();
+    });
+
+
 </script>
 #end
 
@@ -47,7 +75,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">预计金额</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
+                                    <input name="digits" type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">（单位：元）</div>
                             </div>

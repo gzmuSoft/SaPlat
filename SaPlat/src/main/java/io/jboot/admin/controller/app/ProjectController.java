@@ -1339,18 +1339,20 @@ public class ProjectController extends BaseController {
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
         }
-
-        //如果当前用户是管理机构则不限定用户信息
-        if (!(isMgrAgency(AuthUtils.getLoginUser()))) {
-            project.setUserId(AuthUtils.getLoginUser().getId());
-        }
         project.setIsEnable(true);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
+        project.setUserId(AuthUtils.getLoginUser().getId());
+        Page<Project> page = null;
+        //是管理机构
+        if (isMgrAgency(AuthUtils.getLoginUser())) {
+            page = projectService.findPageForMgr(project, pageNumber, pageSize);
+        }else{//不是管理机构
+            page = projectService.findPage(project, pageNumber, pageSize);
+        }
         renderJson(new DataTable<Project>(page));
     }
 
     //角色“管理机构”的ID
-    private final int MGR_AGENCY = 3;
+    private final int MGR_AGENCY = 6;
 
     /**
      * 判断用户是不是“管理机构”

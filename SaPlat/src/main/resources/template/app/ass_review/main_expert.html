@@ -3,9 +3,7 @@
 
 #define css()
 <style>
-    .pdfobject-container {
-        width: 65%;
-        height: 100%;
+    .pdf-container {
         padding: 5em 0;
     }
 
@@ -20,15 +18,7 @@
 #end
 
 #define js()
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
 <script type="text/javascript">
-    //设置PDFObject
-    var options = {
-        forcePDFJS: true,
-        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
-    };
-    PDFObject.embed("", "#pdfviewer", options);
 
     function loadRecData(){
         layui.use('layer', function () {
@@ -90,7 +80,12 @@
     });
 
     $(document).ready(function () {
-        PDFObject.embed("#(reportPath)", "#pdfviewer", options);
+        $("a.media").media({
+            width: 800
+            , height: 600
+            , autoplay:true
+            , src:"#(reportPath)"
+        });
         loadRecData();
     });
 
@@ -122,7 +117,9 @@
 #define content()
 <div class="layui-fluid" style="height:100%;">
     <div class="layui-row" style="min-height:600px">
-        <div id="pdfviewer" class="layui-col-md8" style="min-height:500px"></div>
+        <div id="pdfviewer" class="layui-col-md8" style="min-height:500px">
+            <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
+        </div>
         <div class="layui-col-md4">
             <ul id="recomment"></ul>
         </div>

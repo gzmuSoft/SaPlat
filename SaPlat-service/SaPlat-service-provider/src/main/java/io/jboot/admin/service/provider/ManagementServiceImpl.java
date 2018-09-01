@@ -94,4 +94,9 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }
+
+    @Override
+    public List<Management> findListByColumns(Columns columns){
+        return  DAO.findListByColumns(columns);
+    }
 }

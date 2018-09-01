@@ -28,28 +28,12 @@ function digitsConversion(currencyDigits) {
     var i, p, d;
     var quotient, modulus;
 
-    // if (!currencyDigits.match(/[^,.\d]/)) {
-    //     alert("请输入有效数字");
-    //     $("#Digits").focus();
-    //     return;
-    // }
-    //
-    // //判断是否输入有效的数字格式
-    // var reg = /^((\d{1,3}(,\d{3})*(.((\d{3},)*\d{1,3}))?)|(\d+(.\d+)?))$/;
-    // if (!reg.test(currencyDigits)) {
-    //     alert("请输入有效格式数字");
-    //     $("#Digits").focus();
-    //     return;
-    //
-    // }
-    //
-    // currencyDigits = currencyDigits.replace(/,/g, "");
-    // currencyDigits = currencyDigits.replace(/^0+/, "");
-    // //判断输入的数字是否大于定义的数值
+    if (Number(currencyDigits) < 0) {
+        return "请输入大于零的金额";
+    }
+    //判断输入的数字是否大于定义的数值
     if (Number(currencyDigits) > MAXIMUM_NUMBER) {
-        alert("您输入的数值太大");
-        $("#Digits").focus();
-        return;
+        return "您输入的数值太大";
     }
     parts = currencyDigits.split(".");
     if (parts.length > 1) {

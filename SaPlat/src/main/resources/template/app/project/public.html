@@ -26,9 +26,9 @@
             , layedit = layui.layedit
             , $ = layui.jquery;
 
-        // layedit.build('brief', {
-        //     height: 180 //设置编辑器高度
-        // }); //建立编辑器
+        layedit.build('brief', {
+            height: 180 //设置编辑器高度
+        }); //建立编辑器
 
         var startDate = laydate.render({
             elem: '#publicTime'
@@ -101,60 +101,60 @@
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
         <legend>请填写发布日期</legend>
     </fieldset>
-    <form class="layui-form x-center">
-        <div class="layui-form-pane" style="margin: 0px;">
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
             <!--隐藏id-->
             <input type="text" id="id" name="id" class="layui-input layui-disabled layui-hide" value="#(model.id)"/>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 120px">发布期限</label>
-                <div class="layui-input-inline" style="width:255px;">
+                <div class="layui-input-inline">
                     <input type="text" id="publicTime" name="publicTime" class="layui-input" lay-verify="datetime" lay-verify="required" placeholder=" - "/>
                 </div>
                 <div class="layui-form-mid">至</div>
-                <div class="layui-input-inline" style="width:255px;">
+                <div class="layui-input-inline">
                     <input type="text" id="endTime" name="endTime" class="layui-input" lay-verify="datetime" lay-verify="required" placeholder=" - ">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 120px">项目名称</label>
-                <div class="layui-input-block" style="margin-left:120px;width: 552px;">
-                    <input type="text" id="name" name="site" class="layui-input" value="#(model.name)" readonly/>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.name)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 120px">项目类型</label>
-                <div class="layui-inline" style="margin-left:-1px;float:left; width: 190px;">
-                    <input type="text" id="typeName" name="typeName" class="layui-input" value="#(model.typeName)" readonly/>
+                <div class="layui-inline" style="float: left; width: 180px">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.typeName)</p>
                 </div>
                 <label class="layui-form-label"style="width: 120px">预计金额</label>
-                <div class="layui-inline" style="margin-left:-1px;float:left;">
-                    <input type="text" id="amount" name="amount" class="layui-input"
-                           value="#number(model.amount, ',###')" readonly/>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#number(model.amount, ",###")元</p>
                 </div>
-                <div class="layui-form-mid layui-word-aux">（单位：元）</div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 120px">地址</label>
-                <div class="layui-input-block" style="width: 555px; margin-left: 120px;">
-                    <input type="text" id="site" name="site" class="layui-input" lay-verify="required"
-                        value="#(model.site)" readonly/>
+                <div class="layui-inline" style="float: left;">
+                    <p style="margin-left: 20px;margin-top: 8px">#(model.site)</p>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 675px;">简介</label>
-                <div class="layui-inline" style="width: 675px;margin-top:-1px;">
+                <label class="layui-form-label"style="width: 120px">简介</label>
+                <div class="layui-inline">
                     <textarea class="layui-textarea" id="brief" name="brief" disabled>#(model.brief)</textarea>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <button class="layui-btn" lay-submit lay-filter="sub" align="center">提交</button>
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="sub" align="center">提交</button>
+                </div>
             </div>
+
         </div>
     </form>
 </div>

@@ -33,6 +33,24 @@ function pop_show(title,url,w,h,f){
 	});
 }
 
+function pop_show_full(title,url,f){
+    if (title == null || title == '') {
+            title=false;
+    };
+    var cur_layer = layer.open({
+        type: 2,
+        area: ['90%', '90%'],
+        fix: false, //不固定
+        maxmin: false,
+        shadeClose: true,
+        shade:0.4,
+        title: title,
+        content: url,
+        end: f
+    });
+    layer.full(cur_layer);
+}
+
 function pop_max_show(title,url,f){
     if (title == null || title == '') {
         title=false;
