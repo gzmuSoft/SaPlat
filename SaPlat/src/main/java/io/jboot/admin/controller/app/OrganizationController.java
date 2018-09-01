@@ -3,6 +3,7 @@ package io.jboot.admin.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -283,7 +284,15 @@ public class OrganizationController extends BaseController {
     public void management() {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        Management model = managementService.findByOrgId(organization.getId());
+        List<Management> mList = managementService.findAll(true);
+        BaseStatus superiorStatus = new BaseStatus(){};
+        superiorStatus.add("0", "无上级部门");
+        Management model = null;
+        for (Management item : mList) {
+            superiorStatus.add(item.getId().toString(), item.getName());
+            if (item.getOrgID() == loginUser.getUserID())
+                model = item;
+        }
         if (model == null) {
             model = new Management();
         }
@@ -297,12 +306,20 @@ public class OrganizationController extends BaseController {
 
         //flag = 0时未在认证状态，页面不禁用； flag = 1时页面内容禁用不可编辑
         if (authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION) == null) {
-            setAttr("organization", organization).setAttr("management", model)
-                    .setAttr("flag", 0).render("management.html");
+            setAttr("flag", 0);
         } else {
-            setAttr("organization", organization).setAttr("management", model)
-                    .setAttr("flag", 1).render("management.html");
+            setAttr("flag", 1);
         }
+        setAttr("organization", organization).setAttr("superiorStatus", superiorStatus).setAttr("management", model)
+                .render("management.html");
+    }
+
+    public void getSuperiorInfo() {
+        int id = getParaToInt("id", 0);
+        Management model = managementService.findById(id);
+        JSONObject json = new JSONObject();
+        json.put("management", model);
+        renderJson(json);
     }
     /**
      * 提交认证管理机构数据并进入待审核状态
@@ -311,10 +328,8 @@ public class OrganizationController extends BaseController {
     public void managementProve() {
         User loginUser = AuthUtils.getLoginUser();
         Management model = getBean(Management.class, "management");
+        model.setSuperiorID(getParaToLong("superiorID"));
         String management = "管理机构";
-        Date date =new Date();
-        model.setCreateTime(date);
-        model.setLastAccessTime(date);
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());
         //若曾经取消认证则下次认证时获取id进行更新
@@ -329,7 +344,6 @@ public class OrganizationController extends BaseController {
         }
         auth.setRoleId(roleid);
         auth.setUserId(loginUser.getId());
-        auth.setLastUpdTime(date);
         auth.setType(TypeStatus.ORGANIZATION);
         auth.setName(loginUser.getName());
         auth.setStatus(AuthStatus.VERIFYING);
@@ -340,10 +354,8 @@ public class OrganizationController extends BaseController {
         notification.setContent("申请" + management + "认证");
         notification.setReceiverID(1);
         notification.setCreateUserID(loginUser.getId());
-        notification.setCreateTime(date);
         notification.setRecModule(loginUser.getName());
         notification.setLastUpdateUserID(loginUser.getId());
-        notification.setLastAccessTime(date);
         notification.setIsEnable(true);
         notification.setRemark(auth.getType());
         notification.setStatus(0);

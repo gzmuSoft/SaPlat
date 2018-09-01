@@ -14,17 +14,50 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
 @JbootrpcService
-public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService {
+public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService{
     @Inject
     private NotificationService notificationService;
 
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public Management fitModel(Management model){
+        if(null != model && model.getSuperiorID() > 0) {
+            Management tmp = findById(model.getSuperiorID());
+            if(tmp != null) {
+                model.setSuperiorName(tmp.getName());
+                model.setPrincipal(tmp.getPrincipal());
+                model.setPrincipalcon(tmp.getPrincipalcon());
+            }
+        }
+        return model;
+    }
+
+    /**
+     * 获取所有数据
+     * @param isEnable 根据指定的isEnable的值来获取数据
+     * @return
+     */
+    @Override
+    public List<Management> findAll(boolean isEnable){
+        return DAO.findListByColumn("isEnable", isEnable);
+    }
+
+    @Override
+    public Management findById(Object id) {
+        return fitModel(DAO.findFirstByColumn("id", id));
+    }
+
     @Override
     public Management findByOrgId(Long orgId) {
-        return DAO.findFirstByColumn("orgID", orgId);
+        return fitModel(DAO.findFirstByColumn("orgID", orgId));
     }
 
     @Override
@@ -49,7 +82,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
     @Override
     public Management findByName(String name) {
-        return DAO.findFirstByColumn("name", name);
+        return fitModel(DAO.findFirstByColumn("name", name));
     }
 
 

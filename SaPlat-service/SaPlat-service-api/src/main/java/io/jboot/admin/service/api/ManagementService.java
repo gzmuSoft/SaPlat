@@ -27,6 +27,12 @@ public interface ManagementService  {
      */
     public List<Management> findAll();
 
+    /**
+     * 获取所有数据
+     * @param isEnable 根据指定的isEnable的值来获取数据
+     * @return
+     */
+    public List<Management> findAll(boolean isEnable);
 
     /**
      * delete model by primary key
@@ -35,7 +41,6 @@ public interface ManagementService  {
      * @return success
      */
     public boolean deleteById(Object id);
-
 
     /**
      * delete model

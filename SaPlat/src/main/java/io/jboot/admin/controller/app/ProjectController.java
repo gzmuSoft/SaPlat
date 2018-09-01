@@ -109,9 +109,13 @@ public class ProjectController extends BaseController {
         for (int i = 0; i < authList.size(); i++) {
             roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
         }
+
+        List<Management> mList = managementService.findAll(true);
+
         if (roleNameList.size() != 0) {
             setAttr("roleNameList", roleNameList).setAttr("flag", true)
                     .setAttr("PaTypeNameList", PaTypeList)
+                    .setAttr("managList", mList)
                     .setAttr("projectStepNameList", projectStepList)
                     .render("projectInformation.html");
         } else {
@@ -135,104 +139,110 @@ public class ProjectController extends BaseController {
     @Before({GET.class, ProjectValidator.class})
     public void projectUploading() {
         User loginUser = AuthUtils.getLoginUser();
-        Date date= new Date();
+        Date date = new Date();
         Project project = getBean(Project.class, "project");
-        project.setUserId(loginUser.getId());
-        project.setCreateTime(date);
-        project.setLastAccessTime(date);
-        project.setStatus(ProjectStatus.BUILDING);
-        project.setCreateUserID(loginUser.getId());
-        project.setLastUpdateUserID(loginUser.getId());
-        project.setIsEnable(true);
-        int saveOrUpdate = getParaToInt("saveOrUpdate");
-        if (saveOrUpdate == 1) {
-            Project model = projectService.saveProject(project);
-            JSONObject json = new JSONObject();
-            Long projectId = -1L;
 
-            if (model != null) {
-                projectId = model.getId();
-            }
+        //查找是否存在同名项目
+        if (projectService.findFirstByColumn("name", project.getName()) != null) {
+            renderJson(RestResult.buildError("项目资料更新失败"));
+            throw new BusinessException("项目资料更新失败");
+        } else {
+            project.setUserId(loginUser.getId());
+            project.setStatus(ProjectStatus.BUILDING);
+            project.setCreateUserID(loginUser.getId());
+            project.setLastUpdateUserID(loginUser.getId());
+            project.setIsEnable(true);
+            int saveOrUpdate = getParaToInt("saveOrUpdate");
+            if (saveOrUpdate == 1) {
+                Project model = projectService.saveProject(project);
 
-            json.put("projectId", projectId);
-            if (projectId != -1L) {
-                renderJson(json);
-            } else {
-                renderJson(RestResult.buildError("项目资料上传失败"));
-                throw new BusinessException("项目资料上传失败");
-            }
-        } else if (saveOrUpdate == 0) {
-            JSONObject jsonData = new JSONObject();
-            if (getParaToBoolean("judgeFile")) {
-                Project projectDb = projectService.findById(getParaToLong("projectId"));
-                AuthProject authProject = new AuthProject();
-                authProject.setUserId(loginUser.getId());
-                authProject.setRoleId(roleService.findByName(projectDb.getRoleName()).getId());
-                authProject.setProjectId(getParaToLong("projectId"));
-                authProject.setLastUpdTime(date);
-                authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
-                authProject.setName(loginUser.getName());
+                JSONObject json = new JSONObject();
+                Long projectId = -1L;
 
-                authProject.setLastUpdUser(loginUser.getName());
-                if ("自评".equals(project.getAssessmentMode())) {
-                    authProject.setStatus(ProjectStatus.REVIEW);
-                    project.setStatus(ProjectStatus.REVIEW);
-
-                    ProjectUndertake projectUndertake = new ProjectUndertake();
-                    projectUndertake.setName(projectDb.getName());
-                    projectUndertake.setCreateUserID(loginUser.getId());
-                    projectUndertake.setProjectID(getParaToLong("projectId"));
-                    projectUndertake.setFacAgencyID(loginUser.getId());
-                    projectUndertake.setApplyOrInvite(true);
-                    projectUndertake.setStatus(2);
-                    projectUndertake.setCreateTime(date);
-                    projectUndertake.setDeadTime(date);
-                    projectUndertake.setLastAccessTime(date);
-                    projectUndertake.setLastUpdateUserID(loginUser.getId());
-                    projectUndertake.setIsEnable(true);
-                    if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
-                        throw new BusinessException("保存失败");
-                    }
-                    jsonData.put("flag", 0);
-                } else if ("委评".equals(project.getAssessmentMode())) {
-                    authProject.setStatus(ProjectStatus.VERIFIING);
-                    project.setStatus(ProjectStatus.VERIFIING);
-
-                    Notification notification = new Notification();
-                    notification.setName(loginUser.getName());
-                    notification.setSource("/app/project/projectUploading");
-                    notification.setContent("申请《" + projectDb.getName() + "》审核");
-                    notification.setReceiverID(1);
-                    notification.setCreateUserID(loginUser.getId());
-                    notification.setCreateTime(date);
-                    notification.setRecModule(projectDb.getName());
-                    notification.setLastUpdateUserID(loginUser.getId());
-                    notification.setLastAccessTime(date);
-                    notification.setIsEnable(true);
-                    notification.setStatus(0);
-                    notificationService.save(notification);
-                    jsonData.put("flag", 1);
+                if (model != null) {
+                    projectId = model.getId();
                 }
 
-                if (authProjectService.saveOrUpdate(authProject)) {
-                    renderJson(RestResult.buildSuccess("项目状态表上传成功"));
+                json.put("projectId", projectId);
+                if (projectId != -1L) {
+                    renderJson(json);
                 } else {
-                    renderJson(RestResult.buildError("项目状态表上传失败"));
-                    throw new BusinessException("项目状态表上传失败");
+                    renderJson(RestResult.buildError("项目资料上传失败"));
+                    throw new BusinessException("项目资料上传失败");
                 }
-            } else {
-                jsonData.put("flag", 2);
-            }
-            if (getParaToLong("projectId") != -1) {
-                project.setId(getParaToLong("projectId"));
-            }
+            } else if (saveOrUpdate == 0) {
+                JSONObject jsonData = new JSONObject();
+                if (getParaToBoolean("judgeFile")) {
+                    Project projectDb = projectService.findById(getParaToLong("projectId"));
+                    AuthProject authProject = new AuthProject();
+                    authProject.setUserId(loginUser.getId());
+                    authProject.setRoleId(roleService.findByName(projectDb.getRoleName()).getId());
+                    authProject.setProjectId(getParaToLong("projectId"));
+                    authProject.setLastUpdTime(date);
+                    authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+                    authProject.setName(loginUser.getName());
 
-            if (projectService.update(project)) {
-                renderJson(RestResult.buildSuccess("项目资料更新成功"));
-                renderJson(jsonData);
-            } else {
-                renderJson(RestResult.buildError("项目资料更新失败"));
-                throw new BusinessException("项目资料更新失败");
+                    authProject.setLastUpdUser(loginUser.getName());
+                    if ("自评".equals(project.getAssessmentMode())) {
+                        authProject.setStatus(ProjectStatus.REVIEW);
+                        project.setStatus(ProjectStatus.REVIEW);
+
+                        ProjectUndertake projectUndertake = new ProjectUndertake();
+                        projectUndertake.setName(projectDb.getName());
+                        projectUndertake.setCreateUserID(loginUser.getId());
+                        projectUndertake.setProjectID(getParaToLong("projectId"));
+                        projectUndertake.setFacAgencyID(loginUser.getId());
+                        projectUndertake.setApplyOrInvite(true);
+                        projectUndertake.setStatus(2);
+                        projectUndertake.setCreateTime(date);
+                        projectUndertake.setDeadTime(date);
+                        projectUndertake.setLastAccessTime(date);
+                        projectUndertake.setLastUpdateUserID(loginUser.getId());
+                        projectUndertake.setIsEnable(true);
+                        if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
+                            throw new BusinessException("保存失败");
+                        }
+                        jsonData.put("flag", 0);
+                    } else if ("委评".equals(project.getAssessmentMode())) {
+                        authProject.setStatus(ProjectStatus.VERIFIING);
+                        project.setStatus(ProjectStatus.VERIFIING);
+
+                        Notification notification = new Notification();
+                        notification.setName(loginUser.getName());
+                        notification.setSource("/app/project/projectUploading");
+                        notification.setContent("申请《" + projectDb.getName() + "》审核");
+                        notification.setReceiverID(1);
+                        notification.setCreateUserID(loginUser.getId());
+                        notification.setCreateTime(date);
+                        notification.setRecModule(projectDb.getName());
+                        notification.setLastUpdateUserID(loginUser.getId());
+                        notification.setLastAccessTime(date);
+                        notification.setIsEnable(true);
+                        notification.setStatus(0);
+                        notificationService.save(notification);
+                        jsonData.put("flag", 1);
+                    }
+
+                    if (authProjectService.saveOrUpdate(authProject)) {
+                        renderJson(RestResult.buildSuccess("项目状态表上传成功"));
+                    } else {
+                        renderJson(RestResult.buildError("项目状态表上传失败"));
+                        throw new BusinessException("项目状态表上传失败");
+                    }
+                } else {
+                    jsonData.put("flag", 2);
+                }
+                if (getParaToLong("projectId") != -1) {
+                    project.setId(getParaToLong("projectId"));
+                }
+
+                if (projectService.update(project)) {
+                    renderJson(RestResult.buildSuccess("项目资料更新成功"));
+                    renderJson(jsonData);
+                } else {
+                    renderJson(RestResult.buildError("项目资料更新失败"));
+                    throw new BusinessException("项目资料更新失败");
+                }
             }
         }
     }

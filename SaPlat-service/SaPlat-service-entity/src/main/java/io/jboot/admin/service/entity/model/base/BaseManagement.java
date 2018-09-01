@@ -49,12 +49,12 @@ public abstract class BaseManagement<M extends BaseManagement<M>> extends JbootM
 		return getStr("responsibility");
 	}
 
-	public void setSuperior(java.lang.String superior) {
-		set("superior", superior);
+	public void setSuperiorID(java.lang.Long superiorID) {
+		set("superiorID", superiorID);
 	}
 	
-	public java.lang.String getSuperior() {
-		return getStr("superior");
+	public java.lang.Long getSuperiorID() {
+		return getLong("superiorID");
 	}
 
 	public void setPrincipal(java.lang.String principal) {
