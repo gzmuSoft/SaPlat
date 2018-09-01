@@ -30,26 +30,23 @@
         });
 
         $("#eva-scheme-process").click(function(){
-            pop_show("评估过程","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+            pop_show("评估方案","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
         });
 
         $("#pretrial-report").click(function(){
-            pop_show("预审报告","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
         });
 
         $("#final-report").click(function(){
-            //alert("终审报告");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("终审报告");
         });
 
         $("#project-record").click(function(){
-            //alert("项目备案");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("项目备案");
         });
 
         $("#project-track").click(function(){
-            //alert("项目跟踪");
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            alert("项目跟踪");
         });
     });
 
@@ -92,7 +89,6 @@
                                 <label class="layui-form-label">预计金额</label>
                                 <div class="layui-input-inline">
                                     <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
-                                    <input name="digits" type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input" readonly/>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">（单位：元）</div>
                             </div>
@@ -115,7 +111,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="digitsTip"></div>
                     </form>
                 </div>
             </div>
