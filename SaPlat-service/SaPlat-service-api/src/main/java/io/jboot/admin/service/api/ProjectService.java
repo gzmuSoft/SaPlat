@@ -135,6 +135,9 @@ public interface ProjectService  {
      */
     public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize);
 
+    public Page<Project> findPageForCreater(Long userID, int pageNumber, int pageSize);
+
+    public Page<Project> findPageForService(Long userID, int pageNumber, int pageSize);
     /**
      * find model by user and role and isEnable
      *

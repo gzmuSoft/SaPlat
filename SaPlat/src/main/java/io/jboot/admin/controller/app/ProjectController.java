@@ -1342,11 +1342,21 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
         Page<Project> page = null;
-        //是管理机构
-        if (isMgrAgency(AuthUtils.getLoginUser())) {
-            page = projectService.findPageForMgr(project, pageNumber, pageSize);
-        }else{//不是管理机构
-            page = projectService.findPage(project, pageNumber, pageSize);
+
+        if (StrKit.notBlank(getPara("ownType"))) {
+            int iOwnType = Integer.parseInt(getPara("ownType"));
+            switch (iOwnType){
+                case 0:
+                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
+                    break;
+                case 1:
+                    project.setUserId(AuthUtils.getLoginUser().getUserID());
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                    break;
+                case 2:
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
+                    break;
+            }
         }
         renderJson(new DataTable<Project>(page));
     }

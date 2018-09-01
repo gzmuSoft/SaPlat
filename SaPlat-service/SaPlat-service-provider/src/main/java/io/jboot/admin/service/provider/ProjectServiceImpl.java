@@ -160,6 +160,20 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
+    public Page<Project> findPageForCreater(Long userID, int pageNumber, int pageSize){
+        Kv c = Kv.by("userID", userID);
+        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-creater", c);
+        return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+    }
+
+    @Override
+    public Page<Project> findPageForService(Long userID, int pageNumber, int pageSize){
+        Kv c = Kv.by("userID", userID);
+        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-service", c);
+        return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+    }
+
+    @Override
     public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize){
         //当前用户对应的管理机构
         Management curMgr = mgrService.findByOrgId(project.getUserId());
@@ -172,11 +186,8 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                 str.append(item.getId());
                 str.append(",");
             }
-            str.subSequence(0,str.length()-1);
-            Kv c = null;
-            SqlPara sqlPara = null;
-            c = Kv.by("mgr_list", str.toString());
-            sqlPara = Db.getSqlPara("project-by-mgr", c);
+            Kv c = Kv.by("mgr_list", str.substring(0,str.length()-1));
+            SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr", c);
             return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
         }
         return  new Page<Project>();
