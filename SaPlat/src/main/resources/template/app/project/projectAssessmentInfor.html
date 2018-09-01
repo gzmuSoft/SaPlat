@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/x-admin.css" type="text/css">
     <link rel="stylesheet" href="/static/css/iconfont.css">
-
+    <link rel="stylesheet" href="/static/css/manhua_hoverTips.css" type="text/css"/>
     <!--css start-->
     <style>
         .layui-form-label {
@@ -188,7 +188,9 @@
 <script type="text/javascript" src="/static/js/comm_notbar.js"></script>
 <script type="text/javascript" src="/static/js/utils.js"></script>
 <script type="text/javascript" src="/static/js/ztree/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>
+<!--<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>-->
+<script type="text/javascript" src="/static/js/digitsConversion.js"></script>
+<script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
 <!--js start-->
 <script type="text/javascript">
 
@@ -204,10 +206,9 @@
         clearInterval(timer);
         offset = $(this).offset();
         h = $(this).height();
-        w = $(this).width();
         $(".cont").html(str);
         $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+        $btip.css({ "left":offset.left-800  ,  "top":offset.top+h-40  }).show();
     });
 
 
@@ -363,7 +364,6 @@
                 });
             }
         });
-
     });
     $("#res").click(function () {
         history.go(-1);
