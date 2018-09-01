@@ -29,6 +29,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     ProjectAssTypeServiceImpl projectAssTypeService = new ProjectAssTypeServiceImpl();
     UserServiceImpl userService = new UserServiceImpl();
     OrganizationServiceImpl organizationService = new OrganizationServiceImpl();
+    ManagementServiceImpl mgrService = new ManagementServiceImpl();
     /**
      * 装配单个实体对象的数据
      * @param model
@@ -156,6 +157,41 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         //return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
         //Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
+    }
+
+    @Override
+    public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize){
+        //当前用户对应的管理机构
+        Management curMgr = mgrService.findByOrgId(project.getUserId());
+        if(null != curMgr) {
+            List<Management> result = new ArrayList<Management>();
+            result.add(curMgr);
+            findMgrChildren(curMgr.getId(), result);
+            StringBuilder str = new StringBuilder();
+            for(Management item : result){
+                str.append(item.getId());
+                str.append(",");
+            }
+            str.subSequence(0,str.length()-1);
+            Kv c = null;
+            SqlPara sqlPara = null;
+            c = Kv.by("mgr_list", str.toString());
+            sqlPara = Db.getSqlPara("app-project.project-undertake-ApplyIn", c);
+            return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+        }
+        return  new Page<Project>();
+    }
+
+    private void findMgrChildren(long mgrId,List<Management> result){
+        Columns columns = Columns.create();
+        columns.eq("superiorID",mgrId);
+        List<Management> list = mgrService.findListByColumns(columns);
+        if((null != list) && (list.size() >=0)){
+            result.addAll(list);
+            for(Management item : list){
+                findMgrChildren(item.getId(),result);
+            }
+        }
     }
 
     @Override

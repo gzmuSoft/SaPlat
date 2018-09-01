@@ -30,6 +30,9 @@
             var status = "#(model.status)"
             switch(status){
                 case "7":
+                    $("#eva-scheme").removeClass("layui-hide");
+                    $("#eva-scheme-process").removeClass("layui-hide");
+                    $("#pretrial-report").removeClass("layui-hide");
                     break;
                 case "6":
                     break;
@@ -50,15 +53,15 @@
         }
 
         $("#eva-scheme").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)");
+            pop_show_full("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)",function(){});
         });
 
         $("#eva-scheme-process").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)");
+            pop_show_full("评估过程资料","#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)"+ "&entry=mgr",function(){});
         });
 
         $("#pretrial-report").click(function(){
-            pop_show("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2");
+            pop_show_full("评估方案","#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2",function(){});
         });
 
         $("#final-report").click(function(){
@@ -114,7 +117,7 @@
                     <div class="layui-btn-group layui-hide" style="float:right" id="entries-mgr">
                         <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme">评估方案</button>
                         <button class="layui-btn layui-btn-sm layui-hide" id="eva-scheme-process">评估过程资料</button>
-                        <button class="layui-btn layui-btn-sm layui-hide" id="pretrial-report">预审报告</button>
+                        <button class="layui-btn layui-btn-sm layui-hide" id="pretrial-report">项目文件</button>
                         <button class="layui-btn layui-btn-sm layui-hide" id="final-report">终审报告</button>
                         <button class="layui-btn layui-btn-sm layui-hide" id="project-record">项目备案</button>
                         <button class="layui-btn layui-btn-sm layui-hide" id="project-track">项目跟踪</button>

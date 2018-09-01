@@ -14,6 +14,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Bean
 @Singleton
@@ -60,5 +61,10 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
             columns.like("name", "%" + management.getName() + "%");
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
+    }
+
+    @Override
+    public List<Management> findListByColumns(Columns columns){
+        return  DAO.findListByColumns(columns);
     }
 }
