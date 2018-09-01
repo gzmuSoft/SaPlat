@@ -4,12 +4,10 @@
 #define css()
 <link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
 <style>
-    .pdfobject-container {
-        width: 48%;
-        height: 100%;
-        padding: 5em 0;
+     .pdf-container {
+        width:98%;
+        padding: 3em;
     }
-
     html, body {
         height: 97%;
     }
@@ -22,14 +20,25 @@
 
 #define js()
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfobject.min.js"></script>
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/pdf/pdfjs/core/pdf.js"></script>
 <script type="text/javascript">
-    var options = {
-        forcePDFJS: true,
-        PDFJS_URL: "/static/js/pdf/pdfjs/web/viewer.html"
-    };
-    PDFObject.embed("", "#pdfviewer", options);
+    function addDiyDom(treeId, treeNode) {
+		var spaceWidth = 5;
+		var switchObj = $("#" + treeNode.tId + "_switch"),
+		icoObj = $("#" + treeNode.tId + "_ico");
+		switchObj.remove();
+		icoObj.before(switchObj);
+
+		if (treeNode.level > 1) {
+			var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+			switchObj.before(spaceStr);
+		}
+		var spantxt=$("#" + treeNode.tId + "_span").html();
+		if(spantxt.length>12){
+			spantxt=spantxt.substring(0,12)+"...";
+			$("#" + treeNode.tId + "_span").html(spantxt);
+		}
+	}
+
     var setting = {
         data: {
             simpleData: {
@@ -40,7 +49,8 @@
             onClick: zTreeOnClick
         },
         view: {
-            showTitle: true
+            showTitle: true,
+            addDiyDom: addDiyDom
         }
     };
 
@@ -95,7 +105,14 @@
     }
 
     function zTreeOnClick(event, treeId, treeNode) {
-        PDFObject.embed(treeNode.title, "#pdfviewer", options);
+        $("#pdf-viewer").children().remove();
+        $("#pdf-viewer").append("<a class='media' href=''></a>");
+        $("a.media").media({
+            width: 800
+            , height: 600
+            , autoplay:true
+            , src:treeNode.title
+        });
         layui.use('flow', function () {
             var $ = layui.jquery;
             var flow = layui.flow;
@@ -126,12 +143,14 @@
 #end
 
 #define content()
-<div class="layui-fluid" style="height:100%;">
-    <div class="layui-row" style="min-height:600px">
+<div class="layui-fluid">
+    <div class="layui-row">
         <div class="layui-col-md3">
             <ul id="tree" class="ztree"></ul>
         </div>
-        <div id="pdfviewer" class="layui-col-md9" style="min-height:500px"></div>
+        <div id="pdf-viewer" class="layui-col-md6">
+            <a class="media" href=""></a>
+        </div>
         <div class="layui-col-md3">
             <ul id="recomment"></ul>
         </div>
