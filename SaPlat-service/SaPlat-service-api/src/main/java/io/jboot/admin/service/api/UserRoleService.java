@@ -88,6 +88,8 @@ public interface UserRoleService  {
     public boolean update(UserRole model);
 
     public List<UserRole> findAll();
+    public List<UserRole> findAllByRoleId(Object roleID);
+
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
     public void join(Page<? extends Model> page, String joinOnField, String joinName);

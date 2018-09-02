@@ -888,6 +888,7 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void isPublic() {
+        User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Project model = projectService.findById(id);
         if (model != null) {
@@ -896,6 +897,27 @@ public class ProjectController extends BaseController {
             model.setIsPublic(true);
         }
         if (projectService.update(model)) {
+            Long roleId  = roleService.findByName("服务机构").getId();
+            List<UserRole> userRoles = userRoleService.findAllByRoleId(roleId);
+
+            Notification notification = new Notification();
+            notification.setName("项目公开通知");
+            notification.setSource("/app/project/isPublic");
+            notification.setContent( user.getName() + " 公开项目《" + model.getName() + "》的评估");
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(new Date());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(new Date());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+
+            for (int i = 0;i <userRoles.size();i++){
+                notification.setReceiverID(userRoles.get(i).getUserID().intValue());
+                notificationService.save(notification);
+            }
+
+            notification.setReceiverID(1);
+            notificationService.save(notification);
             renderJson(RestResult.buildSuccess("项目公开成功"));
         } else {
             renderJson(RestResult.buildError("项目公开失败"));

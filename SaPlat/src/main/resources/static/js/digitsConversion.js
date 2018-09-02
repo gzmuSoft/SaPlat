@@ -27,6 +27,7 @@ function digitsConversion(currencyDigits) {
     var zeroCount;
     var i, p, d;
     var quotient, modulus;
+	var sign = 0;
 
     if (Number(currencyDigits) < 0) {
         return "请输入大于零的金额";
@@ -55,23 +56,26 @@ function digitsConversion(currencyDigits) {
     if (Number(integral) > 0) {
         zeroCount = 0;
         for (i = 0; i < integral.length; i++) {
-            p = integral.length - i - 1;
-            d = integral.substr(i, 1);
-            quotient = p / 4;
-            modulus = p % 4;
-            if (d == "0") {
-                zeroCount++;
-            }
-            else {
-                if (zeroCount > 0) {
-                    outputCharacters += digits[0];
-                }
-                zeroCount = 0;
-                outputCharacters += digits[Number(d)] + radices[modulus];
-            }
-            if (modulus == 0 && zeroCount < 4) {
-                outputCharacters += bigRadices[quotient];
-            }
+        	p = integral.length - i - 1;
+        	d = integral.substr(i, 1);
+        	quotient = p / 4;
+        	modulus = p % 4;
+        	if (d == "0") {
+        		zeroCount++;
+        	}
+        	else {
+        		if (zeroCount > 0 && sign ==1) {
+        			outputCharacters += digits[0];
+        		}							
+        		zeroCount = 0;
+        		outputCharacters += digits[Number(d)] + radices[modulus];
+        		if (sign == 0){
+        			sign = 1;
+        		}
+        	}
+        	if (modulus == 0 && zeroCount < 4 && sign ==1) {
+        		outputCharacters += bigRadices[quotient];
+        	}
         }
         outputCharacters += CN_DOLLAR;
     }
