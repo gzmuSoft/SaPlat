@@ -3,9 +3,7 @@
 
 #define css()
 <style>
-    .layui-form-label{
-        width: 120px;
-    }
+
 
 </style>
 #end
@@ -41,67 +39,100 @@
 #end
 
 #define content()
-<div class="x-body">
-    <form id="addForm" class="layui-form" action="">
-        <input type="hidden" name="model.id" value="#(model.id)">
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="专家团体名称" class="layui-input" value="#(model.name)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>工作时间</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="工作时间" class="layui-input" value="#(model.worktime)"
-                       required lay-verify="required" style="width:500px"  autocomplete="off" disabled="disabled"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>在职状态</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="在职状态" class="layui-input" value="#(model.workstate)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>专业资格内容</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="专业资格内容" class="layui-input" value="#(model.profess)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
-            </div>
-        </div>
+<div class="layui-fluid">
+    <!--    <fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color:#009688;">
+            <legend style="font-size: 20px;font-weight: 500;">专家团体</legend>
+        </fieldset>
+        <br/>-->
 
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>专业证书</label>
-            <div class="layui-input-inline">
-                <button  type="button" class="layui-btn" name="check" id="check2" style="margin: 0 200px" value="#(model.certificate)">点击查看</button>
-            </div>
-        </div>
+    <div style="padding: 20px; background-color: #F2F2F2;margin-top:19px">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="model.name" >名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" id="model.name" name="model.name" value="#(model.name)"
+                                               class="layui-input " readonly/>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="model.worktime" >工作时间：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" name="model.worktime" id="model.worktime" autocomplete="off"
+                                               value="#(model.worktime)" class="layui-input"  readonly>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="model.workstate" >在职状态：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" name="model.workstate" id="model.workstate" class="layui-input" value="#(model.workstate)" readonly>
+                                    </div>
+                                </div>
+                            </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>部门名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="book.name" placeholder="部门名称" class="layui-input" value="#(model.department)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="model.department" >部门名称：</label>
+                                    <div class="layui-input-block" >
+                                        <input type="text" name="model.department" id="model.department" autocomplete="off"
+                                               value="#(model.department)" class="layui-input" style="width: 510px" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">证书/证件资料</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="">
+                            <div class="layui-row layui-col-space10 layui-form-item">
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"  style="width: 110px;">工作证件照片：</label>
+                                        <div class="layui-input-block" >
+                                            <button type="button" class="layui-btn"  value="#(model.workpictrue)" style="margin: 0 40px">
+                                                点击查看
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md4">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 110px;">专业资格证书：</label>
+                                        <div class="layui-input-block" >
+                                            <button type="button" class="layui-btn" name="check" id="check2" style="margin: 0 40px" value="#(model.certificate)">
+                                                点击查看
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div></div></form>
+                    </div>
+                </div>
+            </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label" ><em class="require-mark">*</em>工作证件照片</label>
-            <div class="layui-input-inline">
-                <button  type="button" class="layui-btn" style="margin: 0 200px" value="#(model.workpictrue)">点击查看</button>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">专业资格内容</div>
+                    <div class="layui-card-body">
+                        <p style="margin-left: 20px;margin-top: 8px">#(model.profess)</p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>参与项目经历</label>
-            <div class="layui-input-block" style="width: 500px">
-                <textarea name="model.project"
-                                      class="layui-textarea" disabled="disabled">#(model.project)</textarea>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">参与项目经历</div>
+                    <div class="layui-card-body">
+                        <p style="margin-left: 20px;margin-top: 8px">#(model.project)</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </div></div></div>
 #end
