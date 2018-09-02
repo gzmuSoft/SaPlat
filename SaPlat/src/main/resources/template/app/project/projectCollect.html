@@ -12,6 +12,14 @@
     <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
+                <label class="layui-form-label">项目归属</label>
+                <div class="layui-input-inline">
+                    <select id='ownType' name="ownType" lay-filter="ownTypeSelect">
+                        <option value="0" selected>我创建的</option>
+                        <option value="1">我管理的</option>
+                        <option value="2">我承接的</option>
+                    </select>
+                </div>
                 <label class="layui-form-label">项目类型</label>
                 <div class="layui-input-inline">
                     <select id='projectType' name="projectType">
@@ -64,6 +72,9 @@
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
+            , where: {
+                ownType:0
+            } //设定异步数据接口的额外参数
             , url: '#(ctxPath)/app/project/projectCollectTableData'
             , method: 'get'
             , request: {
@@ -80,21 +91,27 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+                pop_show_full('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {
                 });
             }
         });
 
-        reloadTable = function (projectType) {
+        reloadTable = function (projectType, ownType) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/project/projectCollectTableData'
                 , where: {
                     projectType: projectType
+                    ,ownType:ownType
                 } //设定异步数据接口的额外参数
             });
         };
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType);
+            reloadTable(data.field.projectType, data.field.ownType);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('select(ownTypeSelect)', function(data){
+            reloadTable($('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });

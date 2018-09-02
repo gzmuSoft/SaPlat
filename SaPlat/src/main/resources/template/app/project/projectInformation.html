@@ -15,7 +15,7 @@
 <body>
 #if(flag)
 <article class="htmleaf-content">
-    <form id="msform" method='post'>
+    <form id="msform" method='post' style="width:1100px;">
         <ul id="progressbar">
             <li class="active">项目主体资料填写</li>
             <li>稳评领导小组资料填写</li>
@@ -27,15 +27,15 @@
             <h1 class="fs-title">请填写项目相关资料</h1>
 
             <div>
-                <label for="project.name" style="padding-top: 5px;">项目名称:</label>
-                <input type="text" id="project.name" class="project" name="project.name"/>
+                <label for="project.name" style="vertical-align: center;">项目名称</label>
+                <input type="text" id="project.name" class="project" name="project.name" style="width:400px;"/>
             </div>
 
             <div>
-                <label for="project.amount" style="padding-top: 5px;">预计金额:</label>
+                <label for="project.amount" style="padding-top: 5px;">预计金额</label>
                 <span>
                 <input type="number" id="project.amount" class="project money" name="project.amount"
-                       style="width:18%;margin-right:  0px;"/>
+                       style="width:370px;margin-right:  0px;"/>
                 </span>
                 <div id="digitsTip"></div>
                 <!--<select id="units" name="units"-->
@@ -49,13 +49,29 @@
                 <span style="box-sizing: border-box;color: rgb(32, 13, 41);margin-right: 29px;border-radius: 3px;font-family: 'Microsoft YaHei', montserrat, serif;font-size: 17px;height: 32px;float:  left;width: 30px;padding-top: 5px;">元</span>
             </div>
 
+            <br><br><br>
+
+
             <div>
-                <label for="project.site" style="padding-top: 5px; width: 100px;text-align: right;">项目地址:</label>
-                <input type="text" id="project.site" class="project" name="project.site" style="margin: 0 10px"/>
+                <label for="project.managementID">主管部门</label>
+                <select id="project.managementID" name="project.managementID" class="project"
+                    style="float:left; width: 400px;">
+                    <option value="">请选择项目主管部门</option>
+                    #for(List : managList)
+                    <option value="#(List.id)">#(List.name)</option>
+                    #end
+                </select>
             </div>
-            <br><br><br><br><br>
+
             <div>
-                <label for="project.roleName" style="padding-top: 5px;">立项身份:</label>
+                <label for="project.site" style="padding-top: 5px;">项目地址</label>
+                <input type="text" id="project.site" class="project" name="project.site" style="float:left;width: 400px;"/>
+            </div>
+
+            <br><br><br>
+
+            <div>
+                <label for="project.roleName" style="padding-top: 5px;">立项身份</label>
                 <select id="project.roleName" class="project" name="project.roleName">
                     <option value="">请选择立项身份</option>
                     #for(List : roleNameList)
@@ -65,7 +81,7 @@
             </div>
 
             <div>
-                <label for="project.pStepID" style="padding-top: 5px;">项目阶段:</label>
+                <label for="project.pStepID" style="padding-top: 5px;">项目阶段</label>
                 <select id="project.pStepID" class="project" name="project.pStepID">
                     <option value="">请选择项目阶段</option>
                     #for(List : projectStepNameList)
@@ -75,8 +91,8 @@
             </div>
 
             <div>
-                <label for="project.paTypeID" style="width: 100px;margin-top: 5px">项目评估类型:</label>
-                <select id="project.paTypeID" class="project" name="project.paTypeID" style="margin: 0 10px">
+                <label for="project.paTypeID" style="width: 100px;margin-top: 5px">项目评估类型</label>
+                <select id="project.paTypeID" class="project" name="project.paTypeID" style="width: 235px;">
                     <option value="">请选择项目评估类型</option>
                     #for(List : PaTypeNameList)
                     <option value="#(List.id)">#(List.name)</option>
@@ -85,7 +101,7 @@
             </div>
 
             <div class="layui-form-item">
-                <h2 style="margin-top: 70px;">简介:</h2>
+                <h2 style="margin-top: 70px;">简介</h2>
                 <hr class="layui-bg-blue">
                 <label for="brief"></label><textarea id="brief" name="project.brief"></textarea>
             </div>
@@ -97,20 +113,20 @@
             <h1 class="fs-title">请填写领导小组相关资料</h1>
             <div class="layui-form-item" style="margin-left:25%;">
                 <div>
-                    <label for="LeaderGroup.leader">组长:</label>
+                    <label for="LeaderGroup.leader">组长</label>
                     <label for="leaderGroup.leader"></label><input type="text" class="leaderGroup"
                                                                    id="leaderGroup.leader" name="leaderGroup.leader"/>
                 </div>
 
                 <div>
-                    <label for="LeaderGroup.deputy">副组长:</label>
+                    <label for="LeaderGroup.deputy">副组长</label>
                     <label for="leaderGroup.deputy"></label><input type="text" class="leaderGroup"
                                                                    id="leaderGroup.deputy" name="leaderGroup.deputy"/>
                 </div>
             </div>
 
             <div class="layui-form-item" style="margin-left:25%;">
-                <label>组员:</label>
+                <label>组员</label>
                 <label for="crew"></label><textarea id="crew" name="leaderGroup.crew" cols="47" rows="5"></textarea>
             </div>
             <input type="button" name="previous" id="previousPage2" class="previous action-button" value="上一步"/>
@@ -164,33 +180,6 @@
     var projectId = -1, judgeFile = false;
     var paTypeID, fileId;
 
-    $('.money').on('input propertychange', function() {
-        var data = $('.money').val();
-        var str = digitsConversion(data);
-        var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-        var $btip = $("#btip"+bid);
-        var offset,h ,w ;
-        var timer;
-        clearInterval(timer);
-        offset = $(this).offset();
-        h = $(this).height();
-        w = $(this).width();
-        $(".cont").html(str);
-        $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
-    });
-
-
-    $('.money').live("mousemove",function(){
-        clearInterval(window.timer);
-        $("#digitsTip").show();
-    });
-
-    $('.money').live("mouseout",function(){
-        $("#digitsTip").hide();
-    });
-
     layui.use(['layedit', 'table', 'element'], function () {
         /**
          * 操作对象
@@ -205,7 +194,7 @@
          * 富文本编辑器
          */
         var index = layedit.build('brief', {
-            height: 100,
+            height: 150,
             hideTool: ['link', 'unlink', 'face', 'image', 'help']
         });
 
@@ -499,6 +488,32 @@
         });
     });
 
+    $('.money').on('input propertychange', function() {
+        var data = $('.money').val();
+        var str = digitsConversion(data);
+        var bid = parseInt(Math.random()*100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip"+bid);
+        var offset,h ,w ;
+        var timer;
+        clearInterval(timer);
+        offset = $(this).offset();
+        h = $(this).height();
+        w = $(this).width();
+        $(".cont").html(str);
+        $(".triangle-t").css('left',26);
+        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+    });
+
+
+    $('.money').live("mousemove",function(){
+        clearInterval(window.timer);
+        $("#digitsTip").show();
+    });
+
+    $('.money').live("mouseout",function(){
+        $("#digitsTip").hide();
+    });
 </script>
 #else
 <script>

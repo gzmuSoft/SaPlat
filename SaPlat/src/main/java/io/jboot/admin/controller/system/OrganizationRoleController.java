@@ -58,7 +58,7 @@ public class OrganizationRoleController extends Controller {
     public void managementEnable() {
         Management management = managementService.findById(getParaToLong("id"));
         if (management == null) {
-            throw new BusinessException("找不到改团体");
+            throw new BusinessException("找不到该管理机构");
         }
         management.setLastAccessTime(new Date());
         management.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
@@ -155,15 +155,13 @@ public class OrganizationRoleController extends Controller {
 
     public void enterpriseIndex() {
         render("enterprise.html");
-
     }
-
 
     @NotNullPara({"id", "enable"})
     public void enterpriseEnable() {
         Enterprise enterprise = enterpriseService.findById(getParaToLong("id"));
         if (enterprise == null) {
-            throw new BusinessException("找不到该团体");
+            throw new BusinessException("找不到该企业机构");
         }
         enterprise.setLastAccessTime(new Date());
         enterprise.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
@@ -187,18 +185,15 @@ public class OrganizationRoleController extends Controller {
         renderJson(new DataTable<Enterprise>(page));
     }
 
-
     public void reviewgroupIndex() {
         render("reviewgroup.html");
-
     }
-
 
     @NotNullPara({"id", "enable"})
     public void reviewgroupEnable() {
         ReviewGroup reviewGroup = reviewGroupService.findById(getParaToLong("id"));
         if (reviewGroup == null) {
-            throw new BusinessException("找不到该团体");
+            throw new BusinessException("找不到该审查团体");
         }
         reviewGroup.setLastAccessTime(new Date());
         reviewGroup.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
@@ -222,7 +217,6 @@ public class OrganizationRoleController extends Controller {
         renderJson(new DataTable<ReviewGroup>(page));
     }
 
-
     /**
      * 修改密码
      */
@@ -243,7 +237,6 @@ public class OrganizationRoleController extends Controller {
         User sysUser = getBean(User.class, "user");
 
         String pwd = getPara("newPwd");
-
 
         String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);

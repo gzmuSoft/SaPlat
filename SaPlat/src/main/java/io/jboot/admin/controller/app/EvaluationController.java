@@ -1,5 +1,6 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.kit.StrKit;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
@@ -158,10 +159,20 @@ public class EvaluationController extends BaseController {
     @NotNullPara({"id"})
     public void evaluationInformation_mgr() {
         Long id = getParaToLong("id");
-        Project project = projectService.findFirstByColumns(new String[]{"id", "status"},
-                new String[]{id.toString(), ProjectStatus.REVIEW});
-        if (project == null) {
-            throw new BusinessException("当前项目不符合要求！");
+        String entry = getPara("entry");
+        Project project = null;
+        if (StrKit.notBlank(entry) && StrKit.equals("mgr", entry)) {
+            project = projectService.findFirstByColumns(new String[]{"id"},
+                    new String[]{id.toString()});
+            if (project == null) {
+                throw new BusinessException("数据异常");
+            }
+        } else {
+            project = projectService.findFirstByColumns(new String[]{"id", "status"},
+                    new String[]{id.toString(), ProjectStatus.REVIEW});
+            if (project == null) {
+                throw new BusinessException("当前项目不符合要求！");
+            }
         }
         setAttr("isSelf", "true");
         setAttr("method", "false");
@@ -195,7 +206,7 @@ public class EvaluationController extends BaseController {
 
         setAttr("project", project)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
-                .setAttr("entry","mgr_agency")
+                .setAttr("entry", "mgr_agency")
                 .render("evaluation.html");
     }
 }

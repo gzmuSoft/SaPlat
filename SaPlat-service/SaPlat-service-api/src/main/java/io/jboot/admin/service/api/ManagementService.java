@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Management;
 import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.db.model.Columns;
 
 import java.util.List;
 
@@ -27,6 +28,12 @@ public interface ManagementService  {
      */
     public List<Management> findAll();
 
+    /**
+     * 获取所有数据
+     * @param isEnable 根据指定的isEnable的值来获取数据
+     * @return
+     */
+    public List<Management> findAll(boolean isEnable);
 
     /**
      * delete model by primary key
@@ -35,7 +42,6 @@ public interface ManagementService  {
      * @return success
      */
     public boolean deleteById(Object id);
-
 
     /**
      * delete model
@@ -102,6 +108,7 @@ public interface ManagementService  {
 
 
     public Page<Management> findPage(Management management, int pageNumber, int pageSize);
+    public List<Management> findListByColumns(Columns columns);
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

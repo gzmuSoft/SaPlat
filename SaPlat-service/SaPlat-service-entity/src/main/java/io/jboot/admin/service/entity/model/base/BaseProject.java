@@ -8,6 +8,7 @@ import com.jfinal.plugin.activerecord.IBean;
  */
 @SuppressWarnings("serial")
 public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M> implements IBean {
+
 	public void setId(java.lang.Long id) {
 		set("id", id);
 	}
@@ -190,6 +191,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 	
 	public java.lang.Boolean getIsEnable() {
 		return get("isEnable");
+	}
+
+	public void setManagementID(java.lang.Long managementID) {
+		set("managementID", managementID);
+	}
+	
+	public java.lang.Long getManagementID() {
+		return getLong("managementID");
 	}
 
 }

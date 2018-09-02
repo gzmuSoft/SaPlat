@@ -93,3 +93,39 @@ WHERE
   )
   order by projectID, createTime desc
 #end
+
+#sql("project-by-mgr")
+SELECT
+  *
+FROM
+  project
+WHERE
+  managementID in (#para(mgr_list))
+  order by createTime desc
+#end
+
+#sql("project-by-creater")
+SELECT
+  *
+FROM
+  project
+WHERE
+  userId in (#para(userID))
+  order by createTime desc
+#end
+
+#sql("project-by-service")
+SELECT * FROM
+project
+WHERE ID IN
+(
+	SELECT
+		DISTINCT projectID
+	FROM
+		project_undertake
+	WHERE
+		(facAgencyID = createUserID	AND facAgencyID = #para(userID))
+		OR
+		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 3)
+)
+#end

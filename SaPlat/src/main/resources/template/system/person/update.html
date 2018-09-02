@@ -39,48 +39,48 @@
 
 #define content()
 <div class="x-body layui-main">
-    <form id="addForm" class="layui-form " action="" style="margin:0 20%">
+    <form id="addForm" class="layui-form " action="" >
         <input type="hidden" name="person.id" value="#(person.id)">
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>个人名称</label>
+            <label class="layui-form-label">个人名称：</label>
             <div class="layui-input-block">
                 <input type="text" name="person.name" placeholder="个人群体名称" class="layui-input" value="#(person.name)"
-                       required lay-verify="required" style="width: 500px"  autocomplete="off" disabled="disabled"/>
+                       required lay-verify="required" style="width: 300px"  autocomplete="off" readonly/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>性别</label>
+            <label class="layui-form-label">性别：</label>
             <div class="layui-input-block">
                 #if(person.sex == "男")
-                男<input type="radio" name="person.sex" placeholder="男" class="layui-input" value="男" autocomplete="off"
+              男&nbsp;&nbsp;<input type="radio" name="person.sex" placeholder="男" class="layui-input" value="男" autocomplete="off"
                         checked="checked" disabled="disabled">
-                女<input type="radio" name="person.sex" placeholder="女" class="layui-input" value="女" autocomplete="off" disabled="disabled">
+                女&nbsp;&nbsp;<input type="radio" name="person.sex" placeholder="女" class="layui-input" value="女" autocomplete="off" disabled="disabled">
                 #else
-                男<input type="radio" name="person.sex" placeholder="男" class="layui-input" value="男" autocomplete="off" disabled="disabled">
-                女<input type="radio" name="person.sex" placeholder="女" class="layui-input" value="女" autocomplete="off"
+               男&nbsp;&nbsp;<input type="radio" name="person.sex" placeholder="男" class="layui-input" value="男" autocomplete="off" disabled="disabled">
+               女&nbsp;&nbsp;<input type="radio" name="person.sex" placeholder="女" class="layui-input" value="女" autocomplete="off"
                         checked="checked" disabled="disabled">
                 #end
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>电话号码</label>
+            <label class="layui-form-label">电话号码：</label>
             <div class="layui-input-block">
                 <input type="text" name="person.phone" placeholder="电话号码" class="layui-input" value="#(person.phone)"
-                       style="width: 500px"  autocomplete="off" disabled="disabled"/>
+                       style="width: 300px"  autocomplete="off" readonly/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>地址</label>
+            <label class="layui-form-label">地址：</label>
             <div class="layui-input-block">
                 <input type="text" name="person.addr" class="layui-input" value="#(person.addr)"
-                       style="width: 500px"  autocomplete="off" disabled="disabled"/>
+                       style="width: 300px"  autocomplete="off" readonly/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>身份证</label>
+            <label class="layui-form-label">身份证：</label>
             <div class="layui-input-inline">
-                <button type="button" class="layui-btn" style="margin: 0 200px" value="#(person.identity)">
+                <button type="button" class="layui-btn" style="margin: 0 100px" value="#(person.identity)">
                     点击查看
                 </button>
             </div>
@@ -88,8 +88,8 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
-            <div class="layui-input-block"style="width: 500px">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-input-block"style="width: 300px">
                 <select id='person' name="person.isEnable" lay-verify="required"  disabled="disabled">
                     <option></option>
                     #if(person.isEnable)
