@@ -30,7 +30,7 @@
                                     <label class="layui-form-label" for="project.name" >项目名称：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="project.name" name="project.name" value="#(project.name)"
-                                               class="layui-input " style="width: 200px" readonly/>
+                                               class="layui-input " style="width: 300px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -51,7 +51,7 @@
                                     <label class="layui-form-label" for="project.assessmentMode" >评估方式：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="project.assessmentMode" name="project.assessmentMode" value="#(project.assessmentMode)"
-                                               class="layui-input " readonly/>
+                                               class="layui-input " style="width: 80px" readonly/>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                                     <label class="layui-form-label" for="project.site" >地址：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="project.site" name="project.site" value="#(project.site)"
-                                               class="layui-input " style="width: 900px" readonly/>
+                                               class="layui-input " style="width: 855px" readonly/>
                                     </div>
                                 </div>
                             </div>
@@ -119,10 +119,10 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="impTeam.name" >小组名称：</label>
+                                    <label class="layui-form-label" for="impTeam.name" style="width: 110px" >小组名称：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="impTeam.name" name="impTeam.name" value="#(impTeam.name)"
-                                               class="layui-input " style="width: 200px" readonly/>
+                                               class="layui-input " style="width: 400px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
@@ -132,47 +132,49 @@
                                                class="layui-input "  readonly/>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">副组长：</label>
+                                    <label class="layui-form-label" style="width: 110px">副组长：</label>
                                     <div class="layui-input-block" >
                                         <input type="text"
                                                value="#for(asLeaderGroup : asLeaderGroups)
                                                     #(asLeaderGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                                                     #end"
-                                               class="layui-input "  style="width: 500px" readonly/>
+                                               class="layui-input "  style="width: 900px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label"  style="width: 130px">专家成员：</label>
+                                    <label class="layui-form-label"  style="width: 110px">专家成员：</label>
                                     <div class="layui-input-block" >
                                         <input type="text"  value="#for(expertGroup : expertGroups)
                         #(expertGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
-                                               class="layui-input " style="width: 900px" readonly/>
+                                               class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label"  style="width: 130px" >现场调查成员：</label>
+                                    <label class="layui-form-label"  style="width: 110px" >现场调查成员：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" value=" #for(invTeam : invTeams)
                         #(invTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
-                                               class="layui-input " style="width: 900px" readonly/>
+                                               class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" style="width: 130px">报告编制成员：</label>
+                                    <label class="layui-form-label" style="width: 110px">报告编制成员：</label>
                                     <div class="layui-input-block" >
                                         <input type="text"  value="#for(repTeam : repTeams)
                         #(repTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
-                                               class="layui-input " style="width: 900px" readonly/>
+                                               class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                             </div>
@@ -222,17 +224,17 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="evaScheme.startDate" style="width: 130px" >总开始时间：</label>
+                                    <label class="layui-form-label" for="evaScheme.startDate" style="width: 110px" >总开始时间：</label>
                                     <div class="layui-input-block" >
                                         <input type="text" id="evaScheme.startDate" name="evaScheme.startDate" value="#(evaScheme.startDate)"
-                                               class="layui-input " style="width: 300px" readonly/>
+                                               class="layui-input " style="width: 300px;margin-left: 50px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="evaScheme.endDate" style="width: 130px">总结束时间：</label>
+                                    <label class="layui-form-label" for="evaScheme.endDate" style="width: 110px">总结束时间：</label>
                                     <div class="layui-input-block">
                                         <input type="text" id="evaScheme.endDate" name="evaScheme.endDate" value="#(evaScheme.endDate)"
-                                               class="layui-input " style="width: 350px" readonly/>
+                                               class="layui-input " style="width: 300px;margin-left: 50px" readonly/>
                                     </div>
                                 </div>
                             </div>
