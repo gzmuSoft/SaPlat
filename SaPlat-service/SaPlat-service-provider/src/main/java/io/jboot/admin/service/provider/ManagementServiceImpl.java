@@ -33,8 +33,6 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
             Management tmp = findById(model.getSuperiorID());
             if(tmp != null) {
                 model.setSuperiorName(tmp.getName());
-                model.setPrincipal(tmp.getPrincipal());
-                model.setPrincipalcon(tmp.getPrincipalcon());
             }
         }
         return model;

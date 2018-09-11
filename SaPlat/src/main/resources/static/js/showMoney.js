@@ -12,12 +12,12 @@ layui.define(['layer', 'element'], function (exports) {
         if ($(this).val().match(/\./g) != null) {
             integerNum = parseInt($(this).val()).toString().replace(/\d(?=(\d{3})+$)/g, '$&,');
             decimalNum = '.' + $(this).val().replace(/(.*)\.(.*)/g, '$2');
-            tx = integerNum + decimalNum + "元"
+            tx = integerNum + decimalNum //+ "元"
         } else if($(this).val().length!=0){
-            tx = $(this).val().replace(/\d(?=(\d{3})+$)/g, '$&,') + "元";
+            tx = $(this).val().replace(/\d(?=(\d{3})+$)/g, '$&,')// + "元";
         }
         else{
-            tx="0元";
+            tx="0";//"0元";
         }
 
         var _format_value = tx;

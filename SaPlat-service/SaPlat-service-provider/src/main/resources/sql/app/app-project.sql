@@ -110,7 +110,7 @@ SELECT
 FROM
   project
 WHERE
-  userId in (#para(userID))
+  userId = #para(userID)
   order by createTime desc
 #end
 

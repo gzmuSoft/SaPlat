@@ -2,6 +2,18 @@
 #@layout()
 
 #define css()
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
+
 #end
 
 #define js()
@@ -36,10 +48,10 @@
             <label class="layui-form-label" for="project.amount"><em class="require-mark">*</em>预计金额</label>
             <div class="layui-input-inline" style="width: 250px">
                 <input type="number" autocomplete="off" id="project.amount" name="project.amount"
-                       value="#(project.amount)" class="layui-input money"lay-verify="required">
+                       value="#number(project.amount, '#')" class="layui-input money"lay-verify="required">
             </div>
             <div id="digitsTip"></div>
-            <div class="layui-form-mid layui-word-aux">元</div>
+            <div class="layui-form-mid layui-word-aux"></div>
         </div>
     </div>
 
@@ -164,33 +176,6 @@
 <script type="text/javascript">
 
     var assessmentMode = '#(project.assessmentMode)';
-    $('.money').on('input propertychange', function() {
-        var data = $('.money').val();
-        var str = digitsConversion(data);
-        var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-        var $btip = $("#btip"+bid);
-        var offset,h ,w ;
-        var timer;
-        clearInterval(timer);
-        offset = $(this).offset();
-        h = $(this).height();
-        w = $(this).width();
-        $(".cont").html(str);
-        $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
-    });
-
-
-    $('.money').live("mousemove",function(){
-        clearInterval(window.timer);
-        $("#digitsTip").show();
-    });
-
-    $('.money').live("mouseout",function(){
-        $("#digitsTip").hide();
-    });
-
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
 
         var projectID = "#(projectID)";
@@ -339,8 +324,32 @@
     $("#res").click(function () {
         history.go(-1);
     });
+    $('.money').on('input propertychange', function() {
+        var data = $('.money').val();
+        var str = digitsConversion(data);
+        var bid = parseInt(Math.random()*100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip"+bid);
+        var offset,h ,w ;
+        var timer;
+        clearInterval(timer);
+        offset = $(this).offset();
+        h = $(this).height();
+        w = $(this).width();
+        $(".cont").html(str);
+        $(".triangle-t").css('left',26);
+        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+    });
 
 
+    $('.money').live("mousemove",function(){
+        clearInterval(window.timer);
+        $("#digitsTip").show();
+    });
+
+    $('.money').live("mouseout",function(){
+        $("#digitsTip").hide();
+    });
 </script>
 <!--js end-->
 
