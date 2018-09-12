@@ -76,34 +76,6 @@
             alert("项目跟踪");
         });
     });
-
-    $('.money').on('input propertychange', function() {
-        var data = $('.money').val();
-        var str = digitsConversion(data);
-        var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-        var $btip = $("#btip"+bid);
-        var offset,h ,w ;
-        var timer;
-        clearInterval(timer);
-        offset = $(this).offset();
-        h = $(this).height();
-        w = $(this).width();
-        $(".cont").html(str);
-        $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
-    });
-
-
-    $('.money').live("mousemove",function(){
-        clearInterval(window.timer);
-        $("#digitsTip").show();
-    });
-
-    $('.money').live("mouseout",function(){
-        $("#digitsTip").hide();
-    });
-
 </script>
 #end
 
@@ -144,7 +116,6 @@
                                 <div class="layui-input-inline">
                                     <input type="text" value="#number(model.amount, ',###')" autocomplete="off" class="layui-input money" readonly/>
                                 </div>
-                                <div id="digitsTip"></div>
                                 <div class="layui-form-mid layui-word-aux">（单位：元）</div>
                             </div>
                         </div>

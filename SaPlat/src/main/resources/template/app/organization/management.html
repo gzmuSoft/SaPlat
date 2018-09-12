@@ -37,7 +37,7 @@
                 <label class="layui-form-label" for="organization.name"style="width: 120px">组织机构名称</label>
                 <div class="layui-input-block">
                     <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)"value="#(organization.name)"
-                           class="layui-input " style="width: 500px" disabled/>
+                           class="layui-input " style="width: 500px" readonly/>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                 <label class="layui-form-label" for="management.name" style="width: 120px"><em class="require-mark">*</em>管理机构名称</label>
                 <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
                     <input type="text" id="management.name" name="management.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px"required lay-verify="required"/>
+                           class="layui-input " style="width: 500px" lay-verify="required"/>
                 </div>
 
                 <label class="layui-form-label" for="management.num"style="width: 120px">部门人数</label>
@@ -88,7 +88,7 @@
                 <label class="layui-form-label" for="management.manager"style="width: 120px"><em class="require-mark">*</em>主管姓名</label>
                 <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
                     <input type="text" id="management.manager" name="management.manager"
-                           value="#(management.manager)" class="layui-input" required lay-verify="required"/>
+                           value="#(management.manager)" class="layui-input" lay-verify="required"/>
                 </div>
 
                 <label class="layui-form-label" for="management.managercon"style="width: 120px"><em class="require-mark">*</em>主管联系方式</label>
@@ -102,7 +102,7 @@
                 <label class="layui-form-label" for="management.detailedaddr" style="width: 120px"><em class="require-mark">*</em>详细地址</label>
                 <div class="layui-input-block" style="margin-left:120px;">
                     <input type="text" id="management.detailedaddr" name="management.detailedaddr"
-                           value="#(management.detailedaddr)" class="layui-input" required lay-verify="required"/>
+                           value="#(management.detailedaddr)" class="layui-input" lay-verify="required"/>
                 </div>
             </div>
 
@@ -110,15 +110,15 @@
                 <label class="layui-form-label"><em class="require-mark">*</em>部门职责</label>
                 <div class="layui-input-block">
                     <textarea placeholder="请输入部门职责……" style="display: none;" id="responsibility" name="management.responsibility"
-                              value="#(management.responsibility)" required lay-verify="required">#(management.responsibility)</textarea>
+                              value="#(management.responsibility)" lay-verify="responsibility">#(management.responsibility)</textarea>
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label"><em class="require-mark">*</em>党政信息</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入党政信息……" style="display: none;" id="party" name="management.party"
-                              value="#(management.party)" required lay-verify="required">#(management.party)</textarea>
+                    <textarea placeholder="请输入党政信息……" style="display: none;" id="party" name="management.party" lay-verify="party"
+                              value="#(management.party)">#(management.party)</textarea>
                 </div>
             </div>
 
@@ -132,7 +132,7 @@
 
             <!--隐藏flag作为界面是否禁用的方法-->
             <input type="text" id="flag" name="flag"
-                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+                   class="layui-input layui-disabled layui-hide" value="#(flag)"/>
 
             <br>
             <div class="layui-form-item">
@@ -165,13 +165,24 @@
 
 
         form.verify({
-            length: [
-                /^[\S]{0,9}$/
-                ,'人数不能大于9位'
-            ]
+            length: [/^[\S]{0,9}$/,'人数不能大于9位'],
+            responsibility: function(value){
+                var resValue = layedit.getContent(rIndex)
+                if(resValue.length < 10){
+                    return '部门职责请输入至少10个字符';
+                }
+            },
+            party: function(value){
+                var parValue = layedit.getContent(pIndex)
+                if(parValue.length < 10){
+                    return '党政信息请输入至少10个字符';
+                }
+            }
         });
 
         form.on('submit(sub)', function (data) {
+            data.field['management.responsibility'] = layedit.getContent(rIndex);
+            data.field['management.party'] = layedit.getContent(pIndex);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/organization/managementProve',

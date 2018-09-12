@@ -294,7 +294,10 @@ public class OrganizationController extends BaseController {
                 model = item;
         }
         if (model == null) {
-            model = new Management();
+            model = managementService.findByOrgId(loginUser.getUserID());
+            if (model == null) {
+                model = new Management();
+            }
         }
 
         //获取初始数据

@@ -110,7 +110,7 @@ SELECT
 FROM
   project
 WHERE
-  userId in (#para(userID))
+  userId = #para(userID)
   order by createTime desc
 #end
 
@@ -126,6 +126,6 @@ WHERE ID IN
 	WHERE
 		(facAgencyID = createUserID	AND facAgencyID = #para(userID))
 		OR
-		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 3)
+		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2)
 )
 #end
