@@ -310,7 +310,7 @@ public class ProjectController extends BaseController {
             AuthProject apModel = authProjectService.findByProjectId(id);//获取项目的立项审核信息
             if (null != apModel) {
                 strRoleName = roleService.findById(apModel.getRoleId()).getName();
-            }else {
+            } else {
                 strRoleName = "";
             }
         } else {
@@ -321,7 +321,7 @@ public class ProjectController extends BaseController {
         setAttr("organization", organization)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
-                .setAttr("entry","mgr")
+                .setAttr("entry", "mgr")
                 .render("update.html");
     }
 
@@ -907,13 +907,13 @@ public class ProjectController extends BaseController {
             model.setIsPublic(true);
         }
         if (projectService.update(model)) {
-            Long roleId  = roleService.findByName("服务机构").getId();
+            Long roleId = roleService.findByName("服务机构").getId();
             List<UserRole> userRoles = userRoleService.findAllByRoleId(roleId);
 
             Notification notification = new Notification();
             notification.setName("项目公开通知");
             notification.setSource("/app/project/isPublic");
-            notification.setContent( user.getName() + " 公开项目《" + model.getName() + "》的评估");
+            notification.setContent(user.getName() + " 公开项目《" + model.getName() + "》的评估");
             notification.setCreateUserID(user.getId());
             notification.setCreateTime(new Date());
             notification.setLastUpdateUserID(user.getId());
@@ -921,7 +921,7 @@ public class ProjectController extends BaseController {
             notification.setIsEnable(true);
             notification.setStatus(0);
 
-            for (int i = 0;i <userRoles.size();i++){
+            for (int i = 0; i < userRoles.size(); i++) {
                 notification.setReceiverID(userRoles.get(i).getUserID().intValue());
                 notificationService.save(notification);
             }
@@ -1308,7 +1308,7 @@ public class ProjectController extends BaseController {
      * 审查汇总主页
      */
     @Before(GET.class)
-    public void collectView(){
+    public void collectView() {
         render("collect.html");
     }
 
@@ -1367,7 +1367,7 @@ public class ProjectController extends BaseController {
 
         if (StrKit.notBlank(getPara("ownType"))) {
             int iOwnType = Integer.parseInt(getPara("ownType"));
-            switch (iOwnType){
+            switch (iOwnType) {
                 case 0:
                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
                     break;

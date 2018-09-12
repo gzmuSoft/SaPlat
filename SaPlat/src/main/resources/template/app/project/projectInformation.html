@@ -358,7 +358,7 @@
 //                            valueArray[key] *= $('#units').val();
                         data[nameArray[key]] = valueArray[key];
                     });
-                    data['project.brief'] = layedit.getContent(index)
+                    data['project.brief'] = layedit.getContent(index);
                     if (saveOrUpdate === 1) {
                         data.projectId = projectId;
                         $.getJSON(
