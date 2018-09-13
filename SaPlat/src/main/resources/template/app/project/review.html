@@ -67,7 +67,7 @@
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
                 });
             } else if (obj.event === 'invite') {
-                pop_show('邀请审查', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', '900', '', function () {
+                pop_show('邀请审查', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', '1200', '', function () {
                     window.location.reload();
                 });
             } else if (obj.event === 'view') {

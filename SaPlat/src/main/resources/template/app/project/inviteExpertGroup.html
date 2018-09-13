@@ -15,9 +15,9 @@
 #define content()
 <div class="x-body">
 
-    <label class="layui-form-label">专家团体名称</label>
+    <label class="layui-form-label">专家姓名</label>
     <div class="layui-input-inline">
-        <input type="text" id="name" name="name" placeholder="专家团体名称" class="layui-input"/>
+        <input type="text" id="name" name="name" placeholder="专家姓名" class="layui-input"/>
     </div>
     <div class="layui-input-inline" style="width : 80px">
         <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
@@ -69,12 +69,11 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '专家团体名称', width: 100}
-                , {field: 'workstate', title: '在职状态', width: 100}
-                , {field: 'profess', title: '专业资格内容', width: 200}
-                , {field: 'project', title: '参与项目经历', width: 200}
-                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '专家姓名', width: 100, sort: true}
+                , {field: 'workstate', title: '在职状态', width: 90}
+                , {field: 'profess', title: '专业资格内容', minWidth: 200}
+                , {field: 'project', title: '参与项目经历', minWidth: 200}
+                , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/expertGroupTable?id=' + $('#id').val()
             , method: 'get'
