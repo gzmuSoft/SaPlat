@@ -16,7 +16,6 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
-import io.jboot.admin.support.auth.LoginAuth;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.authz.annotation.Logical;
@@ -144,16 +143,6 @@ public class ProjectUndertakeController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-        /*
-        Long id = getParaToLong("id");
-        Project model = projectService.findById(id);
-        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
-        Organization organization = organizationService.findById(userService.findById(model.getUserId()).getUserID());
-        setAttr("organization",organization)
-                .setAttr("model", model)
-                .render("see.html");
-        */
-
         Long id = getParaToLong("id");
         AuthProject apModel = authProjectService.findByProjectId(id);//获取项目的立项审核信息
         Project pModel = projectService.findById(id); //获取项目信息

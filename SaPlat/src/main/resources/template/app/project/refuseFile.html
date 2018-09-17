@@ -1,0 +1,96 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'upload', 'element'], function () {
+        //操作对象
+        var upload = layui.upload;
+        var element = layui.element;
+        var id = "#(model.id)";
+        var projectId = "#(projectId)";
+
+        //创建监听函数
+        var xhrOnProgress = function (fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+            //使用闭包实现监听绑
+            return function () {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
+                    return xhr;
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
+
+        //拖拽上传
+        upload.render({
+            elem: '#file'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf|png|jpeg|jpg'
+            , data: {
+                description: $('#modelName').text()
+            }
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , before: function (res) {
+                $('#upload-progress').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress').addClass('layui-hide');
+                if (res.code == 0) {
+                    pop_close();
+                    $.post('#(ctxPath)/app/project/refuse?fileId=' + res.data.fileId + '&fileTypeId=' + id + '&projectId=' + projectId);
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    setTimeout(function () {
+                    }, 1000);
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
+                alert("文件上传错误！请重新尝试！");
+            }
+        });
+
+    });
+
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>文件上传</legend>
+    </fieldset>
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+            <div class="layui-form-item x-center">
+                <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">#(model.name)</p>
+            </div>
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                 id="upload-progress" lay-filter="upload-progress">
+                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+            </div>
+            <div class="layui-upload-drag" id="file">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
+        </div>
+    </form>
+</div>
+#end

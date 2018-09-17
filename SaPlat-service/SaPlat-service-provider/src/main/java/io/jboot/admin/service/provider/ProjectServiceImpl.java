@@ -5,7 +5,6 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
-import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.entity.model.*;
@@ -248,6 +247,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             authProject.setProjectId(model.getId());
 
             return Db.tx(() -> authProject.saveOrUpdate() && leaderGroup.saveOrUpdate());
+        });
+    }
+
+    @Override
+    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject) {
+        return Db.tx(() -> {
+            if (!model.update()) {
+                return false;
+            }
+            return Db.tx(() -> notification.save() && fileProject.saveOrUpdate());
         });
     }
 

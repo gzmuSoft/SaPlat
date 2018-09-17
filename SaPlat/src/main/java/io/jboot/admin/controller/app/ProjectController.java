@@ -444,7 +444,7 @@ public class ProjectController extends BaseController {
             }
             renderJson(new DataTable<ProjectFileType>(page));
         } else {
-
+            renderJson();
         }
 
 
@@ -542,7 +542,6 @@ public class ProjectController extends BaseController {
             model.setFileTypeID(getParaToLong("fileTypeId"));
             model.setCreateTime(new Date());
             model.setCreateUserID(user.getId());
-
         } else {
             Files files = filesService.findById(model.getFileID());
             if (files != null) {
@@ -1328,6 +1327,103 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * 申诉驳回-上传文件
+     */
+    @NotNullPara("id")
+    public void refuseFile() {
+        Long id = getParaToLong("id");
+        ProjectFileType model = projectFileTypeService.findByName("驳回申诉书面公文（加盖公章）");
+        setAttr("projectId", id).setAttr("model", model).render("refuseFile.html");
+    }
+
+    /**
+     * 申诉驳回状态修改
+     */
+    @NotNullPara({"fileId", "projectId", "fileTypeId"})
+    public void refuse() {
+        User user = AuthUtils.getLoginUser();
+        FileProject model = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
+        if (model == null) {
+            model = new FileProject();
+            model.setFileTypeID(getParaToLong("fileTypeId"));
+            model.setCreateTime(new Date());
+            model.setCreateUserID(user.getId());
+        } else {
+            Files files = filesService.findById(model.getFileID());
+            if (files != null) {
+                files.setIsEnable(false);
+                if (!filesService.update(files)) {
+                    renderJson(RestResult.buildError("文件禁用失败"));
+                    throw new BusinessException("文件禁用失败");
+                }
+            }
+        }
+
+        model.setProjectID(getParaToLong("projectId"));
+        model.setFileID(getParaToLong("fileId"));
+        model.setLastAccessTime(new Date());
+        model.setLastUpdateUserID(user.getId());
+
+        Project project = projectService.findById(model.getProjectID());
+        if (project != null) {
+            project.setStatus(ProjectStatus.REFUSE);
+        }
+
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
+
+        Notification notification = new Notification();
+        notification.setName("项目驳回通知");
+        notification.setContent("您承办的项目《" + project.getName() + "》的结果被管理机构驳回！请立即处理(若未处理七天后自动确认)。");
+        notification.setSource("/app/project/refuse");
+        notification.setRecModule("");
+        if (projectUndertake != null) {
+            notification.setReceiverID(Math.toIntExact(projectUndertake.getFacAgencyID()));
+        } else {
+            renderJson(RestResult.buildError("找不到项目承接者"));
+            throw new BusinessException("找不到项目承接者");
+        }
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        if (!projectService.saveOrUpdate(project, notification, model)) {
+            renderJson(RestResult.buildError("保存失败"));
+            throw new BusinessException("保存失败");
+        } else {
+            Files files = filesService.findById(getParaToLong("fileId"));
+            files.setIsEnable(true);
+            if (!filesService.update(files)) {
+                renderJson(RestResult.buildError("文件启用失败"));
+                throw new BusinessException("文件启用失败");
+            }
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 申诉驳回-主体单位确认
+     */
+    @NotNullPara("id")
+    public void know() {
+        Project model = projectService.findById(getParaToLong("id"));
+        if (model != null) {
+            model.setStatus(ProjectStatus.REVIEW);
+            if (!projectService.update(model)) {
+                renderJson(RestResult.buildError("项目保存失败"));
+                throw new BusinessException("项目保存失败");
+            } else {
+                renderJson(RestResult.buildSuccess("项目更新成功！"));
+            }
+        } else {
+            renderJson(RestResult.buildError("项目查询失败"));
+            throw new BusinessException("项目查询失败");
+        }
+    }
+
+    /**
      * 项目汇总
      */
 
@@ -1377,6 +1473,20 @@ public class ProjectController extends BaseController {
                     break;
                 case 2:
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
+                    break;
+                case 3:
+                    Project model = new Project();
+                    model.setStatus(ProjectStatus.REFUSE);
+                    page = projectService.findPage(model, pageNumber, pageSize);
+                    Long fileTypeID = projectFileTypeService.findByName("驳回申诉书面公文（加盖公章）").getId();
+                    for (int i = 0; i < page.getList().size(); i++) {
+                        FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(page.getList().get(i).getId(), fileTypeID);
+                        if (fileProject != null) {
+                            page.getList().get(i).setFileID(fileProject.getFileID());
+                        } else {
+                            page.getList().get(i).setFileID(0L);
+                        }
+                    }
                     break;
             }
         }
