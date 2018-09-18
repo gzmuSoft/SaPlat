@@ -6,6 +6,8 @@
     h3 {
         font-weight: bold;
     }
+
+
 </style>
 #end
 
@@ -93,7 +95,8 @@
             <div class="layui-form-item" style="display: none">
                 <label class="layui-form-label" for="impTeamName" style="width: 150px">小组名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="impTeamName" name="impTeam.name" value="#(project.name)" class="layui-input" lay-verify="required"/>
+                    <input type="text" id="impTeamName" name="impTeam.name" value="#(project.name)" class="layui-input"
+                           lay-verify="required"/>
                 </div>
             </div>
 
@@ -119,7 +122,7 @@
                     #end
                 </select>
                 </div>
-                <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID1"></p>
+                <p class="layui-form-mid layui-word-aux" id="impTeam.leaderID1" style="margin-left: 11px"></p>
                 <input class="layui-form-mid layui-word-aux layui-hide  " id="impTeam.leaderID" lay-verify="required">
             </div>
 
@@ -146,7 +149,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.assLeaderIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs" lay-verify="required">
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.assLeaderIDs">
             </div>
 
             <div class="layui-form-item">
@@ -172,8 +175,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.expertGroupIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs"
-                       lay-verify="required">
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.expertGroupIDs">
             </div>
 
             <div class="layui-form-item">
@@ -199,7 +201,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.invTeamIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.invTeamIDs" lay-verify="required">
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.invTeamIDs">
             </div>
 
             <div class="layui-form-item">
@@ -225,7 +227,7 @@
                 </select>
                 </div>
                 <p class="layui-form-mid layui-word-aux" id="impTeam.repTeamIDs1"></p>
-                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.repTeamIDs" lay-verify="required">
+                <input class="layui-form-mid layui-word-aux layui-hide" id="impTeam.repTeamIDs">
             </div>
         </div>
 
@@ -269,7 +271,8 @@
             </div>
             <table id="dateTable" lay-filter="dateTable"></table>
         </div>
-        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress"
+             lay-filter="upload-progress">
             <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
         </div>
         <div class="layui-row ">
@@ -320,7 +323,9 @@
             , laydate = layui.laydate
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
             , fileFormId1 = null, fileFormId2 = null
-            , fileId1 = null, fileId2 = null;
+            , fileId1 = null, fileId2 = null
+            , AssString = "", ExpString = "", InvString = "", RepString = ""
+            , con = 0;
 
         /**
          * 建立日期
@@ -483,24 +488,25 @@
             $("#impTeam\\.leaderID").val(data.value);
         });
         form.on('select(clickOption21)', function (data) {
-            judge("#impTeam\\.assLeaderIDs", "#impTeam\\.assLeaderIDs1", data, temp1)
+            judge("impTeam.assLeaderIDs", "#impTeam\\.assLeaderIDs", "#impTeam\\.assLeaderIDs1", data, temp1)
         });
         form.on('select(clickOption31)', function (data) {
-            judge("#impTeam\\.expertGroupIDs", "#impTeam\\.expertGroupIDs1", data, temp2)
+            judge("impTeam.expertGroupIDs", "#impTeam\\.expertGroupIDs", "#impTeam\\.expertGroupIDs1", data, temp2)
         });
         form.on('select(clickOption41)', function (data) {
-            judge("#impTeam\\.invTeamIDs", "#impTeam\\.invTeamIDs1", data, temp3)
+            judge("impTeam.invTeamIDs", "#impTeam\\.invTeamIDs", "#impTeam\\.invTeamIDs1", data, temp3)
         });
         form.on('select(clickOption51)', function (data) {
-            judge("#impTeam\\.repTeamIDs", "#impTeam\\.repTeamIDs1", data, temp4)
+            judge("impTeam.repTeamIDs", "#impTeam\\.repTeamIDs", "#impTeam\\.repTeamIDs1", data, temp4)
         });
 
         /**
          * 禁止重复选择
          * 显示name，返回value
          */
-        function judge(id1, id2, data, temp) {
+        function judge(id, id1, id2, data, temp) {
             var count = temp.length;
+            con++;
             for (var i = 0; i < temp.length; i++) {
                 if (temp[i] === data.value) {
                     count--;
@@ -509,10 +515,70 @@
             if (count === temp.length) {
                 temp.length++;
                 temp[temp.length - 1] = data.value;
-                $(id2).append(data.elem[data.elem.selectedIndex].text + " ");
-                $(id1).val($(id1).val() + data.value + ",");
+                $("<p class=\"layui-form-mid layui-word-aux \"  title=" + con + ">" + data.elem[data.elem.selectedIndex].text + "</p>").insertAfter($(id2));
+                $("<input class=\"layui-form-mid layui-word-aux layui-hide\" title=" + con + " name=" + id + " value=" + data.value + " lay-verify=\"required\">").insertAfter($(id1));
             }
         }
+
+        /**
+         * 实施小组人员删除事件,因为是动态生成的标签要用live方法
+         * 才发现jqury1.9以上版本被抛弃了,换成on方法,
+         */
+        $(document).on("click", "p", function () {
+            var id = $(this).attr("id");
+            var title = $(this).attr("title");
+            if (id === "impTeam.leaderID1") {
+                $(this).text("");
+                $("#impTeam\\.leaderID").val("");
+            } else {
+                $(this).remove();
+                $("input[name='impTeam.assLeaderIDs']").each(function () {
+                    if (title === $(this).attr("title")) {
+                        $(this).remove();
+                        ArrRemove(temp1, $(this).val());
+                    }
+                });
+                $("input[name='impTeam.expertGroupIDs']").each(function () {
+                    if (title === $(this).attr("title")) {
+                        $(this).remove();
+                        ArrRemove(temp2, $(this).val());
+                    }
+                });
+                $("input[name='impTeam.invTeamIDs']").each(function () {
+                    if (title === $(this).attr("title")) {
+                        $(this).remove();
+                        ArrRemove(temp3, $(this).val());
+                    }
+                });
+                $("input[name='impTeam.repTeamIDs']").each(function () {
+                    if (title === $(this).attr("title")) {
+                        $(this).remove();
+                        ArrRemove(temp4, $(this).val());
+                    }
+                });
+            }
+        });
+
+        /**
+         * 删除之后还要对去重留下的标识变量temp进行线性表的移动操作
+         */
+        function ArrRemove(temp, data) {
+            for (var i = 0; i < temp.length; i++) {
+                if (temp[i] === data) {
+                    for (var j = i; j < temp.length - 1; j++) {
+                        temp[j] = temp[j + 1];
+                    }
+                    temp.length--;
+                }
+            }
+        }
+
+        /**
+         *  触摸显示删除的图标
+         */
+        $(document).on("mouseover", "p", function () {
+            this.style.cursor = "url('/static/img/delete-2.ico'),auto";
+        });
 
         /**
          * 判表格是否空逻辑
@@ -588,22 +654,22 @@
         }
 
         //创建监听函数
-         var xhrOnProgress=function(fun) {
+        var xhrOnProgress = function (fun) {
             xhrOnProgress.onprogress = fun; //绑定监听
-             //使用闭包实现监听绑
-            return function() {
+            //使用闭包实现监听绑
+            return function () {
                 //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
                 var xhr = $.ajaxSettings.xhr();
-                 //判断监听函数是否为函数
-                  if (typeof xhrOnProgress.onprogress !== 'function')
-                       return xhr;
-                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                    if (xhrOnProgress.onprogress && xhr.upload) {
-                          xhr.upload.onprogress = xhrOnProgress.onprogress;
-                    }
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
                     return xhr;
-             }
-         }
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
 
         /**
          * 文件上传
@@ -613,9 +679,9 @@
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
             , exts: 'pdf|png|jpeg|jpg'
-            ,xhr:xhrOnProgress
-            ,progress:function(value){//上传进度回调 value进度值
-                element.progress('upload-progress', value+'%')//设置页面进度条
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
             }
             , data: {
                 description: $('#modelName').text()
@@ -728,9 +794,19 @@
             data['ScheduledPlan.endDate'] = JSON.stringify(data['ScheduledPlan.endDate']);
 
             //实施小组
-            $("input.layui-hide").each(function () {
-                data[$(this).attr('id')] = $(this).val();
-            });
+            function ArrToString(temp, string) {
+                for (var i = 0; i < temp.length; i++) {
+                    string += temp[i] + ",";
+                }
+                return string;
+            }
+
+            console.log(temp1 + "," + temp2 + "," + temp3 + "," + temp4);
+            data['impTeam.leaderID'] = $("#impTeam\\.leaderID").val();
+            data['impTeam.assLeaderIDs'] = ArrToString(temp1, AssString);
+            data['impTeam.expertGroupIDs'] = ArrToString(temp2, ExpString);
+            data['impTeam.invTeamIDs'] = ArrToString(temp3, InvString);
+            data['impTeam.repTeamIDs'] = ArrToString(temp4, RepString);
 
             //实施小组名称
             data[$("#impTeamName").attr('name')] = $("#impTeamName").val();
@@ -742,6 +818,7 @@
             //projectID和status
             data.id = '#(project.id)';
             data.status = '#(status)';
+            console.log(data);
             return data;
         }
 
@@ -751,39 +828,39 @@
         form.on('submit(sub)', function () {
             if (dateIsCorrect()) {
                 //if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
-                    if (tableNull()) {
-                        if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
-                            var ajaxTimeoutTest = $.ajax({
-                                type: 'POST',
-                                timeout: 3000,
-                                url: '#(ctxPath)/app/projectUndertake/ImpTeam',
-                                data: dataString(),
-                                loadFlag: true,
-                                success: function (data) { //请求成功的回调函数
-                                    window.parent.location.reload();
-                                    var index = parent.layer.getFrameIndex(window.name);
-                                    parent.layer.close(index);
-                                    layer.msg("操作成功");
-                                },
-                                error: function (data) { //请求成功的回调函数
+                if (tableNull()) {
+                    if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
+                        var ajaxTimeoutTest = $.ajax({
+                            type: 'POST',
+                            timeout: 3000,
+                            url: '#(ctxPath)/app/projectUndertake/ImpTeam',
+                            data: dataString(),
+                            loadFlag: true,
+                            success: function (data) { //请求成功的回调函数
+                                window.parent.location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                                layer.msg("操作成功");
+                            },
+                            error: function (data) { //请求失败的回调函数
+                                string = "?";
+                                layer.msg("操作失败");
+                            },
+                            complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
+                                if (status === 'timeout') {//超时,status还有success,error等值的情况
+                                    ajaxTimeoutTest.abort();
                                     string = "?";
-                                    layer.msg("操作失败");
-                                },
-                                complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
-                                    if (status === 'timeout') {//超时,status还有success,error等值的情况
-                                        ajaxTimeoutTest.abort();
-                                        string = "?";
-                                        layer.msg("请求超时");
-                                    }
+                                    layer.msg("请求超时");
                                 }
-                            });
-                        } else {
-                            layer.msg("必填项不能为空！");
-                            return false;
-                        }
+                            }
+                        });
                     } else {
-                        layer.msg("至少有一条计划！且计划不能为空");
+                        layer.msg("必填项不能为空！");
+                        return false;
                     }
+                } else {
+                    layer.msg("至少有一条计划！且计划不能为空");
+                }
                 //}
             } else {
                 layer.msg("计划日期填写错误！");
