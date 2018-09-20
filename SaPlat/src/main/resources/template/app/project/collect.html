@@ -67,7 +67,8 @@
         });
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-             if (obj.event === 'see') {
+
+            if (obj.event === 'see') {
                  window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2';
              }
              else if(obj.event==="seeFinish"){
