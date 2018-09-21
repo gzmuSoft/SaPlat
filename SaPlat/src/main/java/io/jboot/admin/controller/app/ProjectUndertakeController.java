@@ -710,5 +710,4 @@ public class ProjectUndertakeController extends BaseController {
         }
         renderJson(RestResult.buildSuccess());
     }
-
 }

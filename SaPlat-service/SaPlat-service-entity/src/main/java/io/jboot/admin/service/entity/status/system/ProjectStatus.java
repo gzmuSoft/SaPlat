@@ -69,5 +69,4 @@ public class ProjectStatus extends BaseStatus {
         }
         return me;
     }
-
 }

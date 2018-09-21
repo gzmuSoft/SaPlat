@@ -1489,6 +1489,7 @@ public class ProjectController extends BaseController {
                     }
                     break;
             }
+
         }
         renderJson(new DataTable<Project>(page));
     }
