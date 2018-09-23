@@ -137,6 +137,54 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return get("endPublicTime");
 	}
 
+	public void setInviteReviewCount(java.lang.Integer inviteReviewCount) {
+		set("inviteReviewCount", inviteReviewCount);
+	}
+	
+	public java.lang.Integer getInviteReviewCount() {
+		return getInt("inviteReviewCount");
+	}
+
+	public void setAgreeReviewCount(java.lang.Integer agreeReviewCount) {
+		set("agreeReviewCount", agreeReviewCount);
+	}
+	
+	public java.lang.Integer getAgreeReviewCount() {
+		return getInt("agreeReviewCount");
+	}
+
+	public void setRefuseReviewCount(java.lang.Integer refuseReviewCount) {
+		set("refuseReviewCount", refuseReviewCount);
+	}
+	
+	public java.lang.Integer getRefuseReviewCount() {
+		return getInt("refuseReviewCount");
+	}
+
+	public void setPassReviewCount(java.lang.Integer passReviewCount) {
+		set("passReviewCount", passReviewCount);
+	}
+	
+	public java.lang.Integer getPassReviewCount() {
+		return getInt("passReviewCount");
+	}
+
+	public void setUnpassReviewCount(java.lang.Integer unpassReviewCount) {
+		set("unpassReviewCount", unpassReviewCount);
+	}
+	
+	public java.lang.Integer getUnpassReviewCount() {
+		return getInt("unpassReviewCount");
+	}
+
+	public void setPassReviewByOverdueCount(java.lang.Long passReviewByOverdueCount) {
+		set("passReviewByOverdueCount", passReviewByOverdueCount);
+	}
+	
+	public java.lang.Long getPassReviewByOverdueCount() {
+		return getLong("passReviewByOverdueCount");
+	}
+
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
 	}

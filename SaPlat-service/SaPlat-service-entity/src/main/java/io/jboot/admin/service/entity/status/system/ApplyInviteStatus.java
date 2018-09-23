@@ -33,11 +33,11 @@ public class ApplyInviteStatus extends BaseStatus {
     public final static String NOPASS = "4";
 
     public ApplyInviteStatus() {
-        add(WAITE, "待同意");
-        add(AGREE, "已同意");
-        add(REFUSE, "已拒绝");
-        add(PASS, "通过");
-        add(NOPASS, "不通过");
+        add(WAITE, "待同意邀请");
+        add(AGREE, "同意审查");
+        add(REFUSE, "拒绝审查");
+        add(PASS, "审查通过");
+        add(NOPASS, "审查不通过");
     }
 
     private static ApplyInviteStatus me;

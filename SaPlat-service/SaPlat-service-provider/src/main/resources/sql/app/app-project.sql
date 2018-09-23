@@ -129,3 +129,23 @@ WHERE ID IN
 		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2)
 )
 #end
+
+#sql("invitedExpert-by-projectID")
+SELECT * FROM expert_group WHERE personID IN(
+	SELECT userID FROM sys_user WHERE ID IN(
+		SELECT userID FROM apply_invite
+		WHERE projectID = #para(ID) AND createTime > (
+		  SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
+		)
+	)
+)
+AND isEnable = 1
+#end
+
+#sql("lastInvited-by-projectID")
+SELECT * FROM apply_invite
+WHERE projectID = #para(ID) AND createTime > (
+  SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
+)
+AND isEnable = 1
+#end
