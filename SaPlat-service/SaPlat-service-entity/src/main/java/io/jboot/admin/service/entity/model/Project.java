@@ -20,6 +20,24 @@ public class Project extends BaseProject<Project> {
     private String buildUserName;
     private boolean isBackRecordUpLoad;
     private Long backRecordFileID;
+    private String reviewInfo;
+
+    public String getReviewInfo() {
+        StringBuilder sbInfo = new StringBuilder();
+        sbInfo.append("邀请人数：");
+        sbInfo.append(getInviteReviewCount());
+        if(getPassReviewCount() > 0)
+        {
+            sbInfo.append("，审查通过人数：");
+            sbInfo.append(getPassReviewCount());
+        }
+        if(getPassReviewByOverdueCount() > 0)
+        {
+            sbInfo.append("，超时默认审查通过人数：");
+            sbInfo.append(getPassReviewByOverdueCount());
+        }
+        return sbInfo.toString();
+    }
 
     public ProjectAssType getProjectAssType() {
         return this.projectAssType;
