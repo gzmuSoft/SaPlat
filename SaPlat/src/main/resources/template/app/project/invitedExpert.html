@@ -12,19 +12,7 @@
 </style>
 #end
 
-#define content()
-<div class="x-body">
-
-    <label class="layui-form-label">专姓名</label>
-    <div class="layui-input-inline">
-        <input type="text" id="name" name="name" placeholder="姓名" class="layui-input"/>
-    </div>
-    <div class="layui-input-inline" style="width : 80px">
-        <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
-        </button>
-    </div>
-
-    <!--隐藏id-->
+#define content()   <!--隐藏id-->
     <input type="text" id="id" name="id"
            class="layui-input layui-disabled layui-hide" value="#(id)" required/>
 
@@ -33,23 +21,8 @@
     </div>
 
     <script type="text/html" id="barOption">
-        #shiroHasPermission('/app/project/inviteReview')
-        #[[
-        {{#  if(!d.isInvite){ }}
-        ]]#
-        <a class="layui-btn layui-btn-xs" lay-event="invite">邀请</a>
-
-        #[[
-        {{# } else if(d.isInvite){ }}
-        ]]#
-        <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">√已邀请</a>
-        #[[
-        {{#  } }}
-        ]]#
-        #end
+        <a class="layui-btn layui-btn-xs" lay-event="invite">审查详情</a>
     </script>
-
-</div>
 #end
 
 #define js()
@@ -70,15 +43,16 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '姓名', width: 100, sort: true}
-                , {field: 'workstate', title: '在职状态', width: 90}
                 , {field: 'phone', title: '联系电话', width: 110, templet: function(d){return d.user? (d.user.phone||'') : '';}}
                 , {field: 'Email', title: 'Email', width: 200, templet: function(d){return d.user? (d.user.email||'') : '';}}
                 , {field: 'department', title: '所在部门', width: 200}
-                , {field: 'profess', title: '专业资格', minWidth: 200}
+                , {field: 'workstate', title: '在职状态', width: 90}
                 , {field: 'project', title: '参与项目经历', minWidth: 200}
+                , {field: 'remark', title: '审查状态', width: 120,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "remark")'}
                 , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/expertGroupTable?id=' + $('#id').val()
+            , url: '#(ctxPath)/app/project/invitedExpertTable?id=' + $('#id').val()
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -101,19 +75,12 @@
             if (obj.event === 'invite') {
                 $.ajax({
                     type: 'POST',
-                    url: '#(ctxPath)/app/project/inviteReview?id=' + data.id + '&projectId=' + $('#id').val(),
+                    //url: '#(ctxPath)/app/project/invitedExpert?id=' + data.id + '&projectId=' + $('#id').val(),
                     success: function () {
                         window.location.reload();
                     }
                 });
             }
-        });
-
-        $('#search').click(function () {
-            table.reload('dateTable', {
-                url: '#(ctxPath)/app/expert_group/tableData?name=' + $('#name').val()
-            });
-            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
 

@@ -991,7 +991,43 @@ public class ProjectController extends BaseController {
         } else if (type == 1) {
             setAttr("id", id).render("inviteExpertGroup.html");
         }
+    }
 
+    /**
+     * 选择邀请的机构
+     * 参数type
+     * type=0 邀请评估
+     * type=1 邀请审查
+     */
+    @NotNullPara({"id"})
+    public void invitedExpert() {
+        Long id = getParaToLong("id");
+        setAttr("id", id).render("invitedExpert.html");
+    }
+
+
+    /**
+     * 渲染专家团体表格数据
+     */
+    @NotNullPara({"id"})
+    public void invitedExpertTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        //查找当前项目的所有被邀请的专家列表
+        Page<ExpertGroup> page = expertGroupService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
+        if(page != null){
+            List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
+            int rowCount = page.getList().size();
+            for (int i = 0; i < rowCount; i++) {
+                for (int j = 0; j < aiList.size(); j++) {
+                    if(aiList.get(j).getUserID() == page.getList().get(i).getUser().getId()) {
+                        page.getList().get(i).setRemark(aiList.get(j).getStatus());
+                        break;
+                    }
+                }
+            }
+        }
+        renderJson(new DataTable<ExpertGroup>(page));
     }
 
     /**

@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.StructPersonLinkService;
 import io.jboot.admin.service.entity.model.Notification;
@@ -98,6 +100,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     public ApplyInvite findByProjectID(Long projectID) {
         return DAO.findFirstByColumn("projectID", projectID);
     }
+
     @Override
     public List<ApplyInvite> findList(ApplyInvite model) {
         Columns columns = Columns.create();
@@ -120,6 +123,21 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
             columns.eq("createUserID", model.getCreateUserID());
         }
         return DAO.findListByColumns(columns);
+    }
+
+    /**
+     * find list
+     *
+     * @param projectID
+     * @return
+     */
+    @Override
+    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID){
+        Kv c;
+        SqlPara sqlPara = null;
+        c = Kv.by("ID", projectID);
+        sqlPara = Db.getSqlPara("app-project.lastInvited-by-projectID", c);
+        return DAO.paginate(1, Integer.MAX_VALUE, sqlPara).getList();
     }
 
     @Override

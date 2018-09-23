@@ -93,6 +93,14 @@ public interface ApplyInviteService  {
     public List<ApplyInvite> findList(ApplyInvite model);
 
     /**
+     * find list
+     *
+     * @param projectID
+     * @return
+     */
+    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID);
+
+    /**
      * delete model by primary key
      *
      * @param id
