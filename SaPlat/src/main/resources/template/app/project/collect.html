@@ -24,7 +24,9 @@
 
     <a class="layui-btn layui-btn-xs" lay-event="seeFinish">终审报告</a>
 
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">申诉驳回</a>
+    <a class="layui-btn layui-btn-xs" lay-event="setFinish">评估完成</a>
+
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">驳回重评</a>
 
 </script>
 #end
@@ -50,7 +52,7 @@
                 , {field: 'brief', title: '简介', minWidth: 150}
                 , {field: 'assessmentMode', title: '评估方式', minWidth: 50, sort: true}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {fixed: 'right', title: '操作', width: 250, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/collectTableData'
             , method: 'get'
@@ -69,15 +71,22 @@
             var data = obj.data;
 
             if (obj.event === 'see') {
-                 window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2';
-             }
-             else if(obj.event==="seeFinish"){
-                 window.location.href = '#(ctxPath)/app/project/finishView?id=' + data.id;
-             } else if (obj.event === "refuse") {
-                 pop_show('上传文件', '#(ctxPath)/app/project/refuseFile?id=' + data.id, '400', '300', function () {
-                     window.location.reload();
-                 });
-             }
+               window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2';
+                // pop_max_show('查看预审报告', '#(ctxPath)/util/pdfView?fileID=' + identity, function () {});
+            }
+            else if(obj.event==="setFinish"){
+                pop_show('项目评估完成确认', '#(ctxPath)/app/project/setAssessFinishedView?id=' + data.id, '450', '210', function () {
+                    window.location.reload();
+                });
+            }
+            else if(obj.event==="seeFinish"){
+                window.location.href = '#(ctxPath)/app/project/finishView?id=' + data.id;
+                // pop_max_show('查看终审报告', '#(ctxPath)/util/pdfView?fileID=' + identity, function () {});
+            } else if (obj.event === "refuse") {
+                pop_show('驳回重新评估', '#(ctxPath)/app/project/refuseFile?id=' + data.id, '400', '300', function () {
+                    window.location.reload();
+                });
+            }
         });
     });
 </script>

@@ -186,32 +186,31 @@ public class TrackController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-
-        ProjectUndertake projectUndertake = new ProjectUndertake();
-
-        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
-        if (facAgency != null) {
-            projectUndertake.setFacAgencyID(facAgency.getId());
+        Project project = new Project();
+        project.setStatus(ProjectStatus.RECORDKEEPING);
+        if (StrKit.notBlank(getPara("projectType"))) {
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
         }
-        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
-        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
-        if(page != null) {
-            for (int i = 0; i < page.getList().size(); i++) {
-                ProjectFileType projectFileType = projectFileTypeService.findByName("备案资料移交表");
-                FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), page.getList().get(i).getId());
+        project.setIsEnable(true);
+        project.setUserId(AuthUtils.getLoginUser().getId());
+        Page<Project> page = null;
 
-                if (fileProject != null) {
-                    page.getList().get(i).setIsBackRecordUpLoad(true);
-                    page.getList().get(i).setBackRecordFileID(fileProject.getFileID());
-                } else {
-                    page.getList().get(i).setIsBackRecordUpLoad(false);
-                }
+        if (StrKit.notBlank(getPara("ownType"))) {
+            int iOwnType = Integer.parseInt(getPara("ownType"));
+            switch (iOwnType) {
+                case 0:
+                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    break;
+                case 1:
+                    project.setUserId(AuthUtils.getLoginUser().getUserID());
+                    page = projectService.findPageForMgr(project, ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    break;
+                case 2:
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    break;
             }
-            renderJson(new DataTable<Project>(page));
         }
-        else{
-            renderJson(new DataTable<Project>(new Page<Project>()));
-        }
+        renderJson(new DataTable<Project>(page));
     }
 
     /**
@@ -239,21 +238,31 @@ public class TrackController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        Project project = new Project();
+        project.setStatus(ProjectStatus.TRACKING);
+        if (StrKit.notBlank(getPara("projectType"))) {
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        project.setIsEnable(true);
+        project.setUserId(AuthUtils.getLoginUser().getId());
+        Page<Project> page = null;
 
-        ProjectUndertake projectUndertake = new ProjectUndertake();
-
-        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
-        if (facAgency != null) {
-            projectUndertake.setFacAgencyID(facAgency.getId());
+        if (StrKit.notBlank(getPara("ownType"))) {
+            int iOwnType = Integer.parseInt(getPara("ownType"));
+            switch (iOwnType) {
+                case 0:
+                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    break;
+                case 1:
+                    project.setUserId(AuthUtils.getLoginUser().getUserID());
+                    page = projectService.findPageForMgr(project, ProjectStatus.TRACKING, pageNumber, pageSize);
+                    break;
+                case 2:
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    break;
+            }
         }
-        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
-        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
-        if(page == null) {
-            renderJson(new DataTable<Project>(new Page<Project>()));
-        }
-        else{
-            renderJson(new DataTable<Project>(page));
-        }
+        renderJson(new DataTable<Project>(page));
     }
 
     /**
@@ -278,8 +287,7 @@ public class TrackController extends BaseController {
             model.setFileTypeID(getParaToLong("fileTypeId"));
             model.setCreateTime(new Date());
             model.setCreateUserID(user.getId());
-
-        } else {
+       } else {
             Files files = filesService.findById(model.getFileID());
             if (files != null) {
                 files.setIsEnable(false);

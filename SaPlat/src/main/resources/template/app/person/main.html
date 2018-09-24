@@ -135,7 +135,7 @@
             if (identity == null || identity === "") {
                 layer.msg("对不起，您当前没有上传身份证证件照片！");
             } else {
-                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + identity, '', '', function () {});
+                pop_show('查看身份证证件照片', '#(ctxPath)/util/pdfView?fileID=' + identity, '', '', function () {});
             }
         });
 

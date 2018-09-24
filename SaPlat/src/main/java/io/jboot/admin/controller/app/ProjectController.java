@@ -869,6 +869,52 @@ public class ProjectController extends BaseController {
     }
 
     @NotNullPara("id")
+    public void setAssessFinishedView() {
+        Project project = projectService.findById(getParaToLong("id"));
+        setAttr("project", project);
+        render("setAssessFinished.html");
+    }
+
+    public void setProjectAssessFinished() {
+        Project projectBean = getBean(Project.class, "project");
+        Project project = projectService.findById(projectBean.getId());
+        project.setStatus(ProjectStatus.RECORDKEEPING);//设置项目状态为“项目备案”
+        if (projectService.update(project)) {
+            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            Notification notification = new Notification();
+            notification.setName("项目评估及审查完成确认");
+            notification.setSource("/app/project/setAssessFinished");
+            notification.setContent("管理部门已经对项目《" + project.getName() + "》进行评估及审查完成的确认操作，进入项目备案阶段");
+            notification.setCreateUserID(user.getId());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+
+            //通知评估项目立项单位
+            notification.setReceiverID(project.getCreateUserID().intValue());
+            notificationService.save(notification);
+            //通知承接项目评估的服务机构
+            if(project.getAssessmentMode().equals("委评")) {
+                ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(project.getId(), "2");//状态为2表示同意承接该项目
+                if(puModel!=null){
+                    User uModel = userService.findByUserIdAndUserSource(puModel.getFacAgency().getOrgID(),1);
+                    if(uModel!=null) {
+                        notification.setReceiverID(uModel.getId().intValue());
+                        notificationService.save(notification);
+                    }
+                }
+            }
+            //通知admin
+            notification.setReceiverID(1);
+            notificationService.save(notification);
+            renderJson(RestResult.buildSuccess("项目评估及审查确认完成"));
+        } else {
+            renderJson(RestResult.buildError("项目评估及审查确认失败"));
+            throw new BusinessException("项目评估及审查确认失败");
+        }
+    }
+
+    @NotNullPara("id")
     public void finishView() {
         Project project = projectService.findById(getParaToLong("id"));
         ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
@@ -878,7 +924,6 @@ public class ProjectController extends BaseController {
             setAttr("fileID", fileProject.getFileID());
         }
         render("finishView.html");
-
     }
 
     /**
@@ -1131,7 +1176,7 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 更新狀態
+     * 更新状态
      */
     @NotNullPara("id")
     public void updateStatus() {
@@ -1368,7 +1413,7 @@ public class ProjectController extends BaseController {
     @NotNullPara("id")
     public void refuseFile() {
         Long id = getParaToLong("id");
-        ProjectFileType model = projectFileTypeService.findByName("驳回申诉书面公文（加盖公章）");
+        ProjectFileType model = projectFileTypeService.findByName("驳回重新评估书面公文（加盖公章）");
         setAttr("projectId", id).setAttr("model", model).render("refuseFile.html");
     }
 
@@ -1511,21 +1556,20 @@ public class ProjectController extends BaseController {
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
                     break;
                 case 3:
-                    Project model = new Project();
-                    model.setStatus(ProjectStatus.REFUSE);
-                    page = projectService.findPage(model, pageNumber, pageSize);
-                    Long fileTypeID = projectFileTypeService.findByName("驳回申诉书面公文（加盖公章）").getId();
-                    for (int i = 0; i < page.getList().size(); i++) {
-                        FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(page.getList().get(i).getId(), fileTypeID);
-                        if (fileProject != null) {
-                            page.getList().get(i).setFileID(fileProject.getFileID());
-                        } else {
-                            page.getList().get(i).setFileID(0L);
-                        }
-                    }
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.REFUSE, pageNumber, pageSize);
                     break;
             }
-
+            if(iOwnType >= 2 ){
+                Long fileTypeID = projectFileTypeService.findByName("驳回重新评估书面公文（加盖公章）").getId();
+                for (int i = 0; i < page.getList().size(); i++) {
+                    FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(page.getList().get(i).getId(), fileTypeID);
+                    if (fileProject != null) {
+                        page.getList().get(i).setFileID(fileProject.getFileID());
+                    } else {
+                        page.getList().get(i).setFileID(0L);
+                    }
+                }
+            }
         }
         renderJson(new DataTable<Project>(page));
     }

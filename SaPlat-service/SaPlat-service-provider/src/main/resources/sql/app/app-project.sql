@@ -104,6 +104,16 @@ WHERE
   order by createTime desc
 #end
 
+#sql("project-by-mgr-status")
+SELECT
+  *
+FROM
+  project
+WHERE
+  managementID in (#para(mgr_list)) AND status = #para(status)
+  order by createTime desc
+#end
+
 #sql("project-by-creater")
 SELECT
   *
@@ -111,6 +121,16 @@ FROM
   project
 WHERE
   userId = #para(userID)
+  order by createTime desc
+#end
+
+#sql("project-by-creater-status")
+SELECT
+  *
+FROM
+  project
+WHERE
+  userId = #para(userID) AND status = #para(status)
   order by createTime desc
 #end
 
@@ -128,6 +148,22 @@ WHERE ID IN
 		OR
 		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2)
 )
+#end
+
+#sql("project-by-service-status")
+SELECT * FROM
+project
+WHERE ID IN
+(
+	SELECT
+		DISTINCT projectID
+	FROM
+		project_undertake
+	WHERE
+		((facAgencyID = createUserID	AND facAgencyID = #para(userID))
+		OR
+		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
+) AND status = #para(status)
 #end
 
 #sql("invitedExpert-by-projectID")
