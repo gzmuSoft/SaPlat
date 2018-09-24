@@ -1,0 +1,51 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function (data) {
+             util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/project/setProjectAssessFinished',
+                data: $('#setFishedForm').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(cancel)', function (data) {
+            pop_close();
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+    <form id="setFishedForm" class="layui-form" lay-filter="verifyForm" action="">
+        <input type="hidden" name="project.id" value="#(project.id)">
+        <div class="layui-form-item">
+            <p style="font-size:20px;color:red;font-family: 楷体;">&emsp;&emsp;注意：此操作不可回退，您确认“#(project.name)”项目已经评估完成，可以进入备案阶段吗？</p>
+        </div>
+
+        <div class="layui-form-item" style="padding-top:10px;text-align:center;">
+            <button class="layui-btn" lay-filter="sub" lay-submit>确定</button>
+            <button lay-filter="cancel" lay-submit class="layui-btn layui-btn-primary">取消</button>
+        </div>
+    </form>
+#end

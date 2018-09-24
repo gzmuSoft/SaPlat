@@ -166,9 +166,23 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
+    public Page<Project> findPageForCreater(Long userID, String status, int pageNumber, int pageSize){
+        Kv c = Kv.by("userID", userID).set("status", status);
+        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-creater-status", c);
+        return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+    }
+
+    @Override
     public Page<Project> findPageForService(Long userID, int pageNumber, int pageSize){
         Kv c = Kv.by("userID", userID);
         SqlPara sqlPara = Db.getSqlPara("app-project.project-by-service", c);
+        return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+    }
+
+    @Override
+    public Page<Project> findPageForService(Long userID, String status, int pageNumber, int pageSize){
+        Kv c = Kv.by("userID", userID).set("status", status);
+        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-service-status", c);
         return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
     }
 
@@ -190,6 +204,27 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
         }
         return  new Page<Project>();
+    }
+
+    @Override
+    public Page<Project> findPageForMgr(Project project, String status, int pageNumber, int pageSize){
+        //当前用户对应的管理机构
+        Management curMgr = mgrService.findByOrgId(project.getUserId());
+        if(null != curMgr) {
+            List<Management> result = new ArrayList<Management>();
+            result.add(curMgr);
+            findMgrChildren(curMgr.getId(), result);
+            StringBuilder str = new StringBuilder();
+            for(Management item : result){
+                str.append(item.getId());
+                str.append(",");
+            }
+            Kv c = Kv.by("mgr_list", str.substring(0,str.length()-1)).set("status", status);
+            SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr-status", c);
+            return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
+        }
+        return  new Page<Project>();
+
     }
 
     private void findMgrChildren(long mgrId,List<Management> result){

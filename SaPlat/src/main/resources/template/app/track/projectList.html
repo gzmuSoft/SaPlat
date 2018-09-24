@@ -12,8 +12,16 @@
     <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label">项目类型</label>
+                <label class="layui-form-label">项目归属</label>
                 <div class="layui-input-inline">
+                    <select id='ownType' name="ownType" lay-filter="ownTypeSelect">
+                        <option value="0" selected>我创建的</option>
+                        <option value="1">我管理的</option>
+                        <option value="2">我承接的</option>
+                    </select>
+                </div>
+                <label class="layui-form-label" hidden>项目类型</label>
+                <div class="layui-input-inline" hidden>
                     <select id='projectType' name="projectType">
                         <option></option>
                         #statusOption(PaTypeNameList)
@@ -41,7 +49,7 @@
     #[[
     {{# } else if(d.isBackRecordUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs " lay-event="uploadBackRecord">√ 已上传</a>
+    <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecord">查看</a>
     #[[
     {{#  } }}
@@ -84,6 +92,9 @@
                 , {title: '备案资料', width: 120, align: 'center', toolbar: '#backRecord'}
                 , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
+            , where: {
+                ownType:0
+            }
             , url: '#(ctxPath)/app/track/projectListTableData'
             , method: 'get'
             , request: {
@@ -124,16 +135,18 @@
             }
         });
 
-        reloadTable = function (projectType) {
+        reloadTable = function (projectType, ownType) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/track/projectListTableData'
-                , where: {
-                    projectType: projectType
-                } //设定异步数据接口的额外参数
+                url: '#(ctxPath)/app/track/projectListTableData?projectType=' + projectType + '&ownType=' + ownType
             });
         };
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType);
+            reloadTable(data.field.projectType, data.field.ownType);
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('select(ownTypeSelect)', function(data){
+            reloadTable($('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });

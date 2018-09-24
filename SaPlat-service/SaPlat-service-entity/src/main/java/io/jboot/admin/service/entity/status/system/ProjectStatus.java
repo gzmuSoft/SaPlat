@@ -45,9 +45,18 @@ public class ProjectStatus extends BaseStatus {
      */
     public final static String CHECKED = "7";
     /**
-     * 申诉驳回待确认
+     * 驳回重新评估待确认
      */
     public final static String REFUSE = "8";
+    /**
+     * 项目备案
+     */
+    public final static String RECORDKEEPING = "9";
+    /**
+     * 项目跟踪
+     */
+    public final static String TRACKING = "10";
+
 
     public ProjectStatus() {
         add(CANCEL_VERIFY, "取消审核");
@@ -58,7 +67,9 @@ public class ProjectStatus extends BaseStatus {
         add(REVIEWED, "审查中");
         add(BUILDING, "立项中");
         add(CHECKED, "审查完成");
-        add(REFUSE, "申诉驳回待确认");
+        add(REFUSE, "驳回重新评估待确认");
+        add(RECORDKEEPING, "项目备案");
+        add(TRACKING, "项目跟踪");
     }
 
     private static ProjectStatus me;

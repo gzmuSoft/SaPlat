@@ -19,6 +19,7 @@ public class Project extends BaseProject<Project> {
     private String buildOrgName;
     private String buildUserName;
     private boolean isBackRecordUpLoad;
+    private boolean isRiskTrackUpLoad;
     private Long backRecordFileID;
     private String reviewInfo;
 
@@ -137,5 +138,13 @@ public class Project extends BaseProject<Project> {
 
     public void setBackRecordFileID(Long backRecordFileID) {
         this.backRecordFileID = backRecordFileID;
+    }
+
+    public boolean getIsRiskTrackUpLoad() {
+        return isRiskTrackUpLoad;
+    }
+
+    public void setIsRiskTrackUpLoad(boolean riskTrackUpLoad) {
+        isRiskTrackUpLoad = riskTrackUpLoad;
     }
 }
