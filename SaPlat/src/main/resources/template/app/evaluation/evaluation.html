@@ -16,11 +16,18 @@
     body {
         height: 100%;
     }
+    span {
+        color: #FF5722;
+    }
 </style>
 #end
 
 #define content()
 <h1 class="x-center">评估资料填写</h1>
+<hr class="layui-bg-red">
+<span class="layui-col-md4">当前项目：#(project.name)</span>
+<span class="layui-col-md4">评估方式：#(project.assessmentMode)</span>
+<span class="layui-col-md4">立项单位：#(organization.name)</span>
 <hr class="layui-bg-red">
 <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="tip">
     <div class="layui-progress-bar layui-bg-red" id="bar" lay-percent="0%"></div>
