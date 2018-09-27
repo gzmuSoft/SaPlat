@@ -7,7 +7,6 @@ import io.jboot.admin.service.entity.model.*;
 import java.util.List;
 
 public interface ProjectService  {
-
     /**
      * find model by primary key
      *
@@ -44,6 +43,12 @@ public interface ProjectService  {
      * @return 第一个
      */
     public Project findFirstByColumn(String columnName,Object value);
+
+    /**
+     * 根据项目名称查询
+     * @param ProjectName 列名
+     */
+    public Project findByProjectName(String ProjectName);
 
     /**
      * 根据多个列名和多个列值查询第一个数据
