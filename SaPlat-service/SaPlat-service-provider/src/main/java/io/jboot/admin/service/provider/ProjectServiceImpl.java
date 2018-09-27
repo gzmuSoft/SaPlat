@@ -286,14 +286,23 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
-    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject) {
+    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject, RejectProjectInfo rejectProjectInfo) {
         return Db.tx(() -> {
             if (!model.update()) {
+                return false;
+            }
+            if (!rejectProjectInfo.save()) {
                 return false;
             }
             return Db.tx(() -> notification.save() && fileProject.saveOrUpdate());
         });
     }
+
+    @Override
+    public boolean saveOrUpdate(Project model, Notification notification) {
+        return Db.tx(() -> model.saveOrUpdate() && notification.saveOrUpdate());
+    }
+
 
     @Override
     public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake) {
