@@ -79,6 +79,13 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
+    public Project findByProjectName(String ProjectName){
+        Columns columns = Columns.create();
+        columns.eq("name", ProjectName);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
     public Project findFirstByColumns(String[] columnNames, String[] values) {
         Columns columns = Columns.create();
         if (columnNames.length != values.length) {

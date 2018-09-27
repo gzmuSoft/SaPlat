@@ -894,11 +894,11 @@ public class ProjectController extends BaseController {
             notification.setReceiverID(project.getCreateUserID().intValue());
             notificationService.save(notification);
             //通知承接项目评估的服务机构
-            if(project.getAssessmentMode().equals("委评")) {
+            if (project.getAssessmentMode().equals("委评")) {
                 ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(project.getId(), "2");//状态为2表示同意承接该项目
-                if(puModel!=null){
-                    User uModel = userService.findByUserIdAndUserSource(puModel.getFacAgency().getOrgID(),1);
-                    if(uModel!=null) {
+                if (puModel != null) {
+                    User uModel = userService.findByUserIdAndUserSource(puModel.getFacAgency().getOrgID(), 1);
+                    if (uModel != null) {
                         notification.setReceiverID(uModel.getId().intValue());
                         notificationService.save(notification);
                     }
@@ -1060,12 +1060,12 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         //查找当前项目的所有被邀请的专家列表
         Page<ExpertGroup> page = expertGroupService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
-        if(page != null){
+        if (page != null) {
             List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
             int rowCount = page.getList().size();
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < aiList.size(); j++) {
-                    if(aiList.get(j).getUserID() == page.getList().get(i).getUser().getId()) {
+                    if (aiList.get(j).getUserID() == page.getList().get(i).getUser().getId()) {
                         page.getList().get(i).setRemark(aiList.get(j).getStatus());
                         break;
                     }
@@ -1073,6 +1073,38 @@ public class ProjectController extends BaseController {
             }
         }
         renderJson(new DataTable<ExpertGroup>(page));
+    }
+
+    /**
+     * 立项中项目删除
+     */
+    @NotNullPara({"id"})
+    public void ProjectDelete() {
+        Long id = getParaToLong("id");
+        List<FileProject> fileProjects = fileProjectService.findAllByProjectID(id);
+        for (FileProject i : fileProjects) {
+            fileProjectService.delete(i);
+        }
+        LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
+        if (!leaderGroupService.delete(leaderGroup) || !projectService.deleteById(id)) {
+            throw new BusinessException("删除失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 项目名称获取
+     */
+    @NotNullPara({"name"})
+    public void GetProjectName() {
+        JSONObject json = new JSONObject();
+        Project project = projectService.findByProjectName(getPara("name"));
+        if (project != null) {
+            json.put("status", false);
+        }else {
+            json.put("status", true);
+        }
+        renderJson(json);
     }
 
     /**
@@ -1559,7 +1591,7 @@ public class ProjectController extends BaseController {
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.REFUSE, pageNumber, pageSize);
                     break;
             }
-            if(iOwnType >= 2 ){
+            if (iOwnType >= 2) {
                 Long fileTypeID = projectFileTypeService.findByName("驳回重新评估书面公文（加盖公章）").getId();
                 for (int i = 0; i < page.getList().size(); i++) {
                     FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(page.getList().get(i).getId(), fileTypeID);
