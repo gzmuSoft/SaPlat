@@ -13,6 +13,7 @@ import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
+import io.jboot.admin.service.entity.status.system.ProjectUndertakeStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -58,6 +59,9 @@ public class TrackController extends BaseController {
     @JbootrpcService
     private FacAgencyService facAgencyService;
 
+    @JbootrpcService
+    private ProjectUndertakeService projectUndertakeService;
+
     public void index() {
 
     }
@@ -95,18 +99,37 @@ public class TrackController extends BaseController {
      */
     @NotNullPara("projectID")
     public void toRiskTrackManagement() {
+        User user = AuthUtils.getLoginUser();
+        Project project = projectService.findById(getParaToLong("projectID"));
         Long projectFileTypeID = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
         List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
-        boolean mRole = false, fRole = false;
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(getParaToLong("projectID"), ProjectUndertakeStatus.ACCEPT);
+        FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
+        Long facID = null;
+        if (facAgency != null) {
+            facID = facAgency.getId();
+        }
+        boolean fRole = false;
         for (UserRole u : list) {
-            if (roleService.findById(u.getRoleID()).getName().equals("管理机构")) {
-                mRole = true;
-            } else if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
-                fRole = true;
+            if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
+                if (project.getAssessmentMode().equals("委评")) {
+                    if (projectUndertake.getFacAgencyID().equals(facID)) {
+                        fRole = true;
+                        break;
+                    }
+                } else {
+                    if (projectUndertake.getFacAgencyID().equals(user.getId())) {
+                        fRole = true;
+                        break;
+                    }
+                }
+
             }
         }
-        setAttr("mRole", mRole).setAttr("fRole", fRole).
-                setAttr("projectFileTypeID", projectFileTypeID).setAttr("projectID", getParaToLong("projectID")).render("riskTrackingManagement.html");
+        setAttr("fRole", fRole).
+                setAttr("projectFileTypeID", projectFileTypeID)
+                .setAttr("projectID", getParaToLong("projectID"))
+                .render("riskTrackingManagement.html");
     }
 
     /**
@@ -228,8 +251,13 @@ public class TrackController extends BaseController {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList",baseStatus);
-        render("projectRiskList.html");
+        //查询跟踪资料移交表的typeID便于前台使用
+        ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+        Long fileTypeID = null;
+        if (projectFileType != null) {
+            fileTypeID = projectFileType.getId();
+        }
+        setAttr("riskFileTypeID", fileTypeID).setAttr("PaTypeNameList", baseStatus).render("projectRiskList.html");
     }
 
     @Before(GET.class)
@@ -260,6 +288,25 @@ public class TrackController extends BaseController {
                 case 2:
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
                     break;
+            }
+            ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+            Long fileTypeID = null;
+            if (projectFileType != null) {
+                fileTypeID = projectFileType.getId();
+            }
+            for (int i = 0; i < page.getList().size(); i++) {
+                page.getList().get(i).setOwnType(iOwnType);
+                FileProject fileProject = null;
+                if (fileTypeID != null) {
+                    fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
+                }
+                if (fileProject != null) {
+                    page.getList().get(i).setIsUpload(true);
+                    page.getList().get(i).setFileID(fileProject.getFileID());
+                    System.out.println(fileProject.getFileID());
+                } else {
+                    page.getList().get(i).setIsUpload(false);
+                }
             }
         }
         renderJson(new DataTable<Project>(page));
