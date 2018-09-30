@@ -76,7 +76,7 @@
                 , {field: 'department', title: '所在部门', width: 200}
                 , {field: 'profess', title: '专业资格', minWidth: 200}
                 , {field: 'project', title: '参与项目经历', minWidth: 200}
-                , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/expertGroupTable?id=' + $('#id').val()
             , method: 'get'

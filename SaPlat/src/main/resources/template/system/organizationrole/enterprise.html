@@ -35,7 +35,7 @@
                 , {field: 'start', title: '创办日期', width: 150,sort:true}
                 , {field: 'isEnable', title: '状态', width:80, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")' }
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', unresize: true, width: 160} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', unresize: true, minWidth: 160} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/enterpriseTableData'
             , method: 'get'
