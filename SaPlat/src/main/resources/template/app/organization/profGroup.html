@@ -8,6 +8,12 @@
         color: #FFF;
         border: none;
         border-radius: 15px;
+    .layui-input {
+        width: 350px;
+    }
+
+    .layui-btn {
+        margin-left: 150px;
     }
 </style>
 #end
@@ -18,142 +24,159 @@
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">
         <legend style="font-size: 20px;font-weight: 500;">专业团体认证</legend>
     </fieldset>
+    <div style="width: 1100px; position: relative; left:17%;padding: 50px 0px 0px 0px;">
+        <form id="person" class="layui-form" action="">
+            <div class="layui-form-pane">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)"value="#(organization.name)"
+                                           class="layui-input " style="width: 300px" readonly/>
+                                </div>
+                            </div>
 
-    <form id="person" class="layui-form" action="">
-        <div class="layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="profGroup.name"style="width: 180px"><em class="require-mark">*</em>专业团体名称</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
+                                           class="layui-input" style="width: 300px" required lay-verify="required"/>
+                                </div>
+                            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)"value="#(organization.name)"
-                           class="layui-input " style="width: 500px" disabled/>
+                            <div class="layui-form-item layui-hide">
+                                <label class="layui-form-label" for="profGroup.orgID" style="width: 180px">组织机构编号</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.id)"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="profGroup.scope"style="width: 180px"><em class="require-mark">*</em>服务范围</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="profGroup.scope" name="profGroup.scope"
+                                           value="#(profGroup.scope)" class="layui-input" style="width: 300px" required lay-verify="required"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <div class="grid-demo">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="profGroup.performance"style="width: 180px"><em class="require-mark">*</em>服务业绩</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="profGroup.performance" name="profGroup.performance"
+                                           value="#(profGroup.performance)" class="layui-input" style="width: 300px" required lay-verify="required"/>
+                                </div>
+                            </div>
+
+                            <!--应公司要求，人员简历由填写改为上传文件-->
+                            <!--修改者：刘英伟-->
+                            <!--修改时间：2018年8月27日-->
+                            <!--<div class="layui-form-item layui-form-text">-->
+                            <!--<label class="layui-form-label" for="profGroup.resume" style="width: 680px;">-->
+                            <!--<h style="margin: 0 50px"><em class="require-mark">*</em>人员简历</h>-->
+                            <!--</label>-->
+                            <!--<div class="layui-input-block">-->
+                            <!--<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""-->
+                            <!--class="layui-textarea"-->
+                            <!--cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(profGroup.resume)</textarea>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
+                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="profGroup.content"style="width: 180px"><em class="require-mark">*</em>专业内容</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="profGroup.content" name="profGroup.content"
+                                           value="#(profGroup.content)" class="layui-input" style="width: 300px" required lay-verify="required"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="upload-resume" style="width: 160px"><em
+                                        class="require-mark">*</em>人员简历</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-upload ">
+                                        <div class="layui-upload">
+                                            <button type="button" class="layui-btn" name="upload-resume" id="upload-resume">
+                                                <i class="layui-icon"></i>上传文件
+                                            </button>
+                                            <input class="layui-hide" type="text" value="#(profGroup.resume)"
+                                                   id="profGroup.resume" name="profGroup.resume">
+                                            <button type="button" class="layui-btn" id="see-resume">查看</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <br />
+                <br />
+                <br />
+                <div class="layui-col-md9">
+                    <div class="grid-demo">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="profGroup.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
+                            <div class="layui-input-inline" >
+                                <input type="number" id="profGroup.capital" name="profGroup.capital" value="#(profGroup.capital)" lay-verify="required|mLength" class="layui-input" style="width: 800px" >
+                            </div>
+                            <div class="layui-form-mid layui-word-aux" style="margin:-40px 1000px">元</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="profGroup.administrator"style="width: 180px"><em class="require-mark">*</em>管理员姓名</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="text" id="profGroup.administrator" name="profGroup.administrator"
+                                       value="#(profGroup.administrator)" class="layui-input" style="width: 850px" required lay-verify="required"/>
+                            </div>
+                        </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.name"style="width: 180px"><em class="require-mark">*</em>专业团体名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.name" name="profGroup.name" value="#(organization.name)"
-                           class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-hide">
-                <label class="layui-form-label" for="profGroup.orgID" style="width: 180px">组织机构编号</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="profGroup.orgID" name="profGroup.orgID" value="#(organization.id)"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.scope"style="width: 180px"><em class="require-mark">*</em>服务范围</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.scope" name="profGroup.scope"
-                           value="#(profGroup.scope)" class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
+                        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress1" lay-filter="upload-progress1" >
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                        </div>
 
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.performance"style="width: 180px"><em class="require-mark">*</em>服务业绩</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.performance" name="profGroup.performance"
-                           value="#(profGroup.performance)" class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <!--应公司要求，人员简历由填写改为上传文件-->
-            <!--修改者：刘英伟-->
-            <!--修改时间：2018年8月27日-->
-            <!--<div class="layui-form-item layui-form-text">-->
-                <!--<label class="layui-form-label" for="profGroup.resume" style="width: 680px;">-->
-                    <!--<h style="margin: 0 50px"><em class="require-mark">*</em>人员简历</h>-->
-                <!--</label>-->
-                <!--<div class="layui-input-block">-->
-					<!--<textarea id="profGroup.resume" name="profGroup.resume" lay-verify="required" placeholder=""-->
-                              <!--class="layui-textarea"-->
-                              <!--cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(profGroup.resume)</textarea>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="upload-resume" style="width: 160px"><em
-                        class="require-mark">*</em>人员简历</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload ">
-                        <div class="layui-upload">
-                            <button type="button" class="layui-btn" name="upload-resume" id="upload-resume">
-                                <i class="layui-icon"></i>上传文件
-                            </button>
-                            <input class="layui-hide" type="text" value="#(profGroup.resume)"
-                                   id="profGroup.resume" name="profGroup.resume">
-                            <button type="button" class="layui-btn" id="see-resume">查看</button>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="profGroup.contact" style="width: 180px"><em class="require-mark">*</em>管理员联系方式</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="tel" id="profGroup.contact" name="profGroup.contact"
+                                       value="#(profGroup.contact)" class="layui-input" style="width: 850px" lay-verify="required|phone"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>管理员身份证照片</label>
+                            <div class="layui-input-block layui-upload" style="align-content: center;">
+                                <button type="button" class="layui-btn" id="upload1" style="margin: 0 100px"><i
+                                        class="layui-icon"></i>上传文件
+                                </button>
+                                <button type="button" class="layui-btn layui-hide " id="see">查看</button>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <!--隐藏flag作为界面是否禁用的方法-->
+                        <input type="text" id="flag" name="flag"
+                               class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+                        <br>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <button type="button" class="layui-btn" lay-submit lay-filter="sub"style="position:absolute;left:10%; bottom:0; ">保存</button>
+                                <button type="button" class="layui-btn layui-btn-warm" id="reset" style=" position:absolute;right:15%;bottom:0; ">取消</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.content"style="width: 180px"><em class="require-mark">*</em>专业内容</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.content" name="profGroup.content"
-                           value="#(profGroup.content)" class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
-                <div class="layui-input-inline" >
-                    <input type="number" id="profGroup.capital" name="profGroup.capital" value="#(profGroup.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
-                </div>
-                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">元</div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.administrator"style="width: 180px"><em class="require-mark">*</em>管理员姓名</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="profGroup.administrator" name="profGroup.administrator"
-                           value="#(profGroup.administrator)" class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress1" lay-filter="upload-progress1" >
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>管理员身份证照片</label>
-                <div class="layui-input-block layui-upload" style="align-content: center;">
-                    <button type="button" class="layui-btn" id="upload1" style="margin: 0 100px"><i
-                            class="layui-icon"></i>上传文件
-                    </button>
-                    <button type="button" class="layui-btn layui-hide " id="see">查看</button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="profGroup.contact" style="width: 180px"><em class="require-mark">*</em>管理员联系方式</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="tel" id="profGroup.contact" name="profGroup.contact"
-                           value="#(profGroup.contact)" class="layui-input" style="width: 500px" lay-verify="required|phone"/>
-                </div>
-            </div>
-
-            <!--隐藏flag作为界面是否禁用的方法-->
-            <input type="text" id="flag" name="flag"
-                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
-            <br>
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
-                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 #end
@@ -169,23 +192,23 @@
             , upload = layui.upload;
 
         //创建监听函数
-         var xhrOnProgress=function(fun) {
+        var xhrOnProgress=function(fun) {
             xhrOnProgress.onprogress = fun; //绑定监听
-             //使用闭包实现监听绑
+            //使用闭包实现监听绑
             return function() {
                 //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
                 var xhr = $.ajaxSettings.xhr();
-                 //判断监听函数是否为函数
-                  if (typeof xhrOnProgress.onprogress !== 'function')
-                       return xhr;
-                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                    if (xhrOnProgress.onprogress && xhr.upload) {
-                          xhr.upload.onprogress = xhrOnProgress.onprogress;
-                    }
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
                     return xhr;
-             }
-         }
-         //用于保存人员简历文件ID
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
+        //用于保存人员简历文件ID
         var fileId = "";
 
         //上传控件初始化
