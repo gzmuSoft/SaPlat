@@ -53,7 +53,7 @@
                     <programs>
                         <!--程序打包 mvn package appassembler:assemble -->
                         <program>
-                            <mainClass>io.jboot.Jboot</mainClass>
+                            <mainClass>io.jboot.admin.service.provider.app.Application</mainClass>
                             <id>jboot</id>
                             <platforms>
                                 <platform>windows</platform>
@@ -64,7 +64,7 @@
                     <daemons>
                         <!-- 后台程序打包：mvn clean package appassembler:generate-daemons -->
                         <daemon>
-                            <mainClass>io.jboot.Jboot</mainClass>
+                            <mainClass>io.jboot.admin.service.provider.app.Application</mainClass>
                             <id>jboot-service-system</id>
                             <platforms>
                                 <platform>jsw</platform>
