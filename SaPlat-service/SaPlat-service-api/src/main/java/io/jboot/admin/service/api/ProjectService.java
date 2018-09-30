@@ -7,7 +7,6 @@ import io.jboot.admin.service.entity.model.*;
 import java.util.List;
 
 public interface ProjectService  {
-
     /**
      * find model by primary key
      *
@@ -44,6 +43,12 @@ public interface ProjectService  {
      * @return 第一个
      */
     public Project findFirstByColumn(String columnName,Object value);
+
+    /**
+     * 根据项目名称查询
+     * @param ProjectName 列名
+     */
+    public Project findByProjectName(String ProjectName);
 
     /**
      * 根据多个列名和多个列值查询第一个数据
@@ -116,14 +121,23 @@ public interface ProjectService  {
     public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake);
 
     /**
-     * save Or Update Project And fileProject And notification
+     * save Or Update Project And fileProject And notification And RejectProjectInfo
      *
      * @param model
      * @param notification
      * @param fileProject
      * @return
      */
-    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject);
+    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject, RejectProjectInfo rejectProjectInfo);
+
+    /**
+     * save Or Update Project And notification
+     *
+     * @param model
+     * @param notification
+     * @return
+     */
+    public boolean saveOrUpdate(Project model, Notification notification);
 
     /**
      * find model by user and role and isEnable

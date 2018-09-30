@@ -22,6 +22,7 @@
     #shiroHasPermission('/app/project/buildProject')
     <a class="layui-btn layui-btn-xs" lay-event="build">补充资料</a>
     <a class="layui-btn layui-btn-xs" lay-event="send">发起审核</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="delete">删除</a>
     #end
 </script>
 #end
@@ -45,10 +46,10 @@
                 , {field: 'name', title: '项目名称', minWidth: 150}
                 , {field: 'roleName', title: '机构类型', minWidth: 100}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
-                , {field: 'brief', title: '简介', minWidth: 200}
-                , {field: 'site', title: '地址', minWidth: 200}
+                , {field: 'brief', title: '简介', minWidth: 150}
+                , {field: 'site', title: '地址', minWidth: 150}
                 , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作',width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/buildProject'
             , method: 'get'
@@ -84,7 +85,21 @@
                         }
                     });
                 });
-
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除该项目吗', function (index) {
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/project/ProjectDelete',
+                        data: {id: data.id},
+                        loadFlag: true,
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    });
+                });
             }
         });
     });

@@ -4,7 +4,6 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.api.UserRoleService;
 import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.User;
