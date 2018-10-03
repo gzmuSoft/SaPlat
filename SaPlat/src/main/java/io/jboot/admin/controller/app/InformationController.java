@@ -217,6 +217,9 @@ public class InformationController extends BaseController {
             }
             Organization organization = organizationService.findById(user.getUserID());
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+            if (facAgency == null){
+                facAgency = projectUndertake.getFacAgency();
+            }
             name = facAgency.getName();
         }
         SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();

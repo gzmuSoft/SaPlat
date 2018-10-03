@@ -59,6 +59,8 @@ public class EvaluationController extends BaseController {
     @JbootrpcService
     private FacAgencyService facAgencyService;
 
+    @JbootrpcService
+    private UserService userService;
     /**
      * 评估详情
      */
@@ -148,7 +150,10 @@ public class EvaluationController extends BaseController {
             }
         }
 
+        User user = userService.findById(project.getUserId());
+        Organization organization = organizationService.findById(user.getUserID());
         setAttr("project", project)
+                .setAttr("organization",organization)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
                 .render("evaluation.html");
     }
@@ -204,8 +209,11 @@ public class EvaluationController extends BaseController {
             }
         }
 
+        User user = userService.findById(project.getUserId());
+        Organization organization = organizationService.findById(user.getUserID());
         setAttr("project", project)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
+                .setAttr("organization",organization)
                 .setAttr("entry", "mgr_agency")
                 .render("evaluation.html");
     }
