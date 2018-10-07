@@ -34,7 +34,7 @@
                 , {field: 'contact', title: '联系方式', width: 110,sort:true}
                 , {field: 'isEnable', title: '状态', width:80, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")' }
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width: 160} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 160} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/profgroupTableData'
             , method: 'get'

@@ -93,7 +93,7 @@
                 , {field: 'status', title: '状态', width: 140, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {fixed: 'right', title: '操作', width: 230, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 230, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
                 ownType:0

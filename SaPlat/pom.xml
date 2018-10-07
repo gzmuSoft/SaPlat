@@ -54,7 +54,7 @@
                         <!--程序打包 mvn package appassembler:assemble -->
                         <program>
                             <mainClass>io.jboot.admin.Application</mainClass>
-                            <id>jboot</id>
+                            <id>SaPlat</id>
                             <platforms>
                                 <platform>windows</platform>
                                 <platform>unix</platform>
