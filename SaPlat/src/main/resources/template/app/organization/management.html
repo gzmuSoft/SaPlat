@@ -1,7 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
-#@layout()
-
-#define css()
+#include("/template/common/layout/_page_layout.html") #@layout() #define css()
 <style>
     button {
         background: #758ef0;
@@ -15,114 +12,120 @@
         clear: both;
     }
 </style>
+
 #end
 
-
-#define content()
+ #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px; color: #009688">
         <legend style="font-size: 20px;font-weight: 500;">管理机构认证</legend>
     </fieldset>
-    <form id="person" class="layui-form" lay-filter="managementForm" action="">
-        <div class="layui-form-pane">
+    <div style="width: 1200px; position: relative; left:15%;padding: 50px 0px 0px 0px;">
+        <form id="person" class="layui-form" lay-filter="managementForm" action="">
+            <div class="layui-form-pane">
 
-            <div class="layui-form-item layui-hide">
-                <label class="layui-form-label" for="management.orgID" style="width: 120px">组织机构编号</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="management.orgID" name="management.orgID" value="#(organization.id)"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.name"style="width: 120px">组织机构名称</label>
-                <div class="layui-input-block">
-                    <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)"value="#(organization.name)"
-                           class="layui-input " style="width: 500px" readonly/>
-                </div>
-            </div>
-
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>上级部门信息</legend>
-            </fieldset>
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="superiorSelected" style="width: 120px"><em class="require-mark">*</em>部门名称</label>
-                <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                    <input type="hidden" id="superiorSelected" name="superiorSelected" value="#(management.superiorID)"/>
-                    <select id="superiorID" name="superiorID" lay-verify="required" lay-filter="superiorSelect" lay-search>
-                        #statusOption(superiorStatus);
-                    </select>
+                <div class="layui-form-item layui-hide">
+                    <label class="layui-form-label" for="management.orgID" style="width: 120px">组织机构编号</label>
+                    <div class="layui-input-block" style="margin: 0 180px">
+                        <input type="number" id="management.orgID" name="management.orgID" value="#(organization.id)" />
+                    </div>
                 </div>
 
-                <label class="layui-form-label" for="managementPrincipal"style="width: 120px">负责人</label>
-                <div class="layui-input-block" style="float: left; margin-left: -1px; width: 200px;">
-                    <input type="text" id="managementPrincipal" name="management.principal"
-                           value="#(management.principal)" class="layui-input" readonly/>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="organization.name" style="width: 120px">组织机构名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)" value="#(organization.name)" class="layui-input " style="width: 500px" readonly/>
+                    </div>
+                </div>
+                <br />
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>上级部门信息</legend>
+                </fieldset>
+                <br />
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="superiorSelected" style="width: 120px"><em class="require-mark">*</em>部门名称</label>
+                    <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
+                        <input type="text " id="superiorSelected" name="superiorSelected" value="#(management.superiorID)" class="layui-input" />
+                        <select id="superiorID" name="superiorID" lay-verify="required" lay-filter="superiorSelect" lay-search>
+                            #statusOption(superiorStatus);
+                        </select>
+                    </div>
+
+                    <label class="layui-form-label" for="managementPrincipal" style="width: 120px">负责人</label>
+                    <div class="layui-input-block" style="float: left; margin-left: -1px; width: 200px;">
+                        <input type="text" id="managementPrincipal" name="management.principal" value="#(management.principal)" class="layui-input" readonly/>
+                    </div>
+
+                    <label class="layui-form-label" for="managementPrincipalcon" style="width: 120px">联系方式</label>
+                    <div class="layui-input-block" style="float: left; margin-left: -1px; width: 200px;">
+                        <input type="tel" id="managementPrincipalcon" name="management.principalcon" value="#(management.principalcon)" class="layui-input" readonly/>
+                    </div>
+                </div>
+                <br />
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>管理机构信息</legend>
+                </fieldset>
+                <br />
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="management.name" style="width: 130px"><em class="require-mark">*</em>管理机构名称</label>
+                    <div class="layui-input-block" style="float:left; margin-left: -1px; width: 400px;">
+                        <input type="text" id="management.name" name="management.name" value="#(organization.name)" class="layui-input " style="width: 500px" lay-verify="required" />
+                    </div>
+
+                    <label class="layui-form-label" for="management.num" style="width: 130px">部门人数</label>
+                    <div class="layui-input-block" style="float:left; margin-left: -1px; width: 400px;">
+                        <input type="number" id="management.num" name="management.num" value="#(management.num)" class="layui-input" lay-verify="length" />
+                    </div>
                 </div>
 
-                <label class="layui-form-label" for="managementPrincipalcon"style="width: 120px">联系方式</label>
-                <div class="layui-input-block" style="float: left; margin-left: -1px; width: 200px;">
-                    <input type="tel" id="managementPrincipalcon" name="management.principalcon"
-                           value="#(management.principalcon)" class="layui-input" readonly/>
-                </div>
-            </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="management.manager" style="width: 130px"><em class="require-mark">*</em>主管姓名</label>
+                    <div class="layui-input-block" style="float:left; margin-left: -1px; width: 400px;">
+                        <input type="text" id="management.manager" name="management.manager" value="#(management.manager)" style="width: 500px" class="layui-input" lay-verify="required" />
+                    </div>
 
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>管理机构信息</legend>
-            </fieldset>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="management.name" style="width: 120px"><em class="require-mark">*</em>管理机构名称</label>
-                <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                    <input type="text" id="management.name" name="management.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" lay-verify="required"/>
+                    <label class="layui-form-label" for="management.managercon" style="width: 130px"><em class="require-mark">*</em>主管联系方式</label>
+                    <div class="layui-input-block" style="float:left; margin-left: -1px; width: 400px;">
+                        <input type="tel" id="management.managercon" name="management.managercon" value="#(management.managercon)" class="layui-input" lay-verify="required|phone" />
+                    </div>
                 </div>
 
-                <label class="layui-form-label" for="management.num"style="width: 120px">部门人数</label>
-                <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                    <input type="number" id="management.num" name="management.num"
-                           value="#(management.num)" class="layui-input" lay-verify="length"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="management.manager"style="width: 120px"><em class="require-mark">*</em>主管姓名</label>
-                <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                    <input type="text" id="management.manager" name="management.manager"
-                           value="#(management.manager)" class="layui-input" lay-verify="required"/>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="management.detailedaddr" style="width: 130px"><em class="require-mark">*</em>详细地址</label>
+                    <div class="layui-input-block" style="margin-left:130px;">
+                        <input type="text" id="management.detailedaddr" name="management.detailedaddr" value="#(management.detailedaddr)" class="layui-input" style="width: 930px" lay-verify="required" />
+                    </div>
                 </div>
 
-                <label class="layui-form-label" for="management.managercon"style="width: 180px"><em class="require-mark">*</em>主管联系方式</label>
-                <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                    <input type="tel" id="management.managercon" name="management.managercon"
-                           value="#(management.managercon)" class="layui-input" lay-verify="required|phone"/>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="management.responsibility" style="width: 130px"><em class="require-mark" >*</em>部门职责</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="management.responsibility" name="management.responsibility" value="#(management.responsibility)" class="layui-input" style="width: 930px" lay-verify="required" />
+                    </div>
                 </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="management.detailedaddr" style="width: 120px"><em class="require-mark">*</em>详细地址</label>
-                <div class="layui-input-block" style="margin-left:120px;">
-                    <input type="text" id="management.detailedaddr" name="management.detailedaddr"
-                           value="#(management.detailedaddr)" class="layui-input" lay-verify="required"/>
+                <!--<div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label"><em class="require-mark" >*</em>部门职责</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入部门职责……" style="display: none;" id="responsibility" name="management.responsibility" value="#(management.responsibility)" lay-verify="responsibility">#(management.responsibility)</textarea>
+                    </div>
+                </div>-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label" for="management.party" style="width: 130px;"><em class="require-mark">*</em>党政信息</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="management.party" name="management.party" value="#(management.party)" class="layui-input" style="width: 930px;" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label"><em class="require-mark">*</em>部门职责</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入部门职责……" style="display: none;" id="responsibility" name="management.responsibility"
-                              value="#(management.responsibility)" lay-verify="responsibility">#(management.responsibility)</textarea>
-                </div>
-            </div>
+                <!--<div class="layui-form-item layui-form-text" style="margin-top: -35px;">
+                    <label class="layui-form-label"><em class="require-mark">*</em>党政信息</label>
+                    <div class="layui-input-block" >
+                        <textarea placeholder="请输入党政信息……" style="display: none;" id="party" name="management.party" lay-verify="party" value="#(management.party)" >#(management.party)</textarea>
+                    </div>
+                </div>-->
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label"><em class="require-mark">*</em>党政信息</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入党政信息……" style="display: none;" id="party" name="management.party" lay-verify="party"
-                              value="#(management.party)">#(management.party)</textarea>
-                </div>
-            </div>
-
-<!--            <div class="layui-form-item">
+                <!--            <div class="layui-form-item">
                 <label class="layui-form-label" for="management.lower"style="width: 120px">下级部门</label>
                 <div class="layui-input-block" style="margin: 0 180px">
                     <input type="text" id="management.lower" name="management.lower"
@@ -130,27 +133,28 @@
                 </div>
             </div>-->
 
-            <!--隐藏flag作为界面是否禁用的方法-->
-            <input type="text" id="flag" name="flag"
-                   class="layui-input layui-disabled layui-hide" value="#(flag)"/>
+                <!--隐藏flag作为界面是否禁用的方法-->
+                <input type="text" id="flag" name="flag" class="layui-input layui-disabled layui-hide" value="#(flag)" />
 
-            <br>
-            <div class="layui-form-item">
-                <div class="layui-inline" style="margin-top:10px; width:100%; text-align:center;">
-                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
-                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
+                <br>
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="margin-top:10px; width:100%; text-align:center;">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="sub" style="position:absolute;left:25%; bottom:0; ">保存</button>
+                        <button type="button" class="layui-btn layui-btn-warm" id="reset" position:absolute;right:15%;bottom:0; ">取消</button>
+                        <button type="button " class="layui-btn layui-btn-warm layui-hide " id="back ">返回</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+
 
 #end
 
 
 #define js()
-<script type="text/javascript">
+<script type="text/javascript ">
     layui.use(['form', 'layer', 'layedit'], function () {
         var layer = layui.layer
             , $ = layui.jquery
@@ -160,7 +164,7 @@
         var rIndex=layedit.build('responsibility',{ height: 100}); //建立编辑器
         var pIndex=layedit.build('party',{ height: 100}); //建立编辑器
 
-        $("#superiorID").val($('#superiorSelected').val());//atype是select的id
+        $("#superiorID ").val($('#superiorSelected').val());//atype是select的id
         form.render('select');
 
 
@@ -204,19 +208,19 @@
         form.on('select(superiorSelect)', function(data){
             $.getJSON("#(ctxPath)/app/organization/getSuperiorInfo?id=" + data.value,
                 function (data) {
-                    $("#superiorSelected").val(data.management.id);
-                    $("#managementPrincipal").val(data.management.manager);
-                    $("#managementPrincipalcon").val(data.management.managercon);
+                    $(" #superiorSelected ").val(data.management.id);
+                    $("#managementPrincipal ").val(data.management.manager);
+                    $("#managementPrincipalcon ").val(data.management.managercon);
                 });
             return false;
         });
     });
 
     if ($('#flag').val() == 1) {
-        $(".layui-btn").addClass("layui-hide");
-        $(":input").addClass("layui-disabled");
-        $(":input").attr("disabled", "disabled");
-        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled","");
+        $(".layui-btn ").addClass("layui-hide ");
+        $(":input ").addClass("layui-disabled ");
+        $(":input ").attr("disabled ", "disabled ");
+        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled "," ");
     }
     $('#back').click(function () {
         history.go(-1);

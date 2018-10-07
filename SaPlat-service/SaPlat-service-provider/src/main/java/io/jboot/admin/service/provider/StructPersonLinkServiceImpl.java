@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -10,14 +11,13 @@ import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
-import org.apache.jute.compiler.generated.Rcc;
 
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 @Bean
 @Singleton
@@ -82,6 +82,33 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         return page;
     }
 
+    @Override
+    /**
+     * 根据用户的userID查询用户的基本信息
+     */
+    public List<Record> getOrgPersonInfo(Long userId) {
+        Kv para = Kv.by("userID",userId);
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.OrgPersonInfo",para);
+//        System.out.println(sqlPara);
+        List<Record> list = Db.find(sqlPara);
+        return list;
+    }
+
+    /**
+     * 根据组织的组织id查询加入当前组织的人员列表
+     * @param pagenumber
+     * @param pageSize
+     * @param OrganizationId
+     * @return
+     */
+    @Override
+    public Page<Record> getOrgPersonList(int pagenumber, int pageSize, Long OrganizationId) {
+        //添加参数
+        Kv para = Kv.by("OrgId",OrganizationId);
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.OrgPersonList",para);
+        return Db.paginate(pagenumber,pageSize,sqlPara);
+    }
+
     /**
      * 组织管理  -  架构人员列表
      * @param pageNumber
@@ -94,6 +121,7 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.StructurePersonList");
         //添加参数
         sqlPara.addPara(orgStructureId);
+
         Page<Record> page = Db.paginate(pageNumber,pageSize,sqlPara);
         return page;
     }

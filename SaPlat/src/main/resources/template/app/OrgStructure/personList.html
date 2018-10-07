@@ -1,0 +1,89 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-150'    //容器高度
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'name', title: '姓名', minWidth: 80,sort:true}
+                , {field: 'sex', title: '性别', minWidth: 80,sort:true}
+                , {field: 'age', title: '年龄', minWidth: 80,sort:true}
+                , {field: 'phone', title: '电话号码', minWidth: 160,sort:true}
+                , {field: 'createTime', title: '创建时间', minWidth: 120,sort:true}
+                , {title: '状态', minWidth: 100,align: 'center', toolbar: '#status',sort:true}
+                , {fixed: 'right', title: '操作', minWidth: 100, align: 'center', toolbar: '#barOption'}
+            ]]
+            , url: '#(ctxPath)/app/OrgStructure/personListApi'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+        });
+
+        table.on('tool(dateTable)', function(obj) {
+            var data = obj.data;
+            if (obj.event === 'show') {
+                pop_show('查看人员信息', '#(ctxPath)/app/OrgStructure/showOrgPersonInfo?id=' + data.id , '', '', function () {
+                });
+            }
+        });
+
+    });
+
+
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+    <div class="layui-row">
+        <table id="dateTable" lay-filter="dateTable"></table>
+    </div>
+</div>
+
+<script type="text/html" id="barOption">
+
+<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="show">查看信息</a>
+
+</script>
+<script type="text/html" id="status">
+    #[[
+    {{#  if(d.isEnable == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-danger">离职</a>
+    #[[
+    {{# } }}
+    ]]#
+
+    #[[
+    {{#  if(d.isEnable == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs">在职</a>
+    #[[
+    {{# } }}
+    ]]#
+</script>
+#end

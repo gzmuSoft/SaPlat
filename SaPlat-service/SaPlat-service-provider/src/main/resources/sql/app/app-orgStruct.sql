@@ -90,3 +90,43 @@
         a.id = #para(structId)
     order by a.createTime desc
 #end
+
+#sql("OrgPersonList")
+    select
+        *
+    from
+        person as p
+    where
+        p.id in (
+                select distinct
+                    personID
+                from
+                    struct_person_link as s
+                where
+                    s.structID in (
+                                  select distinct
+                                     id
+                                  from
+                                      org_structure
+                                  where orgID = #para(OrgId))
+        )
+#end
+
+#sql("OrgPersonInfo")
+    SELECT
+      s.name as user,
+      p.name,
+      p.sex,
+      p.age,
+      p.phone,
+      s.email
+    FROM
+      sys_user AS s
+      JOIN person AS p
+    WHERE
+      s.userID = p.id
+    AND
+      s.userSource = 0
+    AND
+      s.userID = #para(userID)
+#end

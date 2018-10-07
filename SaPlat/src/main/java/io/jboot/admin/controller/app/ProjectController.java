@@ -1434,11 +1434,20 @@ public class ProjectController extends BaseController {
     @Before(GET.class)
     @NotNullPara({"pageNumber", "pageSize"})
     public void collectTableData() {
+        User user = AuthUtils.getLoginUser();
+        Long managementID = null;
+        if (user != null) {
+            Management management = managementService.findByOrgId(user.getUserID());
+            if (management != null) {
+                managementID = management.getId();
+            }
+        }
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setStatus(ProjectStatus.CHECKED);
         project.setIsEnable(true);
+        project.setManagementID(managementID);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -1554,12 +1563,20 @@ public class ProjectController extends BaseController {
         if (model != null) {
             model.setStatus(ProjectStatus.REVIEW);
 
+            Management management = managementService.findById(model.getManagementID());
+            Long recID = null;
+            if (management != null) {
+                User tmp = userService.findByUserIdAndUserSource(management.getOrgID(), 1);
+                if (tmp != null) {
+                    recID = tmp.getId();
+                }
+            }
             Notification notification = new Notification();
             notification.setName("项目审查驳回确认通知");
             notification.setContent("您在审查汇总中驳回的项目《" + model.getName() + "》已被项目承接者确认处理。");
             notification.setSource("/app/project/know");
             notification.setRecModule("");
-            notification.setReceiverID(Math.toIntExact(model.getManagementID()));
+            notification.setReceiverID(Math.toIntExact(recID));
             notification.setCreateUserID(user.getId());
             notification.setCreateTime(new Date());
             notification.setLastUpdateUserID(user.getId());

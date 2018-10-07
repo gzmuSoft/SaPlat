@@ -3,13 +3,24 @@ package io.jboot.admin.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 
 import java.util.List;
 import java.util.Map;
 
 public interface StructPersonLinkService {
+    /**
+     * 获取加入组织的用户的基本信息
+     * @param userId
+     * @return
+     */
+    public List<Record> getOrgPersonInfo(Long userId);
+    /**
+     * 根据组织id查询加入到组织的用户列表
+     * @param OrganizationId
+     * @return
+     */
+    public Page<Record> getOrgPersonList(int pagenumber,int pageSize,Long OrganizationId);
     /**
      * 查询加入架构的用户列表
      * 根据架构ID查询
@@ -22,10 +33,10 @@ public interface StructPersonLinkService {
      * 根据用户personId查询用户已经加入的架构
      * @param pageNumber
      * @param pageSize
-     * @param personID
+     * @param personId
      * @return
      */
-    public Page<Record> findStructListPageByPersonID(int pageNumber, int pageSize, Long personID);
+    public Page<Record> findStructListPageByPersonID(int pageNumber, int pageSize, Long personId);
     /**
      * 根据用户ID以及架构ID查询用户是否已经是架构成员
      * 防止用户重复加入架构的情况
@@ -58,10 +69,10 @@ public interface StructPersonLinkService {
     /**
      * 个人群体 - 我加入的架构
      *根据用户id查询用户加入的架构
-     * @param personID
+     * @param personId
      * @return
      */
-    public Map<String,Object> findStructureListByPersonID(Long personID);
+    public Map<String,Object> findStructureListByPersonID(Long personId);
 
     /**
      * find List<model> by orgStructureId
