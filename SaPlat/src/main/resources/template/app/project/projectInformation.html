@@ -36,7 +36,6 @@
 
         <fieldset>
             <h1 class="fs-title">请填写项目相关资料</h1>
-
             <div>
                 <label for="project.name" style="vertical-align: center;">项目名称</label>
                 <input type="text" id="project.name" class="project" name="project.name" style="width:400px;"/>
@@ -50,12 +49,12 @@
                 </span>
                 <div id="digitsTip"></div>
                 <!--<select id="units" name="units"-->
-                        <!--style='box-sizing: border-box;color: rgb(32, 13, 41);margin-right: 30px;border-radius: 3px;border: 1px solid #bfbfbf;font-family: "Microsoft YaHei", montserrat, serif;font-size: 15px;height: 32px;float:  left;width: 66px;'>-->
-                    <!--<option value="1">元</option>-->
-                    <!--<option value="100">百元</option>-->
-                    <!--<option value="1000">千元</option>-->
-                    <!--<option value="10000">元</option>-->
-                    <!--<option value="1000000">百万元</option>-->
+                <!--style='box-sizing: border-box;color: rgb(32, 13, 41);margin-right: 30px;border-radius: 3px;border: 1px solid #bfbfbf;font-family: "Microsoft YaHei", montserrat, serif;font-size: 15px;height: 32px;float:  left;width: 66px;'>-->
+                <!--<option value="1">元</option>-->
+                <!--<option value="100">百元</option>-->
+                <!--<option value="1000">千元</option>-->
+                <!--<option value="10000">元</option>-->
+                <!--<option value="1000000">百万元</option>-->
                 <!--</select>-->
                 <span style="box-sizing: border-box;color: rgb(32, 13, 41);margin-right: 29px;border-radius: 3px;font-family: 'Microsoft YaHei', montserrat, serif;font-size: 17px;height: 32px;float:  left;width: 30px;padding-top: 5px;">元</span>
             </div>
@@ -66,7 +65,7 @@
             <div>
                 <label for="project.managementID">主管部门</label>
                 <select id="project.managementID" name="project.managementID" class="project"
-                    style="float:left; width: 400px;">
+                        style="float:left; width: 400px;">
                     <option value="">请选择项目主管部门</option>
                     #for(List : managList)
                     <option value="#(List.id)">#(List.name)</option>
@@ -76,7 +75,8 @@
 
             <div>
                 <label for="project.site" style="padding-top: 5px;">项目地址</label>
-                <input type="text" id="project.site" class="project" name="project.site" style="float:left;width: 400px;"/>
+                <input type="text" id="project.site" class="project" name="project.site"
+                       style="float:left;width: 400px;"/>
             </div>
 
             <br><br><br>
@@ -138,7 +138,7 @@
 
             <div class="layui-form-item" style="margin-left:25%;">
                 <label>组员</label>
-                <label for="crew"></label><textarea id="crew" name="leaderGroup.crew" cols="47" rows="5"></textarea>
+                <label for="crew"></label><textarea id="crew" name="leaderGroup.crew" cols="51" rows="6"></textarea>
             </div>
             <input type="button" name="previous" id="previousPage2" class="previous action-button" value="上一步"/>
             <input type="button" name="next" id="nextPage2" class="next action-button " value="下一步"/>
@@ -199,7 +199,31 @@
             , layedit = layui.layedit
             , table = layui.table
             , element = layui.element
-            , saveOrUpdate = 1, maxPage = 1, presentPage = 1;
+            , saveOrUpdate = 1, maxPage = 1, presentPage = 1
+            , temp;
+
+        /**
+         *  项目名称框鼠标移出事件(重名检测)
+         */
+        $(function focus() {
+            var data = {};
+            $("#project\\.name").on({
+                blur: function () {
+                    data['name'] = $(this).val();
+                    $.post('#(ctxPath)/app/project/GetProjectName', {
+                        name: data.name
+                    }, function (data) {
+                        if (data.status === true) {
+                            layer.msg("该项目名可用！");
+                            temp = 0;
+                        } else if (data.status === false) {
+                            layer.msg("项目名重复，请重新输入");
+                            temp = 1;
+                        }
+                    });
+                }
+            });
+        });
 
         /**
          * 富文本编辑器
@@ -355,7 +379,6 @@
             if (this.id === "nextPage1") {
                 if (notNull()) {
                     var data = {};
-
                     not = true;
                     valueArray = [], nameArray = [];
                     paTypeID = $("#project\\.paTypeID").val();
@@ -365,12 +388,13 @@
                     $(".project").each(function (key) {
                         nameArray[key] = $(this).attr('name');
                         valueArray[key] = $(this).val();
-//                        if (nameArray[key] == "project.amount")
-//                            valueArray[key] *= $('#units').val();
                         data[nameArray[key]] = valueArray[key];
                     });
                     data['project.brief'] = layedit.getContent(index);
-                    if (saveOrUpdate === 1) {
+                    if (temp === 1) {
+                        not = false;
+                        layer.msg("项目重名，无法进行下一步！");
+                    } else if (saveOrUpdate === 1) {
                         data.projectId = projectId;
                         $.getJSON(
                             "#(ctxPath)/app/project/projectUploading", data,
@@ -469,7 +493,7 @@
                 function (data) {
                     layer.open({
                         content: '填写提交完毕'
-                        , btn: ['查看项目状态', '成立新项目']
+                        , btn: ['查看项目状态', '继续成立新项目']
                         , yes: function (index, layero) {
                             //按钮【按钮一】的回调
                             var ele = parent.$("li.layui-this").children("i");
@@ -499,30 +523,30 @@
         });
     });
 
-    $('.money').on('input propertychange', function() {
+    $('.money').on('input propertychange', function () {
         var data = $('.money').val();
         var str = digitsConversion(data);
-        var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-        var $btip = $("#btip"+bid);
-        var offset,h ,w ;
+        var bid = parseInt(Math.random() * 100000);
+        $("#digitsTip").html('<div class="docBubble" id="btip' + bid + '"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        var $btip = $("#btip" + bid);
+        var offset, h, w;
         var timer;
         clearInterval(timer);
         offset = $(this).offset();
         h = $(this).height();
         w = $(this).width();
         $(".cont").html(str);
-        $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+        $(".triangle-t").css('left', 26);
+        $btip.css({"left": offset.left - 330, "top": offset.top + h - 60}).show();
     });
 
 
-    $('.money').live("mousemove",function(){
+    $('.money').live("mousemove", function () {
         clearInterval(window.timer);
         $("#digitsTip").show();
     });
 
-    $('.money').live("mouseout",function(){
+    $('.money').live("mouseout", function () {
         $("#digitsTip").hide();
     });
 </script>

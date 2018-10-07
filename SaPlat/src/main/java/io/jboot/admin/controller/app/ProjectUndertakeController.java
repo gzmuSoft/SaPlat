@@ -172,7 +172,8 @@ public class ProjectUndertakeController extends BaseController {
 
         //获取项目id为id，创建用户编号为当前用户编号的项目承接信息
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyID(id, facAgency.getId());
-        Project project = projectService.findById(id);//获取项目信息
+        //获取项目信息
+        Project project = projectService.findById(id);
         if (projectUndertake != null) {
             if (projectUndertake.getApplyOrInvite()) {
                 if (projectUndertake.getStatus() != Integer.parseInt(ProjectUndertakeStatus.REFUSE)) {
@@ -281,17 +282,20 @@ public class ProjectUndertakeController extends BaseController {
 
             projectUndertake.setApplyOrInvite(applyOrInvite);
             projectUndertake.setIsEnable(true);
-            if(applyOrInvite && flag) {//applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)，无需做特殊处理
+            if (applyOrInvite && flag) {
+                //applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)，无需做特殊处理
                 projectUndertake.setCreateUserID(user.getId());
             }
             else {
                 //applyOrInvite: true, flag: false：查看邀请您介入的项目(已通过验证)
-                FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());//找到当前用户所属组织机构对应的服务机构信息
+                //找到当前用户所属组织机构对应的服务机构信息
+                FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
                 if (facAgency != null) {
                     projectUndertake.setFacAgencyID(facAgency.getId());
                 }
 
-                if (!applyOrInvite && flag) {//applyOrInvite: false, flag: true：查看申请介入项目的状态，需额外设置用户id(已通过验证)
+                if (!applyOrInvite && flag) {
+                    //applyOrInvite: false, flag: true：查看申请介入项目的状态，需额外设置用户id(已通过验证)
                     projectUndertake.setCreateUserID(user.getId());
                 }
             }
