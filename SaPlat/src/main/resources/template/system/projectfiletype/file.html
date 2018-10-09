@@ -27,6 +27,8 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称',minWidth:200,sort:true}
+                , {field: 'status', title: '必须上传', width: 80,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "status")' }
                 , {field: 'sort', title: '顺序', width:80,sort:true}
                 , {field: 'createTime', title: '创建时间', width:150,sort:true}
                 , {fixed: 'right', title: '操作', minWidth: 210, align: 'center', toolbar: '#barOption'}//这里的toolbar值是模板元素的选择器

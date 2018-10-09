@@ -78,7 +78,7 @@ public class OrganizationRoleController extends Controller {
 
         Management management = new Management();
         management.setName(getPara("name"));
-
+        management.setResponsibility(getPara("responsibility"));
         Page<Management> page = managementService.findPage(management, pageNumber, pageSize);
         renderJson(new DataTable<Management>(page));
     }
