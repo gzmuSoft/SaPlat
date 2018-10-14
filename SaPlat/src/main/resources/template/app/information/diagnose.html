@@ -129,47 +129,47 @@
             <form class="layui-form" id="Form">
                 <input class="layui-hide" value="#(diagnoses.id)" name="diagnoses.id">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">评估项目名称：</label>
+                    <label class="layui-form-label" style="width:100px;">评估项目名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.name" autocomplete="off" placeholder="系统读取"
-                               value="#(project.name)" class="layui-input" readonly="readonly">
+                               value="#(project.name)" class="layui-input" readonly="readonly" style="position: absolute; left: 20px;">
                         <input type="text" name="diagnoses.project" autocomplete="off" placeholder="系统读取"
-                               value="#(project.id)" class="layui-input layui-hide">
+                               value="#(project.id)" class="layui-input layui-hide" style="position: absolute; left: 20px;">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">负责评估机构：</label>
+                    <label class="layui-form-label" style="width:100px;">负责评估机构：</label>
                     <div class="layui-input-block">
                         <input type="text" autocomplete="off" placeholder="系统读取"
-                               value="#(organization.name)" class="layui-input" disabled="disabled">
+                               value="#(organization.name)" class="layui-input" readonly="readonly" style="position: absolute; left: 20px;">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">调查范围：</label>
+                    <label class="layui-form-label" style="width:100px;">调查范围：</label>
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off" placeholder="系统读取"
-                               value="#(files.id)" class="layui-input layui-hide">
-                        <a class="media" href="#(files.path)" disabled="disabled"></a>
+                               value="#(files.id)" class="layui-input layui-hide" style="position: absolute; left: 20px;">
+                        <a class="media" href="#(files.path)" readonly="readonly"></a>
                         <a class="layui-btn" id="media">点击查看</a>
                         <button id="pdf"></button>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">项目地址：</label>
+                    <label class="layui-form-label" style="width:100px;">项目地址：</label>
                     <div class="layui-input-block">
                         <input type="text" name="diagnoses.project.site" autocomplete="off" placeholder="系统读取"
-                               value="#(project.site)" class="layui-input layui-disabled" disabled="disabled">
+                               value="#(project.site)" class="layui-input" readonly="readonly" style="position: absolute; left: 20px;">
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">调查群体：</label>
-                    <div class="layui-input-block ">
+                    <label class="layui-form-label" style="width:100px;">调查群体：</label>
+                    <div class="layui-input-block " style="margin-left: 60px">
                         <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写"
                                   name="diagnoses.surveyGroup" class="layui-textarea"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">调查方法</label>
+                    <label class="layui-form-label" style="width:100px;">调查方法：</label>
                     <div class="layui-input-inline">
                         <label>
                             <select lay-verify="required" name="diagnoses.surveyMethod" id="surveyMethod">
@@ -182,35 +182,35 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">调查方式</label>
+                    <label class="layui-form-label" style="width:100px;" >调查方式：</label>
                     <input type="checkbox" name="surveyWays" value="走访" title="走访">
                     <input type="checkbox" name="surveyWays" value="座谈" title="座谈">
                     <input type="checkbox" name="surveyWays" value="听证会" title="听证会">
                     <input type="checkbox" name="surveyWays" value="电话调查" title="电话调查">
                     <input type="checkbox" name="surveyWays" value="邮件询问" title="邮件询问">
                 </div>
-                <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">调查抽样率：</label>
+                <div class="layui-form-item layui-form-text" >
+                    <label class="layui-form-label" style="width:100px;">调查抽样率：</label>
                     <div class="layui-input-block">
                         <input type="number" lay-verify="required|sampleRateNumber" class="layui-input"
-                               name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)" min=0 max=100>
+                               name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)" min=0 max=100 style="position: absolute; left: 20px;">
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">问卷调查设计：</label>
-                    <div class="layui-input-block">
+                    <label class="layui-form-label" style="width:100px;">问卷调查设计：</label>
+                    <div class="layui-input-block" style="margin-left: 60px">
                         <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
-                                  lay-verify="surveyDesignedit" name="diagnoses.surveyDesign"></textarea>
+                                  lay-verify="surveyDesignedit" name="diagnoses.surveyDesign" style="position: absolute; left: 40px; width: 500px;" ></textarea>
                     </div>
                 </div>
 
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">现场人员安排</label>
+                    <label class="layui-form-label" style="width:100px;">现场人员安排：</label>
                     <div class="layui-input-block">
                         #for (invTeamID : invTeamMap.keySet())
-                        <input type="checkbox" name="staffArrangements" value="#(invTeamID)"
-                               title="#(invTeamMap[invTeamID])">
+                        <input type="checkbox" name="staffArrangements" value="#(inrevTeamID)"
+                               title="#(invTeamMap[invTeamID])" >
                         #end
                     </div>
                 </div>

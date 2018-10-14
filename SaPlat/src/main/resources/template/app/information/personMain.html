@@ -14,213 +14,264 @@
 #define content()
 <br>
 <h2 class="title" align="center">社会稳定风险评估调查问卷表（个人）</h2><br>
+<div style="margin: 0 10%">
 
-<form class="layui-form" action="">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
-        <legend>项目基本信息</legend>
-    </fieldset>
-    <input type="hidden" name="project.id" value="#(project.id)">
-    <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
-    <input type="hidden" name="questionnaire.id" value="#(questionnaire.id)">
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 150px">评估项目名称：</label>
-        <div class="layui-input-block">
-            <input style="width: 1000px;" type="text" id="project.name" name="project.name" value="#(project.name)"
-                   lay-verify="required" autocomplete="off"
-                   placeholder="请输入标题" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label" style="width: 150px">项目简介：</label>
-        <div class="layui-input-block" style="width: 1000px;margin: 0 180px">
+    <form class="layui-form" action="">
+        <input type="hidden" name="project.id" value="#(project.id)">
+        <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
+        <input type="hidden" name="questionnaire.id" value="#(questionnaire.id)">
+        <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">项目基本信息</div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"  style="width: 120px">评估项目名称：</label>
+                                        <div class="layui-input-block">
+                                            <input  type="text" id="project.name" name="project.name" value="#(project.name)"
+                                                    lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" style="width: 600px">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row">
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label" style="width: 120px">项目简介：</label>
+                                        <div class="layui-input-block" style="width: 600px;margin: 0 150px">
             <textarea id="demo" name="project.brief" lay-verify="required"
-                      class="layui-textarea">#(project.brief)</textarea>
-        </div>
-    </div>
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
-        <legend>问卷基本信息</legend>
-    </fieldset>
-    <div class="layui-row">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">问卷信息所属部门：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="questionnaire.department" lay-verify="required" value="#(questionnaire.department)" autocomplete="off" placeholder="请输入标题"
-                           class="layui-input" style="width: 500px" >
-                </div>
-            </div>
-    </div>
-    <div class="layui-row">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label" style="width: 160px">问卷调查时间：</label>
-                <div class="layui-input-inline" >
-                    <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
-                           autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-    </div>
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
-        <legend>问卷对象基本情况</legend>
-    </fieldset>
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">姓名：</label>
-                <div class="layui-input-block" >
-                    <input type="text" name="questionnaire.personName" lay-verify="required" value="#(questionnaire.personName)" placeholder="请输入姓名" autocomplete="off"
-                           class="layui-input" style="width: 300px">
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">性别：</label>
-                <div class="layui-input-block" >
-                    #if(questionnaire.personGender == 2)
-                        <input type="radio" name="questionnaire.personGender" value=1 title="男">
-                        <input type="radio" name="questionnaire.personGender" value=2 title="女" checked="checked">
-                    #else
-                        <input type="radio" name="questionnaire.personGender" value=1 title="男" checked="checked">
-                        <input type="radio" name="questionnaire.personGender" value=2 title="女">
-                    #end
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="width:160px">民族：</label>
-                    <div class="layui-input-inline" style="width: 300px">
-                        <select name="questionnaire.nationID" lay-verify="required" lay-search="">
-                            #if(nation != null)
-                                <option value="#(nation.id)">#(nation.name)</option>
-                            #else
-                                <option value="">直接选择或搜索选择</option>
-                            #end
-                            #statusOption(nationStatus);
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md6">
-            <div class="layui-inline">
-                <label class="layui-form-label" style="width:160px">联系电话：</label>
-                <div class="layui-input-inline" >
-                    <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input"style="width: 300px">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">身份证号码：</label>
-                <div class="layui-input-block" >
-                    <input type="text" name="questionnaire.IDCard" lay-verify="identity" value="#(questionnaire.IDCard)" placeholder="请输入身份证" autocomplete="off"
-                           class="layui-input" style="width: 300px">
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">年龄：</label>
-                <div class="layui-input-inline" style="width: 300px">
-                    <input type="number" name="questionnaire.age" lay-verify="required" value="#(questionnaire.age)" autocomplete="off" placeholder="请输入年龄"
-                           class="layui-input">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="layui-row">
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width:160px">职业：</label>
-                <div class="layui-input-inline" style="width: 300px">
-                    <select name="questionnaire.occupationID" lay-verify="required" lay-search="">
-                        #if(occupation != null)
-                            <option value="#(occupation.id)">#(occupation.name)</option>
-                        #else
-                            <option value="">直接选择或搜索选择</option>
-                        #end
-                        #statusOption(occupationStatus);
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-col-md6">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">文化程度：</label>
-                <div class="layui-input-inline" style="width: 300px">
-                    <select name="questionnaire.degreeOfEducationID" lay-verify="required" lay-search="">
-                        #if(educational != null)
-                            <option value="#(educational.id)">#(educational.name)</option>
-                        #else
-                            <option value="">直接选择或搜索选择</option>
-                        #end
-                        #statusOption(educationalStatus);
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-row">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 160px">居住地址：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="questionnaire.addr" lay-verify="required" value="#(questionnaire.addr)" autocomplete="off" placeholder="请输入居住地址"
-                           class="layui-input" style="width: 500px">
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;color: #009688">
-        <legend>调查内容</legend>
-    </fieldset>
-    <br>
-    <ol>
-        <li class="qwe">
-            <div class="layui-form-item">
-                <div class="layui-row">
-                    <div class="layui-col-md10">
-                        <label class="layui-form-label">调查内容：</label>
-                        <div class="layui-input-block">
-                            #if(questionnaireContents != null)
-                            #set(name = questionnaireContents[0].name)
-                            #set(content = questionnaireContents[0].content)
-                            #else
-                            #set(name = null)
-                            #set(content = null)
-                            #end
-                            <input type="text" lay-verify="title" value="#(name)" autocomplete="off" placeholder="请输入调查题目"
-                                   class="layui-input name" style="width: 900px;">
-                            <input type="text" lay-verify="title" value="#(content)" autocomplete="off" placeholder="请输入调查内容"
-                                   class="layui-input content" style="width: 900px;">
+                      class="layui-textarea" style="width: 500px">#(project.brief)</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="layui-col-md2">
-                        <button type="button" class="layui-btn" id="add">添加行</button>
+                </div>
+
+            </div>
+        </div>
+        <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">问卷基本信息</div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <div class="grid-demo grid-demo-bg1">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label"  style="width: 120px">问卷信息所属部门：</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="questionnaire.department" lay-verify="required" value="#(questionnaire.department)" autocomplete="off" placeholder="请输入标题"
+                                                       class="layui-input"  style="width:250px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label"  style="width: 120px; margin-left: -40px;" >问卷调查时间：</label>
+                                                <div class="layui-input-inline" >
+                                                    <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
+                                                           autocomplete="off" class="layui-input" style="width: 250px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">问卷对象基本情况</div>
+                        <div class="layui-card-body">
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"  style="width: 120px">姓名：</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text" name="questionnaire.personName" lay-verify="required" value="#(questionnaire.personName)" placeholder="请输入姓名" autocomplete="off"
+                                                   class="layui-input" style="width: 250px;" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="grid-demo">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width: 120px">性别：</label>
+                                            <div class="layui-input-block" >
+                                                #if(questionnaire.personGender == 2)
+                                                <input type="radio" name="questionnaire.personGender" value=1 title="男">
+                                                <input type="radio" name="questionnaire.personGender" value=2 title="女" checked="checked">
+                                                #else
+                                                <input type="radio" name="questionnaire.personGender" value=1 title="男" checked="checked">
+                                                <input type="radio" name="questionnaire.personGender" value=2 title="女">
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label" style="width:120px">民族：</label>
+                                            <div class="layui-input-inline" style="width: 250px">
+                                                <select name="questionnaire.nationID" lay-verify="required" lay-search="">
+                                                    #if(nation != null)
+                                                    <option value="#(nation.id)">#(nation.name)</option>
+                                                    #else
+                                                    <option value="">直接选择或搜索选择</option>
+                                                    #end
+                                                    #statusOption(nationStatus);
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 120px">年龄：</label>
+                                        <div class="layui-input-inline" >
+                                            <input type="number" name="questionnaire.age" lay-verify="required" value="#(questionnaire.age)" autocomplete="off" placeholder="请输入年龄"
+                                                   class="layui-input" style="width: 250px;" >
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width:120px">职业：</label>
+                                        <div class="layui-input-inline" style="width: 250px">
+                                            <select name="questionnaire.occupationID" lay-verify="required" lay-search="">
+                                                #if(occupation != null)
+                                                <option value="#(occupation.id)">#(occupation.name)</option>
+                                                #else
+                                                <option value="">直接选择或搜索选择</option>
+                                                #end
+                                                #statusOption(occupationStatus);
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md6">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="width:120px">联系电话：</label>
+                                        <div class="layui-input-inline" >
+                                            <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input" style="width: 250px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 120px">身份证号码：</label>
+                                        <div class="layui-input-block" >
+                                            <input type="text" name="questionnaire.IDCard" lay-verify="identity" value="#(questionnaire.IDCard)" placeholder="请输入身份证" autocomplete="off"
+                                                   class="layui-input" style="width: 250px" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 120px">文化程度：</label>
+                                        <div class="layui-input-inline" style="width: 250px">
+                                            <select name="questionnaire.degreeOfEducationID" lay-verify="required" lay-search="">
+                                                #if(educational != null)
+                                                <option value="#(educational.id)">#(educational.name)</option>
+                                                #else
+                                                <option value="">直接选择或搜索选择</option>
+                                                #end
+                                                #statusOption(educationalStatus);
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-row">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 120px">居住地址：</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="questionnaire.addr" lay-verify="required" value="#(questionnaire.addr)" autocomplete="off" placeholder="请输入居住地址"
+                                                   class="layui-input" style="width: 690px;" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </li>
-    </ol>
-    <br>
-    <div style="text-align: center">
-        <div class="layui-input-block">
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
-            <button type="button" class="layui-btn" id="ret" >返回</button>
         </div>
-    </div>
+
+        <div style="padding: 20px; margin: 10px;background-color: #F2F2F2;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">调查内容</div>
+                        <div class="layui-card-body">
+                            <ol>
+                                <li class="qwe">
+                                    <div class="layui-form-item">
+                                        <div class="layui-row">
+                                            <div class="layui-col-md10">
+                                                <label class="layui-form-label">调查内容：</label>
+                                                <div class="layui-input-block">
+                                                    #if(questionnaireContents != null)
+                                                    #set(name = questionnaireContents[0].name)
+                                                    #set(content = questionnaireContents[0].content)
+                                                    #else
+                                                    #set(name = null)
+                                                    #set(content = null)
+                                                    #end
+                                                    <input type="text" lay-verify="title" value="#(name)" autocomplete="off" placeholder="请输入调查题目"
+                                                           class="layui-input name" style="width: 600px;">
+                                                    <input type="text" lay-verify="title" value="#(content)" autocomplete="off" placeholder="请输入调查内容"
+                                                           class="layui-input content" style="width: 600px;">
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-md2">
+                                                <button type="button" class="layui-btn" id="add">添加行</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ol>
+                            <br>
+                            <div style="text-align: center">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
+                                    <button type="button" class="layui-btn" id="ret" >返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     #for(i = 1; i < contentsLength; i++)
     <div class="name layui-hide">#(questionnaireContents[i].name)</div>
     <div class="contents layui-hide">#(questionnaireContents[i].content)</div>
     #end
-</form>
+    </form></div>
 #end
 
 #define js()
@@ -284,9 +335,9 @@
                     "                <label class='layui-form-label'>调查内容：</label>\n" +
                     "                <div class='layui-input-block'>\n" +
                     "                    <input type='text' lay-verify='title' value='"+name+"' autocomplete='off' placeholder='请输入调查题目'\n" +
-                    "                           class='layui-input name' style='width: 900px;'>\n" +
+                    "                           class='layui-input name' style='width: 600px;'>\n" +
                     "                    <input type='text' lay-verify='title' value='"+content+"' autocomplete='off' placeholder='请输入调查内容'\n" +
-                    "                           class='layui-input content' style='width: 900px;'>\n" +
+                    "                           class='layui-input content' style='width: 600px;'>\n" +
                     "                </div>\n" +
                     "            </div>\n" +
                     "            <div class='layui-col-md2'>\n" +
@@ -307,9 +358,9 @@
                     "                <label class='layui-form-label'>调查内容：</label>\n" +
                     "                <div class='layui-input-block'>\n" +
                     "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查题目'\n" +
-                    "                           class='layui-input name' style='width: 900px;'>\n" +
+                    "                           class='layui-input name' style='width: 600px;'>\n" +
                     "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查内容'\n" +
-                    "                           class='layui-input content' style='width: 900px;'>\n" +
+                    "                           class='layui-input content' style='width: 600px;'>\n" +
                     "                </div>\n" +
                     "            </div>\n" +
                     "            <div class='layui-col-md2'>\n" +
