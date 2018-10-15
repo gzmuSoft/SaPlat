@@ -10,10 +10,20 @@
 
 #define js()
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
+<style type="text/css">
+    .ztree li a.level0 {width:200px;height: 20px; text-align: center; display:block; background-color: #393D49; border:1px silver solid; margin:10px; border-radius:5px;}
+    .ztree li a.level0.cur {background-color: #66A3D2; }
+    .ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:14px; font-weight: bold;word-spacing: 2px; line-height:10px;}
+    .ztree li a.level0 span.button {	float:right; margin-left: 10px; visibility: visible;display:none;}
+    .ztree li span.button.switch.level0 {display:none;}
+
+
+</style>
 <script type="text/javascript">
     var setting = {
         view: {
-            showLine: false
+            showLine: false,
+            addDiyDom:addDiyDom
         },
         data: {
             simpleData: {
@@ -24,7 +34,13 @@
             onClick: zTreeOnClick
         }
     };
-
+    function addDiyDom(treeId, treeNode) {
+        var spaceWidth = 10;
+        var switchObj = $("#" + treeNode.tId + "_switch"),
+            icoObj = $("#" + treeNode.tId + "_ico");
+        switchObj.remove();
+        icoObj.before(switchObj);
+    }
     var pid = '#(parentID)';
     var projectID = '#(projectID)';
     var fileTypeID = null;
@@ -151,8 +167,8 @@
             , data: {
                 description: "文档文件"
             }, before: function (res) {
-                <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
-                <!--$('body').prepend(bg);-->
+                // <!--var bg = $('<div class="loading-bg"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop loading-ico"></i></div>');-->
+                // <!--$('body').prepend(bg);-->
                 $('#upload-progress').removeClass('layui-hide');
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
