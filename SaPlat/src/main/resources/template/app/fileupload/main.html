@@ -11,9 +11,9 @@
 #define js()
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/ztree/jquery.ztree.all.min.js"></script>
 <style type="text/css">
-    .ztree li a.level0 {width:200px;height: 20px; text-align: center; display:block; background-color: #393D49; border:1px silver solid; margin:10px; border-radius:5px;}
+    .ztree li a.level0 {width:180px;height: 30px; text-align: center; display:block; background-color: #009688; margin:10px; border-radius:3px;}
     .ztree li a.level0.cur {background-color: #66A3D2; }
-    .ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:14px; font-weight: bold;word-spacing: 2px; line-height:10px;}
+    .ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:14px; font-weight: initial;word-spacing: 2px; line-height:22px;}
     .ztree li a.level0 span.button {	float:right; margin-left: 10px; visibility: visible;display:none;}
     .ztree li span.button.switch.level0 {display:none;}
 
@@ -229,7 +229,7 @@
 <div class="layui-fluid">
     <div class="layui-row">
         <div class="layui-col-md3" style="overflow:auto;">
-            <ul id="tree" class="ztree"></ul>
+            <ul id="tree" class="ztree" style="padding: 13px"></ul>
         </div>
         <div class="layui-col-md9">
             <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
