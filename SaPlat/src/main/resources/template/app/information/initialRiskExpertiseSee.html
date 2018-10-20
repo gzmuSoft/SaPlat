@@ -16,102 +16,115 @@
     <div class="layui-form-pane">
         <div class="layui-row">
             <div class="layui-col-md5">
-        <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 160px">当前专家：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">#(expertGroup.name)</p>
-            </div>
-        </div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 160px">当前专家：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="expertGroup.name" name="expertGroup.name" value="#(expertGroup.name)"
+                               class="layui-input" readonly style="width: 300px;"/>
+                    </div>
+                </div></div>
             <div class="layui-col-md7">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">项目名称：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">#(project.name)</p>
-            </div>
-        </div></div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">项目名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="project.name" name="project.name" value="#(project.name)"
+                               class="layui-input" readonly style="width: 300px;"/>
+                    </div>
+                </div></div></div>
 
         <div class="layui-row">
             <div class="layui-col-md5">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">风险因素：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">#(initialRiskExpertise.riskFactor)</p>
-            </div>
-        </div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">风险因素：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="initialRiskExpertise.riskFactor" name="initialRiskExpertise.riskFactor" value="#(initialRiskExpertise.riskFactor)"
+                               class="layui-input" readonly  style="width: 300px;"/>
+                    </div>
+                </div></div>
             <div class="layui-col-md7">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">风险概率专家意见：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">
-                    #if(initialRiskExpertise.riskExpertise == 1)
-                    很低
-                    #else if(initialRiskExpertise.riskExpertise == 2)
-                    较低
-                    #else if(initialRiskExpertise.riskExpertise == 3)
-                    中等
-                    #else if(initialRiskExpertise.riskExpertise == 4)
-                    较高
-                    #else if(initialRiskExpertise.riskExpertise == 5)
-                    很高
-                    #end
-                </p>
-            </div>
-        </div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">风险概率专家意见：</label>
+                    <div class="layui-input-inline">
+                 <input type="text" id="initialRiskExpertise.riskExpertise" name="initialRiskExpertise.riskExpertise" 
+				 value=" #if(initialRiskExpertise.riskExpertise == 1)
+                            很低
+                            #else if(initialRiskExpertise.riskExpertise == 2)
+                            较低
+                            #else if(initialRiskExpertise.riskExpertise == 3)
+                            中等
+                            #else if(initialRiskExpertise.riskExpertise == 4)
+                            较高
+                            #else if(initialRiskExpertise.riskExpertise == 5)
+                            很高
+                            #end"
+                         class="layui-input" readonly  style="width: 300px; text-align: left"/>
+
+
+                    </div>
+                </div></div>
         </div>
 
         <div class="layui-row">
             <div class="layui-col-md5">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">风险概率：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">#(initialRiskExpertise.riskProbability)</p>
-            </div>
-        </div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">风险概率：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="initialRiskExpertise.riskProbability" name="initialRiskExpertise.riskProbability" value="#(initialRiskExpertise.riskProbability)"
+                               class="layui-input" readonly  style="width: 300px;"/>
+
+                        <!-- <p style="margin-top: 8px">#(initialRiskExpertise.riskProbability)</p>-->
+                    </div>
+                </div></div>
             <div class="layui-col-md7">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">影响程度专家意见：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">
-                    #if(initialRiskExpertise.incidenceExpertise == 1)
-                    可忽略
-                    #else if(initialRiskExpertise.incidenceExpertise == 2)
-                    较小
-                    #else if(initialRiskExpertise.incidenceExpertise == 3)
-                    中等
-                    #else if(initialRiskExpertise.incidenceExpertise == 4)
-                    较大
-                    #else if(initialRiskExpertise.incidenceExpertise == 5)
-                    严重
-                    #end
-                </p>
-            </div>
-        </div></div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">影响程度专家意见：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="initialRiskExpertise.incidenceExpertise" name="initialRiskExpertise.incidenceExpertise" value="#if(initialRiskExpertise.incidenceExpertise == 1)
+                            可忽略
+                            #else if(initialRiskExpertise.incidenceExpertise == 2)
+                            较小
+                            #else if(initialRiskExpertise.incidenceExpertise == 3)
+                            中等
+                            #else if(initialRiskExpertise.incidenceExpertise == 4)
+                            较大
+                            #else if(initialRiskExpertise.incidenceExpertise == 5)
+                            严重
+                            #end"
+                               class="layui-input" readonly  style="width: 300px;text-align: left""/>
+
+
+                    </div>
+                </div></div></div>
         <div class="layui-row">
             <div class="layui-col-md5">
-        <div class="layui-form-item">
-            <label class="layui-form-label"style="width: 160px">影响程度概率：</label>
-            <div class="layui-input-inline">
-                <p style="margin-top: 8px">#(initialRiskExpertise.incidenceProbability)</p>
-            </div>
-        </div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">影响程度概率：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="initialRiskExpertise.incidenceProbability" name="initialRiskExpertise.incidenceProbability" value="#(initialRiskExpertise.incidenceProbability)"
+                               class="layui-input" readonly  style="width: 300px;"/>
+                    </div>
+                </div></div>
             <div class="layui-col-md7">
-        <div class="layui-form-item">
-        <label class="layui-form-label"style="width: 160px">风险程度：</label>
-        <div class="layui-input-inline">
-            <p style="margin-top: 8px">#(initialRiskExpertise.riskLevel)</p>
-        </div>
-        </div></div></div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"style="width: 160px">风险程度：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="initialRiskExpertise.riskLevel" name="initialRiskExpertise.riskLevel" value="#(initialRiskExpertise.riskLevel)"
+                               class="layui-input" readonly  style="width: 300px;"/>
 
-#end
 
-#define js()
-<script type="text/javascript">
-    layui.use(['form', 'layer', 'element'], function () {
-        var element = layui.element
-            , $ = layui.jquery
-            , layer = layui.layer
-            , util = layui.util;
+                    </div>
+                </div></div></div>
 
-    });
-</script>
-#end
+        #end
+
+        #define js()
+        <script type="text/javascript">
+            layui.use(['form', 'layer', 'element'], function () {
+                var element = layui.element
+                    , $ = layui.jquery
+                    , layer = layui.layer
+                    , util = layui.util;
+
+            });
+        </script>
+        #end

@@ -2,7 +2,7 @@
 #@layout()
 
 #define css()
-<link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
 <style>
 
 </style>
@@ -20,22 +20,22 @@
             , upload = layui.upload;
 
         //创建监听函数
-         var xhrOnProgress=function(fun) {
+        var xhrOnProgress=function(fun) {
             xhrOnProgress.onprogress = fun; //绑定监听
-             //使用闭包实现监听绑
+            //使用闭包实现监听绑
             return function() {
                 //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
                 var xhr = $.ajaxSettings.xhr();
-                 //判断监听函数是否为函数
-                  if (typeof xhrOnProgress.onprogress !== 'function')
-                       return xhr;
-                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                    if (xhrOnProgress.onprogress && xhr.upload) {
-                          xhr.upload.onprogress = xhrOnProgress.onprogress;
-                    }
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
                     return xhr;
-             }
-         }
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
 
         var percent = '#(percent)';
         if (percent < 100) {
@@ -127,7 +127,7 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;color: #009688">
         <legend class="x-center">预审报告</legend>
         <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
             <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
@@ -135,17 +135,17 @@
         <!--2、添加上传进度监听函数-->
         #if(!fileProject.isEnable)
         <div class="x-center">
-            <h3>上传预审报告文件</h3>
+            <h3 style="margin-bottom:10px">上传预审报告文件</h3>
             <button id="add" class="layui-btn layui-btn-small layui-hide">上传</button>
         </div>
         #if(fileProject.fileID!=null)
         <div class="x-center">
-            <h3>预览预审报告文件</h3>
+            <h3 style="margin-bottom:10px">预览预审报告文件</h3>
             <button id="view" class="layui-btn layui-btn-small">预览</button>
         </div>
 
         <div class="x-center">
-            <h3>提交预审报告文件</h3>
+            <h3 style="margin-bottom:10px">提交预审报告文件</h3>
             <button id="sub" class="layui-btn layui-btn-small">提交</button>
         </div>
         #end
