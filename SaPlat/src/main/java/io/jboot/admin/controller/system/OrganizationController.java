@@ -49,8 +49,17 @@ public class OrganizationController extends BaseController {
 
         Organization organization = new Organization();
         organization.setName(getPara("name"));
+        organization.setPrincipal(getPara("principal"));
+        System.out.println(organization.getPrincipal());
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Page<Organization> page = organizationService.findPage(organization, pageNumber, pageSize);
+        Page<Organization> page = organizationService.findPage(organization, dates, pageNumber, pageSize);
         for (Organization organization1 : page.getList()) {
             FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization","营业执照",organization1.getId());
             if(fileForm!=null) {

@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.NotificationService;
@@ -56,8 +57,14 @@ public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implem
     @Override
     public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (null != reviewGroup.getName()) {
+        if (StrKit.notBlank(reviewGroup.getName())) {
             columns.like("name", "%" + reviewGroup.getName() + "%");
+        }
+        if (StrKit.notBlank(reviewGroup.getAdministrator())){
+            columns.like("administrator", "%" + reviewGroup.getAdministrator() + "%");
+        }
+        if (StrKit.notNull(reviewGroup.getIsEnable())){
+            columns.eq("isEnable", reviewGroup.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }

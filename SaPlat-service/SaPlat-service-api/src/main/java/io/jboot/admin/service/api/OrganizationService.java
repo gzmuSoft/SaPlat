@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Organization;
 import io.jboot.admin.service.entity.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrganizationService {
@@ -41,6 +42,12 @@ public interface OrganizationService {
      */
     public Page<Organization> findPage(Organization organization, int pageNumber, int pageSize);
 
+    /**
+     * 分页查询系统 组织
+     * @param organization 组织
+     * @return 页
+     */
+    public Page<Organization> findPage(Organization organization, Date[] dates, int pageNumber, int pageSize);
     /**
      * delete model
      *

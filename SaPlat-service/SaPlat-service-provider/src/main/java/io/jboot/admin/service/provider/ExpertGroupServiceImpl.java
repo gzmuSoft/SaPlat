@@ -17,6 +17,8 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Bean
@@ -87,6 +89,28 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         }
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
+        }
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
+    }
+
+    @Override
+    public Page<ExpertGroup> findPage(ExpertGroup model, Date[] dates, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
+        }
+        if (StrKit.notNull(model.getIsEnable())) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        if (StrKit.notNull(dates[0])){
+            columns.ge("createTime", dates[0]);
+        }
+        if (StrKit.notNull(dates[1])){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dates[1]);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dates[1] = calendar.getTime();
+            columns.le("createTime", dates[1]);
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }

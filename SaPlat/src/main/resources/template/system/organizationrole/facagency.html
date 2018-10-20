@@ -108,16 +108,16 @@
         });
 
 
-        reloadTable = function (_name) {
+        reloadTable = function (_name, credit, startDate, endDate) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/organizationrole/facagencyTableData'
-                , where: {name: _name} //设定异步数据接口的额外参数
+                , where: {name: _name, credit:credit, startDate:startDate, endDate:endDate} //设定异步数据接口的额外参数
             });
         };
 
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.name);
+            reloadTable(data.field.name, data.field.credit, data.field.startDate, data.field.endDate);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -134,6 +134,17 @@
                 <label class="layui-form-label">机构名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" placeholder="机构名称" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">统一社会信用代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="credit" name="credit" placeholder="统一社会信用代码" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">创办时间</label>
+                <div class="layui-input-inline">
+                    <input type="date" id="startDate" name="startDate" placeholder="开始日期" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="date" id="endDate" name="endDate" placeholder="结束日期" class="layui-input"/>
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>

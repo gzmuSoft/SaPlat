@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ManagementService;
@@ -90,11 +91,18 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     @Override
     public Page<Management> findPage(Management management, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (null != management.getName()) {
+
+        if (StrKit.notBlank(management.getName())) {
             columns.like("name", "%" + management.getName() + "%");
         }
-        if (null != management.getResponsibility()) {
+        if (StrKit.notBlank(management.getResponsibility())) {
             columns.like("responsibility", "%" + management.getResponsibility() + "%");
+        }
+        if (StrKit.notBlank(management.getManager())){
+            columns.like("manager", "%" + management.getManager() + "%");
+        }
+        if (StrKit.notNull(management.getIsEnable())){
+            columns.eq("isEnable", management.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }

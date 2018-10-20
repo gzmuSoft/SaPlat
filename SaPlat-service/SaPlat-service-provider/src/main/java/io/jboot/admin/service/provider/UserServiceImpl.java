@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -62,6 +63,30 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
         if (StrKit.notBlank(user.getPhone())) {
             columns.like("phone", "%" + user.getPhone() + "%");
         }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+    @Override
+    public Page<User> findPage(User user,Date[] dates, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+
+        if (StrKit.notBlank(user.getName())) {
+            columns.like("name", "%" + user.getName() + "%");
+        }
+        if (StrKit.notBlank(user.getPhone())) {
+            columns.like("phone", "%" + user.getPhone() + "%");
+        }
+        if (StrKit.notNull(dates[0])){
+            columns.ge("createTime", dates[0]);
+        }
+        if (StrKit.notNull(dates[1])){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dates[1]);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dates[1] = calendar.getTime();
+            columns.le("createTime", dates[1]);
+        }
+
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
 
