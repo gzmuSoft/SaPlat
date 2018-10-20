@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.ManagementService;
@@ -19,19 +20,20 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService{
+public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService {
     @Inject
     private NotificationService notificationService;
 
     /**
      * 装配单个实体对象的数据
+     *
      * @param model
      * @return
      */
-    public Management fitModel(Management model){
-        if(null != model && model.getSuperiorID() > 0) {
+    public Management fitModel(Management model) {
+        if (null != model && model.getSuperiorID() > 0) {
             Management tmp = findById(model.getSuperiorID());
-            if(tmp != null) {
+            if (tmp != null) {
                 model.setSuperiorName(tmp.getName());
             }
         }
@@ -40,11 +42,12 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
     /**
      * 获取所有数据
+     *
      * @param isEnable 根据指定的isEnable的值来获取数据
      * @return
      */
     @Override
-    public List<Management> findAll(boolean isEnable){
+    public List<Management> findAll(boolean isEnable) {
         return DAO.findListByColumn("isEnable", isEnable);
     }
 
@@ -67,6 +70,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     public boolean saveOrUpdate(Management model, Auth auth) {
         return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate());
     }
+
     @Override
     public boolean saveOrUpdate(Management model, Auth auth, Notification notification) {
         return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate() && notificationService.saveOrUpdate(notification));
@@ -87,14 +91,24 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     @Override
     public Page<Management> findPage(Management management, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (null != management.getName()) {
+
+        if (StrKit.notBlank(management.getName())) {
             columns.like("name", "%" + management.getName() + "%");
+        }
+        if (StrKit.notBlank(management.getResponsibility())) {
+            columns.like("responsibility", "%" + management.getResponsibility() + "%");
+        }
+        if (StrKit.notBlank(management.getManager())){
+            columns.like("manager", "%" + management.getManager() + "%");
+        }
+        if (StrKit.notNull(management.getIsEnable())){
+            columns.eq("isEnable", management.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }
 
     @Override
-    public List<Management> findListByColumns(Columns columns){
-        return  DAO.findListByColumns(columns);
+    public List<Management> findListByColumns(Columns columns) {
+        return DAO.findListByColumns(columns);
     }
 }

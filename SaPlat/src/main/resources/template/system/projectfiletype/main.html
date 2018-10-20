@@ -26,9 +26,11 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 200,sort:true}
+                , {field: 'status', title: '必须上传', width: 80,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "status")' }
                 , {field: 'sort', title: '顺序', width: 80,sort:true}
                 , {field: 'createTime', title: ' 创建时间',width: 150,sort:true}
-                , {fixed: 'right', title: '操作', width: 210, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', minWidth: 210, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/system/projectfiletype/tableData?parentID=' + parentID
             , method: 'get'
@@ -49,7 +51,7 @@
             if (obj.event === 'editfile') {
                 window.location.href = '#(ctxPath)/system/projectfiletype/file?id=' + data.id;
             } else if (obj.event === 'edit') {
-                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '265', function () {
+                pop_show('编辑', '#(ctxPath)/system/projectfiletype/update?id=' + data.id, '545', '320', function () {
                     reloadTable(null);
                 });
             } else if (obj.event === 'use') {
@@ -81,7 +83,7 @@
             }
         });
         $("#add").click(function () {
-            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '265', function () {
+            pop_show('添加', '#(ctxPath)/system/projectfiletype/add?parentID=' + parentID, '545', '320', function () {
                 reloadTable(null);
             });
         });

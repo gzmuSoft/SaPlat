@@ -40,6 +40,7 @@ public class NotificationController extends BaseController {
     public void tableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        Date[] dates = new Date[2];
         User loginUser = AuthUtils.getLoginUser();
         Notification notification = new Notification();
         notification.setName(getPara("name"));
@@ -47,7 +48,15 @@ public class NotificationController extends BaseController {
         notification.setReceiverID((loginUser.getId().intValue()));
         notification.setStatus(getParaToInt("status"));
         notification.setIsEnable(true);
-        Page<Notification> page = notificationService.findPage(notification, pageNumber, pageSize);
+
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Page<Notification> page = notificationService.findPage(notification, dates, pageNumber, pageSize);
         renderJson(new DataTable<Notification>(page));
     }
 

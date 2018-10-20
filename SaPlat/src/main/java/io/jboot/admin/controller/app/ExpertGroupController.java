@@ -54,8 +54,15 @@ public class ExpertGroupController extends BaseController {
 
         ExpertGroup model = new ExpertGroup();
         model.setName(getPara("name"));
-
-        Page<ExpertGroup> page = expertGroupService.findPage(model, pageNumber, pageSize);
+        model.setIsEnable(getParaToBoolean("isEnable"));
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Page<ExpertGroup> page = expertGroupService.findPage(model, dates, pageNumber, pageSize);
 
         renderJson(new DataTable<ExpertGroup>(page));
     }

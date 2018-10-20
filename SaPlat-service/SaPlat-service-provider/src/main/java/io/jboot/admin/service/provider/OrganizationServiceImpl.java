@@ -14,6 +14,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
         }
         return page;
     }
+
 
     /**
      * 装配单个实体对象的数据
@@ -69,6 +71,37 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
         Columns columns = Columns.create();
         if (StrKit.notBlank(organization.getName())) {
             columns.like("name", "%" + organization.getName() + "%");
+        }
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param organization 组织
+     * @param dates 创建日期
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public Page<Organization> findPage(Organization organization, Date[] dates, int pageNumber, int pageSize){
+        Columns columns = Columns.create();
+        if (StrKit.notBlank(organization.getName())) {
+            columns.like("name", "%" + organization.getName() + "%");
+        }
+        if (StrKit.notBlank(organization.getPrincipal())){
+            columns.like("principal", "%" + organization.getPrincipal() + "%");
+        }
+        if (StrKit.notNull(dates[0])){
+            columns.ge("createTime", dates[0]);
+        }
+        if (StrKit.notNull(dates[1])){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dates[1]);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);  //利用Calendar 实现 Date日期+1天
+            dates[1] = calendar.getTime();
+            columns.le("createTime", dates[1]);
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }

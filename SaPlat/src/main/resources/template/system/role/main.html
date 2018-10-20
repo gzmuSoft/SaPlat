@@ -37,7 +37,7 @@
                     sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.RoleStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', width: 80, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 80, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/role/tableData'
             , method: 'get'

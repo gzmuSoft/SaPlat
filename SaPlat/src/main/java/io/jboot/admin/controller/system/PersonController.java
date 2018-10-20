@@ -40,9 +40,15 @@ public class PersonController extends BaseController {
 
         Person person = new Person();
         person.setName(getPara("name"));
-        person.setPhone(getPara("phone"));
-        //查询
-        Page<Person> page = personService.findPage(person, pageNumber, pageSize);
+        person.setIsEnable(getParaToBoolean("isEnable"));
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Page<Person> page = personService.findPage(person, dates, pageNumber, pageSize);
 
         renderJson(new DataTable<Person>(page));
     }

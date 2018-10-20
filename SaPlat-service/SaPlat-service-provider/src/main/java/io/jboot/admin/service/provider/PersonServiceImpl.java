@@ -19,6 +19,8 @@ import io.jboot.service.JbootServiceBase;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Bean
@@ -62,11 +64,6 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         return model;
     }
 
-    /*
-     *其中的if是用来做查询的
-     * 不满足即不查询
-     * 返回全部数据
-     */
     @Override
     public Page<Person> findPage(Person person, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
@@ -76,6 +73,29 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         }
         if (StrKit.notBlank(person.getPhone())) {
             columns.like("phone", "%" + person.getPhone() + "%");
+        }
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
+    }
+
+    @Override
+    public Page<Person> findPage(Person person, Date[] dates, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+
+        if (StrKit.notBlank(person.getName())) {
+            columns.like("name", "%" + person.getName() + "%");
+        }
+        if (StrKit.notNull(person.getIsEnable())){
+            columns.eq("isEnable", person.getIsEnable());
+        }
+        if (StrKit.notNull(dates[0])){
+            columns.ge("createTime", dates[0]);
+        }
+        if (StrKit.notNull(dates[1])){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dates[1]);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dates[1] = calendar.getTime();
+            columns.le("createTime", dates[1]);
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }

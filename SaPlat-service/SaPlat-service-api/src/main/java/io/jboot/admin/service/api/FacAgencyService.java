@@ -6,6 +6,7 @@ import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.FacAgency;
 import io.jboot.admin.service.entity.model.Notification;
 
+import java.util.Date;
 import java.util.List;
 
 public interface FacAgencyService  {
@@ -40,6 +41,13 @@ public interface FacAgencyService  {
      * @return 页
      */
     public Page<FacAgency> findPage(FacAgency model, int pageNumber, int pageSize);
+
+    /**
+     * 分页查询 项目阶段 信息
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<FacAgency> findPage(FacAgency model, Date[] dates, int pageNumber, int pageSize);
 
     /**
      * 分页查询 指定服务机构之外的所有服务机构 信息

@@ -78,7 +78,9 @@ public class OrganizationRoleController extends Controller {
 
         Management management = new Management();
         management.setName(getPara("name"));
-
+        management.setResponsibility(getPara("responsibility"));
+        management.setManager(getPara("manager"));
+        management.setIsEnable(getParaToBoolean("isEnable"));
         Page<Management> page = managementService.findPage(management, pageNumber, pageSize);
         renderJson(new DataTable<Management>(page));
     }
@@ -113,6 +115,8 @@ public class OrganizationRoleController extends Controller {
         int pageSize = getParaToInt("pageSize", 30);
         ProfGroup profGroup = new ProfGroup();
         profGroup.setName(getPara("name"));
+        profGroup.setAdministrator(getPara("administrator"));
+        profGroup.setIsEnable(getParaToBoolean("isEnable"));
         Page<ProfGroup> page = profGroupService.findPage(profGroup, pageNumber, pageSize);
         renderJson(new DataTable<ProfGroup>(page));
     }
@@ -148,7 +152,15 @@ public class OrganizationRoleController extends Controller {
 
         FacAgency facAgency = new FacAgency();
         facAgency.setName(getPara("name"));
-        Page<FacAgency> page = facAgencyService.findPage(facAgency, pageNumber, pageSize);
+        facAgency.setCredit(getPara("credit"));
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Page<FacAgency> page = facAgencyService.findPage(facAgency, dates, pageNumber, pageSize);
         renderJson(new DataTable<FacAgency>(page));
     }
 
@@ -181,7 +193,16 @@ public class OrganizationRoleController extends Controller {
 
         Enterprise enterprise = new Enterprise();
         enterprise.setName(getPara("name"));
-        Page<Enterprise> page = enterpriseService.findPage(enterprise, pageNumber, pageSize);
+        enterprise.setCredit(getPara("credit"));
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Page<Enterprise> page = enterpriseService.findPage(enterprise, dates, pageNumber, pageSize);
         renderJson(new DataTable<Enterprise>(page));
     }
 
@@ -213,6 +234,8 @@ public class OrganizationRoleController extends Controller {
 
         ReviewGroup reviewGroup = new ReviewGroup();
         reviewGroup.setName(getPara("name"));
+        reviewGroup.setAdministrator(getPara("administrator"));
+        reviewGroup.setIsEnable(getParaToBoolean("isEnable"));
         Page<ReviewGroup> page = reviewGroupService.findPage(reviewGroup, pageNumber, pageSize);
         renderJson(new DataTable<ReviewGroup>(page));
     }

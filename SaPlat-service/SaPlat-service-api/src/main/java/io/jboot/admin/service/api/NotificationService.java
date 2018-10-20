@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.Notification;
 
+import java.util.Date;
 import java.util.List;
 
 public interface NotificationService {
@@ -17,11 +18,18 @@ public interface NotificationService {
     public Notification findById(Object id);
 
     /**
-     * 分页查询信息
+            * 分页查询信息
      * @param notification
      * @return 页
      */
     public Page<Notification> findPage(Notification notification, int pageNumber, int pageSize);
+
+    /**
+     * 分页查询信息
+     * @param notification
+     * @return 页
+     */
+    public Page<Notification> findPage(Notification notification, Date[] dates, int pageNumber, int pageSize);
 
     /**
      * find all model

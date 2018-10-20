@@ -10,6 +10,7 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.RoleService;
 import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.Data;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.UserStatus;
@@ -21,6 +22,8 @@ import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -55,8 +58,14 @@ public class UserController extends BaseController {
         User sysUser = new User();
         sysUser.setName(getPara("name"));
         sysUser.setPhone(getPara("phone"));
-
-        Page<User> userPage = userService.findPage(sysUser, pageNumber, pageSize);
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Page<User> userPage = userService.findPage(sysUser,dates, pageNumber, pageSize);
         renderJson(new DataTable<User>(userPage));
     }
 

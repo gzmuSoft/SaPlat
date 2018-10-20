@@ -32,7 +32,7 @@
                // , {field: 'source', title: '通知来源', minWidth: 180}
                 , {field: 'createTime', title: '发送时间', width: 150}
                 , {field: 'statusName', title: '状态', width: 80, align: 'center', toolbar: '#barOption1'}
-                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/notification/tableData'
             , method: 'get'
@@ -91,26 +91,27 @@
         });
 
         $("#all").click(function () {
-            reloadTable(null, null, null);
-        });
+            reloadTable(null, null, null, null, null);
+        })
 
         $("#noRead").click(function () {
-            reloadTable(null, null, 0);
+            reloadTable(null, null, 0, null, null);
         });
 
         $("#read").click(function () {
-            reloadTable(null, null, 1);
-        });
+            reloadTable(null, null, 1, null, null);
+        })
 
-        reloadTable = function (name, content, status) {
+
+        reloadTable = function (name, content, status, startDate, endDate) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/system/notification/tableData'
-                , where: {name: name, content: content, status: status} //设定异步数据接口的额外参数
+                url: '#(ctxPath)/app/notification/tableData'
+                , where: {name: name, content: content, status: status, startDate: startDate, endDate: endDate} //设定异步数据接口的额外参数
             });
-        };
+        }
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.name, data.field.content);
+            reloadTable(data.field.name, data.field.content,data.field.status, data.field.startDate, data.field.endDate);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -130,6 +131,13 @@
                 <label class="layui-form-label">内容</label>
                 <div class="layui-input-inline">
                     <input type="text" id="content" name="content" placeholder="内容" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-inline">
+                    <input type="date" id="startDate" name="startDate" placeholder="开始日期" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="date" id="endDate" name="endDate" placeholder="结束日期" class="layui-input"/>
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
