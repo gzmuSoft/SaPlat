@@ -18,11 +18,6 @@
             <artifactId>SaPlat-service-api</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
-            <groupId>io.jboot.admin</groupId>
-            <artifactId>SaPlat-b2c-service-api</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -58,7 +53,7 @@
                     <programs>
                         <!--程序打包 mvn package appassembler:assemble -->
                         <program>
-                            <mainClass>io.jboot.Jboot</mainClass>
+                            <mainClass>io.jboot.admin.Application</mainClass>
                             <id>jboot</id>
                             <platforms>
                                 <platform>windows</platform>
@@ -69,7 +64,7 @@
                     <daemons>
                         <!-- 后台程序打包：mvn clean package appassembler:generate-daemons -->
                         <daemon>
-                            <mainClass>io.jboot.Jboot</mainClass>
+                            <mainClass>io.jboot.admin.Application</mainClass>
                             <id>SaPlat</id>
                             <platforms>
                                 <platform>jsw</platform>

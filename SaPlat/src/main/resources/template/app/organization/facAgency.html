@@ -1,7 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
-#@layout()
-
-#define css()
+#include("/template/common/layout/_page_layout.html") #@layout() #define css()
 <style>
     button {
         background: #758ef0;
@@ -10,320 +7,310 @@
         border-radius: 15px;
     }
 </style>
+
 #end
-
-
-#define content()
+ #define content()
 <div class="layui-fluid">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">
         <legend style="font-size: 20px;font-weight: 500;">服务机构认证</legend>
     </fieldset>
+    <div style="width: 1100px; position: relative; left:17%;padding: 50px 0px 0px 0px;">
+        <form id="person" class="layui-form " action="">
+            <div class="layui-form-pane">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="organization.name" style="width: 180px">组织机构名称</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)" value="#(organization.name)" class="layui-input " style="width: 300px" disabled/>
+                                </div>
+                            </div>
 
-    <form id="person" class="layui-form " action="">
-        <div class="layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.name" style="width: 180px"><em class="require-mark">*</em>服务机构名称</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)" class="layui-input " style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="organization.name"style="width: 180px">组织机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="organization.name" name="organization.name"placeholder="#(organization.name)" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" disabled/>
+                            <div class="layui-form-item layui-hide">
+                                <label class="layui-form-label" for="facAgency.orgID" style="width: 180px">组织机构编号</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="number" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.id)" />
+                                </div>
+                            </div>
+
+                            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress">
+                                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.person" style="width: 180px"><em class="require-mark">*</em>企业法人</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.person" name="facAgency.person" value="#(facAgency.person)" class="layui-input" style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.website" style="width: 180px">企业网站</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.website" name="facAgency.website" value="#(facAgency.website)" class="layui-input" style="width: 300px" required/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.scale" style="width: 180px">企业人数</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="number" id="facAgency.scale" name="facAgency.scale" value="#(facAgency.scale)" class="layui-input" style="width: 300px" lay-verify="pLength" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <div class="grid-demo">
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.scope" style="width: 180px"><em class="require-mark">*</em>业务范围</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.scope" name="facAgency.scope" value="#(facAgency.scope)" class="layui-input" style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgencyStart" style="width: 180px"><em class="require-mark">*</em>创办日期</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgencyStart" name="facAgency.start" value="#(facAgency.start)" class="layui-input" style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.type" style="width: 180px"><em class="require-mark">*</em>主体类型</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.type" name="facAgency.type" value="#(facAgency.type)" class="layui-input" style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" for="facAgency.credit" style="width: 180px"><em class="require-mark">*</em>统一社会信用代码</label>
+                                <div class="layui-input-block" style="margin: 0 180px">
+                                    <input type="text" id="facAgency.credit" name="facAgency.credit" value="#(facAgency.credit)" class="layui-input" style="width: 300px" required lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: 180px"><em class="require-mark">*</em>维稳办备案文件照片</label>
+                                <div class="layui-input-block layui-upload" style="align-content: center;">
+                                    <button type="button" class="layui-btn" id="upload" style="margin: 0 100px"><i
+                                            class="layui-icon"></i>上传文件
+                                    </button>
+                                    <button type="button" class="layui-btn layui-hide " id="see">查看</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <br />
+                <br />
+                <div class="layui-col-md9">
+                    <div class="grid-demo">
+
+                        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress1" lay-filter="upload-progress1">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label " style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
+                            <div class="layui-input-block layui-upload" style="align-content: center;">
+                                <button type="button" class="layui-btn" id="upload1" style="margin: 0 100px"><i
+                                        class="layui-icon"></i>上传文件
+                                </button>
+                                <button type="button" class="layui-btn layui-hide " id="see1">查看</button>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="facAgency.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
+                            <div class="layui-input-inline">
+                                <input type="number" id="facAgency.capital" name="facAgency.capital" value="#(facAgency.capital)" lay-verify="required|mLength" class="layui-input" style="width: 800px">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux" style="margin:-40px 1000px">元</div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="facAgency.principal" style="width: 180px"><em class="require-mark">*</em>公司负责人</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="text" id="facAgency.principal" name="facAgency.principal" value="#(facAgency.principal)" class="layui-input" style="width: 850px" required lay-verify="required" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="facAgency.phone" style="width: 180px"><em class="require-mark">*</em>公司负责人联系方式</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="tel" id="facAgency.phone" name="facAgency.phone" value="#(facAgency.phone)" class="layui-input" style="width: 850px" lay-verify="required|phone" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="facAgency.address" style="width: 180px"><em class="require-mark">*</em>公司地址</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="text" id="facAgency.address" name="facAgency.address" value="#(facAgency.address)" class="layui-input" style="width: 850px" required lay-verify="required" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="facAgency.landline" style="width: 180px">座机电话</label>
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <input type="text" id="facAgency.landline" name="facAgency.landline" value="#(facAgency.landline)" class="layui-input" style="width: 850px" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" for="facAgency.resume" style="width: 1030px;">
+                                <h style="margin: 0 50px"><em class="require-mark">*</em>公司简介</h>
+                            </label>
+                            <div class="layui-input-block">
+                                <textarea id="facAgency.resume" name="facAgency.resume" lay-verify="required" placeholder="" class="layui-textarea" cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 1030px">#(facAgency.resume)</textarea>
+                            </div>
+                        </div>
+
+                        <!--隐藏flag作为界面是否禁用的方法-->
+                        <input type="text" id="flag" name="flag" class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
+                        <br>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="margin: 0 180px">
+                                <button type="button" class="layui-btn" lay-submit lay-filter="sub" style="position:absolute;left:10%; bottom:0; ">保存</button>
+                                <button type="button" class="layui-btn layui-btn-warm" id="reset" style=" position:absolute;right:15%;bottom:0; ">取消</button>
+                                <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.name" style="width: 180px"><em class="require-mark">*</em>服务机构名称</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.name" name="facAgency.name" value="#(organization.name)"
-                           class="layui-input " style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-hide">
-                <label class="layui-form-label" for="facAgency.orgID" style="width: 180px">组织机构编号</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="facAgency.orgID" name="facAgency.orgID" value="#(organization.id)"/>
-                </div>
-            </div>
-
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label"style="width: 180px"><em class="require-mark">*</em>维稳办备案文件照片</label>
-                <div class="layui-input-block layui-upload" style="align-content: center;">
-                    <button type="button" class="layui-btn" id="upload" style="margin: 0 100px"><i
-                            class="layui-icon"></i>上传文件
-                    </button>
-                    <button type="button" class="layui-btn layui-hide " id="see">查看</button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.address"style="width: 180px"><em class="require-mark">*</em>公司地址</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.address" name="facAgency.address"
-                           value="#(facAgency.address)" class="layui-input" style="width: 500px" required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="facAgency.resume" style="width: 680px;">
-                    <h style="margin: 0 50px"><em class="require-mark">*</em>公司简介</h>
-                </label>
-                <div class="layui-input-block">
-					<textarea id="facAgency.resume" name="facAgency.resume" lay-verify="required" placeholder=""
-                              class="layui-textarea"
-                              cols="100" rows="2" wrap="hard" autocomplete="off" style="width: 680px">#(facAgency.resume)</textarea>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.principal"style="width: 180px"><em class="require-mark">*</em>公司负责人</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.principal" name="facAgency.principal"
-                           value="#(facAgency.principal)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.phone"style="width: 180px"><em class="require-mark">*</em>公司负责人联系方式</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="tel" id="facAgency.phone" name="facAgency.phone"
-                           value="#(facAgency.phone)" class="layui-input"style="width: 500px"  lay-verify="required|phone"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.type"style="width: 180px"><em class="require-mark">*</em>主体类型</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.type" name="facAgency.type"
-                           value="#(facAgency.type)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.credit"style="width: 180px"><em class="require-mark">*</em>统一社会信用代码</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.credit" name="facAgency.credit"
-                           value="#(facAgency.credit)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.scope"style="width: 180px"><em class="require-mark">*</em>业务范围</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.scope" name="facAgency.scope"
-                           value="#(facAgency.scope)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgencyStart"style="width: 180px"><em class="require-mark">*</em>创办日期</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgencyStart" name="facAgency.start"
-                           value="#(facAgency.start)" class="layui-input" style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.person"style="width: 180px"><em class="require-mark">*</em>企业法人</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.person" name="facAgency.person"
-                           value="#(facAgency.person)" class="layui-input"style="width: 500px"  required lay-verify="required"/>
-                </div>
-            </div>
-
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress1" lay-filter="upload-progress1" >
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label "style="width: 180px"><em class="require-mark">*</em>法人身份证照片</label>
-                <div class="layui-input-block layui-upload" style="align-content: center;">
-                    <button type="button" class="layui-btn" id="upload1" style="margin: 0 100px"><i
-                            class="layui-icon"></i>上传文件
-                    </button>
-                    <button type="button" class="layui-btn layui-hide " id="see1">查看</button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.capital" style="width: 180px"><em class="require-mark">*</em>注册资本</label>
-                <div class="layui-input-inline" >
-                    <input type="number" id="facAgency.capital" name="facAgency.capital" value="#(facAgency.capital)" lay-verify="required|mLength" class="layui-input" style="width: 430px" >
-                </div>
-                <div class="layui-form-mid layui-word-aux" style="margin:0 240px">元</div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.website"style="width: 180px">企业网站</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.website" name="facAgency.website"
-                           value="#(facAgency.website)" class="layui-input"style="width: 500px"  required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.landline"style="width: 180px">座机电话</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="text" id="facAgency.landline" name="facAgency.landline"
-                           value="#(facAgency.landline)" class="layui-input" style="width: 500px" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label" for="facAgency.scale"style="width: 180px">企业人数</label>
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <input type="number" id="facAgency.scale" name="facAgency.scale"
-                           value="#(facAgency.scale)" class="layui-input" style="width: 500px" lay-verify="pLength"/>
-                </div>
-            </div>
-
-            <!--隐藏flag作为界面是否禁用的方法-->
-            <input type="text" id="flag" name="flag"
-                   class="layui-input layui-disabled layui-hide" value="#(flag)" required/>
-            <br>
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="margin: 0 180px">
-                    <button type="button" class="layui-btn" lay-submit lay-filter="sub">保存</button>
-                    <button type="button" class="layui-btn layui-btn-warm" id="reset">取消</button>
-                    <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
-#end
-
-
-#define js()
+#end #define js()
 <script type="text/javascript">
     var fileID, fileID1, fileFromID, fileFromID1;
-    layui.use(['form', 'layer', 'laydate', 'upload', 'element'], function () {
-        var layer = layui.layer
-            , $ = layui.jquery
-            , form = layui.form
-            , element = layui.element
-            , laydate = layui.laydate
-            , upload = layui.upload;
+    layui.use(['form', 'layer', 'laydate', 'upload', 'element'], function() {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form,
+            element = layui.element,
+            laydate = layui.laydate,
+            upload = layui.upload;
 
         laydate.render({
             elem: '#facAgencyStart', //指定元素
-            max:0
+            max: 0
         });
 
         //创建监听函数
-         var xhrOnProgress=function(fun) {
+        var xhrOnProgress = function(fun) {
             xhrOnProgress.onprogress = fun; //绑定监听
-             //使用闭包实现监听绑
+            //使用闭包实现监听绑
             return function() {
                 //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
                 var xhr = $.ajaxSettings.xhr();
-                 //判断监听函数是否为函数
-                  if (typeof xhrOnProgress.onprogress !== 'function')
-                       return xhr;
-                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                    if (xhrOnProgress.onprogress && xhr.upload) {
-                          xhr.upload.onprogress = xhrOnProgress.onprogress;
-                    }
+                //判断监听函数是否为函数
+                if(typeof xhrOnProgress.onprogress !== 'function')
                     return xhr;
-             }
-         }
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if(xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
 
         form.verify({
             mLength: [
-                /^[\S]{0,11}$/
-                ,'注册资金不能大于11位'
-            ]
-            ,tel: [
+                /^[\S]{0,11}$/, '注册资金不能大于11位'
+            ],
+            tel: [
 
-                /0\d{2,3}-\d{7,8}/
-                ,'座机电话格式为000-00000000'
-            ]
-            ,pLength: [
-                /^[\S]{0,9}$/
-                ,'人数不能大于9位'
+                /0\d{2,3}-\d{7,8}/, '座机电话格式为000-00000000'
+            ],
+            pLength: [
+                /^[\S]{0,9}$/, '人数不能大于9位'
             ]
         });
 
         upload.render({
-            elem: '#upload'
-            , url: '#(ctxPath)/util/uploadFile'
-            , accept: 'file'
-            , exts: 'doc|docx|pdf|png|jpeg|jpg'
-            ,xhr:xhrOnProgress
-            ,progress:function(value){//上传进度回调 value进度值
-                element.progress('upload-progress', value+'%')//设置页面进度条
-            }
-            , data: {
+            elem: '#upload',
+            url: '#(ctxPath)/util/uploadFile',
+            accept: 'file',
+            exts: 'doc|docx|pdf|png|jpeg|jpg',
+            xhr: xhrOnProgress,
+            progress: function(value) { //上传进度回调 value进度值
+                element.progress('upload-progress', value + '%') //设置页面进度条
+            },
+            data: {
                 description: "服务机构维稳备案文件照片"
-            }, before: function (res) {
+            },
+            before: function(res) {
                 $('#upload-progress').removeClass('layui-hide');
-            }, done: function (res) {
+            },
+            done: function(res) {
                 $('#upload-progress').addClass('layui-hide');
-                if (res.code == 0) {
-                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=维稳备案文件照片', function (data) {
+                if(res.code == 0) {
+                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=维稳备案文件照片', function(data) {
                         <!--$('.loading-bg').remove();-->
                         fileFromID = data.fileFromID;
                         layer.msg("上传成功");
                         fileID = res.data.fileId;
                         $('#see').removeClass('layui-hide');
                     });
-                } else if (res.code == 1) {
+                } else if(res.code == 1) {
                     <!--$('.loading-bg').remove();-->
                     layer.msg("文件上传失败，请重新选择上传！");
-                    setTimeout(function () {
-                    }, 1000);
+                    setTimeout(function() {}, 1000);
                 }
-            }
-            , error: function (index, upload) {
+            },
+            error: function(index, upload) {
                 $('#upload-progress').addClass('layui-hide');
                 alert("文件上传错误！请重新尝试！");
             }
         });
 
         upload.render({
-            elem: '#upload1'
-            , url: '#(ctxPath)/util/uploadFile'
-            , accept: 'file'
-            , exts: 'doc|docx|pdf|png|jpeg|jpg'
-            , data: {
+            elem: '#upload1',
+            url: '#(ctxPath)/util/uploadFile',
+            accept: 'file',
+            exts: 'doc|docx|pdf|png|jpeg|jpg',
+            data: {
                 description: "服务机构法人身份证照片"
-            }
-            ,xhr:xhrOnProgress
-            ,progress:function(value){//上传进度回调 value进度值
-                element.progress('upload-progress1', value+'%')//设置页面进度条
-            }
-            , before: function (res) {
+            },
+            xhr: xhrOnProgress,
+            progress: function(value) { //上传进度回调 value进度值
+                element.progress('upload-progress1', value + '%') //设置页面进度条
+            },
+            before: function(res) {
                 $('#upload-progress1').removeClass('layui-hide');
-            }, done: function (res) {
+            },
+            done: function(res) {
                 $('#upload-progress1').addClass('layui-hide');
-                if (res.code == 0) {
-                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=法人身份证照片', function (data) {
+                if(res.code == 0) {
+                    $.post('#(ctxPath)/app/organization/upload?fileId=' + res.data.fileId + '&tableName=facAgency&fieldName=法人身份证照片', function(data) {
                         <!--$('.loading-bg').remove();-->
                         fileFromID1 = data.fileFromID;
                         layer.msg("上传成功");
                         fileID1 = res.data.fileId;
                         $('#see1').removeClass('layui-hide');
                     });
-                } else if (res.code == 1) {
+                } else if(res.code == 1) {
                     <!--$('.loading-bg').remove();-->
                     layer.msg("文件上传失败，请重新选择上传！");
-                    setTimeout(function () {
-                    }, 1000);
+                    setTimeout(function() {}, 1000);
                 }
-            }
-            , error: function (index, upload) {
+            },
+            error: function(index, upload) {
                 $('#upload-progress1').addClass('layui-hide');
                 alert("文件上传错误！请重新尝试！");
             }
         });
 
-
-        form.on('submit(sub)', function (data) {
-            if(isNaN(parseInt(fileFromID)) || isNaN(parseInt(fileFromID1))){
+        form.on('submit(sub)', function(data) {
+            if(isNaN(parseInt(fileFromID)) || isNaN(parseInt(fileFromID1))) {
                 layer.msg("您的文件还没有上传,请上传后再提交");
                 return false;
             }
@@ -332,11 +319,11 @@
                 url: '#(ctxPath)/app/organization/facAgencyProve?fileFromID=' + fileFromID + '&fileFromID1=' + fileFromID1,
                 data: $.param(data.field),
                 loadFlag: true,
-                success: function (data) {
+                success: function(data) {
                     window.location.href = '#(ctxPath)/app/organization/prove';
                     return true;
                 },
-                error: function (data) {
+                error: function(data) {
                     console.log(data);
                 }
             });
@@ -344,26 +331,24 @@
         });
     });
 
-    if ($('#flag').val() == 1) {
+    if($('#flag').val() == 1) {
         $(".layui-btn").addClass("layui-hide");
         $(":input").addClass("layui-disabled");
         $(":input").attr("disabled", "disabled");
-        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled","");
+        $('#back').removeClass('layui-hide').removeClass('layui-disabled').attr("disabled", "");
     }
-    $('#back').click(function () {
+    $('#back').click(function() {
         history.back();
     });
-    $('#reset').click(function () {
+    $('#reset').click(function() {
         history.back();
     });
 
-    $("#see").click(function () {
-        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function () {
-        });
+    $("#see").click(function() {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID, '', '', function() {});
     });
-    $("#see1").click(function () {
-        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID1, '', '', function () {
-        });
+    $("#see1").click(function() {
+        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileID1, '', '', function() {});
     });
 </script>
 #end

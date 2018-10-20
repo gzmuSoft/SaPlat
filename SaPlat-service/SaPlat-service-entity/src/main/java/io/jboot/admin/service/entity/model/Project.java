@@ -22,6 +22,7 @@ public class Project extends BaseProject<Project> {
     private boolean isRiskTrackUpLoad;
     private Long backRecordFileID;
     private String reviewInfo;
+    private Integer ownType;
 
     public String getReviewInfo() {
         StringBuilder sbInfo = new StringBuilder();
@@ -146,5 +147,13 @@ public class Project extends BaseProject<Project> {
 
     public void setIsRiskTrackUpLoad(boolean riskTrackUpLoad) {
         isRiskTrackUpLoad = riskTrackUpLoad;
+    }
+
+    public Integer getOwnType() {
+        return ownType;
+    }
+
+    public void setOwnType(Integer ownType) {
+        this.ownType = ownType;
     }
 }

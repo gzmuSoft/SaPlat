@@ -93,6 +93,8 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private NotificationService notificationService;
 
+    @JbootrpcService
+    private RejectProjectInfoService rejectProjectInfoService;
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -1369,12 +1371,14 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-//
+
         ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());//找到组织机构信息
+        //找到组织机构信息
+        Organization organization = organizationService.findById(loginUser.getUserID());
         FacAgency facAgency = null;
         if (organization != null) {
-            facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
+            //找到组织机构对应的服务机构信息
+            facAgency = facAgencyService.findByOrgId(organization.getId());
             if (facAgency != null) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
             }
@@ -1430,11 +1434,20 @@ public class ProjectController extends BaseController {
     @Before(GET.class)
     @NotNullPara({"pageNumber", "pageSize"})
     public void collectTableData() {
+        User user = AuthUtils.getLoginUser();
+        Long managementID = null;
+        if (user != null) {
+            Management management = managementService.findByOrgId(user.getUserID());
+            if (management != null) {
+                managementID = management.getId();
+            }
+        }
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setStatus(ProjectStatus.CHECKED);
         project.setIsEnable(true);
+        project.setManagementID(managementID);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -1483,14 +1496,23 @@ public class ProjectController extends BaseController {
         }
 
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
-
+        Long receiverID = projectUndertake.getFacAgencyID();
+        if (project.getAssessmentMode().equals("委评")) {
+            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+            if (facAgency != null) {
+                User tmp = userService.findByUserIdAndUserSource(facAgency.getOrgID(), roleService.findByName("组织机构").getId());
+                if (tmp != null) {
+                    receiverID = tmp.getId();
+                }
+            }
+        }
         Notification notification = new Notification();
         notification.setName("项目驳回通知");
         notification.setContent("您承办的项目《" + project.getName() + "》的结果被管理机构驳回！请立即处理(若未处理七天后自动确认)。");
         notification.setSource("/app/project/refuse");
         notification.setRecModule("");
         if (projectUndertake != null) {
-            notification.setReceiverID(Math.toIntExact(projectUndertake.getFacAgencyID()));
+            notification.setReceiverID(Math.toIntExact(receiverID));
         } else {
             renderJson(RestResult.buildError("找不到项目承接者"));
             throw new BusinessException("找不到项目承接者");
@@ -1502,10 +1524,25 @@ public class ProjectController extends BaseController {
         notification.setIsEnable(true);
         notification.setStatus(0);
 
-        if (!projectService.saveOrUpdate(project, notification, model)) {
+        RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
+        rejectProjectInfo.setName(project.getName());
+        rejectProjectInfo.setProjectID(getParaToLong("projectId"));
+        rejectProjectInfo.setFileID(getParaToLong("fileId"));
+        rejectProjectInfo.setRemark(receiverID.toString());
+        rejectProjectInfo.setCreateUserID(user.getId());
+        rejectProjectInfo.setCreateTime(new Date());
+        rejectProjectInfo.setIsEnable(true);
+
+        if (!projectService.saveOrUpdate(project, notification, model, rejectProjectInfo)) {
             renderJson(RestResult.buildError("保存失败"));
             throw new BusinessException("保存失败");
         } else {
+            notification.setContent("您的项目《" + project.getName() + "》的审查结果被管理机构驳回！。");
+            notification.setReceiverID(Math.toIntExact(project.getUserId()));
+            if (!notificationService.save(notification)) {
+                renderJson(RestResult.buildError("向项目主体发送驳回通知失败！"));
+                throw new BusinessException("向项目主体发送驳回通知失败！");
+            }
             Files files = filesService.findById(getParaToLong("fileId"));
             files.setIsEnable(true);
             if (!filesService.update(files)) {
@@ -1521,14 +1558,42 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara("id")
     public void know() {
+        User user = AuthUtils.getLoginUser();
         Project model = projectService.findById(getParaToLong("id"));
         if (model != null) {
             model.setStatus(ProjectStatus.REVIEW);
-            if (!projectService.update(model)) {
+
+            Management management = managementService.findById(model.getManagementID());
+            Long recID = null;
+            if (management != null) {
+                User tmp = userService.findByUserIdAndUserSource(management.getOrgID(), 1);
+                if (tmp != null) {
+                    recID = tmp.getId();
+                }
+            }
+            Notification notification = new Notification();
+            notification.setName("项目审查驳回确认通知");
+            notification.setContent("您在审查汇总中驳回的项目《" + model.getName() + "》已被项目承接者确认处理。");
+            notification.setSource("/app/project/know");
+            notification.setRecModule("");
+            notification.setReceiverID(Math.toIntExact(recID));
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(new Date());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(new Date());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            if (!projectService.saveOrUpdate(model, notification)) {
                 renderJson(RestResult.buildError("项目保存失败"));
                 throw new BusinessException("项目保存失败");
             } else {
-                renderJson(RestResult.buildSuccess("项目更新成功！"));
+                notification.setContent("您被驳回的项目《" + model.getName() + "》已被您的承接者确认处理。");
+                notification.setReceiverID(Math.toIntExact(model.getUserId()));
+                if (!notificationService.saveOrUpdate(notification)) {
+                    renderJson(RestResult.buildSuccess("项目更新成功但向主体发送通知失败！"));
+                } else {
+                    renderJson(RestResult.buildSuccess("项目更新成功！"));
+                }
             }
         } else {
             renderJson(RestResult.buildError("项目查询失败"));
@@ -1566,6 +1631,7 @@ public class ProjectController extends BaseController {
     public void projectCollectTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        int iOwnType = getParaToInt("ownType");
         Project project = new Project();
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
@@ -1573,9 +1639,8 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
         Page<Project> page = null;
-
+        Page<RejectProjectInfo> page1 = null;
         if (StrKit.notBlank(getPara("ownType"))) {
-            int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
@@ -1588,22 +1653,24 @@ public class ProjectController extends BaseController {
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
                     break;
                 case 3:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.REFUSE, pageNumber, pageSize);
+                    RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
+                    page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
+                    for (int i = 0; i < page1.getList().size(); i++) {
+                        Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
+                        if (tmp != null) {
+                            page.getList().get(i).setStatus(tmp.getStatus());
+                        } else {
+                            page.getList().get(i).setFileID(0L);
+                        }
+                    }
                     break;
             }
-            if (iOwnType >= 2) {
-                Long fileTypeID = projectFileTypeService.findByName("驳回重新评估书面公文（加盖公章）").getId();
-                for (int i = 0; i < page.getList().size(); i++) {
-                    FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(page.getList().get(i).getId(), fileTypeID);
-                    if (fileProject != null) {
-                        page.getList().get(i).setFileID(fileProject.getFileID());
-                    } else {
-                        page.getList().get(i).setFileID(0L);
-                    }
-                }
-            }
         }
-        renderJson(new DataTable<Project>(page));
+        if (iOwnType == 3) {
+            renderJson(new DataTable<RejectProjectInfo>(page1));
+        } else {
+            renderJson(new DataTable<Project>(page));
+        }
     }
 
     //角色“管理机构”的ID

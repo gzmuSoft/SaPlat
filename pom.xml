@@ -22,9 +22,6 @@
         <module>SaPlat-base</module>
         <module>SaPlat</module>
         <module>SaPlat-service</module>
-        <module>SaPlat-wechat</module>
-        <module>SaPlat-b2c-service</module>
-        <module>SaPlat-b2c</module>
     </modules>
 
     <dependencyManagement>

@@ -121,14 +121,23 @@ public interface ProjectService  {
     public boolean saveOrUpdate(Project model, AuthProject authProject, ProjectUndertake projectUndertake);
 
     /**
-     * save Or Update Project And fileProject And notification
+     * save Or Update Project And fileProject And notification And RejectProjectInfo
      *
      * @param model
      * @param notification
      * @param fileProject
      * @return
      */
-    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject);
+    public boolean saveOrUpdate(Project model, Notification notification, FileProject fileProject, RejectProjectInfo rejectProjectInfo);
+
+    /**
+     * save Or Update Project And notification
+     *
+     * @param model
+     * @param notification
+     * @return
+     */
+    public boolean saveOrUpdate(Project model, Notification notification);
 
     /**
      * find model by user and role and isEnable

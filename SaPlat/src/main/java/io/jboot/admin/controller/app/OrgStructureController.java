@@ -1,5 +1,6 @@
 package io.jboot.admin.controller.app;
 
+import com.jfinal.core.paragetter.Para;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.base.common.RestResult;
@@ -668,4 +669,35 @@ public class OrgStructureController extends BaseController {
         renderJson(map);
     }
 
+
+    /**
+     * 在组织界面显示人员列表
+    **/
+    public void personList(){
+        render("personList.html");
+    }
+
+    /**
+     * 组织成员列表API
+     * */
+    public void personListApi(){
+        Long OrganizationId = AuthUtils.getLoginUser().getUserID();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+
+
+        Page<Record> page = structPersonLinkService.getOrgPersonList(pageNumber,pageSize,OrganizationId);
+        renderJson(new DataTable<Record>(page));
+
+    }
+    @NotNullPara("id")
+    public void showOrgPersonInfo(){
+        Long userId = getParaToLong("id");
+        List<Record> list = structPersonLinkService.getOrgPersonInfo(userId);
+        if(list.size() == 1) {
+            setAttr("info", list.get(0)).render("ViewOrgPersonInfo.html");
+        }else{
+            renderText("无法查询到用户的基本信息，该用户可能不存在！");
+        }
+    }
 }
