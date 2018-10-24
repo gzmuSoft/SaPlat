@@ -489,7 +489,19 @@ public class ProjectController extends BaseController {
         List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(projectFileType.getId());
         JSONObject json = new JSONObject();
         ProjectUndertake projectUndertake = null;
-        if (project != null && leaderGroup != null && projectFileTypes.size() == fileProjects.size()) {
+        Boolean flag=false;
+        FileProject fileProject;
+        for (ProjectFileType item:projectFileTypes) {
+            if(item.getStatus()!=null && 1 == item.getStatus()) {
+                fileProject = fileProjectService.findByProjectIDAndFileTypeID(id, item.getId());
+                if (null == fileProject) {
+                    json.put("status", false);
+                    flag=true;
+                    break;
+                }
+            }
+        }
+        if (project != null && leaderGroup != null && !flag) {
             AuthProject authProject = new AuthProject();
             authProject.setProjectId(id);
             authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
@@ -525,6 +537,7 @@ public class ProjectController extends BaseController {
             } else {
                 json.put("status", true);
             }
+
         } else {
             json.put("status", false);
         }
@@ -598,13 +611,19 @@ public class ProjectController extends BaseController {
         ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
         List<ProjectFileType> childProjectFileType = projectFileTypeService.findListByParentId(parentProjectFileType.getId());
         JSONObject json = new JSONObject();
-        if (childProjectFileType == null || childProjectFileType.size() == fileProjects.size()) {
-            json.put("judgeFile", true);
-            renderJson(json);
-        } else {
-            json.put("judgeFile", false);
-            renderJson(json);
+        FileProject fileProject;
+        json.put("judgeFile", true);
+        for (ProjectFileType item:childProjectFileType) {
+            if(item.getStatus()!=null && 1 == item.getStatus()) {
+                fileProject = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), item.getId());
+                if (null == fileProject) {
+                    json.put("judgeFile", false);
+                    break;
+                }
+            }
         }
+
+        renderJson(json);
     }
 
     /**

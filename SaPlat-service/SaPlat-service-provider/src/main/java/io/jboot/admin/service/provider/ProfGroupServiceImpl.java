@@ -1,5 +1,6 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.NotificationService;
@@ -56,8 +57,14 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
     @Override
     public Page<ProfGroup> findPage(ProfGroup profGroup, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (null != profGroup.getName()) {
+        if (StrKit.notBlank(profGroup.getName())) {
             columns.like("name", "%" + profGroup.getName() + "%");
+        }
+        if (StrKit.notBlank(profGroup.getAdministrator())){
+            columns.like("administrator", "%" + profGroup.getAdministrator() + "%");
+        }
+        if (StrKit.notNull(profGroup.getIsEnable())){
+            columns.eq("isEnable", profGroup.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
     }

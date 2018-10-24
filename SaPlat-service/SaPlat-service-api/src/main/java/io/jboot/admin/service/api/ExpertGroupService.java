@@ -2,11 +2,9 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.ExpertGroup;
-import io.jboot.admin.service.entity.model.Files;
-import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.*;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ExpertGroupService {
@@ -37,6 +35,14 @@ public interface ExpertGroupService {
      * @return 页
      */
     public Page<ExpertGroup> findPage(ExpertGroup expert_group, int pageNumber, int pageSize);
+
+    /**
+     * 分页查询系统 专家团体 信息
+     *
+     * @param expert_group 专家团体
+     * @return 页
+     */
+    public Page<ExpertGroup> findPage(ExpertGroup expert_group, Date[] dates, int pageNumber, int pageSize);
 
     /**
      * 分页查询系统 专家团体 信息

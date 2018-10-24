@@ -15,6 +15,8 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Calendar;
+import java.util.Date;
 
 @Bean
 @Singleton
@@ -38,6 +40,28 @@ public class FacAgencyServiceImpl extends JbootServiceBase<FacAgency> implements
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {
             columns.like("name", "%" + model.getName() + "%");
+        }
+        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+    }
+
+    @Override
+    public Page<FacAgency> findPage(FacAgency model, Date[] dates, int pageNumber, int pageSize) {
+        Columns columns = Columns.create();
+        if (StrKit.notBlank(model.getName())) {
+            columns.like("name", "%" + model.getName() + "%");
+        }
+        if (StrKit.notBlank(model.getCredit())){
+            columns.like("credit", "%" + model.getCredit() + "%");
+        }
+        if (StrKit.notNull(dates[0])){
+            columns.ge("start", dates[0]);
+        }
+        if (StrKit.notNull(dates[1])){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dates[1]);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dates[1] = calendar.getTime();
+            columns.le("start", dates[1]);
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
     }
