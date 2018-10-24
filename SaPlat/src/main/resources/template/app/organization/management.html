@@ -20,7 +20,7 @@
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px; color: #009688">
         <legend style="font-size: 20px;font-weight: 500;">管理机构认证</legend>
     </fieldset>
-    <div style="width: 1200px; position: relative; left:15%;padding: 50px 0px 0px 0px;">
+    <div style="width: 1200px; position: relative; left:5%;">
         <form id="person" class="layui-form" lay-filter="managementForm" action="">
             <div class="layui-form-pane">
 
@@ -37,16 +37,14 @@
                         <input type="text" id="organization.name" name="organization.name" placeholder="#(organization.name)" value="#(organization.name)" class="layui-input " style="width: 500px" readonly/>
                     </div>
                 </div>
-                <br />
 
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>上级部门信息</legend>
                 </fieldset>
-                <br />
                 <div class="layui-form-item">
                     <label class="layui-form-label" for="superiorSelected" style="width: 120px"><em class="require-mark">*</em>部门名称</label>
                     <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                        <input type="text " id="superiorSelected" name="superiorSelected" value="#(management.superiorID)" class="layui-input" />
+                        <input type="text " id="superiorSelected" name="superiorSelected" value="#(management.superiorID)" class="layui-input layui-hide" />
                         <select id="superiorID" name="superiorID" lay-verify="required" lay-filter="superiorSelect" lay-search>
                             #statusOption(superiorStatus);
                         </select>
@@ -136,12 +134,12 @@
                 <!--隐藏flag作为界面是否禁用的方法-->
                 <input type="text" id="flag" name="flag" class="layui-input layui-disabled layui-hide" value="#(flag)" />
 
-                <br>
+                <br><br><br>
                 <div class="layui-form-item">
                     <div class="layui-inline" style="margin-top:10px; width:100%; text-align:center;">
                         <button type="button" class="layui-btn" lay-submit lay-filter="sub" style="position:absolute;left:25%; bottom:0; ">保存</button>
-                        <button type="button" class="layui-btn layui-btn-warm" id="reset" position:absolute;right:15%;bottom:0; ">取消</button>
-                        <button type="button " class="layui-btn layui-btn-warm layui-hide " id="back ">返回</button>
+                        <button type="button" class="layui-btn layui-btn-warm" id="reset" style="position:absolute;right:15%;bottom:0; ">取消</button>
+                        <button type="button" class="layui-btn layui-btn-warm layui-hide" id="back">返回</button>
                     </div>
                 </div>
             </div>
