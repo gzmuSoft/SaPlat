@@ -44,7 +44,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label" for="superiorSelected" style="width: 120px"><em class="require-mark">*</em>部门名称</label>
                     <div class="layui-input-block" style="float:left; margin-left: -1px; width: 300px;">
-                        <!--<input type="text " id="superiorSelected" name="superiorSelected" value="#(management.superiorID)" class="layui-input" />-->
+                        <input type="text " id="superiorSelected" name="superiorSelected" value="#(management.superiorID)" class="layui-input layui-hide" />
                         <select id="superiorID" name="superiorID" lay-verify="required" lay-filter="superiorSelect" lay-search>
                             #statusOption(superiorStatus);
                         </select>
