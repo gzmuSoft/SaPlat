@@ -28,8 +28,8 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '标题', width: 150,sort:true}
                 , {field: 'content', title: '内容', minWidth: 200,sort:true}
-                , {field: 'createTime', title: '发送时间', width: 150,sort:true}
-                , {field: 'statusName', title: '状态', width: 80,sort:true, align: 'center', toolbar: '#barOption1'}
+                , {field: 'createTime', title: '发送时间', minWidth: 150,sort:true}
+                , {field: 'statusName', title: '状态', minWidth: 80,sort:true, align: 'center', toolbar: '#barOption1'}
                 , {fixed: 'right', title: '操作', minWidth: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/notification/tableData'
@@ -121,9 +121,9 @@
 #define content()
 <div class="layui-fluid">
 
-    <form id="searchForm" class="layui-form x-center" action="">
+    <form id="searchForm" class="layui-form x-center" action="" style="margin: -6px 0">
         <div class="layui-form-pane">
-            <div class="layui-form-item">
+            <div class="layui-form-item"style="margin: 5px 0">
                 <label class="layui-form-label">标题</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" placeholder="标题" class="layui-input"/>
@@ -131,11 +131,13 @@
                 <label class="layui-form-label">内容</label>
                 <div class="layui-input-inline">
                     <input type="text" id="content" name="content" placeholder="内容" class="layui-input"/>
-                </div>
+                </div></div>
+                <div class="layui-form-item" style="margin: 5px 0">
                 <label class="layui-form-label">创建时间</label>
                 <div class="layui-input-inline">
                     <input type="date" id="startDate" name="startDate" placeholder="开始日期" class="layui-input"/>
                 </div>
+                    <div class="layui-form-mid">-</div>
                 <div class="layui-input-inline">
                     <input type="date" id="endDate" name="endDate" placeholder="结束日期" class="layui-input"/>
                 </div>
@@ -143,8 +145,8 @@
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
                     </button>
                 </div>
+                </div>
             </div>
-        </div>
     </form>
     <hr>
 
