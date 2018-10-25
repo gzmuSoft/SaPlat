@@ -78,6 +78,8 @@ public interface ManagementService  {
      */
     public boolean update(Management model);
 
+    public boolean useOrUnuse(Management management);
+
 
     /**
      * 根据名称查询 管理机构 信息

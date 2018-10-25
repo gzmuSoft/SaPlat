@@ -3,11 +3,8 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.NotificationService;
-import io.jboot.admin.service.api.ReviewGroupService;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.Notification;
-import io.jboot.admin.service.entity.model.ReviewGroup;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -22,6 +19,18 @@ import javax.inject.Singleton;
 public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implements ReviewGroupService {
     @Inject
     private NotificationService notificationService;
+
+    @Inject
+    private RoleService roleService;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private OrganizationService organizationService;
+
+    @Inject
+    private UserRoleService userRoleService;
 
     @Override
     public ReviewGroup findByOrgId(Long orgId) {
@@ -38,6 +47,20 @@ public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implem
         return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate());
     }
 
+    @Override
+    public boolean useOrUnuse(ReviewGroup reviewGroup){
+        return Db.tx(() -> {
+            Organization organization=organizationService.findById(reviewGroup.getOrgID());
+            User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            Role role = roleService.findByName("审查团体");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(reviewGroup.getIsEnable());
+            return userRoleService.update(userRole) && reviewGroup.update();
+        });
+    }
     @Override
     public boolean saveOrUpdate(ReviewGroup model, Auth auth, Notification notification) {
         return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate() && notificationService.saveOrUpdate(notification));

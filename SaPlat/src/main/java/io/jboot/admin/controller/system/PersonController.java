@@ -97,8 +97,9 @@ public class PersonController extends BaseController {
         person.setLastAccessTime(new Date());
         //设置是否可用
         person.setIsEnable(true);
-        if (!personService.update(person)) {
-            throw new BusinessException("启用失败");
+        if (!personService.useOrunuse(person)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -117,8 +118,9 @@ public class PersonController extends BaseController {
         person.setIsEnable(false);
         person.setLastAccessTime(new Date());
 
-        if (!personService.update(person)) {
-            throw new BusinessException("停用失败");
+        if (!personService.useOrunuse(person)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
 
         renderJson(RestResult.buildSuccess());
