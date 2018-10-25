@@ -1,5 +1,5 @@
 多机情况下：每台单实例，单机情况下在考虑端口分配
-SaPlat:8888
+SaPlat:9999
 SaPlat-wechat:8899
 SaPlat-b2c:8879
 SaPlat-service-provider:9001
