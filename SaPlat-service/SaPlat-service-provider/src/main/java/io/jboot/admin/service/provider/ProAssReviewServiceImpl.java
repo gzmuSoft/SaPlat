@@ -56,7 +56,8 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
             Files file = filesService.findById(item.getFileID());
 
             //构造叶子节点
-            zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getParentID(), file.getPath(),file.getId()));
+            //zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getParentID(), file.getPath(),file.getId()));
+            zTree.add(new ZTree(Long.MAX_VALUE, projectFileType.getName(), projectFileType.getParentID(), file.getPath(),file.getId()));
             do{
                 projectFileType = projectFileTypeService.findById(projectFileType.getParentID());
                 if(null != projectFileType) {

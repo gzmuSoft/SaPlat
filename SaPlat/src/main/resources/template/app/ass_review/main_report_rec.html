@@ -1,0 +1,128 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    .pdf-container {
+        padding: 5em 0;
+    }
+
+    html, body {
+        height: 97%;
+    }
+
+    ul {
+        padding: 0px 10px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+
+    function loadRecData(){
+        layui.use('layer', function () {
+        var $ = layui.jquery;
+        var ul;
+
+        /**
+         * 获取列表的数据，参考information edit.html
+         */
+        $.get("#(ctxPath)/app/ass_review/recData", {projectId: "#(projectId)",fileId:"#(fileId)"}, function (res) {
+            var data = res.list;
+            $("ul#recomment").find("div").remove();
+            $("ul#recomment").find("li").remove();
+            if(data&&0 !=data.length){
+                var liTagS = '<li class="layui-timeline-item">';
+                var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+                var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+                var timeTxtTagS = '<h3 class="layui-timeline-title">';
+                var timeTxtTagE = '</h3>';
+                var reTitle = '评估审查意见：';
+                var timeLineContentDivE = '</div>';
+                var liTagE = '</li>';
+                var liItem = '';
+                data.forEach(function (ele) {
+                    liItem = '';
+                    liItem += liTagS;
+                    liItem += timeLineIcon;
+                    liItem += timeLineContentDivS;
+                    liItem += timeTxtTagS;
+                    liItem += ele.createTime;
+                    liItem += timeTxtTagE;
+                    liItem += reTitle;
+                    liItem += ele.recomment;
+                    /*liItem += '<hr class="layui-bg-gray">';
+                    liItem += '意见反馈：';
+                    if (ele.feedback) {
+                        liItem += ele.feedback;
+                    } else {
+                        liItem += '暂无';
+                    }*/
+                    liItem += timeLineContentDivE;
+                    liItem += liTagE;
+                    $("ul#recomment").append(liItem);
+                });
+            } else {
+                $("ul#recomment").append("<li><div>暂无评审意见</div></li>");
+            }});
+        });
+    }
+
+
+    //渲染表单，
+    layui.use('form', function(){
+         var form = layui.form ,layer = layui.layer,$ = layui.jquery;
+         form.render();
+         form.on('switch(switchS)', function(data){
+            $("input[name='model.isPass']").val(this.checked ? '1' : '0');
+          });
+    });
+
+    $(document).ready(function () {
+        $("a.media").media({
+            width: 800
+            , height: 600
+            , autoplay:true
+            , src:"#(reportPath)"
+        });
+        loadRecData();
+    });
+
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(add)', function (data) {
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/ass_review/postAdd',
+                data: $('#rec').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                   //loadRecData();
+                    window.location.reload();
+                    pop_close();
+                }
+            });
+            //alert($('#rec').serialize());
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-fluid" style="height:100%;">
+    <div class="layui-row" style="min-height:600px">
+        <div id="pdfviewer" class="layui-col-md8" style="min-height:500px">
+            <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
+        </div>
+        <div class="layui-col-md4">
+            <ul id="recomment"></ul>
+        </div>
+    </div>
+</div>
+#end
