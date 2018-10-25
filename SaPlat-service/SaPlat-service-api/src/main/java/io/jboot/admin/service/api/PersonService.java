@@ -107,6 +107,12 @@ public interface PersonService {
     public boolean update(Person person);
 
     /**
+     *  启用 禁用
+     */
+    public boolean useOrunuse(Person person);
+
+
+    /**
      * save or update model
      *
      * @param model

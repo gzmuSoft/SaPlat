@@ -148,7 +148,7 @@
     #end
 
     #[[
-    {{#  if(d.status == '0'){ }}
+    {{#  if(d.isEnable == '0'){ }}
     ]]#
     #shiroHasPermission('/system/organization/use')
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="use">启用</a>
@@ -158,7 +158,7 @@
     ]]#
 
     #[[
-    {{#  if(d.status == '1'){ }}
+    {{#  if(d.isEnable == '1'){ }}
     ]]#
     #shiroHasPermission('/system/organization/unuse')
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="unuse">禁用</a>

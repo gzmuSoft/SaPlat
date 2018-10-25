@@ -72,7 +72,10 @@ public interface ReviewGroupService {
      */
     public boolean update(ReviewGroup model);
 
-
+    /**
+     * 启用 和禁用
+     */
+    public boolean useOrUnuse(ReviewGroup reviewGroup);
     /**
      * 根据名称查询 审查团体 信息
      *

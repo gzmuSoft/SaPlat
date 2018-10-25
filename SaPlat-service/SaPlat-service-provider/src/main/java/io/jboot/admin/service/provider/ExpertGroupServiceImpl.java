@@ -5,10 +5,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
-import io.jboot.admin.service.api.AuthService;
-import io.jboot.admin.service.api.ExpertGroupService;
-import io.jboot.admin.service.api.FilesService;
-import io.jboot.admin.service.api.NotificationService;
+import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -31,6 +28,18 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
 
     @Inject
     private FilesService filesService;
+
+    @Inject
+    private UserRoleService userRoleService;
+
+    @Inject
+    private RoleService roleService;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private PersonService personService;
 
     @Inject
     private NotificationService notificationService;
@@ -151,6 +160,23 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         });
     }
 
+
+    @Override
+    public boolean useOrunuse(ExpertGroup expertGroup){
+        return Db.tx(() -> {
+            System.out.println(expertGroup);
+            Person person=personService.findById(expertGroup.getPersonID());
+            User user = userService.findByUserIdAndUserSource(person.getId(), 0);
+            Role role = roleService.findByName("专家团体");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(expertGroup.getIsEnable());
+            return userRoleService.update(userRole) && expertGroup.update();
+
+        });
+    }
     @Override
     public boolean saveOrUpdate(ExpertGroup model, Auth auth, List<Files> files, Notification noti) {
         return Db.tx(() -> {
