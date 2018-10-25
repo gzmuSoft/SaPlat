@@ -31,6 +31,14 @@ public class ApplyInviteStatus extends BaseStatus {
      * 不通过
      */
     public final static String NOPASS = "4";
+    /**
+     * 选择审查专家
+     */
+    public final static String CHOOSE_EXPERT = "5";
+    /**
+     * 选择专家完成
+     */
+    public final static String CHOOSE_OVER = "6";
 
     public ApplyInviteStatus() {
         add(WAITE, "待同意邀请");
@@ -38,6 +46,8 @@ public class ApplyInviteStatus extends BaseStatus {
         add(REFUSE, "拒绝审查");
         add(PASS, "审查通过");
         add(NOPASS, "审查不通过");
+        add(CHOOSE_EXPERT, "选择审查专家");
+        add(CHOOSE_OVER, "选择专家完成");
     }
 
     private static ApplyInviteStatus me;

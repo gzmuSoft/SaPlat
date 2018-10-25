@@ -20,7 +20,7 @@ public class OrganizationValidator extends JsonValidator {
         if (!c.getPara("user.pwd").equals(c.getPara("rePwd"))) {
             addError("两次密码输入不一致");
         }
-        validateString("organization.principal", 2, 20, "委办负责人姓名请在2-20位");
+        validateString("organization.principal", 2, 7, "委办负责人姓名请在2-20位");
         validateRequiredString("organization.addr", "请输入组织机构地址");
         //注册时可不输入组织机构代码，认证时必须输入，刘英伟，2018.08.27
         //validateString("organization.code", 18, 18, "请输入18位组织机构代码");

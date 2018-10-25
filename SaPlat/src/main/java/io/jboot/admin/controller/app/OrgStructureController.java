@@ -1,6 +1,5 @@
 package io.jboot.admin.controller.app;
 
-import com.jfinal.core.paragetter.Para;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.base.common.RestResult;
@@ -53,6 +52,9 @@ public class OrgStructureController extends BaseController {
 
     @JbootrpcService
     private PersonService personService;
+
+    @JbootrpcService
+    private ExpertGroupService expertGroupService;
 
     /**
      * index
@@ -690,6 +692,53 @@ public class OrgStructureController extends BaseController {
         renderJson(new DataTable<Record>(page));
 
     }
+
+    /**
+     * 具体组织成员列表API
+     */
+    @NotNullPara({"orgType", "projectID"})
+    public void personForOrgListApi() {
+        Long OrganizationId = AuthUtils.getLoginUser().getUserID();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long orgType = getParaToLong("orgType");
+        if (orgType == 3) {
+            orgType = roleService.findByName("审查团体").getId();
+        } else if (orgType == 4) {
+            orgType = roleService.findByName("专业团体").getId();
+        }
+        Page<Record> page = structPersonLinkService.OrgPersonListByType(pageNumber, pageSize, OrganizationId, orgType);
+        List<ExpertGroup> list = new ArrayList<ExpertGroup>();
+        ExpertGroup expertGroup;
+        if (page != null) {
+            Long personID = null;
+            for (Record r : page.getList()) {
+                personID = r.get("userID");
+                if (personID != null) {
+                    expertGroup = expertGroupService.findByPersonId(personID);
+                    if (expertGroup != null) {
+                        list.add(expertGroup);
+                    }
+                }
+            }
+        }
+        ApplyInvite applyInvite = new ApplyInvite();
+        ApplyInvite tmp = null;
+        for (int i = 0; i < list.size(); i++) {
+            applyInvite.setIsEnable(true);
+            applyInvite.setProjectID(getParaToLong("projectID"));
+            applyInvite.setModule(1);
+            applyInvite.setUserID(list.get(i).getPersonID());
+            tmp = applyInviteService.findFirstByModel(applyInvite);
+            if (tmp != null) {
+                list.get(i).setIsInvite(true);
+            } else {
+                list.get(i).setIsInvite(false);
+            }
+        }
+        renderJson(RestResult.buildSuccess(list));
+    }
+
     @NotNullPara("id")
     public void showOrgPersonInfo(){
         Long userId = getParaToLong("id");

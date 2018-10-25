@@ -95,6 +95,13 @@ public class ProjectController extends BaseController {
 
     @JbootrpcService
     private RejectProjectInfoService rejectProjectInfoService;
+
+    @JbootrpcService
+    private ReviewGroupService reviewGroupService;
+
+    @JbootrpcService
+    private ProfGroupService profGroupService;
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -424,7 +431,7 @@ public class ProjectController extends BaseController {
     /**
      * 立项中-文件列表表格渲染
      */
-    @NotNullPara({"id"})
+    @NotNullPara({"id", "paTypeID"})
     public void fileTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -446,10 +453,8 @@ public class ProjectController extends BaseController {
             }
             renderJson(new DataTable<ProjectFileType>(page));
         } else {
-            renderJson();
+            renderJson(new DataTable<ProjectFileType>(null));
         }
-
-
     }
 
 
@@ -489,19 +494,18 @@ public class ProjectController extends BaseController {
         List<ProjectFileType> projectFileTypes = projectFileTypeService.findListByParentId(projectFileType.getId());
         JSONObject json = new JSONObject();
         ProjectUndertake projectUndertake = null;
-        Boolean flag=false;
+        boolean flag = true;
         FileProject fileProject;
-        for (ProjectFileType item:projectFileTypes) {
-            if(item.getStatus()!=null && 1 == item.getStatus()) {
+        for (ProjectFileType item : projectFileTypes) {
+            if (item.getStatus() != null && item.getStatus() == 1) {
                 fileProject = fileProjectService.findByProjectIDAndFileTypeID(id, item.getId());
-                if (null == fileProject) {
-                    json.put("status", false);
-                    flag=true;
+                if (fileProject == null) {
+                    flag = false;
                     break;
                 }
             }
         }
-        if (project != null && leaderGroup != null && !flag) {
+        if (leaderGroup != null && project != null && flag) {
             AuthProject authProject = new AuthProject();
             authProject.setProjectId(id);
             authProject.setRoleId(roleService.findByName(project.getRoleName()).getId());
@@ -537,7 +541,6 @@ public class ProjectController extends BaseController {
             } else {
                 json.put("status", true);
             }
-
         } else {
             json.put("status", false);
         }
@@ -1055,7 +1058,7 @@ public class ProjectController extends BaseController {
         if (type == 0) {
             setAttr("id", id).render("invite.html");
         } else if (type == 1) {
-            setAttr("id", id).render("inviteExpertGroup.html");
+            setAttr("id", id).render("inviteReviewGroup.html");
         }
     }
 
@@ -1086,7 +1089,7 @@ public class ProjectController extends BaseController {
             int rowCount = page.getList().size();
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < aiList.size(); j++) {
-                    if (aiList.get(j).getUserID() == page.getList().get(i).getUser().getId()) {
+                    if (aiList.get(j).getUserID().equals(page.getList().get(i).getUser().getId())) {
                         page.getList().get(i).setRemark(aiList.get(j).getStatus());
                         break;
                     }
@@ -1149,7 +1152,8 @@ public class ProjectController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         try {
-            Organization organization = organizationService.findById(user.getUserID());//找到组织机构信息
+            //找到组织机构信息
+            Organization organization = organizationService.findById(user.getUserID());
             //获取当前服务机构之外的其他所有服务机构信息
             Page<FacAgency> page = facAgencyService.findPageExcludeByOrgID(organization.getId(), pageNumber, pageSize);
             List<FacAgency> faList = page.getList();
@@ -1165,15 +1169,103 @@ public class ProjectController extends BaseController {
 
 
     /**
-     * 邀请审查
+     * 邀请专业/审查团体进行审查
+     * 参数 orgType
+     * 0 审查团体
+     * 1 专业团体
      */
-    @NotNullPara({"id", "projectId"})
+    @NotNullPara({"id", "projectId", "orgType", "num"})
     public void inviteReview() {
         User user = AuthUtils.getLoginUser();
+        Long id = getParaToLong("id");
+        Long projectId = getParaToLong("projectId");
+        Long orgId = null;
+
+        int num = getParaToInt("num");
+        int userSource = -1;
+        int orgType = getParaToInt("orgType");
+
+        if (orgType == 0) {
+            orgId = reviewGroupService.findById(id).getOrgID();
+            userSource = 3;
+        } else if (orgType == 1) {
+            orgId = profGroupService.findById(id).getOrgID();
+            userSource = 4;
+        }
         Notification notification = new Notification();
-        notification.setName("项目邀请审查通知");
+        notification.setName("邀请审查通知");
         notification.setSource("/app/project/inviteReview");
-        notification.setContent("您好, " + user.getName() + " 邀请您介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查，请及时处理！");
+        notification.setContent("您好, " + user.getName() + " 希望您的团队派出" + num + "人介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查，请及时处理！");
+        notification.setReceiverID(userService.findByUserIdAndUserSource(orgId, 1L).getId().intValue());
+        notification.setCreateUserID(user.getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(user.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        Date nowTime = new Date();
+        Calendar time = Calendar.getInstance();
+        //获取七天以后的日期作为申请的失效日期
+        time.setTime(nowTime);
+        time.add(Calendar.DATE, 7);
+
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setName(projectService.findById(projectId).getName());
+        applyInvite.setModule(2);
+        applyInvite.setCreateUserID(user.getId());
+        applyInvite.setProjectID(projectId);
+        applyInvite.setUserID(notification.getReceiverID().longValue());
+        applyInvite.setSort(num);
+        if (userSource != -1) {
+            applyInvite.setUserSource(userSource);
+        } else {
+            applyInvite.setUserSource(null);
+        }
+        applyInvite.setApplyOrInvite(1);
+        applyInvite.setStatus(ApplyInviteStatus.WAITE);
+        applyInvite.setCreateTime(new Date());
+        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
+        if (timeTmp != null) {
+            applyInvite.setDeadTime(timeTmp.getDeadTime());
+        } else {
+            applyInvite.setDeadTime(time.getTime());
+        }
+        applyInvite.setLastAccessTime(new Date());
+        applyInvite.setLastUpdateUserID(user.getId());
+        applyInvite.setIsEnable(true);
+        if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
+            throw new BusinessException("邀请失败");
+        }
+        renderJson();
+    }
+
+    /**
+     * 组织选择专家进行具体审查
+     */
+    @NotNullPara({"id", "projectId", "num"})
+    public void chooseExpert() {
+        User user = AuthUtils.getLoginUser();
+        JSONObject json = new JSONObject();
+        ApplyInvite jud = new ApplyInvite();
+        jud.setIsEnable(true);
+        jud.setProjectID(getParaToLong("projectID"));
+        jud.setModule(2);
+        jud.setBelongToID(null);
+        jud.setUserID(user.getId());
+
+        jud = applyInviteService.findFirstByModel(jud);
+        if (jud != null) {
+            if (jud.getStatus() == ApplyInviteStatus.CHOOSE_OVER) {
+                json.put("status", false);
+                renderJson(json);
+                return;
+            }
+        }
+        Notification notification = new Notification();
+        notification.setName("项目审查工作通知");
+        notification.setSource("/app/project/chooseExpert");
+        notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(expertGroupService.findById(getParaToLong("id")).getPersonID(), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
         notification.setCreateTime(new Date());
@@ -1194,6 +1286,7 @@ public class ProjectController extends BaseController {
         applyInvite.setCreateUserID(user.getId());
         applyInvite.setProjectID(getParaToLong("projectId"));
         applyInvite.setUserID(notification.getReceiverID().longValue());
+        applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.WAITE);
         applyInvite.setCreateTime(new Date());
@@ -1208,8 +1301,29 @@ public class ProjectController extends BaseController {
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
             throw new BusinessException("邀请失败");
+        } else {
+            //查询当前组织已经邀请的人数
+            applyInvite = new ApplyInvite();
+            applyInvite.setIsEnable(true);
+            applyInvite.setProjectID(getParaToLong("projectID"));
+            applyInvite.setModule(1);
+            applyInvite.setBelongToID(user.getId());
+            List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+            if (list.size() == getParaToLong("num")) {
+                //若人数已经达到要求则查询当前组织的审查请求的状态为已选择完成
+                applyInvite.setModule(2);
+                applyInvite.setBelongToID(null);
+                applyInvite.setUserID(user.getId());
+
+                applyInvite = applyInviteService.findFirstByModel(applyInvite);
+                applyInvite.setStatus(ApplyInviteStatus.CHOOSE_OVER);
+                if (!applyInviteService.update(applyInvite)) {
+                    throw new BusinessException("更新选择专家状态失败");
+                }
+            }
+            json.put("status", true);
+            renderJson(json);
         }
-        renderJson();
     }
 
     /**
@@ -1226,6 +1340,91 @@ public class ProjectController extends BaseController {
             page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(expertGroupService.findById(page.getList().get(i).getId()).getPersonID(), 0L).getId(), getParaToLong("id")));
         }
         renderJson(new DataTable<ExpertGroup>(page));
+    }
+
+    /**
+     * 显示当前架构的所有专家的页面
+     */
+    @NotNullPara({"orgType", "projectID", "num"})
+    public void toChooseExpert() {
+        setAttr("orgType", getParaToLong("orgType"))
+                .setAttr("num", getParaToLong("num"))
+                .setAttr("projectID", getParaToLong("projectID"))
+                .render("chooseExpert.html");
+    }
+
+    /**
+     * 渲染审查团体表格数据
+     * flag 查询的团体类型
+     * 0：审查团体
+     * 1：专业团体
+     */
+    @NotNullPara({"id", "flag"})
+    public void reviewGroupTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectID = getParaToLong("id");
+        int flag = getParaToInt("flag");
+        if (flag == 0) {
+            ReviewGroup reviewGroup = new ReviewGroup();
+            reviewGroup.setIsEnable(true);
+            Page<ReviewGroup> page = reviewGroupService.findPage(reviewGroup, pageNumber, pageSize);
+            for (int i = 0; i < page.getList().size(); i++) {
+                page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(reviewGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+            }
+            renderJson(new DataTable<ReviewGroup>(page));
+        } else if (flag == 1) {
+            ProfGroup profGroup = new ProfGroup();
+            profGroup.setIsEnable(true);
+            Page<ProfGroup> page = profGroupService.findPage(profGroup, pageNumber, pageSize);
+            for (int i = 0; i < page.getList().size(); i++) {
+                page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(profGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+            }
+            renderJson(new DataTable<ProfGroup>(page));
+        }
+    }
+
+    /**
+     * 填写所需组织提供的人数
+     */
+    @NotNullPara({"id", "projectId", "orgType"})
+    public void reviewNum() {
+        Long id = getParaToLong("id");
+        Long projectId = getParaToLong("projectId");
+        Long orgType = getParaToLong("orgType");
+        setAttr("id", id).setAttr("projectId", projectId)
+                .setAttr("orgType", orgType).render("reviewNum.html");
+    }
+
+    /**
+     * 判断选择的人数是否达到要求（6人以上）
+     */
+    @NotNullPara("projectId")
+    public void judePeopleNum() {
+        Long projectId = getParaToLong("projectId");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setProjectID(projectId);
+        applyInvite.setIsEnable(true);
+        applyInvite.setModule(2);
+        List<ApplyInvite> list = applyInviteService.findList(applyInvite);
+        int num = 0;
+        for (ApplyInvite a : list) {
+            num += a.getSort();
+        }
+        JSONObject json = new JSONObject();
+        if (num >= 6) {
+            json.put("status", true);
+        } else {
+            json.put("status", false);
+        }
+        renderJson(json);
+    }
+
+    /**
+     * 通往审查请求界面
+     */
+    public void toReviewInvite() {
+        render("reviewInvite.html");
     }
 
     /**
@@ -1252,7 +1451,6 @@ public class ProjectController extends BaseController {
     /**
      * 专家团体审查项目表格渲染
      * 参数flag
-     * 0 查看邀请审查的项目
      * 1 查看正在审查的项目
      * 2 查看审查完成的项目
      */
@@ -1266,19 +1464,37 @@ public class ProjectController extends BaseController {
         applyInvite.setIsEnable(true);
         applyInvite.setUserID(user.getId());
         applyInvite.setModule(1);
-        if (flag == 0) {
-            applyInvite.setStatus(ApplyInviteStatus.WAITE);
-        } else if (flag == 1) {
+        if (flag == 1) {
             applyInvite.setStatus(ApplyInviteStatus.AGREE);
         } else if (flag == 2) {
             applyInvite.setStatus(null);
             applyInvite.setRemark("审查完成");
         }
         Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
-//        int size = page.getList().size();
-//        for (int i = 0; i < size; i++) {
-//
-//        }
+        renderJson(new DataTable<ApplyInvite>(page));
+    }
+
+    /**
+     * 查询组织收到的审查请求信息
+     */
+    public void orgReviewTable() {
+        User user = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setIsEnable(true);
+        applyInvite.setUserID(user.getId());
+        applyInvite.setModule(2);
+        Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
+        int typeId;
+        for (ApplyInvite a : page.getList()) {
+            typeId = a.getUserSource();
+            if (typeId == 3) {
+                a.setGroupType("审查团体");
+            } else if (typeId == 4) {
+                a.setGroupType("专业团体");
+            }
+        }
         renderJson(new DataTable<ApplyInvite>(page));
     }
 
@@ -1310,11 +1526,17 @@ public class ProjectController extends BaseController {
         User user = AuthUtils.getLoginUser();
         String reply = null;
         Notification notification = new Notification();
-
+        String name = "";
         if (type == 1 && invite == 1) {
+            Long orgType = getParaToLong("orgType");
+            if (orgType == 3) {
+                name = reviewGroupService.findByCreateUserID(user.getId()).getName();
+            } else if (orgType == 4) {
+                name = profGroupService.findByCreateUserID(user.getId()).getName();
+            }
             reply = getPara("reply");
-            notification.setName("邀请审查通知");
-            notification.setContent(user.getName() + "已拒绝您的项目审查邀请！");
+            notification.setName("审查请求回复");
+            notification.setContent(name + "已拒绝您的项目审查邀请！");
             applyInvite.setStatus(ApplyInviteStatus.REFUSE);
         } else if (type == 0 && invite == 1) {
             reply = getPara("reply");
@@ -1323,9 +1545,15 @@ public class ProjectController extends BaseController {
             applyInvite.setStatus(ApplyInviteStatus.NOPASS);
             applyInvite.setRemark("审查完成");
         } else if (type == 1 && invite == 2) {
-            notification.setName("邀请审查通知");
-            notification.setContent(user.getName() + "已接收您的项目审查邀请！");
-            applyInvite.setStatus(ApplyInviteStatus.AGREE);
+            Long orgType = getParaToLong("orgType");
+            if (orgType == 3) {
+                name = reviewGroupService.findByCreateUserID(user.getId()).getName();
+            } else if (orgType == 4) {
+                name = profGroupService.findByCreateUserID(user.getId()).getName();
+            }
+            notification.setName("审查请求回复");
+            notification.setContent(name + "已接收您的项目审查邀请！");
+            applyInvite.setStatus(ApplyInviteStatus.CHOOSE_EXPERT);
         } else if (type == 0 && invite == 2) {
             notification.setName("审查结果通知");
             notification.setContent(user.getName() + "对您的项目《" + projectService.findById(applyInvite.getProjectID()).getName() + "》的审查意见为：通过！");
@@ -1628,9 +1856,6 @@ public class ProjectController extends BaseController {
     public void projectCollect() {
         BaseStatus baseStatus = new BaseStatus() {
         };
-//        baseStatus.add("4","评估中");
-//        baseStatus.add("5","审查中");
-//        baseStatus.add("7","审查通过");
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);

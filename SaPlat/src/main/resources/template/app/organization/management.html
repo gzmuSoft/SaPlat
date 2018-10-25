@@ -183,12 +183,9 @@
         });
 
         form.on('submit(sub)', function (data) {
-            data.field['management.responsibility'] = layedit.getContent(rIndex);
-            data.field['management.party'] = layedit.getContent(pIndex);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/organization/managementProve',
-                data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
                     window.location.href = '#(ctxPath)/app/organization/prove';
