@@ -213,7 +213,7 @@ util.isPostNo = function(val) {
 }
 
 /**
- * 将数值四舍五入(保留2位小数)后格式化成金额形式
+ * 将数值四舍五入(保留2位小数)后格式化成形式
  *
  * @param num 数值(Number或者String)
  * @return 金额格式的字符串,如'1,234,567.45'
