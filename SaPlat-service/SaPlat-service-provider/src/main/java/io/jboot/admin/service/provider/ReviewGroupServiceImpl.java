@@ -80,6 +80,9 @@ public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implem
     @Override
     public Page<ReviewGroup> findPage(ReviewGroup reviewGroup, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
+        if (reviewGroup.getIsEnable() != null) {
+            columns.eq("isEnable", reviewGroup.getIsEnable());
+        }
         if (StrKit.notBlank(reviewGroup.getName())) {
             columns.like("name", "%" + reviewGroup.getName() + "%");
         }
