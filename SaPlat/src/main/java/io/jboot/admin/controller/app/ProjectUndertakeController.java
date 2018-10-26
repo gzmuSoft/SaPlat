@@ -66,23 +66,6 @@ public class ProjectUndertakeController extends BaseController {
     @JbootrpcService
     private RoleService roleService;
 
-    /**
-     * 去重
-     */
-    static String sub(String str) {
-        List list = new ArrayList();
-        StringBuffer sb = new StringBuffer(str);
-        int j = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (list.contains(str.charAt(i))) {
-                sb.deleteCharAt(i - j);
-                j++;
-            } else {
-                list.add(str.charAt(i));
-            }
-        }
-        return sb.toString();
-    }
 
     /**
      * 跳转榜单页面
@@ -132,8 +115,7 @@ public class ProjectUndertakeController extends BaseController {
                 });
             }
             renderJson(new DataTable<Project>(page));
-        }
-        else{
+        } else {
             renderJson(new DataTable<Project>(null));
         }
     }
@@ -149,7 +131,7 @@ public class ProjectUndertakeController extends BaseController {
         pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
         Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
         String strRoleName = roleService.findById(apModel.getRoleId()).getName();
-        setAttr("organization",organization)
+        setAttr("organization", organization)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .render("see.html");
@@ -166,7 +148,7 @@ public class ProjectUndertakeController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(user.getUserID());//找到组织机构信息
         FacAgency facAgency = null;
-        if(organization != null) {
+        if (organization != null) {
             facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
         }
 
@@ -189,7 +171,7 @@ public class ProjectUndertakeController extends BaseController {
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
-            if(facAgency != null) {
+            if (facAgency != null) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
             }
         }
@@ -273,11 +255,10 @@ public class ProjectUndertakeController extends BaseController {
         }
         */
 
-        if(!applyOrInvite && !flag){//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
+        if (!applyOrInvite && !flag) {//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
             //此时，CreateUserID为申请介入项目评估的服务机构对应用户ID，需要通过user.getUserID()获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
             page = projectUndertakeService.findPageOfApplyIn(user.getId(), pageNumber, pageSize);
-        }
-        else {
+        } else {
             ProjectUndertake projectUndertake = new ProjectUndertake();
 
             projectUndertake.setApplyOrInvite(applyOrInvite);
@@ -285,8 +266,7 @@ public class ProjectUndertakeController extends BaseController {
             if (applyOrInvite && flag) {
                 //applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)，无需做特殊处理
                 projectUndertake.setCreateUserID(user.getId());
-            }
-            else {
+            } else {
                 //applyOrInvite: true, flag: false：查看邀请您介入的项目(已通过验证)
                 //找到当前用户所属组织机构对应的服务机构信息
                 FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
@@ -404,28 +384,37 @@ public class ProjectUndertakeController extends BaseController {
     }
 
     /**
+     * 去重
+     */
+    static List<Long> sub(List<Long> list) {
+        List<Long> tempList = new ArrayList<Long>();
+        for (Long i : list) {
+            if (!tempList.contains(i)) {
+                tempList.add(i);
+            }
+        }
+        return tempList;
+    }
+
+    /**
      * 稳评方案初始页面
      */
     @NotNullPara("id")
     public void toProjectImpTeam() {
         Long id = getParaToLong("id");
-        StringBuilder string = new StringBuilder();
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
-        if (evaScheme != null) {
-            setAttr("status", evaScheme.getStatus());
-        }
+        StringBuilder stringBuilders[];
         Project project = projectService.findById(id);//点击的当前项目
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
-        User user = AuthUtils.getLoginUser();
-        Organization org = organizationService.findById(user.getUserID());
-        //List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
-//        for (StructPersonLink structPersonLink : structPersonLinks) {
-//            string.append(structPersonLink.getStructID());
-//        }
-//        for (int i = 0; i < sub(string.toString()).length(); i++) {
-//            orgStructures.add(orgStructureService.findById(Character.getNumericValue(sub(string.toString()).charAt(i))));
-//        }
+        List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
+        List<Long> longs = new ArrayList<>();
+        List<OrgStructure> orgStructures = new ArrayList<>();
+        for (StructPersonLink structPersonLink : structPersonLinks) {
+            longs.add(structPersonLink.getStructID());
+        }
+        for (Long i : sub(longs)) {
+            System.out.println(i);
+            orgStructures.add(orgStructureService.findById(i));
+        }
         if (leaderGroup == null) {
             leaderGroup = new LeaderGroup();
         }
@@ -440,32 +429,24 @@ public class ProjectUndertakeController extends BaseController {
         List<StructPersonLink> structPersonLinks = structPersonLinkService.findByStructId(getParaToLong("orgStructureId"));
         List<ExpertGroup> expertGroups = new ArrayList<>();
         List<Person> persons = new ArrayList<>();
-        boolean isGetExpert = getParaToBoolean("flag");
         for (StructPersonLink structPersonLink : structPersonLinks) {
-            Person person = personService.findById(structPersonLink.getPersonID());
-            if(false == isGetExpert) {
-                persons.add(person);
-            }else {
-                ExpertGroup expertGroupModel = expertGroupService.findByPersonId(person.getId());
-                if (expertGroupModel != null) {
-                    persons.add(person);
-                }
-            }
+            persons.add(personService.findById(structPersonLink.getPersonID()));
         }
         JSONObject json = new JSONObject();
         json.put("persons", persons);
-//        if (getParaToBoolean("flag")) {
-//            ExpertGroup expertGroupModel;
-//            for (int i = 0; i < persons.size(); i++) {
-//                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
-//                if (expertGroupModel != null) {
-//                    expertGroups.add(expertGroupModel);
-//                }
-//            }
-//            json.put("expertGroups", expertGroups);
-//        }
+        if (getParaToBoolean("flag")) {
+            ExpertGroup expertGroupModel;
+            for (int i = 0; i < persons.size(); i++) {
+                expertGroupModel = expertGroupService.findByPersonId(persons.get(i).getId());
+                if (expertGroupModel != null) {
+                    expertGroups.add(expertGroupModel);
+                }
+            }
+            json.put("expertGroups", expertGroups);
+        }
         renderJson(json);
     }
+
 
     /**
      * 稳评方案提交资料
