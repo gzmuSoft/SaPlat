@@ -63,8 +63,9 @@ public class OrganizationRoleController extends Controller {
         management.setLastAccessTime(new Date());
         management.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         management.setIsEnable(getParaToBoolean("enable"));
-        if (!managementService.update(management)) {
-            throw new BusinessException("操作失败");
+        if (!managementService.useOrUnuse(management)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -101,8 +102,9 @@ public class OrganizationRoleController extends Controller {
         profGroup.setLastAccessTime(new Date());
         profGroup.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         profGroup.setIsEnable(getParaToBoolean("enable"));
-        if (!profGroupService.update(profGroup)) {
-            throw new BusinessException("操作失败");
+        if (!profGroupService.useOrUnuse(profGroup)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -137,8 +139,9 @@ public class OrganizationRoleController extends Controller {
         facAgency.setLastAccessTime(new Date());
         facAgency.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         facAgency.setIsEnable(getParaToBoolean("enable"));
-        if (!facAgencyService.update(facAgency)) {
-            throw new BusinessException("操作失败");
+        if (!facAgencyService.useOrUnuse(facAgency)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -178,8 +181,9 @@ public class OrganizationRoleController extends Controller {
         enterprise.setLastAccessTime(new Date());
         enterprise.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         enterprise.setIsEnable(getParaToBoolean("enable"));
-        if (!enterpriseService.update(enterprise)) {
-            throw new BusinessException("操作失败");
+        if (!enterpriseService.useOrunuse(enterprise)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -219,8 +223,9 @@ public class OrganizationRoleController extends Controller {
         reviewGroup.setLastAccessTime(new Date());
         reviewGroup.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
         reviewGroup.setIsEnable(getParaToBoolean("enable"));
-        if (!reviewGroupService.update(reviewGroup)) {
-            throw new BusinessException("操作失败");
+        if (!reviewGroupService.useOrUnuse(reviewGroup)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }

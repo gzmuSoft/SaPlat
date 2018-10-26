@@ -3,11 +3,8 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.EnterpriseService;
-import io.jboot.admin.service.api.NotificationService;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.Enterprise;
-import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -24,6 +21,19 @@ import java.util.Date;
 public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implements EnterpriseService {
     @Inject
     private NotificationService notificationService;
+
+    @Inject
+    private UserRoleService userRoleService;
+
+    @Inject
+    private RoleService roleService;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private OrganizationService organizationService;
+
 
     @Override
     public Page<Enterprise> findPage(Enterprise model, int pageNumber, int pageSize) {
@@ -84,5 +94,20 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
     @Override
     public boolean saveOrUpdate(Enterprise model, Auth auth, Notification notification) {
         return Db.tx(() -> model.saveOrUpdate() && auth.saveOrUpdate() && notificationService.saveOrUpdate(notification));
+    }
+
+    @Override
+    public boolean useOrunuse(Enterprise enterprise){
+        return Db.tx(() -> {
+            Organization organization=organizationService.findById(enterprise.getOrgID());
+            User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            Role role = roleService.findByName("企业机构");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(enterprise.getIsEnable());
+            return userRoleService.update(userRole) && enterprise.update();
+        });
     }
 }

@@ -3,10 +3,11 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.OrganizationService;
-import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.Organization;
+import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.entity.model.UserRole;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -25,6 +26,15 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     @Inject
     private UserService userService;
 
+
+    @Inject
+    private AffectedGroupService affectedGroupService;
+
+    @Inject
+    private UserRoleService userRoleService;
+
+    @Inject
+    private RoleService roleService;
     UserServiceImpl userServiceNew = new UserServiceImpl();
 
     /**
@@ -122,6 +132,20 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
             }
             user.setUserID(model.getId());
             return userService.saveUser(user, roles);
+        });
+    }
+
+    @Override
+    public boolean useOrUnuse(Organization organization) {
+        return Db.tx(() -> {
+            User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            Role role = roleService.findByName("组织机构");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(organization.getIsEnable());
+            return userRoleService.update(userRole) && organization.update();
         });
     }
 
