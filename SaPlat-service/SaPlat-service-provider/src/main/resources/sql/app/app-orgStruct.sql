@@ -112,6 +112,28 @@
         )
 #end
 
+#sql("OrgPersonListByType")
+    select
+        *
+    from
+        sys_user as s
+    where
+        s.userID in (
+                select distinct
+                    personID
+                from
+                    struct_person_link as s
+                where
+                    s.structID in (
+                                  select distinct
+                                     id
+                                  from
+                                      org_structure
+                                  where orgType = #para(orgType) and orgID = #para(OrgId))
+        )
+and userSource = 0
+#end
+
 #sql("OrgPersonInfo")
     SELECT
       s.name as user,

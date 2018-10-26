@@ -23,17 +23,17 @@
             , contentType: 'application/json; charset=UTF-8'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '项目名称', minWidth: 200,sort:true}
-                ,{field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
+                , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
                 , {
                     field: 'status',
                     title: '状态',
                     minWidth: 100,
-                    sort:true,
+                    sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
                 }
                 , {field: 'reply', title: '回复', minWidth: 150}
-                , {title: '操作', minWidth: 200, align: 'center', toolbar: '#barOptionInvite'}
+                , {title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
             ]]
             , url: '#(ctxPath)/app/project/reviewProjectTable'
             , method: 'get'
@@ -46,7 +46,7 @@
             , limit: 30 //默认采用30
             , loading: true
             , where: {
-                applyOrInvite: true, flag: 0
+                applyOrInvite: true, flag: 1
             }
             , done: function (res, curr, count) {
             }
@@ -56,60 +56,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             console.log(obj);
-            if (obj.event === 'agree') {
-                layer.confirm('确定接受嘛？(此操作不可逆！)', function (index) {
-                    $.post("#(ctxPath)/app/project/saveInviteReview", {
-                        id: data.id,
-                        invite: 2,
-                        type: 1
-                    }, function () {
-                        layer.msg("同意成功！");
-                        setTimeout(function () {
-                        }, 1000);
-                        table.reload('dateTable', {
-                            url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=0'
-                        });
-                    });
-                });
-            } else if (obj.event === 'refuse') {
-                layer.open({
-                    type: 1
-                    , title: false //不显示标题栏
-                    , closeBtn: false
-                    , area: '300px;'
-                    , shade: 0.8
-                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                    , btn: ['残忍拒绝', '我再想想']
-                    , btnAlign: 'c'
-                    , moveType: 1 //拖拽模式，0或者1
-                    , content: '' +
-                    '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
-                    '<label class="layui-form-label">拒绝缘由</label>' +
-                    '<textarea placeholder="请输入内容" class="layui-textarea" name="desc">' +
-                    '</textarea>' +
-                    '</div>'
-                    , success: function (layero) {
-                        var btn = layero.find('.layui-layer-btn');
-                        btn.find('.layui-layer-btn0').on('click', function () {
-                            var textarea = layero.find('textarea')[0];
-                            $.post("#(ctxPath)/app/project/saveInviteReview", {
-                                id: data.id,
-                                reply: textarea.value,
-                                invite: 1,
-                                type: 1
-                            }, function () {
-                                layer.msg("拒绝成功！");
-                                setTimeout(function () {
-                                }, 1000);
-                                table.reload('dateTable', {
-                                    url: '#(ctxPath)/app/project/reviewProjectTable?applyOrInvite=' + true + '&flag=0'
-                                });
-                            });
-                        });
-                    }
-                });
-
-            } else if (obj.event === 'pass') {
+            if (obj.event === 'pass') {
                 layer.confirm('确定通过吗？(此操作不可逆！)', function (index) {
                     $.post("#(ctxPath)/app/project/saveInviteReview", {
                         id: data.id,
@@ -166,47 +113,6 @@
             }
         });
 
-
-        $('#inviteStatus').on('click', function () {
-            table.render({
-                elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-                , id: 'dateTable'
-                , even: true //开启隔行背景
-                , size: 'sm' //小尺寸的表格
-                , height: 'full-150'    //容器高度
-                , contentType: 'application/json; charset=UTF-8'
-                , cols: [[                  //标题栏
-                    {type: 'numbers', fixed: true, unresize: 'true'}
-                    , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
-                    , {field: 'createTime', title: '创建时间', minWidth: 150, sort: true}
-                    , {
-                        field: 'status',
-                        title: '状态',
-                        minWidth: 100,
-                        sort: true,
-                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
-                    }
-                    , {field: 'reply', title: '回复', minWidth: 150}
-                    , {title: '操作', minWidth: 200, align: 'center', toolbar: '#barOptionInvite'}
-                ]]
-                , url: '#(ctxPath)/app/project/reviewProjectTable'
-                , method: 'get'
-                , request: {
-                    pageName: 'pageNumber' //页码的参数名称，默认：page
-                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                }
-                , page: true
-                , limits: [30, 60, 90, 150, 300]
-                , limit: 30 //默认采用30
-                , loading: true
-                , where: {
-                    applyOrInvite: true, flag: 0
-                }
-                , done: function (res, curr, count) {
-                }
-            });
-
-        });
 
         $('#invite').on('click', function () {
             table.render({
@@ -295,7 +201,6 @@
 #define content()
 
 <div class="reloadChoose">
-    <button class="layui-btn" id="inviteStatus">查看邀请您审查的项目</button>
     <button class="layui-btn" id="invite">查看正在审查的项目</button>
     <button class="layui-btn" id="reviewed">查看审查完成的项目</button>
 </div>
@@ -327,26 +232,7 @@
     #[[
     {{# } else if(d.status == '4'){ }}
     ]]#
-    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">不通过</a>
-    #[[
-    {{#  } }}
-    ]]#
-</script>
-
-<script type="text/html" id="barOptionInvite">
-    #[[
-    {{#  if(d.status == '0'){ }}
-    ]]#
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agree">同意</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">拒绝</a>
-    #[[
-    {{# } else if(d.status == '2'){ }}
-    ]]#
-    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已同意</a>
-    #[[
-    {{# } else if(d.status == '1'){ }}
-    ]]#
-    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">已拒绝</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs layui-disabled" disabled="disabled">拒绝通过</a>
     #[[
     {{#  } }}
     ]]#

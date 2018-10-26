@@ -110,6 +110,23 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
     }
 
     /**
+     * 根据组织的组织id和orgType查询加入当前组织的人员列表
+     *
+     * @param pagenumber
+     * @param pageSize
+     * @param OrganizationId
+     * @param orgType
+     * @return
+     */
+    @Override
+    public Page<Record> OrgPersonListByType(int pagenumber, int pageSize, Long OrganizationId, Long orgType) {
+        //添加参数
+        Kv para = Kv.by("OrgId", OrganizationId).set("orgType", orgType);
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.OrgPersonListByType", para);
+        return Db.paginate(pagenumber, pageSize, sqlPara);
+    }
+
+    /**
      * 组织管理  -  架构人员列表
      * @param pageNumber
      * @param pageSize

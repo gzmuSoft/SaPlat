@@ -72,14 +72,14 @@
                 window.location.href = '#(ctxPath)/app/project/projectMessage?id=' + data.id;
             } else if (obj.event === 'send') {
                 layer.confirm('确定发起审核吗？(审核过程中不可编辑资料！)', function (index) {
-                    $.post('#(ctxPath)/app/project/sendAssessment', {
+                    $.getJSON('#(ctxPath)/app/project/sendAssessment', {
                         id: data.id
                     }, function (res) {
-                        if (res.status == true) {
+                        if (res.status) {
                             layer.msg("发起审核成功！");
                             layer.close(index);
                             window.location.reload();
-                        } else if (res.status == false) {
+                        } else if (!res.status) {
                             layer.msg("请先将项目相关资料补充完整！");
                             layer.close(index);
                         }

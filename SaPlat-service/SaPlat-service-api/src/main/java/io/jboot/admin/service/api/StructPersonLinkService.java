@@ -21,6 +21,18 @@ public interface StructPersonLinkService {
      * @return
      */
     public Page<Record> getOrgPersonList(int pagenumber,int pageSize,Long OrganizationId);
+
+    /**
+     * 根据组织的组织id和orgType查询加入当前组织的人员列表
+     *
+     * @param pagenumber
+     * @param pageSize
+     * @param OrganizationId
+     * @param orgType
+     * @return
+     */
+    public Page<Record> OrgPersonListByType(int pagenumber, int pageSize, Long OrganizationId, Long orgType);
+
     /**
      * 查询加入架构的用户列表
      * 根据架构ID查询
