@@ -4,12 +4,15 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.entity.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserService  {
     public User findModel(User model);
 
     public Page<User> findPage(User sysUser, int pageNumber, int pageSize);
+
+    public Page<User> findPage(User sysUser, Date[] dates, int pageNumber, int pageSize);
 
     public List<User> findAll();
 

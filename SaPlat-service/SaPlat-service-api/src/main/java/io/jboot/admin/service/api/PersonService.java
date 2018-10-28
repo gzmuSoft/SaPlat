@@ -7,6 +7,7 @@ import io.jboot.admin.service.entity.model.Files;
 import io.jboot.admin.service.entity.model.Person;
 import io.jboot.admin.service.entity.model.User;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PersonService {
@@ -54,6 +55,14 @@ public interface PersonService {
     public Page<Person> findPage(Person person, int pageNumber, int pageSize);
 
     /**
+     * 分页查询系统个人群体信息
+     *
+     * @param person 个人
+     * @return 页
+     */
+    public Page<Person> findPage(Person person, Date[] dates, int pageNumber, int pageSize);
+
+    /**
      * save model to database
      *
      * @param model
@@ -96,6 +105,12 @@ public interface PersonService {
      * @return
      */
     public boolean update(Person person);
+
+    /**
+     *  启用 禁用
+     */
+    public boolean useOrunuse(Person person);
+
 
     /**
      * save or update model

@@ -16,10 +16,6 @@
 
 #end
 
-#define js()
-
-#end
-
 #define content()
 <form class="layui-form">
     <h2>项目基本资料</h2>
@@ -81,9 +77,9 @@
         <div class="layui-inline">
             <label class="layui-form-label"><em class="require-mark">*</em>评估方式</label>
             <div class="layui-input-block">
-                <input class="btn layui-btn layui-btn-primary" type="button" id="zp" value="自评">
+                <input class="btn layui-btn layui-btn-primary" type="button" id="zp" value="自评"/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="btn layui-btn layui-btn-primary" type="button" id="wp" value="委评">
+                <input class="btn layui-btn layui-btn-primary" type="button" id="wp" value="委评"/>
             </div>
         </div>
     </div>
@@ -111,39 +107,35 @@
             <label class="layui-form-label"><em class="require-mark">*</em>组长</label>
             <div class="layui-input-block">
                 <input value="#(leaderGroup.leader)" id="model.leader" type="text" name="leaderGroup.leader"
-                       lay-verify="required" autocomplete="off" placeholder="请输入组长姓名" class="layui-input"
-                       type="text">
+                       lay-verify="required" autocomplete="off" placeholder="请输入组长姓名" class="layui-input"/>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label"><em class="require-mark">*</em>副组长</label>
             <div class="layui-input-block">
                 <input value="#(leaderGroup.deputy)" id="model.deputy" type="text" name="leaderGroup.deputy"
-                       lay-verify="required" autocomplete="off" placeholder="请输入副组长姓名" class="layui-input"
-                       type="text">
+                       lay-verify="required" autocomplete="off" placeholder="请输入副组长姓名" class="layui-input"/>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label"><em class="require-mark">*</em>组员：</label>
             <div class="layui-input-block" style="width: 620px;">
                 <input value="#(leaderGroup.crew)" id="model.crew" type="text" name="leaderGroup.crew"
-                       lay-verify="required" autocomplete="off" placeholder="请输入组员姓名,用逗号间隔" class="layui-input"
-                       type="text">
+                       lay-verify="required" autocomplete="off" placeholder="请输入组员姓名,用逗号间隔" class="layui-input"/>
             </div>
         </div>
     </div>
     <br>
     <p><h2>相关资料文件上传</h2><em class="require-mark">*</em>需将信息填写完整以及文件上传完毕后才可发起审核哦！（文件上传错误可再次上传）</p>
     <hr class="layui-bg-blue">
-    <table id="dateTable" lay-filter="dateTable"></table>
+    <table style="align-content: center;" id="dateTable" lay-filter="dateTable"></table>
     <div class="layui-form-item">
         <div class="layui-input-block" style="margin-left:500px;">
             <button type="button" class="layui-btn" lay-submit="" lay-filter="sub">
                 保存
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="reset" id="res" class="layui-btn layui-btn-warm">返回
-            </button>
+            <button type="reset" id="res" class="layui-btn layui-btn-warm">返回</button>
         </div>
     </div>
 </form>
@@ -154,7 +146,17 @@
     #[[
     {{#  if(!d.isUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传</a>
+        #[[
+        {{#  if(d.status===1){ }}
+        ]]#
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upload">上传(必上传)</a>
+        #[[
+        {{# } else { }}
+        ]]#
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传(非必上传)</a>
+        #[[
+        {{#  } }}
+        ]]#
 
     #[[
     {{# } else if(d.isUpLoad){ }}
@@ -167,20 +169,19 @@
     ]]#
     #end
 </script>
-<script type="text/javascript" src="/static/js/layui/layui.js"></script>
-<script type="text/javascript" src="/static/js/comm_notbar.js"></script>
-<script type="text/javascript" src="/static/js/utils.js"></script>
-<script type="text/javascript" src="/static/js/ztree/jquery-1.4.4.min.js"></script>
+<!--<script type="text/javascript" src="/static/js/layui/layui.js"></script>-->
+<!--<script type="text/javascript" src="/static/js/comm_notbar.js"></script>-->
+<!--<script type="text/javascript" src="/static/js/utils.js"></script>-->
+<!--<script type="text/javascript" src="/static/js/ztree/jquery-1.4.4.min.js"></script>-->
 <script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>
 <!--js start-->
-<script type="text/javascript">
-
+#define js()
+<script>
     var assessmentMode = '#(project.assessmentMode)';
+    var projectID = "#(projectID)";
+    var paTypeID = "#(paTypeId)";
+
     layui.use(['form', 'layer', 'element', 'laydate', 'table', 'layedit'], function () {
-
-        var projectID = "#(projectID)";
-        var paTypeID = "#(paTypeId)";
-
         var layer = layui.layer,
             $ = layui.jquery,
             form = layui.form,
@@ -189,17 +190,34 @@
 
         var index = layedit.build('demo'); //建立编辑器
 
-
-        (function () {
-            console.log("s" + assessmentMode);
-            if (assessmentMode === "委评") {
-                $("#zp").css("color", '#d9cfdc');
-                $("#wp").css("color", '#0fae7f');
-            } else {
-                $("#zp").css("color", '#0fae7f');
-                $("#wp").css("color", '#d9cfdc');
+        /**
+         * 文件表格
+         */
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '500'    //容器高度
+            , contentType: 'application/json; charset=UTF-8'
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'name', title: '需上传的文件', minWidth: 600}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-        })()
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+            }
+        });
 
         /**
          * 判断是否填写完整
@@ -235,11 +253,10 @@
                     }, 1000);
                     return false;
                 }
-                var string = "&project.brief=" + layedit.getContent(index);
 
                 util.sendAjax({
                     type: 'POST',
-                    url: '#(ctxPath)/app/project/saveProjectMessage?id=' + projectID + '&assessmentMode=' + assessmentMode + string,
+                    url: '#(ctxPath)/app/project/saveProjectMessage?id=' + projectID + '&assessmentMode=' + assessmentMode + "&brief=" + layedit.getContent(index),
                     data: $.param(data.field),
                     loadFlag: true,
                     success: function (data) {
@@ -266,35 +283,7 @@
             $("#zp").css("color", '#d9cfdc');
         });
 
-        /**
-         * 文件表格
-         */
 
-        var tableIns = table.render({
-            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
-            , even: true //开启隔行背景
-            , size: 'sm' //小尺寸的表格
-            , height: '500'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
-            , cols: [[                  //标题栏
-                {field: 'id', title: '编号', minWidth: 60}
-                , {field: 'name', title: '需上传的文件', minWidth: 600}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-            ]]
-            , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
-            , method: 'get'
-            , request: {
-                pageName: 'pageNumber' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , page: true
-            , limits: [30, 60, 90, 150, 300]
-            , limit: 30 //默认采用30
-            , loading: true
-            , done: function (res, curr, count) {
-            }
-        });
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
@@ -321,9 +310,11 @@
         });
 
     });
+
     $("#res").click(function () {
         history.go(-1);
     });
+
     $('.money').on('input propertychange', function() {
         var data = $('.money').val();
         var str = digitsConversion(data);
@@ -341,7 +332,6 @@
         $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
     });
 
-
     $('.money').live("mousemove",function(){
         clearInterval(window.timer);
         $("#digitsTip").show();
@@ -352,7 +342,4 @@
     });
 </script>
 <!--js end-->
-
-</body>
-
-</html>
+#end

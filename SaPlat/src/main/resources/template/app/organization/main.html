@@ -19,61 +19,61 @@
 
             <div class="layui-form-item">
                 <label class="layui-form-label"style="width: 180px">登录账号</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="text" id="user.name" name="user.name" value="#(user.name)"
-                           class="layui-input layui-disabled" readonly/>
+                           class="layui-input"  readonly/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 180px">组织机构名称</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="text" id="organization.name" name="organization.name" value="#(organization.name)"
-                           class="layui-input layui-disabled" required/>
+                           class="layui-input " readonly required/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="organization.code"style="width: 180px">组织机构代码</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="text" id="organization.code" name="organization.code" value="#(organization.code)"
-                           class="layui-input layui-disabled" disabled="disabled" required/>
+                           class="layui-input " readonly required/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">由十八位的阿拉伯数字或大写英文字母组成的全国组织机构统一社会信用代码。例如：91512081MA62K0260E</div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="organization.addr"style="width: 180px">组织机构地址</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="text" id="organization.addr" name="organization.addr" value="#(organization.addr)"
-                           class="layui-input layui-disabled" disabled="disabled" required/>
+                           class="layui-input " readonly required/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">包含省市区县的详细组织机构注册所在地址，组织机构地址由3-128个字符构成。例如：贵州省贵阳市南明区**路**大厦</div>
             </div>
 
-            <div class="layui-form-item">
+            <div class="layui-form-item" >
                 <label class="layui-form-label" for="organization.principal"style="width: 180px">委办负责人姓名</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="text" id="organization.principal" name="organization.principal"
-                           value="#(organization.principal)" class="layui-input layui-disabled" disabled="disabled" required/>
+                           value="#(organization.principal)" class="layui-input" readonly required/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">组织机构的委办负责人的真实姓名，由2-20个字符构成</div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="organization.contact"style="width: 180px">委办负责人联系方式</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="tel" id="organization.contact" name="organization.contact"
-                           value="#(organization.contact)" class="layui-input layui-disabled" disabled="disabled" required/>
+                           value="#(organization.contact)" class="layui-input" readonly required/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">手机号码（11位数字）</div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="user.email" style="width: 180px">邮箱</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 270px;">
                     <input type="email" id="user.email" name="user.email" value="#(user.email)"
-                           class="layui-input layui-disabled" disabled="disabled" required/>
+                           class="layui-input" readonly required/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">在各邮件服务商处注册和经常使用的邮箱，邮箱长度最大为60个字符。例如：demo@qq.com</div>
             </div>
@@ -124,22 +124,22 @@
             , form = layui.form;
 
         //创建监听函数
-         var xhrOnProgress=function(fun) {
+        var xhrOnProgress=function(fun) {
             xhrOnProgress.onprogress = fun; //绑定监听
-             //使用闭包实现监听绑
+            //使用闭包实现监听绑
             return function() {
                 //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
                 var xhr = $.ajaxSettings.xhr();
-                 //判断监听函数是否为函数
-                  if (typeof xhrOnProgress.onprogress !== 'function')
-                       return xhr;
-                   //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                    if (xhrOnProgress.onprogress && xhr.upload) {
-                          xhr.upload.onprogress = xhrOnProgress.onprogress;
-                    }
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
                     return xhr;
-             }
-         }
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        }
 
 
         var fileID = '#(fileId)';

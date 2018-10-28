@@ -54,8 +54,15 @@ public class ExpertGroupController extends BaseController {
 
         ExpertGroup model = new ExpertGroup();
         model.setName(getPara("name"));
-
-        Page<ExpertGroup> page = expertGroupService.findPage(model, pageNumber, pageSize);
+        model.setIsEnable(getParaToBoolean("isEnable"));
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Page<ExpertGroup> page = expertGroupService.findPage(model, dates, pageNumber, pageSize);
 
         renderJson(new DataTable<ExpertGroup>(page));
     }
@@ -111,12 +118,13 @@ public class ExpertGroupController extends BaseController {
             throw new BusinessException("对象不存在");
         }
 
-        model.setStatus(DataStatus.USED);
+        model.setIsEnable(true);
         model.setLastAccessTime(new Date());
         model.setRemark("启用对象");
 
-        if (!expertGroupService.update(model)) {
-            throw new BusinessException("启用失败");
+        if (!expertGroupService.useOrunuse(model)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
 
         renderJson(RestResult.buildSuccess());
@@ -134,12 +142,13 @@ public class ExpertGroupController extends BaseController {
             throw new BusinessException("对象不存在");
         }
 
-        model.setStatus(DataStatus.UNUSED);
+        model.setIsEnable(false);
         model.setLastAccessTime(new Date());
         model.setRemark("禁用对象");
 
-        if (!expertGroupService.update(model)) {
-            throw new BusinessException("禁用失败");
+        if (!expertGroupService.useOrunuse(model)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
 
         renderJson(RestResult.buildSuccess());

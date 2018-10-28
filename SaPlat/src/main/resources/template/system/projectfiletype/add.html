@@ -48,6 +48,16 @@
 
 
         <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>必须上传</label>
+            <div class="layui-input-block" style="width: 280px">
+                <select name="projectFileType.status" lay-verify="required">
+                    <option></option>
+                    #statusOption(io.jboot.admin.service.entity.status.system.DataStatus::me(),"1")
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>顺序</label>
             <div class="layui-input-block">
                 <input type="number" name="projectFileType.sort" placeholder="顺序" class="layui-input" value="1" required

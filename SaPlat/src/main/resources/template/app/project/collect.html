@@ -50,7 +50,7 @@
                 , {field: 'brief', title: '简介', minWidth: 150}
                 , {field: 'assessmentMode', title: '评估方式', minWidth: 50, sort: true}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {fixed: 'right', title: '操作', width: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/collectTableData'
             , method: 'get'
@@ -69,7 +69,7 @@
             var data = obj.data;
 
             if (obj.event === 'see') {
-               window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=2';
+               window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4';
                 // pop_max_show('查看预审报告', '#(ctxPath)/util/pdfView?fileID=' + identity, function () {});
             }
             else if(obj.event==="setFinish"){

@@ -36,7 +36,7 @@
                 , {field: 'managercon', title: '主管联系方式', width: 130,sort:true}
                 , {field: 'isEnable', title: '状态', width:80, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")' }
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width: 160} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', minWidth: 160} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/organizationrole/managementTableData'
             , method: 'get'
@@ -66,7 +66,7 @@
                         loadFlag: true,
                         success: function (data) {
                             layer.close(index);
-                            reloadTable($('#name').val());
+                            reloadTable($('#name').val(),$('#responsibility').val());
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -107,16 +107,16 @@
         });
 
 
-        reloadTable = function (_name) {
+        reloadTable = function (_name,_responsibility, manager, isEnable) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/system/organizationrole/managementTableData'
-                , where: {name: _name} //设定异步数据接口的额外参数
+                , where: {name: _name,responsibility:_responsibility, manager:manager, isEnable:isEnable} //设定异步数据接口的额外参数
             });
         };
 
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.name);
+            reloadTable(data.field.name, data.field.responsibility, data.field.manager, data.field.isEnable);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -133,6 +133,21 @@
                 <label class="layui-form-label">机构名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" placeholder="机构名称" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">职责</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="responsibility" name="responsibility" placeholder="职责" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">主管</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="manager" name="manager" placeholder="主管" class="layui-input"/>
+                </div>
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select id="isEnable" name="isEnable">
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
                 </div>
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>

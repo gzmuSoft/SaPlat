@@ -7,10 +7,6 @@
         line-height: 20px;
     }
 
-    .layui-form-item .layui-form-label {
-        width: 200px;
-    }
-
     .layui-form-pane .layui-form-text .layui-input-block, .layui-row {
         margin-top: 20px;
     }
@@ -110,7 +106,7 @@
                     success: function () {
                         $('.loading-bg').remove();
                         setTimeout(function () {
-                           window.location.href = document.referrer;
+                            window.location.href = document.referrer;
                         }, 1000);
                     },
                     error: function () {
@@ -143,20 +139,25 @@
 
     <form class="layui-form x-center" action="">
         <div class="layui-form-pane">
+            <div class="layui-row">
+                <div class="layui-col-md4">
             <div class="layui-form-item">
                 <label class="layui-form-label">制表单位</label>
                 <div class="layui-input-inline">
-                    <p style="margin-left: 20px;margin-top: 8px">#(name)</p>
+                    <input type="text" id="name" name="name" value="#(name)"
+                           class="layui-input" readonly/>
                 </div>
-            </div>
+            </div></div>
 
+                <div class="layui-col-md4">
             <div class="layui-form-item">
                 <label class="layui-form-label">日期</label>
                 <div class="layui-input-inline">
-                    <p style="margin-left: 20px;margin-top: 8px">#(date)</p>
+                    <input type="text" id="date" name="date" value="#(date)"
+                           class="layui-input" readonly/>
                 </div>
-            </div>
-
+            </div></div>
+                <div class="layui-col-md4">
             <div class="layui-form-item">
                 <label class="layui-form-label" for="select">请选择专家</label>
                 <div class="layui-input-inline">
@@ -171,26 +172,27 @@
                         #end
                     </select>
                 </div>
+            </div></div>
             </div>
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="riskFactor">项目建设可能存在的风险因素</label>
                 <div class="layui-input-block">
+                    <label class="layui-form-label" for="riskFactor">项目建设可能存在的风险因素</label>
                     <textarea id="riskFactor" style="display: none;"></textarea>
                 </div>
             </div>
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="resolving">应采取的相应化解措施</label>
                 <div class="layui-input-block">
+                    <label class="layui-form-label" for="resolving">应采取的相应化解措施</label>
                     <textarea id="resolving" style="display: none;"></textarea>
                 </div>
             </div>
 
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label" for="otherComments">其它意见（建议）</label>
                 <div class="layui-input-block">
+                    <label class="layui-form-label" for="otherComments">其它意见（建议）</label>
                     <textarea id="otherComments" style="display: none;"></textarea>
                 </div>
             </div>

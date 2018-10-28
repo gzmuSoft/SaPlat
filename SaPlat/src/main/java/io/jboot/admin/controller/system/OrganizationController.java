@@ -49,8 +49,17 @@ public class OrganizationController extends BaseController {
 
         Organization organization = new Organization();
         organization.setName(getPara("name"));
+        organization.setPrincipal(getPara("principal"));
+        System.out.println(organization.getPrincipal());
+        Date[] dates = new Date[2];
+        try {
+            dates[0] = getParaToDate("startDate");
+            dates[1] = getParaToDate("endDate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Page<Organization> page = organizationService.findPage(organization, pageNumber, pageSize);
+        Page<Organization> page = organizationService.findPage(organization, dates, pageNumber, pageSize);
         for (Organization organization1 : page.getList()) {
             FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization","营业执照",organization1.getId());
             if(fileForm!=null) {
@@ -99,11 +108,12 @@ public class OrganizationController extends BaseController {
         if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
-        organization.setStatus(DataStatus.UNUSED);
+        organization.setIsEnable(false);
         organization.setRemark("禁用组织");
         organization.setLastAccessTime(new Date());
-        if (!organizationService.update(organization)) {
-            throw new BusinessException("禁用失败");
+        if (!organizationService.useOrUnuse(organization)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -118,11 +128,12 @@ public class OrganizationController extends BaseController {
         if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
-        organization.setStatus(DataStatus.USED);
+        organization.setIsEnable(true);
         organization.setRemark("启用组织");
         organization.setLastAccessTime(new Date());
-        if (!organizationService.update(organization)) {
-            throw new BusinessException("启用失败");
+        if (!organizationService.useOrUnuse(organization)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }

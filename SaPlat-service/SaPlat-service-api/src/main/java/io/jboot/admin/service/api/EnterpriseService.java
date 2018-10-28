@@ -6,6 +6,7 @@ import io.jboot.admin.service.entity.model.Auth;
 import io.jboot.admin.service.entity.model.Enterprise;
 import io.jboot.admin.service.entity.model.Notification;
 
+import java.util.Date;
 import java.util.List;
 
 public interface EnterpriseService {
@@ -43,6 +44,14 @@ public interface EnterpriseService {
      * @return 页
      */
     public Page<Enterprise> findPage(Enterprise model, int pageNumber, int pageSize);
+
+    /**
+     * 分页查询 企业机构 信息
+     *
+     * @param model 项目阶段
+     * @return 页
+     */
+    public Page<Enterprise> findPage(Enterprise model, Date[] dates, int pageNumber, int pageSize);
 
     /**
      * 根据名称查询 企业机构 信息
@@ -113,6 +122,13 @@ public interface EnterpriseService {
      * @return
      */
     public boolean update(Enterprise model);
+
+    /**
+     *
+     * 启用 和禁用
+     *
+     */
+    public boolean useOrunuse(Enterprise enterprise);
 
 
     public void join(Page<? extends Model> page, String joinOnField);

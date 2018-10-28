@@ -44,6 +44,15 @@ public interface ApplyInviteService  {
      * @return
      */
     public Page<ApplyInvite> findListByUserIdOrUserName(int pageNumber, int pageSize, ApplyInvite applyInvite);
+
+    /**
+     * 自定义条件查询
+     *
+     * @param model
+     * @return
+     */
+    public ApplyInvite findFirstByModel(ApplyInvite model);
+
     /**
      * find model by primary key
      *
