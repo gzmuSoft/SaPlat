@@ -681,6 +681,7 @@ public class OrgStructureController extends BaseController {
      * 组织成员列表API
      * */
     public void personListApi(){
+
         Long OrganizationId = AuthUtils.getLoginUser().getUserID();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -698,6 +699,26 @@ public class OrgStructureController extends BaseController {
             setAttr("info", list.get(0)).render("ViewOrgPersonInfo.html");
         }else{
             renderText("无法查询到用户的基本信息，该用户可能不存在！");
+        }
+    }
+    /**
+     *  架构通知查看人员信息
+     * */
+    @NotNullPara("UserId")
+    public void showNoticePersonInfo(){
+        //sys_user表的id
+        Long UserId = getParaToLong("UserId");
+        //查询用户sys_user表信息
+        User user = userService.findById(UserId);
+        if(user != null){
+            //查询person表信息
+            Person person = personService.findByUser(user);
+            setAttr("person",person)
+                    .setAttr("user",user)
+                    .render("ViewNoticePersonInfo.html");
+        }else{
+            System.out.println("用户信息为空");
+            render("noInfo.html");
         }
     }
 }

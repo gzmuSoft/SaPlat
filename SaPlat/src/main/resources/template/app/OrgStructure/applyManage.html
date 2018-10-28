@@ -80,6 +80,9 @@
                     })
                     layer.close(index);
                 });
+            }else if(obj.event == 'personInfo'){
+                    pop_show('查看人员信息', '#(ctxPath)/app/OrgStructure/showNoticePersonInfo?UserId=' + data.userID , '', '', function () {
+                });
             }
         });
 
@@ -136,6 +139,8 @@
     用户【UID：#[[{{ d.userID}}]]#】申请加入架构#[[{{ d.name}}]]#，是否同意？
 </script>
 <script type="text/html" id="barOption">
+
+    <a class="layui-btn layui-btn-xs" lay-event="personInfo">用户信息</a>
     #[[
     {{#  if(d.status == '0'){ }}
     ]]#
