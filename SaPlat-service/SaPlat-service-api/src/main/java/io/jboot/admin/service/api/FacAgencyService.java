@@ -124,6 +124,11 @@ public interface FacAgencyService  {
      */
     public boolean update(FacAgency model);
 
+    /*
+
+     */
+    public boolean useOrUnuse(FacAgency facAgency);
+
 
     public void join(Page<? extends Model> page, String joinOnField);
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);

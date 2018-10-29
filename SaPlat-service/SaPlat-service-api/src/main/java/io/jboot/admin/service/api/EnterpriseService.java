@@ -123,6 +123,13 @@ public interface EnterpriseService {
      */
     public boolean update(Enterprise model);
 
+    /**
+     *
+     * 启用 和禁用
+     *
+     */
+    public boolean useOrunuse(Enterprise enterprise);
+
 
     public void join(Page<? extends Model> page, String joinOnField);
 

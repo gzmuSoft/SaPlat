@@ -52,6 +52,7 @@ WHERE
   AND b.id = c.roleID
   AND d.id = e.userID
   and e.roleID = b.id
+  AND e.isEnable = ?
   AND a.`isEnable` = ?
   AND b.`isEnable` = ?
   AND FIND_IN_SET(a.id, querySysRes(?))

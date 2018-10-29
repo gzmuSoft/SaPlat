@@ -8,5 +8,14 @@ import io.jboot.admin.service.entity.model.base.BaseProfGroup;
  */
 @Table(tableName = "prof_group", primaryKey = "id")
 public class ProfGroup extends BaseProfGroup<ProfGroup> {
-	
+
+    private boolean isInvite;
+
+    public void setIsInvite(boolean isInvite) {
+        this.isInvite = isInvite;
+    }
+
+    public boolean getIsInvite() {
+        return this.isInvite;
+    }
 }

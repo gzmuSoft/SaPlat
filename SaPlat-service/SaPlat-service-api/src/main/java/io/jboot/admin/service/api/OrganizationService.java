@@ -82,6 +82,8 @@ public interface OrganizationService {
      */
     public boolean update(Organization model);
 
+    public boolean useOrUnuse(Organization organization);
+
     /**
      * 通过组织机构名称获取组织机构
      *
