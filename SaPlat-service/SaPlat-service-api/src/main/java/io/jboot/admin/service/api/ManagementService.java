@@ -19,7 +19,19 @@ public interface ManagementService  {
      */
     public Management findById(Object id);
 
+    /**
+     * findByOrgId
+     *
+     * @param orgId
+     * @return
+     */
     public Management findByOrgId(Long orgId);
+
+    /**
+     * findByCreateUserID
+     * @param userId
+     * @return
+     */
     public Management findByCreateUserID(Object userId);
     /**
      * find all model
