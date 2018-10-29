@@ -1,0 +1,26 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , layer = layui.layer
+            , $ = layui.jquery
+            , form = layui.form;
+    });
+    window.location.href = "#(ctxPath)/util/tip?content=无法查询到该账号信息&icon=layui-icon-face-cry&method1=new&title=架构人员信息";
+</script>
+#end
+
+#define content()
+<div class="layui-fluid">
+</div>
+
+#end

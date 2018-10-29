@@ -150,7 +150,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
     @Override
     public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
-        return DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
+        return DAO.findFirst("SELECT * FROM `apply_invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
     }
 
     @Override

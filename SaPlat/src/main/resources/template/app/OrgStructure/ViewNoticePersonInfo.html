@@ -1,0 +1,76 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+    });
+
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="" value="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">帐号</label>
+            <div class="layui-input-block">
+                <input type="text" name="user" autocomplete="off" placeholder="账号" readonly="readonly"
+                       value="#(user.name)" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" readonly="readonly" placeholder="姓名" class="layui-input"
+                       value="#(person.name)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="text" name="sex" readonly="readonly" placeholder="性别" class="layui-input"
+                       value="#(person.sex)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">年龄</label>
+            <div class="layui-input-block">
+                <input type="text" name="age" placeholder="年龄" readonly="readonly"
+                       class="layui-input" value="#(person.age)"
+                       autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" readonly="readonly" placeholder="电话" class="layui-input"
+                       value="#(person.phone)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" readonly="readonly" placeholder="邮箱" class="layui-input"
+                       value="#(user.email)"
+                       required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+    </form>
+</div>
+#end
