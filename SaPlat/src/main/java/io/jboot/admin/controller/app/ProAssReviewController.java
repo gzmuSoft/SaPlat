@@ -72,9 +72,21 @@ public class ProAssReviewController extends BaseController {
                 setAttr("projectId",projectId).setAttr("reportPath",getPrepReport(projectId)).
                 render("main_expert.html");
                 break;
+            //直接显示预审报告和所有评审意见
+            case 4:
+                String reportFilePath=getPrepReport(projectId);
+                Long reportFileId = mReportFileId;
+                setAttr("projectId",projectId)
+                        .setAttr("reportPath",reportFilePath)
+                        .setAttr("fileId",reportFileId).
+                        render("main_report_rec.html");
+                break;
             default:
         }
     }
+
+    //为减少对原有逻辑的修改，用于临时存储文件ID
+    private Long mReportFileId = 0L;
 
     /**
      * index
@@ -129,7 +141,8 @@ public class ProAssReviewController extends BaseController {
     private String getPrepReport(Long projectId){
         ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
-        Files file = filesService.findById(fileProject.getFileID());
+        mReportFileId = fileProject.getFileID();
+        Files file = filesService.findById(mReportFileId);
         return file.getPath().trim();
     }
 

@@ -3,14 +3,10 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.AffectedGroupService;
-import io.jboot.admin.service.api.PersonService;
-import io.jboot.admin.service.api.SaPlatService;
-import io.jboot.admin.service.api.UserService;
-import io.jboot.admin.service.entity.model.AffectedGroup;
-import io.jboot.admin.service.entity.model.Files;
-import io.jboot.admin.service.entity.model.Person;
-import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.AuthStatus;
+import io.jboot.admin.service.entity.status.system.RoleStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -26,7 +22,7 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class PersonServiceImpl extends JbootServiceBase<Person> implements PersonService{
+public class PersonServiceImpl extends JbootServiceBase<Person> implements PersonService {
 
     @Inject
     private UserService userService;
@@ -34,17 +30,24 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     @Inject
     private AffectedGroupService affectedGroupService;
 
+    @Inject
+    private UserRoleService userRoleService;
+
+    @Inject
+    private RoleService roleService;
+
     UserServiceImpl userServiceNew = new UserServiceImpl();
 
     /**
      * 装配完善Page对象中所有对象的数据
+     *
      * @param page
      * @return
      */
-    public Page<Person> fitPage(Page<Person> page){
-        if(page != null){
+    public Page<Person> fitPage(Page<Person> page) {
+        if (page != null) {
             List<Person> tList = page.getList();
-            for (Person item: tList) {
+            for (Person item : tList) {
                 fitModel(item);
             }
         }
@@ -53,10 +56,11 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
 
     /**
      * 装配单个实体对象的数据
+     *
      * @param model
      * @return
      */
-    public Person fitModel(Person model){
+    public Person fitModel(Person model) {
         User user = new User();
         user.setUserID(model.getId());
         user.setUserSource(0);// 0 代表个人
@@ -84,13 +88,13 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         if (StrKit.notBlank(person.getName())) {
             columns.like("name", "%" + person.getName() + "%");
         }
-        if (StrKit.notNull(person.getIsEnable())){
+        if (StrKit.notNull(person.getIsEnable())) {
             columns.eq("isEnable", person.getIsEnable());
         }
-        if (StrKit.notNull(dates[0])){
+        if (StrKit.notNull(dates[0])) {
             columns.ge("createTime", dates[0]);
         }
-        if (StrKit.notNull(dates[1])){
+        if (StrKit.notNull(dates[1])) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dates[1]);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -110,6 +114,21 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
             return userService.saveUser(user, roles);
         });
     }
+
+    @Override
+    public boolean useOrunuse(Person person) {
+        return Db.tx(() -> {
+            User user = userService.findByUserIdAndUserSource(person.getId(), 0);
+            Role role = roleService.findByName("个人群体");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(person.getIsEnable());
+            return userRoleService.update(userRole) && person.update();
+        });
+    }
+
 
     @Override
     public Person findByUser(User user) {

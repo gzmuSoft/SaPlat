@@ -3,11 +3,8 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.ManagementService;
-import io.jboot.admin.service.api.NotificationService;
-import io.jboot.admin.service.entity.model.Auth;
-import io.jboot.admin.service.entity.model.Management;
-import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -23,6 +20,18 @@ import java.util.List;
 public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService {
     @Inject
     private NotificationService notificationService;
+
+    @Inject
+    private RoleService roleService;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private OrganizationService organizationService;
+
+    @Inject
+    private UserRoleService userRoleService;
 
     /**
      * 装配单个实体对象的数据
@@ -49,6 +58,21 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     @Override
     public List<Management> findAll(boolean isEnable) {
         return DAO.findListByColumn("isEnable", isEnable);
+    }
+
+    @Override
+    public boolean useOrUnuse(Management management) {
+        return Db.tx(() -> {
+            Organization organization=organizationService.findById(management.getOrgID());
+            User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            Role role = roleService.findByName("管理机构");
+            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
+            if(userRole==null){
+                return false;
+            }
+            userRole.setIsEnable(management.getIsEnable());
+            return userRoleService.update(userRole) && management.update();
+        });
     }
 
     @Override

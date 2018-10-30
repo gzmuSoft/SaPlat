@@ -61,7 +61,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("userID", expertGroupId);
-        columns.eq("module", 1);
+        columns.eq("module", 2);
         if (DAO.findFirstByColumns(columns) != null) {
             return true;
         } else {
@@ -150,6 +150,27 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     }
     @Override
     public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
-        return DAO.findFirst("SELECT * FROM `apply_Invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
+        return DAO.findFirst("SELECT * FROM `apply_invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
+    }
+
+    @Override
+    public ApplyInvite findFirstByModel(ApplyInvite model) {
+        Columns columns = Columns.create();
+        if (model.getStatus() != null) {
+            columns.eq("status", model.getStatus());
+        }
+        if (model.getProjectID() != null) {
+            columns.eq("projectID", model.getProjectID());
+        }
+        if (model.getUserID() != null) {
+            columns.eq("userID", model.getUserID());
+        }
+        if (model.getModule() != null) {
+            columns.eq("module", model.getModule());
+        }
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
+        }
+        return DAO.findFirstByColumns(columns);
     }
 }

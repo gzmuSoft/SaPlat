@@ -72,6 +72,8 @@ public interface ProfGroupService  {
      */
     public boolean update(ProfGroup model);
 
+    public boolean useOrUnuse(ProfGroup profGroup);
+
 
 
     /**

@@ -108,11 +108,12 @@ public class OrganizationController extends BaseController {
         if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
-        organization.setStatus(DataStatus.UNUSED);
+        organization.setIsEnable(false);
         organization.setRemark("禁用组织");
         organization.setLastAccessTime(new Date());
-        if (!organizationService.update(organization)) {
-            throw new BusinessException("禁用失败");
+        if (!organizationService.useOrUnuse(organization)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -127,11 +128,12 @@ public class OrganizationController extends BaseController {
         if (organization == null) {
             throw new BusinessException("组织对象不存在");
         }
-        organization.setStatus(DataStatus.USED);
+        organization.setIsEnable(true);
         organization.setRemark("启用组织");
         organization.setLastAccessTime(new Date());
-        if (!organizationService.update(organization)) {
-            throw new BusinessException("启用失败");
+        if (!organizationService.useOrUnuse(organization)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
         renderJson(RestResult.buildSuccess());
     }

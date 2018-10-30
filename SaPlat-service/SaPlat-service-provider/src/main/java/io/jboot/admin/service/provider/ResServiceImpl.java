@@ -119,9 +119,11 @@ public class ResServiceImpl extends JbootServiceBase<Res> implements ResService 
     public List<Res> findLeftMenuByUserNameAndParentID(String name, Long parentID) {
         SqlPara sp = Db.getSqlPara("system-res.findLeftMenuByUserNameAndParentID");
         sp.addPara(ResStatus.USED);
+        sp.addPara(ResStatus.USED);
         sp.addPara(RoleStatus.USED);
         sp.addPara(parentID);
         sp.addPara(name);
+
         return DAO.find(sp);
     }
 

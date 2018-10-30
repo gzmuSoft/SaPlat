@@ -139,6 +139,10 @@ public interface ExpertGroupService {
      */
     public boolean update(ExpertGroup model);
 
+    /**
+     *  启用 禁用
+     */
+    public boolean useOrunuse(ExpertGroup expertGroup);
 
     public void join(Page<? extends Model> page, String joinOnField);
 

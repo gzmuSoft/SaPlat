@@ -118,12 +118,13 @@ public class ExpertGroupController extends BaseController {
             throw new BusinessException("对象不存在");
         }
 
-        model.setStatus(DataStatus.USED);
+        model.setIsEnable(true);
         model.setLastAccessTime(new Date());
         model.setRemark("启用对象");
 
-        if (!expertGroupService.update(model)) {
-            throw new BusinessException("启用失败");
+        if (!expertGroupService.useOrunuse(model)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
 
         renderJson(RestResult.buildSuccess());
@@ -141,12 +142,13 @@ public class ExpertGroupController extends BaseController {
             throw new BusinessException("对象不存在");
         }
 
-        model.setStatus(DataStatus.UNUSED);
+        model.setIsEnable(false);
         model.setLastAccessTime(new Date());
         model.setRemark("禁用对象");
 
-        if (!expertGroupService.update(model)) {
-            throw new BusinessException("禁用失败");
+        if (!expertGroupService.useOrunuse(model)) {
+            renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
+            return;
         }
 
         renderJson(RestResult.buildSuccess());
