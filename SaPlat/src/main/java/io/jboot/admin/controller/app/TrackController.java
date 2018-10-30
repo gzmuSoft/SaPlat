@@ -223,6 +223,7 @@ public class TrackController extends BaseController {
             switch (iOwnType) {
                 case 0:
                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());

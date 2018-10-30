@@ -793,7 +793,8 @@ public class ProjectController extends BaseController {
         Organization organization = organizationService.findById(loginUser.getUserID());
         if (organization != null) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency != null) {// && facAgency.getIsEnable()
+            if (facAgency != null) {
+                // && facAgency.getIsEnable()
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
@@ -1565,7 +1566,6 @@ public class ProjectController extends BaseController {
         applyInvite.setReply(reply);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setLastAccessTime(new Date());
-
 
         notification.setSource("/app/project/saveInviteReview");
         notification.setRecModule("");
