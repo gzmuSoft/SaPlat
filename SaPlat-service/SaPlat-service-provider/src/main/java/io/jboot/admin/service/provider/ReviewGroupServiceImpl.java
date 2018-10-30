@@ -58,6 +58,14 @@ public class ReviewGroupServiceImpl extends JbootServiceBase<ReviewGroup> implem
                 return false;
             }
             userRole.setIsEnable(reviewGroup.getIsEnable());
+            Role _role = roleService.findByName("审查团体立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(reviewGroup.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && reviewGroup.update();
         });
     }

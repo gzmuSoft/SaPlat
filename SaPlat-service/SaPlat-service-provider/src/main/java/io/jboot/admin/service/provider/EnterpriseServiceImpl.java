@@ -107,6 +107,14 @@ public class EnterpriseServiceImpl extends JbootServiceBase<Enterprise> implemen
                 return false;
             }
             userRole.setIsEnable(enterprise.getIsEnable());
+            Role _role = roleService.findByName("企业机构立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(enterprise.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && enterprise.update();
         });
     }

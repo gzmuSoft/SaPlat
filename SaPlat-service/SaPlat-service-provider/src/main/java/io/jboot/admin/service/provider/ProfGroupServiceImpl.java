@@ -53,6 +53,14 @@ public class ProfGroupServiceImpl extends JbootServiceBase<ProfGroup> implements
                 return false;
             }
             userRole.setIsEnable(profGroup.getIsEnable());
+            Role _role = roleService.findByName("专业团体立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(profGroup.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && profGroup.update();
         });
     }

@@ -7,6 +7,7 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
+import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -119,13 +120,15 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     public boolean useOrunuse(Person person) {
         return Db.tx(() -> {
             User user = userService.findByUserIdAndUserSource(person.getId(), 0);
-            Role role = roleService.findByName("个人群体");
-            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
-            if(userRole==null){
-                return false;
+            if (person.getIsEnable()) {
+                user.setStatus(UserStatus.USED);
+                user.setRemark("启用系统用户");
+            } else {
+                user.setStatus(UserStatus.LOCKED);
+                user.setRemark("锁定系统用户");
             }
-            userRole.setIsEnable(person.getIsEnable());
-            return userRoleService.update(userRole) && person.update();
+            user.setLastAccessTime(new Date());
+            return userService.update(user) && person.update();
         });
     }
 

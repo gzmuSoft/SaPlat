@@ -114,6 +114,14 @@ public class FacAgencyServiceImpl extends JbootServiceBase<FacAgency> implements
                 return false;
             }
             userRole.setIsEnable(facAgency.getIsEnable());
+            Role _role = roleService.findByName("服务机构立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(facAgency.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && facAgency.update();
         });
     }
