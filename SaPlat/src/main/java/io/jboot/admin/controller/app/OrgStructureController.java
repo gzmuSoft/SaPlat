@@ -703,22 +703,17 @@ public class OrgStructureController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long orgType = getParaToLong("orgType");
-        if (orgType == 3) {
-            orgType = roleService.findByName("审查团体").getId();
-        } else if (orgType == 4) {
-            orgType = roleService.findByName("专业团体").getId();
-        }
         Page<Record> page = structPersonLinkService.OrgPersonListByType(pageNumber, pageSize, OrganizationId, orgType);
-        List<ExpertGroup> list = new ArrayList<ExpertGroup>();
-        ExpertGroup expertGroup;
+        List<Person> list = new ArrayList<Person>();
+        Person person;
         if (page != null) {
             Long personID = null;
             for (Record r : page.getList()) {
                 personID = r.get("userID");
                 if (personID != null) {
-                    expertGroup = expertGroupService.findByPersonId(personID);
-                    if (expertGroup != null) {
-                        list.add(expertGroup);
+                    person = personService.findById(personID);
+                    if (person != null) {
+                        list.add(person);
                     }
                 }
             }
@@ -729,7 +724,7 @@ public class OrgStructureController extends BaseController {
             applyInvite.setIsEnable(true);
             applyInvite.setProjectID(getParaToLong("projectID"));
             applyInvite.setModule(1);
-            applyInvite.setUserID(list.get(i).getPersonID());
+            applyInvite.setUserID(userService.findByUserIdAndUserSource(list.get(i).getId(), 0L).getId());
             tmp = applyInviteService.findFirstByModel(applyInvite);
             if (tmp != null) {
                 list.get(i).setIsInvite(true);

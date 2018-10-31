@@ -102,6 +102,9 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ProfGroupService profGroupService;
 
+    @JbootrpcService
+    private PersonService personService;
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -1250,7 +1253,7 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         ApplyInvite jud = new ApplyInvite();
         jud.setIsEnable(true);
-        jud.setProjectID(getParaToLong("projectID"));
+        jud.setProjectID(getParaToLong("projectId"));
         jud.setModule(2);
         jud.setBelongToID(null);
         jud.setUserID(user.getId());
@@ -1267,7 +1270,7 @@ public class ProjectController extends BaseController {
         notification.setName("项目审查工作通知");
         notification.setSource("/app/project/chooseExpert");
         notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
-        notification.setReceiverID(userService.findByUserIdAndUserSource(expertGroupService.findById(getParaToLong("id")).getPersonID(), 0L).getId().intValue());
+        notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
         notification.setCreateTime(new Date());
         notification.setLastUpdateUserID(user.getId());
@@ -1289,7 +1292,7 @@ public class ProjectController extends BaseController {
         applyInvite.setUserID(notification.getReceiverID().longValue());
         applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
-        applyInvite.setStatus(ApplyInviteStatus.WAITE);
+        applyInvite.setStatus(ApplyInviteStatus.AGREE);
         applyInvite.setCreateTime(new Date());
         ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
         if (timeTmp != null) {
@@ -1306,11 +1309,11 @@ public class ProjectController extends BaseController {
             //查询当前组织已经邀请的人数
             applyInvite = new ApplyInvite();
             applyInvite.setIsEnable(true);
-            applyInvite.setProjectID(getParaToLong("projectID"));
+            applyInvite.setProjectID(getParaToLong("projectId"));
             applyInvite.setModule(1);
             applyInvite.setBelongToID(user.getId());
             List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-            if (list.size() == getParaToLong("num")) {
+            if (list.size() >= getParaToLong("num")) {
                 //若人数已经达到要求则查询当前组织的审查请求的状态为已选择完成
                 applyInvite.setModule(2);
                 applyInvite.setBelongToID(null);

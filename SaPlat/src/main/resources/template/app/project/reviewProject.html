@@ -109,7 +109,10 @@
                     }
                 });
             } else if (obj.event === 'view') {
-                window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.projectID + '&roleType=3'
+                pop_show_full('预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.projectID + '&roleType=3'
+                    , function () {
+                        window.location.reload();
+                    });
             }
         });
 
