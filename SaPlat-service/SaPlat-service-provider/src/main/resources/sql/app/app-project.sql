@@ -100,7 +100,10 @@ SELECT
 FROM
   project
 WHERE
-  managementID in (#para(mgr_list))
+  managementID in (
+    #for(id : mgr_list)
+      #(for.index > 0 ? ", " : "")#(id)
+    #end)
   order by createTime desc
 #end
 
@@ -110,7 +113,10 @@ SELECT
 FROM
   project
 WHERE
-  managementID in (#para(mgr_list)) AND status = #para(status)
+  managementID in (
+    #for(id : mgr_list)
+      #(for.index > 0 ? ", " : "")#(id)
+    #end) AND status = #para(status)
   order by createTime desc
 #end
 
