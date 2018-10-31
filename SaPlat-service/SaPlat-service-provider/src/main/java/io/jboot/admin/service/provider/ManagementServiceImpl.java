@@ -71,6 +71,14 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
                 return false;
             }
             userRole.setIsEnable(management.getIsEnable());
+            Role _role = roleService.findByName("管理机构立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(management.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && management.update();
         });
     }
