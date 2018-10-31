@@ -614,7 +614,8 @@ public class ProjectUndertakeController extends BaseController {
     /**
      * 管理就够对前期资料查看
      */
-    @RequiresRoles("管理机构")
+    //临时注释
+    //@RequiresRoles("管理机构")
     @NotNullPara("id")
     public void managementReviewSee() {
         Long id = getParaToLong("id");
