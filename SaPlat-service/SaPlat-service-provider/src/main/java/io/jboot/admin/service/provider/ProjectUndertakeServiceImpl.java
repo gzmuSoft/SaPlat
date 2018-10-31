@@ -8,7 +8,6 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.ProjectUndertakeService;
 import io.jboot.admin.service.entity.model.Notification;
-import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;

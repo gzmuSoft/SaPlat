@@ -111,13 +111,18 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
+
+    $("#back").click(function () {
+        pop_close();
+        window.location.href = '#(ctxPath)/app/reviewProject';
+    })
 </script>
 #end
 
 #define content()
 <div class="layui-fluid" style="height:100%;">
     <div class="layui-row" style="min-height:600px">
-        <div id="pdfviewer" class="layui-col-md8" style="min-height:500px">
+        <div id="pdfviewer" class="layui-col-md8" style="min-height:450px">
             <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
         </div>
         <div class="layui-col-md4">
@@ -127,20 +132,19 @@
     <div class="layui-row">
         <div id="" class="layui-col-md12">
             <form id="rec" class="layui-form" action="">
-                <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">审查意见</label>
-                    <div class="layui-input-block">
-                        <textarea placeholder="请输入内容" class="layui-textarea" name="model.recomment"></textarea>
-                        <input class="layui-hide" type="text" value="0" name="model.isPass">
-                        <input class="layui-hide" type="text" value="test" name="model.name">
-                        <input class="layui-hide" type="text" value="#(projectId)" name="model.projectID">
-                        <input class="layui-hide" type="text" value="6" name="model.sort">
-                    </div>
+                <h3 class="layui-form-label" style="color: #00a89a; ">审查意见:</h3>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="model.recomment"></textarea>
+                    <input class="layui-hide" type="text" value="0" name="model.isPass">
+                    <input class="layui-hide" type="text" value="test" name="model.name">
+                    <input class="layui-hide" type="text" value="#(projectId)" name="model.projectID">
+                    <input class="layui-hide" type="text" value="6" name="model.sort">
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit="" lay-filter="add">提交</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button type="back" class="layui-btn layui-btn-primary">返回</button>
                     </div>
                 </div>
             </form>
