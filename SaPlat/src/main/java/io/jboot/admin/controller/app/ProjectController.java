@@ -118,8 +118,18 @@ public class ProjectController extends BaseController {
         psModel.setIsEnable(true);
         List<ProjectStep> projectStepList = projectStepService.findAll(psModel);
         List<String> roleNameList = new ArrayList<>();
-        for (int i = 0; i < authList.size(); i++) {
-            roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(),true);
+        List<Long> authRoleId = new ArrayList<>();
+        List<Long> userRoleId = new ArrayList<>();
+        for (Auth i : authList) {
+            authRoleId.add(i.getRoleId());
+        }
+        for (UserRole j : userRoles) {
+            userRoleId.add(j.getRoleID());
+        }
+        authRoleId.retainAll(userRoleId);//取两个集合的交集，返回值为boolean；authRoleId为交集
+        for (Long i : authRoleId) {
+            roleNameList.add(roleService.findById(i).getName());
         }
 
         List<Management> mList = managementService.findAll(true);
@@ -619,8 +629,8 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         FileProject fileProject;
         json.put("judgeFile", true);
-        for (ProjectFileType item:childProjectFileType) {
-            if(item.getStatus()!=null && 1 == item.getStatus()) {
+        for (ProjectFileType item : childProjectFileType) {
+            if (item.getStatus() != null && 1 == item.getStatus()) {
                 fileProject = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), item.getId());
                 if (null == fileProject) {
                     json.put("judgeFile", false);
@@ -1129,7 +1139,7 @@ public class ProjectController extends BaseController {
         Project project = projectService.findByProjectName(getPara("name"));
         if (project != null) {
             json.put("status", false);
-        }else {
+        } else {
             json.put("status", true);
         }
         renderJson(json);

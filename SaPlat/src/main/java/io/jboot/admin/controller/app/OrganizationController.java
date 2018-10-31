@@ -1234,6 +1234,7 @@ public class OrganizationController extends BaseController {
      */
     public void projectGet() {
         User user = AuthUtils.getLoginUser();
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(user.getId(),false);
         List<Role> roleList = roleService.findByNames("服务机构立项", "管理机构立项", "企业机构立项", "审查团体立项", "专业团体立项");
         List<Auth> authList = authService.findByUserAndType(user, TypeStatus.PROJECT_VERIFY);
         if (authList == null) {
@@ -1242,6 +1243,21 @@ public class OrganizationController extends BaseController {
         List<Auth> noVerify = Collections.synchronizedList(new ArrayList<Auth>());
         List<Auth> verify = Collections.synchronizedList(new ArrayList<Auth>());
         List<Auth> verifying = Collections.synchronizedList(new ArrayList<Auth>());
+
+
+        List<Long> authRoleId = new ArrayList<>();
+        List<Long> userRoleId = new ArrayList<>();
+        for (UserRole j : userRoles) {
+            userRoleId.add(j.getRoleID());
+        }
+        for (Auth i : authList) {
+            if(i.getStatus().equals(AuthStatus.IS_VERIFY)){
+                authRoleId.add(i.getRoleId());
+            }
+        }
+        authRoleId.retainAll(userRoleId);
+        //这一段是判断角色是否禁止了
+
         authList.forEach(auth -> {
             for (int i = 0; i < roleList.size(); i++) {
                 Role role = roleList.get(i);
@@ -1250,6 +1266,7 @@ public class OrganizationController extends BaseController {
                     roleList.remove(i);
                 }
             }
+
             switch (auth.getStatus()) {
                 case AuthStatus.IS_VERIFY:
                     verify.add(auth);
@@ -1272,6 +1289,7 @@ public class OrganizationController extends BaseController {
                     .setAttr("verify", verify)
                     .setAttr("verifying", verifying)
                     .setAttr("roleList", roleList)
+                    .setAttr("authRoleId", authRoleId)
                     .render("projectGet.html");
         } else {
             setAttr("flag", false).render("projectGet.html");
