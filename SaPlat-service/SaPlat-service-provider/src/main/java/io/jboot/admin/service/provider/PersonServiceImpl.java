@@ -132,6 +132,20 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         });
     }
 
+    /**
+     * 分页查询 项目审查人员 信息
+     *
+     * @param projectID 项目编号
+     * @return 页
+     */
+    @Override
+    public Page<Person> findPageByProjectID(Long projectID, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        c = Kv.by("ID", projectID);
+        sqlPara = Db.getSqlPara("app-project.invitedExpert-by-projectID", c);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+    }
 
     @Override
     public Person findByUser(User user) {

@@ -167,7 +167,7 @@ WHERE ID IN
 #end
 
 #sql("invitedExpert-by-projectID")
-SELECT * FROM expert_group WHERE personID IN(
+SELECT * FROM person WHERE id IN(
 	SELECT userID FROM sys_user WHERE ID IN(
 		SELECT userID FROM apply_invite
 		WHERE projectID = #para(ID) AND createTime > (
