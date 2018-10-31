@@ -30,14 +30,16 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     ProjectServiceImpl projectService = new ProjectServiceImpl();
     FacAgencyServiceImpl faService = new FacAgencyServiceImpl();
+
     /**
      * 装配完善List对象中所有对象的数据
+     *
      * @param list
      * @return
      */
-    public List<ProjectUndertake> fitList(List<ProjectUndertake> list){
-        if(list != null){
-            for (ProjectUndertake item: list) {
+    public List<ProjectUndertake> fitList(List<ProjectUndertake> list) {
+        if (list != null) {
+            for (ProjectUndertake item : list) {
                 fitModel(item);
             }
         }
@@ -46,13 +48,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     /**
      * 装配完善Page对象中所有对象的数据
+     *
      * @param page
      * @return
      */
-    public Page<ProjectUndertake> fitPage(Page<ProjectUndertake> page){
-        if(page != null){
+    private Page<ProjectUndertake> fitPage(Page<ProjectUndertake> page) {
+        if (page != null) {
             List<ProjectUndertake> tList = page.getList();
-            for (ProjectUndertake item: tList) {
+            for (ProjectUndertake item : tList) {
                 fitModel(item);
             }
         }
@@ -61,11 +64,12 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
 
     /**
      * 装配单个实体对象的数据
+     *
      * @param model
      * @return
      */
-    public ProjectUndertake fitModel(ProjectUndertake model){
-        if(model != null) {
+    public ProjectUndertake fitModel(ProjectUndertake model) {
+        if (model != null) {
             if (model.getProjectID() > 0) {
                 model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
             }
@@ -146,9 +150,9 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     @Override
     public List<ProjectUndertake> findListByFacAgencyIdAndStatusAndAOI(Long facAgencyId, String status, boolean aoi) {
         Columns columns = Columns.create();
-        columns.eq("facAgencyID",facAgencyId);
-        columns.eq("status",status);
-        columns.eq("isEnable",aoi);
+        columns.eq("facAgencyID", facAgencyId);
+        columns.eq("status", status);
+        columns.eq("isEnable", aoi);
         return fitList(DAO.findListByColumns(columns));
     }
 
@@ -161,12 +165,12 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     }
 
     @Override
-    public List<ProjectUndertake> findByCreateUserIDAndStatusAndAOI(Long createUserId, String status,boolean aoi) {
+    public List<ProjectUndertake> findByCreateUserIDAndStatusAndAOI(Long createUserId, String status, boolean aoi) {
         Columns columns = Columns.create();
-        columns.eq("createUserID",createUserId);
-        columns.eq("status",status);
-        columns.eq("applyOrInvite",aoi);
-        columns.eq("isEnable",true);
+        columns.eq("createUserID", createUserId);
+        columns.eq("status", status);
+        columns.eq("applyOrInvite", aoi);
+        columns.eq("isEnable", true);
         return fitList(DAO.findListByColumns(columns));
     }
 
@@ -205,14 +209,30 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     public Page<ProjectUndertake> findPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
         Kv c = null;
         SqlPara sqlPara = null;
+        Page<ProjectUndertake> page = null;
+        // 如果它是组织并且是服务机构
         if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
             c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("createUserID", projectUndertake.getCreateUserID()).set("ID", projectUndertake.getCreateUserID());
             sqlPara = Db.getSqlPara("app-project.project", c);
-        } else {
-            c = Kv.by("ID", projectUndertake.getCreateUserID());
-            sqlPara = Db.getSqlPara("app-project.project-self", c);
+            // 直接查询委评项目
+            page = DAO.paginate(pageNumber, pageSize, sqlPara);
         }
-        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+        // 自评
+        c = Kv.by("ID", projectUndertake.getCreateUserID());
+        sqlPara = Db.getSqlPara("app-project.project-self", c);
+        // 查询自评的
+        Page<ProjectUndertake> self = DAO.paginate(pageNumber, pageSize, sqlPara);
+        if (self == null) {
+            self = new Page<>();
+        }
+
+        // 如果委评为空
+        if (page != null && page.getList().size() != 0) {
+            for (ProjectUndertake undertake : page.getList()) {
+                self.getList().add(undertake);
+            }
+        }
+        return fitPage(self);
     }
 
     @Override
