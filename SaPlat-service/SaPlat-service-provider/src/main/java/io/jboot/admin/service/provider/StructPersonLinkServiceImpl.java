@@ -82,7 +82,7 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
         return page;
     }
 
-    @Override
+
     /**
      * 根据用户的userID查询用户的基本信息
      */
@@ -101,7 +101,7 @@ public class StructPersonLinkServiceImpl extends JbootServiceBase<StructPersonLi
      * @param OrganizationId
      * @return
      */
-    @Override
+
     public Page<Record> getOrgPersonList(int pagenumber, int pageSize, Long OrganizationId) {
         //添加参数
         Kv para = Kv.by("OrgId",OrganizationId);
