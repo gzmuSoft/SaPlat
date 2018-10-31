@@ -804,13 +804,16 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        if (organization != null) {
+        // 如果是组织并且启用
+        if (organization != null && organization.getIsEnable()) {
+            // 获取服务机构
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency != null) {
-                // && facAgency.getIsEnable()
+            // 如果服务机构不为空并且启用
+            if (facAgency != null && facAgency.getIsEnable()) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
+            // 如果不是组织或者没有启用
         } else {
             projectUndertake.setCreateUserID(loginUser.getId());
         }
@@ -1090,14 +1093,14 @@ public class ProjectController extends BaseController {
 
 
     /**
-     * 渲染专家团体表格数据
+     * 项目承接者渲染被邀请的人员的表格数据
      */
     @NotNullPara({"id"})
     public void invitedExpertTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        //查找当前项目的所有被邀请的专家列表
-        Page<ExpertGroup> page = expertGroupService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
+        //查找当前项目的所有被邀请的人员列表
+        Page<Person> page = personService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
         if (page != null) {
             List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
             int rowCount = page.getList().size();
@@ -1110,7 +1113,7 @@ public class ProjectController extends BaseController {
                 }
             }
         }
-        renderJson(new DataTable<ExpertGroup>(page));
+        renderJson(new DataTable<Person>(page));
     }
 
     /**

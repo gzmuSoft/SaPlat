@@ -554,8 +554,10 @@ public class OrgStructureController extends BaseController {
      * @return
      */
     private boolean isPerson(Long UserID) {
-        Person person = personService.findById(UserID);
-        if (person != null) {
+        //判断用户身份是否为个人账号 userSource为0为个人帐号
+        Integer userSource = 0;
+        User user = userService.findByUserIdAndUserSource(UserID,userSource);
+        if (user != null) {
             return true;
         } else {
             return false;
