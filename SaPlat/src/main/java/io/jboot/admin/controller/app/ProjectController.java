@@ -804,13 +804,16 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         ProjectUndertake projectUndertake = new ProjectUndertake();
         Organization organization = organizationService.findById(loginUser.getUserID());
-        if (organization != null) {
+        // 如果是组织并且启用
+        if (organization != null && organization.getIsEnable()) {
+            // 获取服务机构
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency != null) {
-                // && facAgency.getIsEnable()
+            // 如果服务机构不为空并且启用
+            if (facAgency != null && facAgency.getIsEnable()) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
+            // 如果不是组织或者没有启用
         } else {
             projectUndertake.setCreateUserID(loginUser.getId());
         }

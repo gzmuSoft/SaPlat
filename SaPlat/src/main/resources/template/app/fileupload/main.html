@@ -574,7 +574,7 @@
     });
 
     function postFileID(_fileTypeID, _fileID, _projectID) {
-        id=_fileTypeID;
+        id = _fileTypeID;
         util.sendAjax({
             type: 'POST',
             url: '#(ctxPath)/app/fileupload/save',
@@ -597,71 +597,82 @@
 #end
 
 #define content()
-<div class="layui-fluid">
+<div class="layui-fluid layui-form-pane">
     <div class="layui-row">
-        <fieldset id="table_1" fileTypeId="24" name="风险权重" class="layui-elem-field">
-            <legend>风险权重</legend>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress_1" lay-filter="upload-progress">
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-btn-group">
-                <button id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
-            </div>
-            <table id="dateTable_1" lay-filter="dateTable_1"></table>
-        </fieldset>
+        <div class="layui-form-item">
+            <fieldset id="table_1" fileTypeId="24" name="风险权重" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_1" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">风险权重</label>
+                <div class="layui-btn-group">
+                    <button id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
+                </div>
+                <table id="dateTable_1" lay-filter="dateTable_1"></table>
+            </fieldset>
+        </div>
     </div>
     <div class="layui-row">
-        <fieldset id="table_2" fileTypeId="25" name="风险等级" class="layui-elem-field">
-            <legend>风险等级</legend>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress_2" lay-filter="upload-progress">
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-btn-group">
-                <button id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
-            </div>
-            <table id="dateTable_2" lay-filter="dateTable_2"></table>
-        </fieldset>
+        <div class="layui-form-item">
+            <fieldset id="table_2" fileTypeId="25" name="风险等级" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_2" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">风险等级</label>
+                <div class="layui-btn-group">
+                    <button id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
+                </div>
+                <table id="dateTable_2" lay-filter="dateTable_2"></table>
+            </fieldset>
+        </div>
     </div>
     <div class="layui-row">
-        <fieldset id="table_3" fileTypeId="26" name="排除风险" class="layui-elem-field">
-            <legend>排除风险</legend>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress_3" lay-filter="upload-progress">
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-btn-group">
-                <button id="add_3" class="layui-btn layui-btn-small  add">上传文件</button>
-            </div>
-            <table id="dateTable_3" lay-filter="dateTable_3"></table>
-        </fieldset>
+        <div class="layui-form-item">
+
+            <fieldset id="table_3" fileTypeId="26" name="排除风险" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_3" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">排除风险</label>
+                <div class="layui-btn-group">
+                    <button id="add_3" class="layui-btn layui-btn-small  add">上传文件</button>
+                </div>
+                <table id="dateTable_3" lay-filter="dateTable_3"></table>
+            </fieldset>
+        </div>
     </div>
     <div class="layui-row">
-        <fieldset id="table_4" fileTypeId="27" name="风险结论" class="layui-elem-field">
-            <legend>风险结论</legend>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress_4" lay-filter="upload-progress">
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-btn-group">
-                <button id="add_4" class="layui-btn layui-btn-small  add">上传文件</button>
-            </div>
-            <table id="dateTable_4" lay-filter="dateTable_4"></table>
-        </fieldset>
+        <div class="layui-form-item">
+            <fieldset id="table_4" fileTypeId="27" name="风险结论" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_4" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">风险结论</label>
+                <div class="layui-btn-group">
+                    <button id="add_4" class="layui-btn layui-btn-small  add">上传文件</button>
+                </div>
+                <table id="dateTable_4" lay-filter="dateTable_4"></table>
+            </fieldset>
+        </div>
     </div>
     <div class="layui-row">
-        <fieldset id="table_5" fileTypeId="28" name="四性分析" class="layui-elem-field">
-            <legend>四性分析</legend>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress_5" lay-filter="upload-progress">
-                <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-            </div>
-            <div class="layui-btn-group">
-                <button id="add_5" class="layui-btn layui-btn-small add">上传文件</button>
-            </div>
-            <table id="dateTable_5" lay-filter="dateTable_5"></table>
-        </fieldset>
+        <div class="layui-form-item">
+            <fieldset id="table_5" fileTypeId="28" name="四性分析" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_5" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">四性分析</label>
+                <div class="layui-btn-group">
+                    <button id="add_5" class="layui-btn layui-btn-small add">上传文件</button>
+                </div>
+                <table id="dateTable_5" lay-filter="dateTable_5"></table>
+            </fieldset>
+        </div>
     </div>
 </div>
 </div>
