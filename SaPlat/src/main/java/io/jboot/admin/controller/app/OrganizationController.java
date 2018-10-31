@@ -1281,7 +1281,14 @@ public class OrganizationController extends BaseController {
                     break;
             }
         });
+        for(Auth i:verify){
+            for(Long j:authRoleId){
+                if(i.getRoleId()==j){
+                    i.setRemark(i.getRemark()+"(已禁止)");
+                }
+            }
 
+        }
         List<UserRole> userRole = userRoleService.findListByUserId(user.getId());
         if (userRole.size() != 1) {
             setAttr("noVerify", noVerify)
@@ -1289,7 +1296,6 @@ public class OrganizationController extends BaseController {
                     .setAttr("verify", verify)
                     .setAttr("verifying", verifying)
                     .setAttr("roleList", roleList)
-                    .setAttr("authRoleId", authRoleId)
                     .render("projectGet.html");
         } else {
             setAttr("flag", false).render("projectGet.html");
