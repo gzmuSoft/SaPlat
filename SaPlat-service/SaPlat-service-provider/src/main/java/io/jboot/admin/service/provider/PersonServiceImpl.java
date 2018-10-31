@@ -7,6 +7,7 @@ import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.AuthStatus;
 import io.jboot.admin.service.entity.status.system.RoleStatus;
+import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -119,16 +120,32 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     public boolean useOrunuse(Person person) {
         return Db.tx(() -> {
             User user = userService.findByUserIdAndUserSource(person.getId(), 0);
-            Role role = roleService.findByName("个人群体");
-            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
-            if(userRole==null){
-                return false;
+            if (person.getIsEnable()) {
+                user.setStatus(UserStatus.USED);
+                user.setRemark("启用系统用户");
+            } else {
+                user.setStatus(UserStatus.LOCKED);
+                user.setRemark("锁定系统用户");
             }
-            userRole.setIsEnable(person.getIsEnable());
-            return userRoleService.update(userRole) && person.update();
+            user.setLastAccessTime(new Date());
+            return userService.update(user) && person.update();
         });
     }
 
+    /**
+     * 分页查询 项目审查人员 信息
+     *
+     * @param projectID 项目编号
+     * @return 页
+     */
+    @Override
+    public Page<Person> findPageByProjectID(Long projectID, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        c = Kv.by("ID", projectID);
+        sqlPara = Db.getSqlPara("app-project.invitedExpert-by-projectID", c);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+    }
 
     @Override
     public Person findByUser(User user) {

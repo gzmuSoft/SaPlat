@@ -8,6 +8,7 @@ import io.jboot.admin.service.entity.model.Organization;
 import io.jboot.admin.service.entity.model.Role;
 import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.model.UserRole;
+import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
@@ -22,7 +23,7 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService{
+public class OrganizationServiceImpl extends JbootServiceBase<Organization> implements OrganizationService {
     @Inject
     private UserService userService;
 
@@ -39,13 +40,14 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
 
     /**
      * 装配完善Page对象中所有对象的数据
+     *
      * @param page
      * @return
      */
-    public Page<Organization> fitPage(Page<Organization> page){
-        if(page != null){
+    public Page<Organization> fitPage(Page<Organization> page) {
+        if (page != null) {
             List<Organization> tList = page.getList();
-            for (Organization item: tList) {
+            for (Organization item : tList) {
                 fitModel(item);
             }
         }
@@ -55,11 +57,12 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
 
     /**
      * 装配单个实体对象的数据
+     *
      * @param model
      * @return
      */
-    public Organization fitModel(Organization model){
-        if(model!=null) {
+    public Organization fitModel(Organization model) {
+        if (model != null) {
             User user = new User();
             user.setUserID(model.getId());
             user.setUserSource(1);// 1 代表组织机构
@@ -89,24 +92,24 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
      * 分页查询
      *
      * @param organization 组织
-     * @param dates 创建日期
+     * @param dates        创建日期
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @Override
-    public Page<Organization> findPage(Organization organization, Date[] dates, int pageNumber, int pageSize){
+    public Page<Organization> findPage(Organization organization, Date[] dates, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
         if (StrKit.notBlank(organization.getName())) {
             columns.like("name", "%" + organization.getName() + "%");
         }
-        if (StrKit.notBlank(organization.getPrincipal())){
+        if (StrKit.notBlank(organization.getPrincipal())) {
             columns.like("principal", "%" + organization.getPrincipal() + "%");
         }
-        if (StrKit.notNull(dates[0])){
+        if (StrKit.notNull(dates[0])) {
             columns.ge("createTime", dates[0]);
         }
-        if (StrKit.notNull(dates[1])){
+        if (StrKit.notNull(dates[1])) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dates[1]);
             calendar.add(Calendar.DAY_OF_MONTH, 1);  //利用Calendar 实现 Date日期+1天
@@ -139,13 +142,16 @@ public class OrganizationServiceImpl extends JbootServiceBase<Organization> impl
     public boolean useOrUnuse(Organization organization) {
         return Db.tx(() -> {
             User user = userService.findByUserIdAndUserSource(organization.getId(), 1);
-            Role role = roleService.findByName("组织机构");
-            UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getId());
-            if(userRole==null){
-                return false;
+            if (organization.getIsEnable()) {
+                user.setStatus(UserStatus.USED);
+                user.setRemark("启用系统用户");
+            } else {
+                user.setStatus(UserStatus.LOCKED);
+                user.setRemark("锁定系统用户");
             }
-            userRole.setIsEnable(organization.getIsEnable());
-            return userRoleService.update(userRole) && organization.update();
+            user.setLastAccessTime(new Date());
+
+            return userService.update(user) && organization.update();
         });
     }
 

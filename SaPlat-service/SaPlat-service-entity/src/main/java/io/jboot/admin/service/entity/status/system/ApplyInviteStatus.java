@@ -46,8 +46,8 @@ public class ApplyInviteStatus extends BaseStatus {
         add(REFUSE, "拒绝审查");
         add(PASS, "审查通过");
         add(NOPASS, "审查不通过");
-        add(CHOOSE_EXPERT, "选择审查专家");
-        add(CHOOSE_OVER, "选择专家完成");
+        add(CHOOSE_EXPERT, "选择审查人员");
+        add(CHOOSE_OVER, "选择人员完成");
     }
 
     private static ApplyInviteStatus me;

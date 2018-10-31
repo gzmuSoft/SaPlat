@@ -75,21 +75,6 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
         return model;
     }
 
-    /**
-     * 分页查询 项目审查专家 信息
-     *
-     * @param projectID 项目编号
-     * @return 页
-     */
-    @Override
-    public Page<ExpertGroup> findPageByProjectID(Long projectID, int pageNumber, int pageSize) {
-        Kv c;
-        SqlPara sqlPara = null;
-        c = Kv.by("ID", projectID);
-        sqlPara = Db.getSqlPara("app-project.invitedExpert-by-projectID", c);
-        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
-    }
-
     @Override
     public Page<ExpertGroup> findPage(ExpertGroup model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
