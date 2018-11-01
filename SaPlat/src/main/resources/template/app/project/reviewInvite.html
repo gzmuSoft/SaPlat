@@ -30,7 +30,7 @@
     #[[
     {{# } else if(d.status === '6'){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invited">审查详情</a>
+    <!--<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invited">审查详情</a>-->
     #[[
     {{#  } }}
     ]]#
@@ -55,6 +55,7 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                 , {field: 'groupType', title: '被邀请的组织身份', minWidth: 200, sort: true}
+                , {field: 'sort', title: '所需人数', minWidth: 150, sort: true}
                 , {field: 'createTime', title: '邀请时间', minWidth: 150, sort: true}
                 , {
                     field: 'status',
@@ -140,7 +141,7 @@
                 });
 
             } else if (obj.event === 'choose') {
-                pop_show('选择审查人员', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, '1200', '700', function () {
+                pop_show('选择审查人员', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, '1200', '800', function () {
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/orgReviewTable'
                         , where: {

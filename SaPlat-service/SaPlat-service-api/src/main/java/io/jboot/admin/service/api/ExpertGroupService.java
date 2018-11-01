@@ -20,13 +20,6 @@ public interface ExpertGroupService {
 
     public ExpertGroup findByOrgId(Long orgId);
 
-    /**
-     * 分页查询 项目审查专家 信息
-     *
-     * @param projectID 项目编号
-     * @return 页
-     */
-    public Page<ExpertGroup> findPageByProjectID(Long projectID, int pageNumber, int pageSize);
 
     /**
      * 分页查询系统 专家团体 信息

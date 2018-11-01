@@ -102,6 +102,9 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ProfGroupService profGroupService;
 
+    @JbootrpcService
+    private PersonService personService;
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -115,14 +118,20 @@ public class ProjectController extends BaseController {
         psModel.setIsEnable(true);
         List<ProjectStep> projectStepList = projectStepService.findAll(psModel);
         List<String> roleNameList = new ArrayList<>();
-        List<UserRole> userRoles = userRoleService.findAll();
-        for (UserRole j : userRoles) {
-            if (j.getIsEnable().equals(true)) {
-                for (int i = 0; i < authList.size(); i++) {
-                    roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
-                }
-            }
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(),true);
+        List<Long> authRoleId = new ArrayList<>();
+        List<Long> userRoleId = new ArrayList<>();
+        for (Auth i : authList) {
+            authRoleId.add(i.getRoleId());
         }
+        for (UserRole j : userRoles) {
+            userRoleId.add(j.getRoleID());
+        }
+        authRoleId.retainAll(userRoleId);//取两个集合的交集，返回值为boolean；authRoleId为交集
+        for (Long i : authRoleId) {
+            roleNameList.add(roleService.findById(i).getName());
+        }
+
         List<Management> mList = managementService.findAll(true);
 
         if (roleNameList.size() != 0) {
@@ -804,7 +813,7 @@ public class ProjectController extends BaseController {
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
-        // 如果不是组织或者没有启用
+            // 如果不是组织或者没有启用
         } else {
             projectUndertake.setCreateUserID(loginUser.getId());
         }
@@ -1084,14 +1093,14 @@ public class ProjectController extends BaseController {
 
 
     /**
-     * 渲染专家团体表格数据
+     * 项目承接者渲染被邀请的人员的表格数据
      */
     @NotNullPara({"id"})
     public void invitedExpertTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        //查找当前项目的所有被邀请的专家列表
-        Page<ExpertGroup> page = expertGroupService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
+        //查找当前项目的所有被邀请的人员列表
+        Page<Person> page = personService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
         if (page != null) {
             List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
             int rowCount = page.getList().size();
@@ -1104,7 +1113,7 @@ public class ProjectController extends BaseController {
                 }
             }
         }
-        renderJson(new DataTable<ExpertGroup>(page));
+        renderJson(new DataTable<Person>(page));
     }
 
     /**
@@ -1257,7 +1266,7 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         ApplyInvite jud = new ApplyInvite();
         jud.setIsEnable(true);
-        jud.setProjectID(getParaToLong("projectID"));
+        jud.setProjectID(getParaToLong("projectId"));
         jud.setModule(2);
         jud.setBelongToID(null);
         jud.setUserID(user.getId());
@@ -1274,7 +1283,7 @@ public class ProjectController extends BaseController {
         notification.setName("项目审查工作通知");
         notification.setSource("/app/project/chooseExpert");
         notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
-        notification.setReceiverID(userService.findByUserIdAndUserSource(expertGroupService.findById(getParaToLong("id")).getPersonID(), 0L).getId().intValue());
+        notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
         notification.setCreateTime(new Date());
         notification.setLastUpdateUserID(user.getId());
@@ -1296,7 +1305,7 @@ public class ProjectController extends BaseController {
         applyInvite.setUserID(notification.getReceiverID().longValue());
         applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
-        applyInvite.setStatus(ApplyInviteStatus.WAITE);
+        applyInvite.setStatus(ApplyInviteStatus.AGREE);
         applyInvite.setCreateTime(new Date());
         ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
         if (timeTmp != null) {
@@ -1313,11 +1322,11 @@ public class ProjectController extends BaseController {
             //查询当前组织已经邀请的人数
             applyInvite = new ApplyInvite();
             applyInvite.setIsEnable(true);
-            applyInvite.setProjectID(getParaToLong("projectID"));
+            applyInvite.setProjectID(getParaToLong("projectId"));
             applyInvite.setModule(1);
             applyInvite.setBelongToID(user.getId());
             List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-            if (list.size() == getParaToLong("num")) {
+            if (list.size() >= getParaToLong("num")) {
                 //若人数已经达到要求则查询当前组织的审查请求的状态为已选择完成
                 applyInvite.setModule(2);
                 applyInvite.setBelongToID(null);
@@ -1573,7 +1582,6 @@ public class ProjectController extends BaseController {
         applyInvite.setReply(reply);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setLastAccessTime(new Date());
-
 
         notification.setSource("/app/project/saveInviteReview");
         notification.setRecModule("");

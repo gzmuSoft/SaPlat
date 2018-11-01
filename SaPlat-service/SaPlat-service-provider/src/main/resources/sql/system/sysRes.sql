@@ -40,7 +40,7 @@ ORDER BY a.parentID asc, a.sort asc
 
 #sql("findLeftMenuByUserNameAndParentID")
 SELECT
-  a.*
+  DISTINCT a.*
 FROM
   sys_res a,
   sys_role b,

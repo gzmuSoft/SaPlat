@@ -10,6 +10,16 @@ import io.jboot.admin.service.entity.model.base.BasePerson;
 public class Person extends BasePerson<Person> {
     private User user;
 
+    private boolean isInvite;
+
+    public void setIsInvite(boolean isInvite) {
+        this.isInvite = isInvite;
+    }
+
+    public boolean getIsInvite() {
+        return this.isInvite;
+    }
+
     public void setPower(java.lang.String power) {
         set("power", power);
     }

@@ -6,16 +6,18 @@ import io.jboot.admin.service.entity.model.UserRole;
 
 import java.util.List;
 
-public interface UserRoleService  {
+public interface UserRoleService {
 
     /**
      * 根据userId删除model
+     *
      * @param userId
      */
     public int deleteByUserId(Long userId);
 
     /**
      * 批量保存 model
+     *
      * @param list
      * @return
      */
@@ -31,11 +33,12 @@ public interface UserRoleService  {
 
     /**
      * 通过用户id和权限id查询
+     *
      * @param userId 用户id
      * @param roleId 权限id
      * @return 用户权限
      */
-    public UserRole findByUserIdAndRoleId(Long userId,Long roleId);
+    public UserRole findByUserIdAndRoleId(Long userId, Long roleId);
 
     /**
      * 根据用户id查询用户权限
@@ -45,6 +48,15 @@ public interface UserRoleService  {
      */
 
     public List<UserRole> findListByUserId(Long userId);
+
+
+    /**
+     * 根据是否禁用查询
+     *
+     * @param isEnable
+     * @return List<UserRole>
+     */
+    public List<UserRole> findListByUserIDAndIsEnable(Long userId,boolean isEnable);
 
     /**
      * 根据ID删除model
@@ -88,17 +100,24 @@ public interface UserRoleService  {
     public boolean update(UserRole model);
 
     public List<UserRole> findAll();
+
     public List<UserRole> findAllByRoleId(Object roleID);
 
     public void join(Page<? extends Model> page, String joinOnField);
+
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName);
+
     public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
 
 
     public void join(List<? extends Model> models, String joinOnField);
+
     public void join(List<? extends Model> models, String joinOnField, String[] attrs);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName);
+
     public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
 
     /**

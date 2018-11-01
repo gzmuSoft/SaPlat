@@ -63,6 +63,14 @@ public interface PersonService {
     public Page<Person> findPage(Person person, Date[] dates, int pageNumber, int pageSize);
 
     /**
+     * 分页查询 项目审查专家 信息
+     *
+     * @param projectID 项目编号
+     * @return 页
+     */
+    public Page<Person> findPageByProjectID(Long projectID, int pageNumber, int pageSize);
+
+    /**
      * save model to database
      *
      * @param model
