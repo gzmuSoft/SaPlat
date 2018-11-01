@@ -17,7 +17,7 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService{
+public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService {
     @Inject
     private NotificationService notificationService;
 
@@ -51,13 +51,14 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
     /**
      * 装配完善Page对象中所有对象的数据
+     *
      * @param page
      * @return
      */
-    public Page<Management> fitPage(Page<Management> page){
-        if(page != null){
+    public Page<Management> fitPage(Page<Management> page) {
+        if (page != null) {
             List<Management> tList = page.getList();
-            for (Management item: tList) {
+            for (Management item : tList) {
                 fitModel(item);
             }
         }
@@ -66,12 +67,13 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
     /**
      * 装配完善List对象中所有对象的数据
+     *
      * @param list
      * @return
      */
-    public List<Management> fitList(List<Management> list){
-        if(list != null){
-            for (Management item: list) {
+    public List<Management> fitList(List<Management> list) {
+        if (list != null) {
+            for (Management item : list) {
                 fitModel(item);
             }
         }
