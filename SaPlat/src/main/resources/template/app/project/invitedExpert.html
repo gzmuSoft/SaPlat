@@ -73,13 +73,14 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'invite') {
-                $.ajax({
+            window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' +  $('#id').val() + '&roleType=4'
+                /*$.ajax({
                     type: 'POST',
                     //url: '#(ctxPath)/app/project/invitedExpert?id=' + data.id + '&projectId=' + $('#id').val(),
                     success: function () {
                         window.location.reload();
                     }
-                });
+                });*/
             }
         });
     });
