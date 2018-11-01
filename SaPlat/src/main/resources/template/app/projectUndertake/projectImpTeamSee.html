@@ -40,13 +40,15 @@
                                                class="layui-input "  readonly/>
                                     </div>
                                 </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.amount" >预计金额：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="project.amount" name="project.amount" value="#(project.amount)"
-                                               class="layui-input " readonly/>
+
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">预计金额</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" value="#number(project.amount, ',###')" autocomplete="off" class="layui-input money" readonly/>
+                                        </div>
+                                        <div class="layui-form-mid layui-word-aux">（单位：元）</div>
                                     </div>
-                                </div>
+
                                 <div class="layui-inline">
                                     <label class="layui-form-label" for="project.assessmentMode" >评估方式：</label>
                                     <div class="layui-input-block" >

@@ -824,6 +824,12 @@ public class ProjectController extends BaseController {
             if (facAgency != null && facAgency.getIsEnable()) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
             }
+<<<<<<< HEAD
+=======
+            // 如果不是组织或者没有启用
+        } else {
+            projectUndertake.setCreateUserID(loginUser.getId());
+>>>>>>> 47f73a08d542e20a4212b6e60214a498994c8b6c
         }
         projectUndertake.setCreateUserID(loginUser.getId());
 
