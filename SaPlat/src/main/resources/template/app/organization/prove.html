@@ -47,6 +47,17 @@
             }
         }
 
+        //已禁止按钮追加以禁止标识
+        var a = $(".stopList");
+        var b = $(".layui-btn");
+        for (var i = 0; i < a.length; i++) {
+            for (var j = 0; j < b.length; j++) {
+                if (a[i].name == b[j].name) {
+                    b[j].innerHTML = "<p>(&nbsp;&nbsp;已&nbsp;&nbsp;认&nbsp;&nbsp;证&nbsp;&nbsp;)(已禁止)</p>"
+                }
+            }
+        }
+
         //按钮点击事件
         form.on('submit(sub)', function (data) {
             var v = data.elem.value;
@@ -131,8 +142,8 @@
                     </li>
                 </ul>
                 <br><br>
-                 <button class="layui-btn" lay-submit lay-filter="sub" value="enterprise" name="企业机构">认&nbsp;&nbsp;&nbsp;&nbsp;证
-                                </button>
+                <button class="layui-btn" lay-submit lay-filter="sub" value="enterprise" name="企业机构">认&nbsp;&nbsp;&nbsp;&nbsp;证
+                </button>
             </div>
         </div>
     </div>
@@ -157,8 +168,8 @@
                     </li>
                 </ul>
                 <br>
-                       <button class="layui-btn" lay-submit lay-filter="sub" value="profGroup" name="专业团体">认&nbsp;&nbsp;&nbsp;&nbsp;证
-                                </button>
+                <button class="layui-btn" lay-submit lay-filter="sub" value="profGroup" name="专业团体">认&nbsp;&nbsp;&nbsp;&nbsp;证
+                </button>
 
             </div>
         </div>
@@ -192,7 +203,12 @@
 
     #for(list : nameList)
     <button class="nameList layui-hide" name="#(list)">对比按钮(隐藏)</button>
-                    #end
+    #end
+
+    #for(list1 : stopList)
+    <button class="stopList layui-hide" name="#(list1)">对比按钮1(隐藏)</button>
+    #end
+
     #else if(flag==false)
     <script>
         window.location.href = "#(ctxPath)/util/tip?content=请上传营业执照&btn1=立即上传&url1=#(ctxPath)/app/organization/&icon=layui-icon-form&method1=new&title=组织机构信息";
