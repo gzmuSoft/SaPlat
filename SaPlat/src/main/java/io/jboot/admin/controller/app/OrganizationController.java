@@ -114,7 +114,6 @@ public class OrganizationController extends BaseController {
      */
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
-        loginUser = userService.findById(loginUser.getId());
 
         Organization organization = organizationService.findById(loginUser.getUserID());
         FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", organization.getId());
