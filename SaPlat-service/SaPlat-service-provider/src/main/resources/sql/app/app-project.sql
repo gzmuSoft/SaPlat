@@ -6,14 +6,6 @@
   where
     (
         facAgencyID = #para(facAgencyID)
-          or
-        (
-          createUserID = #para(ID)
-            AND
-          facAgencyID = #para(ID)
-        )
-          or
-        createUserID = #para(createUserID)
     )
     and
         isEnable = 1

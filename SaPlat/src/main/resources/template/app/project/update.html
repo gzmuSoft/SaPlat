@@ -14,6 +14,7 @@
 
 #define js()
 <script type="text/javascript">
+    var managementRole = "#(managementRole)";
     layui.use(['form', 'layer', 'layedit'], function () {
         // 操作对象
         var form = layui.form
@@ -57,7 +58,13 @@
         }
 
         $("#eva-scheme").click(function(){
-            pop_show_full("评估方案","#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)",function(){});
+            console.log(managementRole);
+            if (managementRole === '1') {
+                pop_show_full("评估方案", "#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)", function () {
+                });
+            } else if (managementRole === '0') {
+                layer.msg("您尚未认证为管理机构，无法查看。");
+            }
         });
 
         $("#eva-scheme-process").click(function(){

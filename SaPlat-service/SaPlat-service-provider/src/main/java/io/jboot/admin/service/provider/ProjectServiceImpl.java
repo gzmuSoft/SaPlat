@@ -157,8 +157,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
             columns.eq("paTypeID", project.getPaTypeID());
         }
-        if(project.getIsEnable()!=null){
+        if (project.getIsEnable() != null) {
             columns.eq("IsEnable", project.getIsEnable());
+        }
+        if (project.getManagementID() != null) {
+            columns.eq("managementID", project.getManagementID());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
         //Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");

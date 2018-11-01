@@ -209,7 +209,10 @@ public class ProjectController extends BaseController {
                         authProject.setStatus(ProjectStatus.REVIEW);
                         project.setStatus(ProjectStatus.REVIEW);
 
-                        ProjectUndertake projectUndertake = new ProjectUndertake();
+                        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(getParaToLong("projectId"), ProjectUndertakeStatus.ACCEPT);
+                        if (projectUndertake == null) {
+                            projectUndertake = new ProjectUndertake();
+                        }
                         projectUndertake.setName(projectDb.getName());
                         projectUndertake.setCreateUserID(loginUser.getId());
                         projectUndertake.setProjectID(getParaToLong("projectId"));
@@ -306,7 +309,7 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-//        User user = AuthUtils.getLoginUser();
+        User user = AuthUtils.getLoginUser();
 //        Long id = getParaToLong("id");
 //        Project model = projectService.findById(id);
 //        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
@@ -340,7 +343,16 @@ public class ProjectController extends BaseController {
             pModel = new Project();
             strRoleName = "";
         }
+
+        //0为无管理权限，1为有管理权限
+        int managementRole = 0;
+        Management management = managementService.findByOrgId(user.getUserID());
+        if (management != null && management.getIsEnable()) {
+            managementRole = 1;
+        }
+
         setAttr("organization", organization)
+                .setAttr("managementRole", managementRole)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .setAttr("entry", "mgr")
@@ -811,12 +823,10 @@ public class ProjectController extends BaseController {
             // 如果服务机构不为空并且启用
             if (facAgency != null && facAgency.getIsEnable()) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
-                projectUndertake.setCreateUserID(loginUser.getId());
             }
-            // 如果不是组织或者没有启用
-        } else {
-            projectUndertake.setCreateUserID(loginUser.getId());
         }
+        projectUndertake.setCreateUserID(loginUser.getId());
+
         Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
         List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
         List<ProjectUndertake> list = projectUndertakePage.getList();
