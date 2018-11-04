@@ -171,6 +171,9 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
         }
+        if (model.getUserSource() != null) {
+            columns.eq("userSource", model.getUserSource());
+        }
         return DAO.findFirstByColumns(columns);
     }
 }

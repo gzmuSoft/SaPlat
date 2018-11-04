@@ -1392,20 +1392,36 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Long projectID = getParaToLong("id");
         int flag = getParaToInt("flag");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setModule(2);
+        applyInvite.setIsEnable(true);
+        applyInvite.setProjectID(projectID);
         if (flag == 0) {
+            applyInvite.setUserSource(3);
             ReviewGroup reviewGroup = new ReviewGroup();
             reviewGroup.setIsEnable(true);
             Page<ReviewGroup> page = reviewGroupService.findPage(reviewGroup, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
                 page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(reviewGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+                if (page.getList().get(i).getIsInvite()) {
+                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
+                    applyInvite.setUserID(userId);
+                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+                }
             }
             renderJson(new DataTable<ReviewGroup>(page));
         } else if (flag == 1) {
+            applyInvite.setUserSource(4);
             ProfGroup profGroup = new ProfGroup();
             profGroup.setIsEnable(true);
             Page<ProfGroup> page = profGroupService.findPage(profGroup, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
                 page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(profGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+                if (page.getList().get(i).getIsInvite()) {
+                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
+                    applyInvite.setUserID(userId);
+                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+                }
             }
             renderJson(new DataTable<ProfGroup>(page));
         }
