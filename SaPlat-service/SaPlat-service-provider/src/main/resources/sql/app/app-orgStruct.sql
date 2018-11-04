@@ -93,9 +93,11 @@
 
 #sql("OrgPersonList")
     select
-        *
+        p.*,
+				s.name as userAccount
     from
-        person as p
+        person as p,
+				sys_user as s
     where
         p.id in (
                 select distinct
@@ -110,6 +112,12 @@
                                       org_structure
                                   where orgID = #para(OrgId))
         )
+				and (
+					s.userID = p.id
+					and
+					s.userSource=0
+				)
+				ORDER BY createTime desc
 #end
 
 #sql("OrgPersonListByType")
