@@ -11,6 +11,16 @@ public class ReviewGroup extends BaseReviewGroup<ReviewGroup> {
 
     private boolean isInvite;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public void setIsInvite(boolean isInvite) {
         this.isInvite = isInvite;
     }

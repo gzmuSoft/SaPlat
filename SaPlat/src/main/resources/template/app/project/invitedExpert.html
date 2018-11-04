@@ -13,6 +13,8 @@
 #end
 
 #define content()   <!--隐藏id-->
+
+<div class="x-body">
     <input type="text" id="id" name="id"
            class="layui-input layui-disabled layui-hide" value="#(id)" required/>
 
@@ -23,6 +25,7 @@
     <script type="text/html" id="barOption">
         <a class="layui-btn layui-btn-xs" lay-event="invite">审查详情</a>
     </script>
+</div>
 #end
 
 #define js()
@@ -71,13 +74,14 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'invite') {
-                $.ajax({
+                window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + $('#id').val() + '&roleType=4'
+                /*$.ajax({
                     type: 'POST',
                     //url: '#(ctxPath)/app/project/invitedExpert?id=' + data.id + '&projectId=' + $('#id').val(),
                     success: function () {
                         window.location.reload();
                     }
-                });
+                 });*/
             }
         });
     });

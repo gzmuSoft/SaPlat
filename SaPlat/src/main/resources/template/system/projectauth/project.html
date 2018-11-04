@@ -64,6 +64,15 @@
 
                         <div class="layui-row layui-col-space10 layui-form-item">
                             <div class="layui-inline">
+                                <label class="layui-form-label">管理部门</label>
+                                <div class="layui-input-block" style="width:975px;">
+                                    <input type="text" value="#(management.name)" autocomplete="off" class="layui-input" readonly/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
                                 <label class="layui-form-label">简介</label>
                                 <div class="layui-input-block" style="width:975px;">
                                     <textarea class="layui-textarea" id="brief" name="brief" disabled>#(model.brief)</textarea>

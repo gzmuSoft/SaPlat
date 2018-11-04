@@ -208,7 +208,7 @@
                     if(res.code == 0) {
                         layer.msg("人员简历上传成功 ");
                         fileId = res.data.fileId;
-                        $('input[name="reviewGroup.resume "]').val(res.data.fileId);
+                        $('input[name="reviewGroup.resume"]').val(res.data.fileId);
                         $('#upload').text("已上传 ");
                     } else if(res.code == 1) {
                         fileId = " ";
@@ -223,7 +223,7 @@
             });
 
             //读取最新的人员简历文件ID
-            fileId = "#(reviewGroup.resume) ";
+            fileId = "#(reviewGroup.resume)";
 
             //查看人员简历文件
             $('#see').removeClass('layui-hide layui-disabled').prop("disabled ", " ").click(function() {

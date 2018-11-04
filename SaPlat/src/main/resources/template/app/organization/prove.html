@@ -8,7 +8,6 @@
         background-color: #eee;
 
     }
-
     .alone-version-desc {
         position: relative;
         padding: 30px 30px 20px;
@@ -24,8 +23,7 @@
         font-size: 14px;
         color: #666;
     }
-
-    .layui-btn {
+    .layui-btn{
         width: 100%;
     }
 </style>
@@ -45,6 +43,17 @@
                     b[j].style.background = "gray";
                     b[j].innerHTML = "<p>(&nbsp;&nbsp;已&nbsp;&nbsp;认&nbsp;&nbsp;证&nbsp;&nbsp;)</p>"
                     b[j].disabled = true;
+                }
+            }
+        }
+
+        //已禁止按钮追加以禁止标识
+        var a = $(".stopList");
+        var b = $(".layui-btn");
+        for (var i = 0; i < a.length; i++) {
+            for (var j = 0; j < b.length; j++) {
+                if (a[i].name == b[j].name) {
+                    b[j].innerHTML = "<p>(&nbsp;&nbsp;已&nbsp;&nbsp;认&nbsp;&nbsp;证&nbsp;&nbsp;)(已禁止)</p>"
                 }
             }
         }
@@ -195,6 +204,11 @@
     #for(list : nameList)
     <button class="nameList layui-hide" name="#(list)">对比按钮(隐藏)</button>
     #end
+
+    #for(list1 : stopList)
+    <button class="stopList layui-hide" name="#(list1)">对比按钮1(隐藏)</button>
+    #end
+
     #else if(flag==false)
     <script>
         window.location.href = "#(ctxPath)/util/tip?content=请上传营业执照&btn1=立即上传&url1=#(ctxPath)/app/organization/&icon=layui-icon-form&method1=new&title=组织机构信息";

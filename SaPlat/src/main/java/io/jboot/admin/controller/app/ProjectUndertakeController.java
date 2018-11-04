@@ -65,6 +65,8 @@ public class ProjectUndertakeController extends BaseController {
     private AuthProjectService authProjectService;
     @JbootrpcService
     private RoleService roleService;
+    @JbootrpcService
+    private ManagementService managementService;
 
     /**
      * 去重
@@ -575,14 +577,23 @@ public class ProjectUndertakeController extends BaseController {
     }
 
     /**
-     * 管理就够对前期资料进行审核创建
+     * 管理机构对前期资料进行审核创建
      */
     @RequiresRoles("管理机构")
     public void managementReviewTableData() {
+        User user = AuthUtils.getLoginUser();
+        Management management = managementService.findByOrgId(user.getUserID());
+        if (management == null || !management.getIsEnable()) {
+            renderJson(new DataTable<Project>(null));
+            return;
+        }
+        Long managementID = management.getId();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setStatus(ProjectStatus.REVIEW);
+        project.setManagementID(managementID);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         if (page.getList() != null) {
             page.getList().forEach(p -> {

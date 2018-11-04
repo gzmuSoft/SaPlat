@@ -6,9 +6,10 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.*;
-import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.RoleStatus;
+import io.jboot.admin.service.entity.model.AffectedGroup;
+import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Person;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -17,7 +18,6 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +66,8 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     public Person fitModel(Person model) {
         User user = new User();
         user.setUserID(model.getId());
-        user.setUserSource(0);// 0 代表个人
+        // 0 代表个人
+        user.setUserSource(0);
         model.setUser(userServiceNew.findModel(user));
         return model;
     }

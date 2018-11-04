@@ -114,7 +114,6 @@ public class OrganizationController extends BaseController {
      */
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
-        loginUser = userService.findById(loginUser.getId());
 
         Organization organization = organizationService.findById(loginUser.getUserID());
         FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("organization", "营业执照", organization.getId());
@@ -250,9 +249,24 @@ public class OrganizationController extends BaseController {
             return;
         } else {
             flag = true;
+            List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(), false);
             Auth auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.VERIFYING, TypeStatus.ORGANIZATION);
             List<Auth> auth1 = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
             List<String> list = new ArrayList<>();
+            List<String> stopList = new ArrayList<>();
+            List<Long> authRoleId = new ArrayList<>();
+            List<Long> userRoleId = new ArrayList<>();
+            for (UserRole j : userRoles) {
+                userRoleId.add(j.getRoleID());
+            }
+            for (Auth i : auth1) {
+                if (i.getStatus().equals(AuthStatus.IS_VERIFY)) {
+                    authRoleId.add(i.getRoleId());
+                }
+            }
+            authRoleId.retainAll(userRoleId);
+            //这一段是判断角色是否禁止了
+
             if (auth == null) {
                 auth = authService.findByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.NOT_VERIFY, TypeStatus.ORGANIZATION);
                 if (auth != null) {
@@ -264,7 +278,12 @@ public class OrganizationController extends BaseController {
                     for (int i = 0; i < auth1.size(); i++) {
                         list.add(roleService.findById(auth1.get(i).getRoleId()).getName());
                     }
-                    setAttr("flag", flag).setAttr("nameList", list).render("prove.html");
+
+                    for (Long j : authRoleId) {
+                        stopList.add(roleService.findById(j).getName());
+                    }
+
+                    setAttr("flag", flag).setAttr("nameList", list).setAttr("stopList", stopList).render("prove.html");
                 } else {
                     setAttr("flag", flag).render("prove.html");
                 }
@@ -276,6 +295,7 @@ public class OrganizationController extends BaseController {
             }
         }
     }
+
     /**
      * 跳转认证管理机构填写信息页面
      * flag = 0时未在认证状态，页面不禁用
@@ -285,7 +305,8 @@ public class OrganizationController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(loginUser.getUserID());
         List<Management> mList = managementService.findAll(true);
-        BaseStatus superiorStatus = new BaseStatus(){};
+        BaseStatus superiorStatus = new BaseStatus() {
+        };
         superiorStatus.add("0", "无上级部门");
         Management model = null;
         for (Management item : mList) {
@@ -324,6 +345,7 @@ public class OrganizationController extends BaseController {
         json.put("management", model);
         renderJson(json);
     }
+
     /**
      * 提交认证管理机构数据并进入待审核状态
      */
@@ -370,6 +392,7 @@ public class OrganizationController extends BaseController {
             throw new BusinessException("认证失败");
         }
     }
+
     /**
      * 取消管理机构认证状态并返回编辑信息
      */
@@ -398,7 +421,7 @@ public class OrganizationController extends BaseController {
         }
     }
 
-    public void managementVerify(){
+    public void managementVerify() {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         Management model = managementService.findByCreateUserID(createUserID);
@@ -425,7 +448,7 @@ public class OrganizationController extends BaseController {
                 .render("managementVerify.html");
     }
 
-    public void managementReview(){
+    public void managementReview() {
         User loginUser = AuthUtils.getLoginUser();
         int notiId = getParaToInt("notiId", 0);
         String verify = getPara("verify", "0");
@@ -441,9 +464,9 @@ public class OrganizationController extends BaseController {
             auth.setLastUpdTime(date);
             auth.setLastUpdUser(loginUser.getName());
             auth.setStatus(verify);
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 auth.setReply("审核成功");
-            }else{
+            } else {
                 auth.setReply("审核失败");
             }
 
@@ -453,13 +476,13 @@ public class OrganizationController extends BaseController {
                 notification.setName(noti.getName());
                 notification.setRecModule(loginUser.getName());
                 notification.setSource("/app/organization/management");
-                if (verify.equals("2")){
+                if (verify.equals("2")) {
                     notification.setContent(noti.getName() + "审核成功");
                     UserRole userRole = new UserRole();
                     userRole.setRoleID(roleid);
                     userRole.setUserID(name.getCreateUserID());
                     userRoleService.saveOrUpdate(userRole);
-                }else{
+                } else {
                     notification.setContent(noti.getName() + "审核失败");
                     userRoleService.deleteByUserId(name.getCreateUserID());
                 }
@@ -601,7 +624,7 @@ public class OrganizationController extends BaseController {
         }
     }
 
-    public void enterpriseVerify(){
+    public void enterpriseVerify() {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         Enterprise model = enterpriseService.findByCreateUserID(createUserID);
@@ -616,7 +639,7 @@ public class OrganizationController extends BaseController {
                 .render("enterpriseVerify.html");
     }
 
-    public void enterpriseReview(){
+    public void enterpriseReview() {
         User loginUser = AuthUtils.getLoginUser();
         int notiId = getParaToInt("notiId", 0);
         String verify = getPara("verify", "0");
@@ -632,9 +655,9 @@ public class OrganizationController extends BaseController {
             auth.setLastUpdTime(date);
             auth.setLastUpdUser(loginUser.getName());
             auth.setStatus(verify);
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 auth.setReply("审核成功");
-            }else{
+            } else {
                 auth.setReply("审核失败");
             }
             name.setLastUpdateUserID(loginUser.getUserID());
@@ -643,13 +666,13 @@ public class OrganizationController extends BaseController {
                 notification.setName(noti.getName());
                 notification.setRecModule(loginUser.getName());
                 notification.setSource("/app/organization/enterprise");
-                if (verify.equals("2")){
+                if (verify.equals("2")) {
                     notification.setContent(noti.getName() + "审核成功");
                     UserRole userRole = new UserRole();
                     userRole.setRoleID(roleid);
                     userRole.setUserID(name.getCreateUserID());
                     userRoleService.saveOrUpdate(userRole);
-                }else{
+                } else {
                     notification.setContent(noti.getName() + "审核失败");
                     userRoleService.deleteByUserId(name.getCreateUserID());
                 }
@@ -800,7 +823,7 @@ public class OrganizationController extends BaseController {
         }
     }
 
-    public void facAgencyVerify(){
+    public void facAgencyVerify() {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         FacAgency model = facAgencyService.findByCreateUserID(createUserID);
@@ -815,7 +838,7 @@ public class OrganizationController extends BaseController {
                 .render("facAgencyVerify.html");
     }
 
-    public void facAgencyReview(){
+    public void facAgencyReview() {
         User loginUser = AuthUtils.getLoginUser();
         int notiId = getParaToInt("notiId", 0);
         String verify = getPara("verify", "0");
@@ -831,9 +854,9 @@ public class OrganizationController extends BaseController {
             auth.setLastUpdTime(date);
             auth.setLastUpdUser(loginUser.getName());
             auth.setStatus(verify);
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 auth.setReply("审核成功");
-            }else{
+            } else {
                 auth.setReply("审核失败");
             }
             name.setLastUpdateUserID(loginUser.getId());
@@ -842,13 +865,13 @@ public class OrganizationController extends BaseController {
                 notification.setName(noti.getName());
                 notification.setRecModule(loginUser.getName());
                 notification.setSource("/app/organization/facAgency");
-                if (verify.equals("2")){
+                if (verify.equals("2")) {
                     notification.setContent(noti.getName() + "审核成功");
                     UserRole userRole = new UserRole();
                     userRole.setRoleID(roleid);
                     userRole.setUserID(name.getCreateUserID());
                     userRoleService.saveOrUpdate(userRole);
-                }else{
+                } else {
                     notification.setContent(noti.getName() + "审核失败");
                     userRoleService.deleteByUserId(name.getCreateUserID());
                 }
@@ -868,6 +891,7 @@ public class OrganizationController extends BaseController {
             }
         }
     }
+
     /**
      * 跳转认证审查团体信息填写页面
      * flag = 0时未在认证状态，页面不禁用
@@ -985,7 +1009,7 @@ public class OrganizationController extends BaseController {
         }
     }
 
-    public void profGroupVerify(){
+    public void profGroupVerify() {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         ProfGroup model = profGroupService.findByCreateUserID(createUserID);
@@ -1000,7 +1024,7 @@ public class OrganizationController extends BaseController {
                 .render("profGroupVerify.html");
     }
 
-    public void profGroupReview(){
+    public void profGroupReview() {
         User loginUser = AuthUtils.getLoginUser();
         int notiId = getParaToInt("notiId", 0);
         String verify = getPara("verify", "0");
@@ -1016,9 +1040,9 @@ public class OrganizationController extends BaseController {
             auth.setLastUpdTime(date);
             auth.setLastUpdUser(loginUser.getName());
             auth.setStatus(verify);
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 auth.setReply("审核成功");
-            }else{
+            } else {
                 auth.setReply("审核失败");
             }
             name.setLastUpdateUserID(loginUser.getId());
@@ -1027,13 +1051,13 @@ public class OrganizationController extends BaseController {
                 notification.setName(noti.getName());
                 notification.setRecModule(loginUser.getName());
                 notification.setSource("/app/organization/profGroup");
-                if (verify.equals("2")){
+                if (verify.equals("2")) {
                     notification.setContent(noti.getName() + "审核成功");
                     UserRole userRole = new UserRole();
                     userRole.setRoleID(roleid);
                     userRole.setUserID(name.getCreateUserID());
                     userRoleService.saveOrUpdate(userRole);
-                }else{
+                } else {
                     notification.setContent(noti.getName() + "审核失败");
                     userRoleService.deleteByUserId(name.getCreateUserID());
                 }
@@ -1160,7 +1184,7 @@ public class OrganizationController extends BaseController {
         }
     }
 
-    public void reviewGroupVerify(){
+    public void reviewGroupVerify() {
         int createUserID = getParaToInt("createUserID", 0);
         int notiId = getParaToInt("notiId", 0);
         ReviewGroup model = reviewGroupService.findByCreateUserID(createUserID);
@@ -1175,7 +1199,7 @@ public class OrganizationController extends BaseController {
                 .render("reviewGroupVerify.html");
     }
 
-    public void reviewGroupReview(){
+    public void reviewGroupReview() {
         User loginUser = AuthUtils.getLoginUser();
         int notiId = getParaToInt("notiId", 0);
         String verify = getPara("verify", "0");
@@ -1191,9 +1215,9 @@ public class OrganizationController extends BaseController {
             auth.setLastUpdTime(date);
             auth.setLastUpdUser(loginUser.getName());
             auth.setStatus(verify);
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 auth.setReply("审核成功");
-            }else{
+            } else {
                 auth.setReply("审核失败");
             }
             name.setLastUpdateUserID(loginUser.getId());
@@ -1202,13 +1226,13 @@ public class OrganizationController extends BaseController {
                 notification.setName(noti.getName());
                 notification.setRecModule(loginUser.getName());
                 notification.setSource("/app/organization/reviewGroup");
-                if (verify.equals("2")){
+                if (verify.equals("2")) {
                     notification.setContent(noti.getName() + "审核成功");
                     UserRole userRole = new UserRole();
                     userRole.setRoleID(roleid);
                     userRole.setUserID(name.getCreateUserID());
                     userRoleService.saveOrUpdate(userRole);
-                }else{
+                } else {
                     notification.setContent(noti.getName() + "审核失败");
                     userRoleService.deleteByUserId(name.getCreateUserID());
                 }
@@ -1234,7 +1258,7 @@ public class OrganizationController extends BaseController {
      */
     public void projectGet() {
         User user = AuthUtils.getLoginUser();
-        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(user.getId(),false);
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(user.getId(), false);
         List<Role> roleList = roleService.findByNames("服务机构立项", "管理机构立项", "企业机构立项", "审查团体立项", "专业团体立项");
         List<Auth> authList = authService.findByUserAndType(user, TypeStatus.PROJECT_VERIFY);
         if (authList == null) {
@@ -1251,7 +1275,7 @@ public class OrganizationController extends BaseController {
             userRoleId.add(j.getRoleID());
         }
         for (Auth i : authList) {
-            if(i.getStatus().equals(AuthStatus.IS_VERIFY)){
+            if (i.getStatus().equals(AuthStatus.IS_VERIFY)) {
                 authRoleId.add(i.getRoleId());
             }
         }
@@ -1281,10 +1305,10 @@ public class OrganizationController extends BaseController {
                     break;
             }
         });
-        for(Auth i:verify){
-            for(Long j:authRoleId){
-                if(i.getRoleId()==j){
-                    i.setRemark(i.getRemark()+"(已禁止)");
+        for (Auth i : verify) {
+            for (Long j : authRoleId) {
+                if (i.getRoleId() == j) {
+                    i.setRemark(i.getRemark() + "(已禁止)");
                 }
             }
 
@@ -1310,8 +1334,8 @@ public class OrganizationController extends BaseController {
         Role role = roleService.findById(id);
         UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getParentID());
         if (userRole == null) {
-            renderJson(RestResult.buildError("亲，请先去认证成为" + role.getName().substring(0,4) + "再来申请哦~~~"));
-            throw new BusinessException("亲，请先去认证成为" + role.getName().substring(0,4) +  "再来申请哦~~~");
+            renderJson(RestResult.buildError("亲，请先去认证成为" + role.getName().substring(0, 4) + "再来申请哦~~~"));
+            throw new BusinessException("亲，请先去认证成为" + role.getName().substring(0, 4) + "再来申请哦~~~");
         }
         Auth auth = authService.findByUserAndRole(user, id);
         if (auth == null) {
@@ -1326,7 +1350,7 @@ public class OrganizationController extends BaseController {
         if (!authService.saveOrUpdate(auth)) {
             renderJson(RestResult.buildError("申请失败"));
             throw new BusinessException("申请失败");
-        }else{
+        } else {
             Notification notification = new Notification();
             notification.setName(role.getName());
             notification.setRecModule(user.getName());
@@ -1349,7 +1373,7 @@ public class OrganizationController extends BaseController {
         Long notiId = getParaToLong("notiId");
         Long roleId = getParaToLong("roleId");
         Notification notification = notificationService.findById(notiId);
-        Auth auth = authService.findByUserIDAndRole(notification.getCreateUserID(),roleId);
+        Auth auth = authService.findByUserIDAndRole(notification.getCreateUserID(), roleId);
         setAttr("notification", notification)
                 .setAttr("roleId", roleId)
                 .setAttr("flag", auth.getStatus())
@@ -1366,27 +1390,27 @@ public class OrganizationController extends BaseController {
         Notification model = notificationService.findById(notiId);
         model.setStatus(1);
         notificationService.saveOrUpdate(model);
-        Auth auth = authService.findByUserIDAndRole(model.getCreateUserID(),roleId);
+        Auth auth = authService.findByUserIDAndRole(model.getCreateUserID(), roleId);
         auth.setStatus(verify);
         auth.setLastUpdUser(user.getName());
-        if (verify.equals("2")){
+        if (verify.equals("2")) {
             auth.setReply("审核成功");
-        }else{
+        } else {
             auth.setReply("审核失败");
         }
 
         if (!authService.saveOrUpdate(auth)) {
             renderJson(RestResult.buildError("审核失败"));
             throw new BusinessException("审核失败");
-        }else{
+        } else {
             Notification notification = new Notification();
             notification.setName(model.getName());
             notification.setRecModule(user.getName());
             notification.setSource("/app/organization/projectReview");
             notification.setReceiverID(model.getCreateUserID().intValue());
-            if (verify.equals("2")){
+            if (verify.equals("2")) {
                 notification.setContent(model.getName() + "审核成功");
-            }else{
+            } else {
                 notification.setContent(model.getName() + "审核失败");
             }
             notification.setCreateUserID(user.getId());

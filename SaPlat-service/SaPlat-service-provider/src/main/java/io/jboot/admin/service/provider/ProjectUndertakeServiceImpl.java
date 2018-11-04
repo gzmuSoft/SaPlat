@@ -211,7 +211,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Page<ProjectUndertake> page = null;
         // 如果它是组织并且是服务机构
         if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
-            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("createUserID", projectUndertake.getCreateUserID()).set("ID", projectUndertake.getCreateUserID());
+            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID());
             sqlPara = Db.getSqlPara("app-project.project", c);
             // 直接查询委评项目
             page = DAO.paginate(pageNumber, pageSize, sqlPara);
