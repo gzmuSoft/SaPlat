@@ -113,26 +113,26 @@ public class AuthController extends BaseController {
             setAttr("person", person).setAttr("expertGroup", expertGroup).render("expertGroup.html");
         } else if ("facAgency".equals(role.getRemark())) {
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","法人身份证照片",facAgency.getId());
-            setAttr("pictrue",fileForm.getFileID());
-            fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency","维稳备案文件照片",facAgency.getId());
-            setAttr("regDocsFilePath",fileForm.getFileID());
+            FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency", "法人身份证照片", facAgency.getId());
+            setAttr("pictrue", fileForm.getFileID());
+            fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("facAgency", "维稳备案文件照片", facAgency.getId());
+            setAttr("regDocsFilePath", fileForm.getFileID());
             setAttr("organization", organization).setAttr("facAgency", facAgency).render("fac_agency.html");
         } else if ("management".equals(role.getRemark())) {
             Management management = managementService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("management", management).render("management.html");
         } else if ("enterprise".equals(role.getRemark())) {
             Enterprise enterprise = enterpriseService.findByOrgId(organization.getId());
-            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("enterprise","法人身份证照片",enterprise.getId());
-            setAttr("pictrue",fileForm.getFileID());
+            FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("enterprise", "法人身份证照片", enterprise.getId());
+            setAttr("pictrue", fileForm.getFileID());
             setAttr("organization", organization).setAttr("enterprise", enterprise).render("enterprise.html");
         } else if ("reviewGroup".equals(role.getRemark())) {
             ReviewGroup reviewGroup = reviewGroupService.findByOrgId(organization.getId());
             setAttr("organization", organization).setAttr("reviewGroup", reviewGroup).render("review_group.html");
         } else if ("profGroup".equals(role.getRemark())) {
             ProfGroup profGroup = profGroupService.findByOrgId(organization.getId());
-            FileForm fileForm=fileFormService.findFirstByTableNameAndRecordIDAndFileName("profGroup","管理员身份证照片",profGroup.getId());
-            setAttr("identity",fileForm.getFileID());
+            FileForm fileForm = fileFormService.findFirstByTableNameAndRecordIDAndFileName("profGroup", "管理员身份证照片", profGroup.getId());
+            setAttr("identity", fileForm.getFileID());
             setAttr("organization", organization).setAttr("profGroup", profGroup).render("prof_group.html");
         } else {
             throw new BusinessException("请求参数非法");
@@ -147,7 +147,7 @@ public class AuthController extends BaseController {
         if (auth == null) {
             throw new BusinessException("没有这个审核");
         }
-        if(auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)){
+        if (auth.getStatus().equals(AuthStatus.CANCEL_VERIFY)) {
             throw new BusinessException("用户已取消审核");
         }
         /*BaseStatus authStatus = new BaseStatus() {
@@ -171,10 +171,9 @@ public class AuthController extends BaseController {
         User user = AuthUtils.getLoginUser();
         model.setLastUpdUser(user.getName());
         model.setReply(auth.getReply());
-        if(auth.getStatus() == null) {
+        if (auth.getStatus() == null) {
             model.setStatus("1");
-        }
-        else{
+        } else {
             model.setStatus("2");
         }
         if (!authService.update(model)) {
@@ -182,7 +181,7 @@ public class AuthController extends BaseController {
         }
 
         //角色审核成功后删除所有缓存
-        if(model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+        if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
             ShiroCacheUtils.clearAuthorizationInfoAll();
         }
         renderJson(RestResult.buildSuccess());
