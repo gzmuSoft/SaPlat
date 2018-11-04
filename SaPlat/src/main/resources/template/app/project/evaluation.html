@@ -20,6 +20,31 @@
     <a class="layui-btn layui-btn-xs" lay-event="see1">评估详情</a>
     #end
 </script>
+<script type="text/html" id="progress">
+    #[[
+    {{#  if(d.assessmentProgress == 100){ }}
+    ]]#
+    <span class="layui-badge">{{d.assessmentProgress}}%</span>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.assessmentProgress < 100 && d.assessmentProgress > 50){ }}
+    ]]#
+    <span class="layui-badge layui-bg-black">{{d.assessmentProgress}}%</span>
+    #[[
+    {{#  } }}
+    ]]#
+
+    #[[
+    {{#  if(d.assessmentProgress < 50){ }}
+    ]]#
+    <span class="layui-badge layui-bg-orange">{{d.assessmentProgress}}%</span>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
 #end
 
 #define js()
@@ -44,6 +69,7 @@
                 , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                 , {field: 'remark', title: '备注', minWidth: 100}
+                , {fixed: 'right', field: 'assessmentProgress',title: '评估进度', width: 120, align: 'center', sort: true, toolbar: '#progress'} //这里的toolbar值是模板元素的选择器
                 , {fixed: 'right', title: '操作', minWidth: 190, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/evaluationTable'

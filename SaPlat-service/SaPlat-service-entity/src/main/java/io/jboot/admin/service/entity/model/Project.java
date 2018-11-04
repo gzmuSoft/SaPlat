@@ -23,6 +23,10 @@ public class Project extends BaseProject<Project> {
     private Long backRecordFileID;
     private String reviewInfo;
     private Integer ownType;
+    /**
+     * 评估进度
+     */
+    private String assessmentProgress;
 
     public String getReviewInfo() {
         StringBuilder sbInfo = new StringBuilder();
@@ -156,4 +160,13 @@ public class Project extends BaseProject<Project> {
     public void setOwnType(Integer ownType) {
         this.ownType = ownType;
     }
+
+    public String getAssessmentProgress() {
+        return assessmentProgress;
+    }
+
+    public void setAssessmentProgress(String assessmentProgress) {
+        this.assessmentProgress = assessmentProgress;
+    }
+
 }

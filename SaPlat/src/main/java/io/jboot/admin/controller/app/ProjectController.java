@@ -46,6 +46,9 @@ public class ProjectController extends BaseController {
     private ProjectAssTypeService projectAssTypeService;
 
     @JbootrpcService
+    private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
+
+    @JbootrpcService
     private ProjectStepService projectStepService;
 
     @JbootrpcService
@@ -68,6 +71,9 @@ public class ProjectController extends BaseController {
 
     @JbootrpcService
     private OrganizationService organizationService;
+
+    @JbootrpcService
+    private DiagnosesService diagnosesService;
 
     @JbootrpcService
     private FileProjectService fileProjectService;
@@ -616,8 +622,8 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         FileProject fileProject;
         json.put("judgeFile", true);
-        for (ProjectFileType item:childProjectFileType) {
-            if(item.getStatus()!=null && 1 == item.getStatus()) {
+        for (ProjectFileType item : childProjectFileType) {
+            if (item.getStatus() != null && 1 == item.getStatus()) {
                 fileProject = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), item.getId());
                 if (null == fileProject) {
                     json.put("judgeFile", false);
@@ -755,23 +761,53 @@ public class ProjectController extends BaseController {
             projects = Collections.synchronizedList(new ArrayList<>());
         }
         projects.removeAll(Collections.singleton(null));
+        List<Project> result;
         if (projects.size() < 1 && undertake.size() > 0) {
             // 当委评的不为空，自评的为空
-            renderJson(RestResult.buildSuccess(undertake));
+            result = undertake;
         } else if (projects.size() > 0 && undertake.size() < 1) {
             // 当委评的为空，自评的不为空
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         } else if (projects.size() > 0 && undertake.size() > 0) {
             // 当委评的不为空，自评的不为空
             if (!projects.addAll(undertake)) {
                 // 合并失败
                 throw new BusinessException("数据加载失败。。。");
             }
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         } else {
             // 当两个都为空
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         }
+        // 查找每个项目的进度
+        if (result.size() > 0) {
+            for (Project project : result) {
+                int progress = 0;
+                EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
+                if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
+                    progress += 20;
+                    List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
+                    if (model != null && model.size() > 0) {
+                        progress += 15;
+                    }
+                    List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
+                    if (diagnoses != null && diagnoses.size() > 0) {
+                        progress += 15;
+                    }
+                    List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
+                    for (ProjectFileType p : list) {
+                        List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
+                        if (fileProjects != null && fileProjects.size() > 0) {
+                            progress += 10;
+                        }
+                    }
+                }
+                project.setAssessmentProgress(Integer.toString(progress));
+            }
+        }
+        System.out.println("123123");
+        result.forEach(System.out::println);
+        renderJson(RestResult.buildSuccess(result));
     }
 
     /**
@@ -800,7 +836,7 @@ public class ProjectController extends BaseController {
                 projectUndertake.setFacAgencyID(facAgency.getId());
                 projectUndertake.setCreateUserID(loginUser.getId());
             }
-        // 如果不是组织或者没有启用
+            // 如果不是组织或者没有启用
         } else {
             projectUndertake.setCreateUserID(loginUser.getId());
         }
@@ -1129,7 +1165,7 @@ public class ProjectController extends BaseController {
         Project project = projectService.findByProjectName(getPara("name"));
         if (project != null) {
             json.put("status", false);
-        }else {
+        } else {
             json.put("status", true);
         }
         renderJson(json);

@@ -78,13 +78,20 @@ public class MainController extends BaseController {
         if (SecurityUtils.getSubject().isAuthenticated()) {
             redirect("/");
         } else {
-            Page<News> news = newsService.findReverses(5);
-            DataTable newsTable = new DataTable<News>(news);
-            setAttr("newsList", newsTable.getData());
+//            Page<News> news = newsService.findReverses(5);
+//            DataTable newsTable = new DataTable<News>(news);
+//            setAttr("newsList", newsTable.getData());
             render("login.html");
         }
     }
 
+    public void home(){
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            redirect("/");
+        } else {
+            render("home.html");
+        }
+    }
 
     public void nshow() {
         int id = getParaToInt("id");
