@@ -186,6 +186,7 @@
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/organization/managementProve',
+                data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
                     window.location.href = '#(ctxPath)/app/organization/prove';

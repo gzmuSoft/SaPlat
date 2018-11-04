@@ -32,7 +32,7 @@
             <div class="layui-input-inline">
                 <h3>预计金额:</h3>
                 <div>
-                    <span>#(project.amount)元</span>
+                    <span>#number(project.amount, ',###') 元</span>
                 </div>
             </div>
             <div class="layui-input-inline">
@@ -81,22 +81,14 @@
             </div>
         </div>
 
-        <h2 style="margin-top: 50px;">实施小组建立</h2>
+        <h2 style="margin-top: 50px;">实施小组</h2>
         <hr class="layui-bg-green">
         <div class="layui-form-pane">
-            <div class="layui-form-item">
+            <div class="layui-form-item layui-hide" >
                 <label class="layui-form-label" for="impTeam.projectID" style="width: 150px">项目名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="impTeam.projectID" name="impTeam.projectID"
                            class="layui-input layui-disabled" readonly="readonly" value="#(project.name)" required/>
-                </div>
-            </div>
-
-            <div class="layui-form-item" style="display: none">
-                <label class="layui-form-label" for="impTeamName" style="width: 150px">小组名称</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="impTeamName" name="impTeam.name" value="#(project.name)" class="layui-input"
-                           lay-verify="required"/>
                 </div>
             </div>
 

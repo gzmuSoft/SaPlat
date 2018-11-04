@@ -17,7 +17,7 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService {
+public class ManagementServiceImpl extends JbootServiceBase<Management> implements ManagementService{
     @Inject
     private NotificationService notificationService;
 
@@ -50,6 +50,35 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     }
 
     /**
+     * 装配完善Page对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<Management> fitPage(Page<Management> page){
+        if(page != null){
+            List<Management> tList = page.getList();
+            for (Management item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配完善List对象中所有对象的数据
+     * @param list
+     * @return
+     */
+    public List<Management> fitList(List<Management> list){
+        if(list != null){
+            for (Management item: list) {
+                fitModel(item);
+            }
+        }
+        return list;
+    }
+
+    /**
      * 获取所有数据
      *
      * @param isEnable 根据指定的isEnable的值来获取数据
@@ -57,7 +86,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
      */
     @Override
     public List<Management> findAll(boolean isEnable) {
-        return DAO.findListByColumn("isEnable", isEnable);
+        return fitList(DAO.findListByColumn("isEnable", isEnable));
     }
 
     @Override
@@ -71,6 +100,14 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
                 return false;
             }
             userRole.setIsEnable(management.getIsEnable());
+            Role _role = roleService.findByName("管理机构立项");
+            UserRole _userRole = userRoleService.findByUserIdAndRoleId(user.getId(), _role.getId());
+            if(_userRole!=null){
+                _userRole.setIsEnable(management.getIsEnable());
+                if(!userRoleService.update(_userRole)){
+                    return false;
+                }
+            }
             return userRoleService.update(userRole) && management.update();
         });
     }
@@ -128,11 +165,11 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
         if (StrKit.notNull(management.getIsEnable())){
             columns.eq("isEnable", management.getIsEnable());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id"));
     }
 
     @Override
     public List<Management> findListByColumns(Columns columns) {
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 }
