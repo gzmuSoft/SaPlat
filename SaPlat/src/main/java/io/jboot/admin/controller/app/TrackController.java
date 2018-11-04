@@ -223,13 +223,22 @@ public class TrackController extends BaseController {
             switch (iOwnType) {
                 case 0:
                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("selfRole");
+                    }
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
                     page = projectService.findPageForMgr(project, ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("managementRole");
+                    }
                     break;
                 case 2:
                     page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("facRole");
+                    }
                     break;
             }
         }

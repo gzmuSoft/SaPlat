@@ -13,6 +13,8 @@
 #end
 
 #define content()   <!--隐藏id-->
+
+<div class="x-body">
     <input type="text" id="id" name="id"
            class="layui-input layui-disabled layui-hide" value="#(id)" required/>
 
@@ -23,6 +25,7 @@
     <script type="text/html" id="barOption">
         <a class="layui-btn layui-btn-xs" lay-event="invite">审查详情</a>
     </script>
+</div>
 #end
 
 #define js()
@@ -43,11 +46,9 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '姓名', width: 100, sort: true}
+                , {field: 'sex', title: '性别', width: 100, sort: true}
+                , {field: 'address', title: '地址', width: 200, sort: true}
                 , {field: 'phone', title: '联系电话', width: 110, templet: function(d){return d.user? (d.user.phone||'') : '';}}
-                , {field: 'Email', title: 'Email', width: 200, templet: function(d){return d.user? (d.user.email||'') : '';}}
-                , {field: 'department', title: '所在部门', width: 200}
-                , {field: 'workstate', title: '在职状态', width: 90}
-                , {field: 'project', title: '参与项目经历', minWidth: 200}
                 , {field: 'remark', title: '审查状态', width: 120,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "remark")'}
                 , {fixed: 'right', title: '操作', minWidth:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
@@ -73,13 +74,14 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'invite') {
-                $.ajax({
+                window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + $('#id').val() + '&roleType=4'
+                /*$.ajax({
                     type: 'POST',
                     //url: '#(ctxPath)/app/project/invitedExpert?id=' + data.id + '&projectId=' + $('#id').val(),
                     success: function () {
                         window.location.reload();
                     }
-                });
+                 });*/
             }
         });
     });

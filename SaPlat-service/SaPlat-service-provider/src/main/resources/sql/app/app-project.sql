@@ -6,14 +6,6 @@
   where
     (
         facAgencyID = #para(facAgencyID)
-          or
-        (
-          createUserID = #para(ID)
-            AND
-          facAgencyID = #para(ID)
-        )
-          or
-        createUserID = #para(createUserID)
     )
     and
         isEnable = 1
@@ -100,7 +92,10 @@ SELECT
 FROM
   project
 WHERE
-  managementID in (#para(mgr_list))
+  managementID in (
+    #for(id : mgr_list)
+      #(for.index > 0 ? ", " : "")#(id)
+    #end)
   order by createTime desc
 #end
 
@@ -110,7 +105,10 @@ SELECT
 FROM
   project
 WHERE
-  managementID in (#para(mgr_list)) AND status = #para(status)
+  managementID in (
+    #for(id : mgr_list)
+      #(for.index > 0 ? ", " : "")#(id)
+    #end) AND status = #para(status)
   order by createTime desc
 #end
 
@@ -167,7 +165,7 @@ WHERE ID IN
 #end
 
 #sql("invitedExpert-by-projectID")
-SELECT * FROM expert_group WHERE personID IN(
+SELECT * FROM person WHERE id IN(
 	SELECT userID FROM sys_user WHERE ID IN(
 		SELECT userID FROM apply_invite
 		WHERE projectID = #para(ID) AND createTime > (

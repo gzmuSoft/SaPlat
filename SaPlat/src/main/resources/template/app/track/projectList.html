@@ -42,14 +42,20 @@
 <script type="text/html" id="backRecord">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(!d.isBackRecordUpLoad){ }}
+    {{#  if(!d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadBackRecord">上传</a>
-
+    #[[
+    {{#  if(!d.isBackRecordUpLoad && d.remark != 'facRole'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-disable">暂无数据</a>
+    #[[
+    {{# } else if(d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     #[[
     {{# } else if(d.isBackRecordUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecord">查看</a>
     #[[
     {{#  } }}

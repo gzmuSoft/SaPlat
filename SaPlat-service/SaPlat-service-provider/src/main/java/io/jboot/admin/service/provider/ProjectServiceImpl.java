@@ -157,8 +157,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
             columns.eq("paTypeID", project.getPaTypeID());
         }
-        if(project.getIsEnable()!=null){
+        if (project.getIsEnable() != null) {
             columns.eq("IsEnable", project.getIsEnable());
+        }
+        if (project.getManagementID() != null) {
+            columns.eq("managementID", project.getManagementID());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
         //Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
@@ -201,16 +204,15 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             List<Management> result = new ArrayList<Management>();
             result.add(curMgr);
             findMgrChildren(curMgr.getId(), result);
-            StringBuilder str = new StringBuilder();
+            List<Long> ids = new ArrayList<Long>();
             for(Management item : result){
-                str.append(item.getId());
-                str.append(",");
+                ids.add(item.getId());
             }
-            Kv c = Kv.by("mgr_list", str.substring(0,str.length()-1));
+            Kv c = Kv.by("mgr_list", ids);
             SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr", c);
             return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
         }
-        return  new Page<Project>();
+        return new Page<Project>();
     }
 
     @Override
@@ -221,12 +223,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             List<Management> result = new ArrayList<Management>();
             result.add(curMgr);
             findMgrChildren(curMgr.getId(), result);
-            StringBuilder str = new StringBuilder();
+            List<Long> ids = new ArrayList<Long>();
             for(Management item : result){
-                str.append(item.getId());
-                str.append(",");
+                ids.add(item.getId());
             }
-            Kv c = Kv.by("mgr_list", str.substring(0,str.length()-1)).set("status", status);
+            Kv c = Kv.by("mgr_list", ids).set("status", status);
             SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr-status", c);
             return fitPage(DAO.paginate(pageNumber,pageSize,sqlPara));
         }

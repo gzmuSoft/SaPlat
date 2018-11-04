@@ -424,6 +424,7 @@ public class InformationController extends BaseController {
                 sb.append("调查对象：个人");
             }
             p.setRemark(sb.toString());
+            p.setName("调查问卷");
         });
         renderJson(new DataTable<Questionnaire>(page));
     }

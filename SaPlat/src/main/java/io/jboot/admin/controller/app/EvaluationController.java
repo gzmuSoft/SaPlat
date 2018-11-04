@@ -39,6 +39,9 @@ public class EvaluationController extends BaseController {
     private EvaSchemeService evaSchemeService;
 
     @JbootrpcService
+    private ManagementService managementService;
+
+    @JbootrpcService
     private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
 
     @JbootrpcService
@@ -152,7 +155,9 @@ public class EvaluationController extends BaseController {
 
         User user = userService.findById(project.getUserId());
         Organization organization = organizationService.findById(user.getUserID());
+        Management management = managementService.findById(project.getManagementID());
         setAttr("project", project)
+                .setAttr("management",management)
                 .setAttr("organization",organization)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
                 .render("evaluation.html");

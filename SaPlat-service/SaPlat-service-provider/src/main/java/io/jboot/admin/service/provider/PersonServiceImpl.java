@@ -1,12 +1,15 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.*;
-import io.jboot.admin.service.entity.model.*;
-import io.jboot.admin.service.entity.status.system.AuthStatus;
-import io.jboot.admin.service.entity.status.system.RoleStatus;
+import io.jboot.admin.service.entity.model.AffectedGroup;
+import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Person;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.UserStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -15,7 +18,6 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +66,8 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
     public Person fitModel(Person model) {
         User user = new User();
         user.setUserID(model.getId());
-        user.setUserSource(0);// 0 代表个人
+        // 0 代表个人
+        user.setUserSource(0);
         model.setUser(userServiceNew.findModel(user));
         return model;
     }
@@ -132,6 +135,20 @@ public class PersonServiceImpl extends JbootServiceBase<Person> implements Perso
         });
     }
 
+    /**
+     * 分页查询 项目审查人员 信息
+     *
+     * @param projectID 项目编号
+     * @return 页
+     */
+    @Override
+    public Page<Person> findPageByProjectID(Long projectID, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        c = Kv.by("ID", projectID);
+        sqlPara = Db.getSqlPara("app-project.invitedExpert-by-projectID", c);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+    }
 
     @Override
     public Person findByUser(User user) {

@@ -1,10 +1,9 @@
 package io.jboot.admin.service.provider;
 
-import com.jfinal.kit.Kv;
+
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
@@ -73,21 +72,6 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
             model.setUser(userServiceNew.findModel(user));
         }
         return model;
-    }
-
-    /**
-     * 分页查询 项目审查专家 信息
-     *
-     * @param projectID 项目编号
-     * @return 页
-     */
-    @Override
-    public Page<ExpertGroup> findPageByProjectID(Long projectID, int pageNumber, int pageSize) {
-        Kv c;
-        SqlPara sqlPara = null;
-        c = Kv.by("ID", projectID);
-        sqlPara = Db.getSqlPara("app-project.invitedExpert-by-projectID", c);
-        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 
     @Override
