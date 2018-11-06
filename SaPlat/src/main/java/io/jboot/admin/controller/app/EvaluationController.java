@@ -216,7 +216,9 @@ public class EvaluationController extends BaseController {
 
         User user = userService.findById(project.getUserId());
         Organization organization = organizationService.findById(user.getUserID());
+        Management management = managementService.findById(project.getManagementID());
         setAttr("project", project)
+                .setAttr("management",management)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())
                 .setAttr("organization",organization)
                 .setAttr("entry", "mgr_agency")
