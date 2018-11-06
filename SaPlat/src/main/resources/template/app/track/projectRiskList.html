@@ -42,7 +42,7 @@
 <script type="text/html" id="riskTrack">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(d.ownType === 2){ }}
+    {{#  if(d.ownType === 0){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="toRisk">管理跟踪资料</a>
     #[[
@@ -57,20 +57,20 @@
 <script type="text/html" id="riskTrackEnd">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(d.ownType === 2 && !d.isUpload){ }}
+    {{#  if(d.ownType === 0 && !d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upLoad">上传跟踪移交表</a>
     #[[
-    {{# } else if(d.ownType === 2 && d.isUpload){ }}
+    {{# } else if(d.ownType === 0 && d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeFile">查看跟踪移交表</a>
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="upLoad">更新</a>
     #[[
-    {{# } else if(d.ownType != 2 && d.isUpload){ }}
+    {{# } else if(d.ownType != 0 && d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeFile">查看跟踪移交表</a>
     #[[
-    {{# } else if(d.ownType != 2 && !d.isUpload){ }}
+    {{# } else if(d.ownType != 0 && !d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm">暂无文件</a>
     #[[

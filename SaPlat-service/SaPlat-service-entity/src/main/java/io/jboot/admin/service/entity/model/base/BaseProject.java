@@ -177,11 +177,11 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getInt("unpassReviewCount");
 	}
 
-	public void setPassReviewByOverdueCount(java.lang.Long passReviewByOverdueCount) {
-		set("passReviewByOverdueCount", passReviewByOverdueCount);
-	}
-	
-	public java.lang.Long getPassReviewByOverdueCount() {
+    public void setPassReviewByOverdueCount(java.lang.Long passReviewByOverdueCount) {
+        set("passReviewByOverdueCount", passReviewByOverdueCount);
+    }
+
+    public java.lang.Long getPassReviewByOverdueCount() {
 		return getLong("passReviewByOverdueCount");
 	}
 
