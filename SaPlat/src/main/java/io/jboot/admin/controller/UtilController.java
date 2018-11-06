@@ -38,9 +38,17 @@ public class UtilController extends BaseController {
         File file = upload.getFile();
         String oldName = file.getName();
         String newName = UUID.randomUUID().toString();
+        // winodws 下文件上传
         String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
+        // linux 下文件上传
+//        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/"));
+
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
+        // winodws 下文件上传
         File newFile = new File(path + "\\" + newName + "." + type);
+        // linux 下文件上传
+//        File newFile = new File(path + "/" + newName + "." + type);
+
         if (!file.renameTo(newFile)) {
             throw new BusinessException("文件上传失败");
         }
@@ -82,39 +90,39 @@ public class UtilController extends BaseController {
      * 提示接口
      *
      * @apiNote 跳转提示页面的通用方法，接受以下参数
-     *   content 提示的显示内容
-     *   btn1 提示是否有跳转连接文字
-     *   url1 如果有，跳转链接
-     *   data1 第一个 url 需要的数据
-     *   method1 页面显示方式，可选值
-     *        this  当前页面打开(默认)
-     *        new   新页面内打开
-     *   type1 提交方式
-     *        href 跳转（默认）
-     *        ajax ajax 提交
-     *   btn2 提示是否有跳转连接文字
-     *   url2 如果有，跳转链接
-     *   data2 第二个 url 需要的数据
-     *   method2 页面显示方式，可选值
-     *        this  (默认)
-     *        new   当前页面内打开
-     *   title 跳转到的页面的标题
-     *   icon 需要显示的图标
-     *   toHtml 跳转到的页面
-     *          默认值：verify.html
+     * content 提示的显示内容
+     * btn1 提示是否有跳转连接文字
+     * url1 如果有，跳转链接
+     * data1 第一个 url 需要的数据
+     * method1 页面显示方式，可选值
+     * this  当前页面打开(默认)
+     * new   新页面内打开
+     * type1 提交方式
+     * href 跳转（默认）
+     * ajax ajax 提交
+     * btn2 提示是否有跳转连接文字
+     * url2 如果有，跳转链接
+     * data2 第二个 url 需要的数据
+     * method2 页面显示方式，可选值
+     * this  (默认)
+     * new   当前页面内打开
+     * title 跳转到的页面的标题
+     * icon 需要显示的图标
+     * toHtml 跳转到的页面
+     * 默认值：verify.html
      */
     public void tip() {
         setAttr("content", getPara("content"))
                 .setAttr("btn1", getPara("btn1"))
                 .setAttr("btn2", getPara("btn2"))
-                .setAttr("type1", getPara("type1","href"))
+                .setAttr("type1", getPara("type1", "href"))
                 .setAttr("url1", getPara("url1"))
-                .setAttr("data1", getPara("data1",""))
-                .setAttr("method1",getPara("method1","this"))
+                .setAttr("data1", getPara("data1", ""))
+                .setAttr("method1", getPara("method1", "this"))
                 .setAttr("url2", getPara("url2"))
-                .setAttr("type2", getPara("type2","href"))
-                .setAttr("data2", getPara("data2",""))
-                .setAttr("method2",getPara("method2","this"))
+                .setAttr("type2", getPara("type2", "href"))
+                .setAttr("data2", getPara("data2", ""))
+                .setAttr("method2", getPara("method2", "this"))
                 .setAttr("icon", getPara("icon", "layui-icon-auz"))
                 .setAttr("title", getPara("title", "新页面"))
                 .render(getPara("toHtml", "verify.html"));
