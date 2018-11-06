@@ -50,18 +50,17 @@
                 , {field: 'address', title: '地址', width: 200, sort: true}
                 , {field: 'phone', title: '联系电话', width: 110, templet: function(d){return d.user? (d.user.phone||'') : '';}}
                 , {field: 'remark', title: '审查状态', width: 120,
-                    templet: function (d) {
-                        if (d.remark == '2') {
+                    templet: function(d){
+                        if(d.remark == '2'){
                             return '审查中';
-                        } else if (d.remark == '3') {
+                        }else if(d.remark == '3'){
                             return '通过';
-                        } else if (d.remark == '4') {
+                        }else if(d.remark == '4'){
                             return '不通过';
-                        } else {
+                        }else {
                             return '状态异常';
                         }
-                    }
-                }
+                    }}
                 , {fixed: 'right', title: '操作', minWidth:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/invitedExpertTable?id=' + $('#id').val()
