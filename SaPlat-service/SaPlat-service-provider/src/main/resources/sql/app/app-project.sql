@@ -168,7 +168,7 @@ WHERE ID IN
 SELECT * FROM person WHERE id IN(
 	SELECT userID FROM sys_user WHERE ID IN(
 		SELECT userID FROM apply_invite
-		WHERE projectID = #para(ID) AND createTime > (
+		WHERE projectID = #para(ID) AND  module = 1 AND isEnable = 1 AND createTime > (
 		  SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
 		)
 	)
