@@ -183,7 +183,7 @@ public class MainController extends BaseController {
         Page<News> news = newsService.findReverses(5);
         DataTable newsTable = new DataTable<News>(news);
         setAttr("newsList", newsTable.getData()).
-                render("login.html");
+                render("home.html");
     }
 
     public void welcome() {
