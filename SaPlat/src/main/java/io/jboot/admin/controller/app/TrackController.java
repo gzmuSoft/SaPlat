@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author LiuChuanJin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 10:05 2018/8/4
  */
 @RequestMapping("/app/track")
@@ -184,28 +184,30 @@ public class TrackController extends BaseController {
         setAttr("mRole", mRole).setAttr("fRole", fRole).
                 setAttr("projectFileTypeID", projectFileTypeID).render("recordDataTransfer.html");
     }
+
     /**
-     *  项目列表
+     * 项目列表
      */
     @Before(GET.class)
-    public void projectList(){
-        BaseStatus baseStatus=new BaseStatus() {};
+    public void projectList() {
+        BaseStatus baseStatus = new BaseStatus() {
+        };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        if(PaTypeList != null) {
+        if (PaTypeList != null) {
             for (ProjectAssType item :
                     PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList",baseStatus);
+        setAttr("PaTypeNameList", baseStatus);
         render("projectList.html");
     }
 
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void projectListTableData(){
+    @NotNullPara({"pageNumber", "pageSize"})
+    public void projectListTableData() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -213,6 +215,11 @@ public class TrackController extends BaseController {
         project.setStatus(ProjectStatus.RECORDKEEPING);
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName("%" + getPara("name") + "%");
+        } else {
+            project.setName("%%");
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
@@ -222,7 +229,7 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, project.getName(), pageNumber, pageSize);
                     for (Project p : page.getList()) {
                         p.setRemark("selfRole");
                     }
@@ -235,10 +242,12 @@ public class TrackController extends BaseController {
                     }
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, project.getName(), pageNumber, pageSize);
                     for (Project p : page.getList()) {
                         p.setRemark("facRole");
                     }
+                    break;
+                default:
                     break;
             }
         }
@@ -246,15 +255,16 @@ public class TrackController extends BaseController {
     }
 
     /**
-     *  项目列表
+     * 项目列表
      */
     @Before(GET.class)
-    public void projectRiskList(){
-        BaseStatus baseStatus=new BaseStatus() {};
+    public void projectRiskList() {
+        BaseStatus baseStatus = new BaseStatus() {
+        };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        if(PaTypeList != null) {
+        if (PaTypeList != null) {
             for (ProjectAssType item :
                     PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
@@ -270,8 +280,8 @@ public class TrackController extends BaseController {
     }
 
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void projectRiskListTableData(){
+    @NotNullPara({"pageNumber", "pageSize"})
+    public void projectRiskListTableData() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -279,6 +289,11 @@ public class TrackController extends BaseController {
         project.setStatus(ProjectStatus.TRACKING);
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName("%" + getPara("name") + "%");
+        } else {
+            project.setName("%%");
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
@@ -288,14 +303,16 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
                     page = projectService.findPageForMgr(project, ProjectStatus.TRACKING, pageNumber, pageSize);
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
+                    break;
+                default:
                     break;
             }
             ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
@@ -343,7 +360,7 @@ public class TrackController extends BaseController {
             model.setFileTypeID(getParaToLong("fileTypeId"));
             model.setCreateTime(new Date());
             model.setCreateUserID(user.getId());
-       } else {
+        } else {
             Files files = filesService.findById(model.getFileID());
             if (files != null) {
                 files.setIsEnable(false);

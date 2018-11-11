@@ -30,9 +30,9 @@
     ]]#
 
     #[[
-    {{#  if(d.assessmentProgress < 100 && d.assessmentProgress > 50){ }}
+    {{#  if(d.assessmentProgress < 100 && d.assessmentProgress >= 50){ }}
     ]]#
-    <span class="layui-badge layui-bg-black">{{d.assessmentProgress}}%</span>
+    <span class="layui-badge layui-bg-orange">{{d.assessmentProgress}}%</span>
     #[[
     {{#  } }}
     ]]#
@@ -40,7 +40,7 @@
     #[[
     {{#  if(d.assessmentProgress < 50){ }}
     ]]#
-    <span class="layui-badge layui-bg-orange">{{d.assessmentProgress}}%</span>
+    <span class="layui-badge layui-bg-blue">{{d.assessmentProgress}}%</span>
     #[[
     {{#  } }}
     ]]#

@@ -12,6 +12,10 @@
     <form id="searchForm" class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="项目名称" class="layui-input"/>
+                </div>
                 <label class="layui-form-label">项目归属</label>
                 <div class="layui-input-inline">
                     <select id='ownType' name="ownType" lay-filter="ownTypeSelect">
@@ -68,12 +72,17 @@
     <a class="layui-btn layui-btn-xs" lay-event="see">查看项目详情</a>
     #end
 </script>
+<script type="text/html" id="fileSee">
+    #shiroHasPermission('/app/project/see')
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="fileSee">查看项目文件</a>
+    #end
+</script>
 #end
 
 #define js()
 <script type="text/javascript">
     var fileId;
-    layui.use(['table', 'layer','form'], function () {
+    layui.use(['table', 'layer', 'form'], function () {
         var table = layui.table
             , form = layui.form;
         var url = "#(url)";
@@ -92,14 +101,17 @@
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 150}
                 , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
-                , {field: 'status', title: '状态', width: 100, sort: true,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
+                , {
+                    field: 'status', title: '状态', width: 100, sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'
+                }
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {title: '备案资料', width: 120, align: 'center', toolbar: '#backRecord'}
+                , {fixed: 'right', title: '备案资料', width: 120, align: 'center', toolbar: '#backRecord'}
                 , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '项目文件', minWidth: 200, align: 'center', toolbar: '#fileSee'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
-                ownType:0
+                ownType: 0
             }
             , url: '#(ctxPath)/app/track/projectListTableData'
             , method: 'get'
@@ -138,6 +150,9 @@
             } else if (obj.event === 'see') {
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
                 });
+            } else if (obj.event === 'fileSee') {
+                pop_show_full("项目文件", "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
+                });
             }
         });
 
@@ -151,7 +166,7 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
-        form.on('select(ownTypeSelect)', function(data){
+        form.on('select(ownTypeSelect)', function (data) {
             reloadTable($('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });

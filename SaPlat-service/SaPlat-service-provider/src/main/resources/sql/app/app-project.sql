@@ -109,6 +109,8 @@ WHERE
     #for(id : mgr_list)
       #(for.index > 0 ? ", " : "")#(id)
     #end) AND status = #para(status)
+	and
+		name like #para(name)
   order by createTime desc
 #end
 
@@ -119,6 +121,8 @@ FROM
   project
 WHERE
   userId = #para(userID)
+	and
+		name like #para(name)
   order by createTime desc
 #end
 
@@ -162,6 +166,8 @@ WHERE ID IN
 		OR
 		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
 ) AND status = #para(status)
+	and
+		name like #para(name)
 #end
 
 #sql("invitedExpert-by-projectID")
