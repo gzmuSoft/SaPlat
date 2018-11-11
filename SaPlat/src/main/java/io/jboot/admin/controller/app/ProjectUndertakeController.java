@@ -68,23 +68,23 @@ public class ProjectUndertakeController extends BaseController {
     @JbootrpcService
     private ManagementService managementService;
 
-    /**
-     * 去重
-     */
-    static String sub(String str) {
-        List list = new ArrayList();
-        StringBuffer sb = new StringBuffer(str);
-        int j = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (list.contains(str.charAt(i))) {
-                sb.deleteCharAt(i - j);
-                j++;
-            } else {
-                list.add(str.charAt(i));
-            }
-        }
-        return sb.toString();
-    }
+//    /**
+//     * 去重
+//     */
+//    static String sub(String str) {
+//        List list = new ArrayList();
+//        StringBuffer sb = new StringBuffer(str);
+//        int j = 0;
+//        for (int i = 0; i < str.length(); i++) {
+//            if (list.contains(str.charAt(i))) {
+//                sb.deleteCharAt(i - j);
+//                j++;
+//            } else {
+//                list.add(str.charAt(i));
+//            }
+//        }
+//        return sb.toString();
+//    }
 
     /**
      * 跳转榜单页面
@@ -420,8 +420,8 @@ public class ProjectUndertakeController extends BaseController {
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         User user = AuthUtils.getLoginUser();
         Organization org = organizationService.findById(user.getUserID());
-        //List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+//        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+        List<OrgStructure> orgStructures = orgStructureService.findByOrgId(org.getId());
 //        for (StructPersonLink structPersonLink : structPersonLinks) {
 //            string.append(structPersonLink.getStructID());
 //        }

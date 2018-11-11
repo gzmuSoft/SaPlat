@@ -60,4 +60,11 @@ public class OrgStructureServiceImpl extends JbootServiceBase<OrgStructure> impl
         return DAO.findListByColumns(columns);
     }
 
+    @Override
+    public List<OrgStructure> findByOrgId(Object id){
+        Columns columns = Columns.create();
+        columns.eq("orgId",id);
+        return DAO.findListByColumns(columns);
+    }
+
 }

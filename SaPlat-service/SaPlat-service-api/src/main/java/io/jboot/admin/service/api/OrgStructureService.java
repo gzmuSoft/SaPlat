@@ -48,6 +48,13 @@ public interface OrgStructureService {
      */
     public List<OrgStructure> findByOrgIdAndType(Object id,int typeId);
 
+    /**
+     * find model by primary key
+     *
+     * @param id
+     * @return
+     */
+    public List<OrgStructure> findByOrgId(Object id);
 
     /**
      * find all model
