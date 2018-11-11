@@ -114,10 +114,7 @@
                 , {title: '跟踪移交', width: 200, align: 'center', toolbar: '#riskTrackEnd'}
                 , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , where: {
-                ownType:0
-            }
-            , url: '#(ctxPath)/app/track/projectRiskListTableData'
+            , url: '#(ctxPath)/app/track/projectRiskListTableData?ownType=0'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page

@@ -303,7 +303,7 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
+                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
@@ -320,18 +320,20 @@ public class TrackController extends BaseController {
             if (projectFileType != null) {
                 fileTypeID = projectFileType.getId();
             }
-            for (int i = 0; i < page.getList().size(); i++) {
-                page.getList().get(i).setOwnType(iOwnType);
-                FileProject fileProject = null;
-                if (fileTypeID != null) {
-                    fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
-                }
-                if (fileProject != null) {
-                    page.getList().get(i).setIsUpload(true);
-                    page.getList().get(i).setFileID(fileProject.getFileID());
-                    System.out.println(fileProject.getFileID());
-                } else {
-                    page.getList().get(i).setIsUpload(false);
+            if (page.getList()!=null) {
+                for (int i = 0; i < page.getList().size(); i++) {
+                    page.getList().get(i).setOwnType(iOwnType);
+                    FileProject fileProject = null;
+                    if (fileTypeID != null) {
+                        fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
+                    }
+                    if (fileProject != null) {
+                        page.getList().get(i).setIsUpload(true);
+                        page.getList().get(i).setFileID(fileProject.getFileID());
+                        System.out.println(fileProject.getFileID());
+                    } else {
+                        page.getList().get(i).setIsUpload(false);
+                    }
                 }
             }
         }
