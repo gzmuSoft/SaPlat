@@ -50,7 +50,7 @@
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadBackRecord">上传</a>
     #[[
-    {{#  if(!d.isBackRecordUpLoad && d.remark != 'facRole'){ }}
+    {{#  } else if(!d.isBackRecordUpLoad && d.remark != 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-disable">暂无数据</a>
     #[[
@@ -107,8 +107,8 @@
                 }
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                 , {fixed: 'right', title: '备案资料', width: 120, align: 'center', toolbar: '#backRecord'}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-                , {fixed: 'right', title: '项目文件', minWidth: 200, align: 'center', toolbar: '#fileSee'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '项目文件', width: 120, align: 'center', toolbar: '#fileSee'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
                 ownType: 0

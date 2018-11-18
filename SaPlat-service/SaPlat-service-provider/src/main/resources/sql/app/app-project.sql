@@ -121,8 +121,9 @@ FROM
   project
 WHERE
   userId = #para(userID)
-	and
-		name like #para(name)
+    #if(name)
+	and	name like #para(name)
+	#end
   order by createTime desc
 #end
 
