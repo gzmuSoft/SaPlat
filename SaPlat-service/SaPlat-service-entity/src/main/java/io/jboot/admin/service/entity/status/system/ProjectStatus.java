@@ -56,6 +56,10 @@ public class ProjectStatus extends BaseStatus {
      * 项目跟踪
      */
     public final static String TRACKING = "10";
+    /**
+     * 备案文件已上传
+     */
+    public final static String RECORDKEEPED = "11";
 
 
     public ProjectStatus() {
@@ -70,6 +74,7 @@ public class ProjectStatus extends BaseStatus {
         add(REFUSE, "驳回重新评估待确认");
         add(RECORDKEEPING, "项目备案");
         add(TRACKING, "项目跟踪");
+        add(RECORDKEEPED, "备案文件已上传");
     }
 
     private static ProjectStatus me;

@@ -133,7 +133,8 @@ public class ProjectController extends BaseController {
         for (UserRole j : userRoles) {
             userRoleId.add(j.getRoleID());
         }
-        authRoleId.retainAll(userRoleId);//取两个集合的交集，返回值为boolean；authRoleId为交集
+        authRoleId.retainAll(userRoleId);
+        //取两个集合的交集，返回值为boolean；authRoleId为交集
         for (Long i : authRoleId) {
             roleNameList.add(roleService.findById(i).getName());
         }

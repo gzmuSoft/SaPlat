@@ -46,15 +46,15 @@
 <script type="text/html" id="backRecord">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(!d.isBackRecordUpLoad && d.remark == 'managementRole'){ }}
+    {{#  if(!d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadBackRecord">上传</a>
     #[[
-    {{#  } else if(!d.isBackRecordUpLoad && d.remark != 'managementRole'){ }}
+    {{#  } else if(!d.isBackRecordUpLoad && d.remark != 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-disable">暂无数据</a>
     #[[
-    {{# } else if(d.isBackRecordUpLoad && d.remark == 'managementRole'){ }}
+    {{# } else if(d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     #[[
@@ -106,13 +106,13 @@
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'
                 }
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {fixed: 'right', title: '备案文件', width: 120, align: 'center', toolbar: '#backRecord'}
+                , {fixed: 'right', title: '备案移交表', width: 120, align: 'center', toolbar: '#backRecord'}
                 , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
                 , {fixed: 'right', title: '项目文件', width: 120, align: 'center', toolbar: '#fileSee'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
                 ownType: 0,
-                type: 0
+                type: 1
             }
             , url: '#(ctxPath)/app/track/projectListTableData'
             , method: 'get'
@@ -137,7 +137,7 @@
                     maxmin: false,
                     shadeClose: false,
                     shade: 0.4,
-                    title: '上传备案文件',
+                    title: '上传备案資料移交表',
                     content: '#(ctxPath)/app/track/fileUploading?projectId=' + data.id + '&type=0',
                     end: function () {
                         table.reload('dateTable', {
