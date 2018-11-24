@@ -7,12 +7,15 @@ import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
+import io.jboot.admin.service.api.FileProjectService;
 import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +31,8 @@ public class UtilController extends BaseController {
     @JbootrpcService
     private FilesService filesService;
 
+    @JbootrpcService
+    private FileProjectService fileProjectService;
     @Before(POST.class)
     public void uploadFile() {
         //当前时间
@@ -126,5 +131,42 @@ public class UtilController extends BaseController {
                 .setAttr("icon", getPara("icon", "layui-icon-auz"))
                 .setAttr("title", getPara("title", "新页面"))
                 .render(getPara("toHtml", "verify.html"));
+    }
+    //判断project 是否有对应的fileType文件
+    @NotNullPara({"fileTypeID","projectID"})
+    public void isLive(){
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Long fileTypeID=getParaToLong("fileTypeID");
+        Long projectID=getParaToLong("projectID");
+        if(!(fileTypeID==null||projectID==null)){
+            FileProject fileProject=fileProjectService.findByFileTypeIdAndProjectId(fileTypeID,projectID);
+            if(fileProject!=null) {
+                map.put("code","1");
+            }
+            else{
+                map.put("code","0");
+            }
+        }
+        else{
+            map.put("code","0");
+        }
+        renderJson(RestResult.buildSuccess(map));
+    }
+
+    @NotNullPara({"fileTypeID","projectID"})
+    public void projectFileView() {
+        Long fileTypeID=getParaToLong("fileTypeID");
+        Long projectID=getParaToLong("projectID");
+        if(!(fileTypeID==null||projectID==null)) {
+            FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, projectID);
+            Files files = filesService.findById(fileProject.getFileID());
+            if (files == null) {
+                files=new Files();
+                files.setPath("none");
+            }
+            setAttr("files", files);
+            render("pdf.html");
+        }
     }
 }
