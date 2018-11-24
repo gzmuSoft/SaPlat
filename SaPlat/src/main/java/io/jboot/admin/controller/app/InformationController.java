@@ -376,12 +376,21 @@ public class InformationController extends BaseController {
     public void diagnosesSave() {
         Diagnoses diagnoses = getBean(Diagnoses.class, "diagnoses");
         String[] idList = getParaValues("staffArrangements");
+        String file = getPara("file");
+        if (StringUtils.isNotEmpty(file)){
+            Files files = filesService.findById(file);
+            files.setIsEnable(true);
+            if (!filesService.update(files)){
+                throw new BusinessException("保存失败");
+            }
+            diagnoses.setRemark(file);
+        }
         diagnoses.setStaffArrangements(StringUtils.join(idList, ","));
         String[] surveyWayList = getParaValues("surveyWays");
         diagnoses.setSurveyWay(StringUtils.join(surveyWayList, ","));
         diagnoses.setCreateUserID(AuthUtils.getLoginUser().getId());
         diagnoses.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
-
+        // 没有字段存放“社会稳定风险评估调查分析表”，使用reamrk字段
         if (!diagnosesService.saveOrUpdate(diagnoses)) {
             throw new BusinessException("保存失败");
         }
