@@ -642,12 +642,22 @@ public class InformationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-
     /**
-     * 临时-项目风险因素影响程度及概率
+     * 选择添加的风险因素界面
      */
     @NotNullPara("projectID")
-    public void toInitialRiskExpertise() {
+    public void chooseRiskExpertise() {
+        setAttr("projectId", getPara("projectID")).render("chooseRiskExpertise.html");
+    }
+
+    /**
+     * 项目风险因素影响程度及概率
+     * type
+     * 0： 初始风险
+     * 1： 採取措施后的风险
+     */
+    @NotNullPara({"projectID", "type"})
+    public void toRiskExpertise() {
         Long projectId = getParaToLong("projectID");
         // 获取到当前行的id
         Long id = getParaToLong("id");
@@ -689,11 +699,15 @@ public class InformationController extends BaseController {
 
     /**
      * 项目风险因素影响程度及概率数据提交
+     * type
+     * 0： 初始风险
+     * 1： 採取措施后的风险
      */
     @Before(POST.class)
-    @NotNullPara({"projectId", "expertId"})
+    @NotNullPara({"projectId", "expertId", "type"})
     public void initialRiskExpertise() {
         User user = AuthUtils.getLoginUser();
+        int type = getParaToInt("type");
         InitialRiskExpertise model = new InitialRiskExpertise();
         ExpertGroup expertGroup = expertGroupService.findById(getParaToLong("expertId"));
         if (expertGroup == null) {
@@ -714,6 +728,11 @@ public class InformationController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
         model.setStatus(3);
+        if (type == 0) {
+            model.setRemark("initial");
+        } else {
+            model.setRemark("result");
+        }
         model.setIsEnable(true);
         if (!initialRiskExpertiseService.save(model)) {
             renderJson(RestResult.buildError("保存失败"));

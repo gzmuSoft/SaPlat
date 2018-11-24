@@ -84,7 +84,7 @@
         <h2 style="margin-top: 50px;">实施小组</h2>
         <hr class="layui-bg-green">
         <div class="layui-form-pane">
-            <div class="layui-form-item layui-hide" >
+            <div class="layui-form-item layui-hide">
                 <label class="layui-form-label" for="impTeam.projectID" style="width: 150px">项目名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="impTeam.projectID" name="impTeam.projectID"
@@ -269,15 +269,23 @@
         </div>
         <div class="layui-row ">
             <div class="layui-btn-group">
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover">稳评方案封面</button>
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">稳评方案封面</button>
                 <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
             </div>
         </div>
 
+        <div class="layui-row " style="margin-top: 20px;">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaReport" style="background-color: red">报备登记表</button>
+                <button type="button" class="layui-btn" id="ReportSee">查看报备登记表</button>
+            </div>
+        </div>
+
+
         #if(project.assessmentMode == "委评")
         <div class="layui-row" style="margin-top: 20px;">
             <div class="layui-btn-group">
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust">委托书</button>
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaEntrust" style="background-color: red">委托书</button>
                 <button type="button" class="layui-btn" id="EntrustSee">查看委托书</button>
             </div>
         </div>
@@ -314,8 +322,8 @@
             , layedit = layui.layedit
             , laydate = layui.laydate
             , temp1 = [], temp2 = [], temp3 = [], temp4 = []
-            , fileFormId1 = null, fileFormId2 = null
-            , fileId1 = null, fileId2 = null
+            , fileFormId1 = null, fileFormId2 = null, fileFormId3 = null
+            , fileId1 = null, fileId2 = null, fileId3 = null
             , AssString = "", ExpString = "", InvString = "", RepString = ""
             , con = 0;
 
@@ -698,20 +706,25 @@
                             if (data.code == 0) {
                                 if (ele.attr('id') === "EvaEntrust") {
                                     fileFormId2 = data.data.fileFormId;
-                                } else {
+                                } else if (ele.attr('id') === "EvaCover") {
                                     fileFormId1 = data.data.fileFormId;
+                                } else {
+                                    fileFormId3 = data.data.fileFormId;
                                 }
                                 flag = true;
                             }
                         }
                     });
                     if (flag) {
-                        $(ele.text("已上传（更改）"));
+                        // $(ele.text("已上传（更改）"));
+                        ele.css('background','green');
                     }
                     if (ele.attr('id') === "EvaEntrust") {
                         fileId2 = res.data.fileId;
-                    } else {
+                    } else if (ele.attr('id') === "EvaCover") {
                         fileId1 = res.data.fileId;
+                    } else {
+                        fileId3 = res.data.fileId;
                     }
                 } else if (res.code == 1) {
                     return false;
@@ -743,14 +756,29 @@
             }
         });
 
+        $("#ReportSee").click(function () {
+            if (fileId3 === null || fileId3 === "") {
+                layer.msg("您还没有上传报备登记表哦")
+            } else {
+                pop_show('查看报备登记表文件', '#(ctxPath)/util/pdfView?fileID=' + fileId3, '', '', function () {
+                });
+            }
+        });
+
         /**
          * 数据打包
          */
         function dataString() {
             var data = {};
-            //两个文件
+            //三个文件
             data.fileFormId1 = fileFormId1;
             data.fileFormId2 = fileFormId2;
+            data.fileFormId3 = fileFormId3;
+
+            data.fileId1 = fileId1;
+            data.fileId2 = fileId2;
+            data.fileId3 = fileId3;
+
 
             //四个富文本框
             data['EvaScheme.gist'] = layedit.getContent(index1);

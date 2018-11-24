@@ -8,7 +8,7 @@
 
 #define content()
 <br>
-<h2 class="title" align="center" style="color: #00a89a">项目初始风险概率及影响程度专家意见统计表</h2><br>
+<h2 class="title" align="center" style="color: #00a89a">项目採取措施后风险概率及影响程度专家意见统计表</h2><br>
 <hr align="center" size="2" width="100%"/>
 <div class="layui-row">
     <div class="layui-btn-group">
@@ -36,6 +36,7 @@
         &nbsp;&nbsp;
         <button id="ret" class="layui-btn layui-btn-small ">返回</button>
     </div>
+
 
 </div>
 
@@ -170,12 +171,11 @@
                 });
 
 
-
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('#submit').remove();
                     $('#del').remove();
-                    $('input').addClass('layui-disabled').attr("disabled","disabled");
+                    $('input').addClass('layui-disabled').attr("disabled", "disabled");
                 }
 
                 /**
@@ -328,7 +328,7 @@
                     };
                     $.ajax({
                         type: 'POST',
-                        url: '#(ctxPath)/app/information/initialRiskExpertise?type=0',
+                        url: '#(ctxPath)/app/information/initialRiskExpertise?type=1',
                         loadFlag: true,
                         data: data,
                         error: function (data) {
@@ -373,7 +373,7 @@
         if (flag === "true") {
             $('#submit').remove();
             $('#del').remove();
-            $('input').addClass('layui-disabled').attr("disabled","disabled");
+            $('input').addClass('layui-disabled').attr("disabled", "disabled");
         }
     });
 </script>
