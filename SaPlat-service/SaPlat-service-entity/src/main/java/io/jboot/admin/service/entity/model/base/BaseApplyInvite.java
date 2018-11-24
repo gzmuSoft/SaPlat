@@ -89,13 +89,13 @@ public abstract class BaseApplyInvite<M extends BaseApplyInvite<M>> extends Jboo
 		return getInt("applyOrInvite");
 	}
 
-    public void setStatus(java.lang.String status) {
-        set("status", status);
+	public void setStatus(java.lang.String status) {
+		set("status", status);
 	}
-
-    public java.lang.String getStatus() {
-        return getStr("status");
-    }
+	
+	public java.lang.String getStatus() {
+		return getStr("status");
+	}
 
 	public void setReply(java.lang.String reply) {
 		set("reply", reply);

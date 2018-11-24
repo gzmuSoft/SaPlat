@@ -24,7 +24,9 @@
             window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectId=#(projectId)&type=1";
         });
         $('#ret').click(function () {
-            window.location.href = "#(ctxPath)/app/information/list?id=#(projectId)&url=/app/information/chooseRiskExpertise";
+            // window.location.href = "#(ctxPath)/app/information/list?id=#(projectId)&url=/app/information/chooseRiskExpertise";
+            // history.go(-1);
+            window.location.href = document.referrer;
         });
         var flag = '#(flag)';
         if (flag === "true") {

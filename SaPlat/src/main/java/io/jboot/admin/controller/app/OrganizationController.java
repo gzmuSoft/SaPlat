@@ -19,6 +19,7 @@ import io.jboot.admin.validator.app.organization.OrganizationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -353,7 +354,7 @@ public class OrganizationController extends BaseController {
     public void managementProve() {
         User loginUser = AuthUtils.getLoginUser();
         Management model = getBean(Management.class, "management");
-        model.setSuperiorID(getParaToLong("superiorID"));
+        model.setSuperiorID(BigInteger.valueOf(getParaToLong("superiorID")));
         String management = "管理机构";
         model.setCreateUserID(loginUser.getId());
         model.setLastUpdateUserID(loginUser.getId());

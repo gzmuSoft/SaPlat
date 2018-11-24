@@ -40,7 +40,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
      * @return
      */
     public Management fitModel(Management model) {
-        if (null != model && model.getSuperiorID() > 0) {
+        if (null != model && model.getSuperiorID().intValue() > 0) {
             Management tmp = findById(model.getSuperiorID());
             if (tmp != null) {
                 model.setSuperiorName(tmp.getName());

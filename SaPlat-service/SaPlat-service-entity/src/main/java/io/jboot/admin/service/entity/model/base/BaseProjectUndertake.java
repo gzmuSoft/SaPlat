@@ -33,14 +33,6 @@ public abstract class BaseProjectUndertake<M extends BaseProjectUndertake<M>> ex
 		return getStr("spell");
 	}
 
-	public void setCreateUserID(java.lang.Long createUserID) {
-		set("createUserID", createUserID);
-	}
-	
-	public java.lang.Long getCreateUserID() {
-		return getLong("createUserID");
-	}
-
 	public void setProjectID(java.lang.Long projectID) {
 		set("projectID", projectID);
 	}
@@ -87,6 +79,14 @@ public abstract class BaseProjectUndertake<M extends BaseProjectUndertake<M>> ex
 	
 	public java.util.Date getDeadTime() {
 		return get("deadTime");
+	}
+
+	public void setCreateUserID(java.lang.Long createUserID) {
+		set("createUserID", createUserID);
+	}
+	
+	public java.lang.Long getCreateUserID() {
+		return getLong("createUserID");
 	}
 
 	public void setCreateTime(java.util.Date createTime) {

@@ -20,10 +20,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -217,7 +214,7 @@ public class InformationController extends BaseController {
             }
             Organization organization = organizationService.findById(user.getUserID());
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency == null){
+            if (facAgency == null) {
                 facAgency = projectUndertake.getFacAgency();
             }
             name = facAgency.getName();
@@ -332,14 +329,13 @@ public class InformationController extends BaseController {
             user = userService.findById(projectUndertake.getFacAgencyID());
             organization = organizationService.findById(user.getUserID());
         } else if ("委评".equals(project.getAssessmentMode())) {
-            if(projectUndertake.getApplyOrInvite()){
-                FacAgency facAgency=facAgencyService.findById(projectUndertake.getFacAgencyID());
+            if (projectUndertake.getApplyOrInvite()) {
+                FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
                 organization = organizationService.findById(facAgency.getOrgID());
-                user=userService.findByUserIdAndUserSource(organization.getId(),1);
-            }
-            else{
-                user=userService.findById(projectUndertake.getCreateUserID());
-                organization=organizationService.findById(user.getUserID());
+                user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            } else {
+                user = userService.findById(projectUndertake.getCreateUserID());
+                organization = organizationService.findById(user.getUserID());
             }
         } else {
             throw new BusinessException("请求错误");
@@ -415,6 +411,7 @@ public class InformationController extends BaseController {
         Long projectId = getParaToLong("id");
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setProjectID(projectId);
+        questionnaire.setIsEnable(true);
         Page<Questionnaire> page = questionnaireService.findPage(questionnaire, pageNumber, pageSize);
         page.getList().forEach(p -> {
             StringBuilder sb = new StringBuilder();
@@ -436,51 +433,17 @@ public class InformationController extends BaseController {
     @NotNullPara("projectId")
     public void personOrOrganization() {
         Project project = projectService.findById(getPara("projectId"));
-        int contentsLength = 0;
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setType(getParaToInt("type"));
         setAttr("flag", getPara("flag", "false"));
+        setAttr("questionnaire", questionnaire).
+                setAttr("project", project).
+                setAttr("projectId", project.getId());
         //判断跳转的页面是哪一个
         if (questionnaire.getType() == 0) {
-            //加载民族
-            Nation nmodel = new Nation();
-            nmodel.setIsEnable(true);
-            List<Nation> nations = nationService.findAll(nmodel);
-            BaseStatus nationStatus = new BaseStatus() {
-            };
-            for (Nation nation : nations) {
-                nationStatus.add(nation.getId().toString(), nation.getName());
-            }
-            //加载学历
-            Educational emodel = new Educational();
-            emodel.setIsEnable(true);
-            List<Educational> educationals = educationalService.findAll(emodel);
-            BaseStatus educationalStatus = new BaseStatus() {
-            };
-            for (Educational educational : educationals) {
-                educationalStatus.add(educational.getId().toString(), educational.getName());
-            }
-            //加载职业
-            Occupation omodel = new Occupation();
-            omodel.setIsEnable(true);
-            List<Occupation> occupations = occupationService.findAll(omodel);
-            BaseStatus occupationStatus = new BaseStatus() {
-            };
-            for (Occupation item : occupations) {
-                occupationStatus.add(item.getId().toString(), item.getName());
-            }
-            setAttr("contentsLength", contentsLength).
-                    setAttr("questionnaire", questionnaire).
-                    setAttr("project", project).
-                    setAttr("occupationStatus", occupationStatus).
-                    setAttr("educationalStatus", educationalStatus).
-                    setAttr("nationStatus", nationStatus).
-                    render("personMain.html");
+            render("personMain.html");
         } else {
-            setAttr("contentsLength", contentsLength).
-                    setAttr("questionnaire", questionnaire).
-                    setAttr("project", project).
-                    render("organizationMain.html");
+            render("organizationMain.html");
         }
     }
 
@@ -494,77 +457,16 @@ public class InformationController extends BaseController {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
         setAttr("flag", getPara("flag", "false"));
         //选择问卷为空则是创建
+        setAttr("projectId", project.getId())
+            .setAttr("project", project);
         if (questionnaire == null) {
-            setAttr("projectId", project.getId()).
-                    render("personOrOrganization.html");
+            render("personOrOrganization.html");
         } else {
-            //加载内容Ids
-            Long[] contentIds = questionnaireContentLinkService.findContentIdByQuestionnaireId(questionnaire.getId());
-            QuestionnaireContent[] questionnaireContents = new QuestionnaireContent[contentIds.length];
-            //内容条数
-            int contentsLength = contentIds.length;
-            //加载内容s
-            for (int i = 0; i < contentIds.length; i++) {
-                questionnaireContents[i] = questionnaireContentService.findById(contentIds[i]);
-            }
-            //判断跳转的页面是哪一个
+            setAttr("questionnaire", questionnaire);
             if (questionnaire.getType() == 0) {
-                //加载民族
-                Nation nmodel = new Nation();
-                nmodel.setIsEnable(true);
-                List<Nation> nations = nationService.findAll(nmodel);
-                BaseStatus nationStatus = new BaseStatus() {
-                };
-                Nation nationName = null;
-                for (Nation nation : nations) {
-                    if (questionnaire.getNationID().equals(nation.getId())) {
-                        nationName = nation;
-                    }
-                    nationStatus.add(nation.getId().toString(), nation.getName());
-                }
-                //加载学历
-                Educational emodel = new Educational();
-                emodel.setIsEnable(true);
-                List<Educational> educationals = educationalService.findAll(emodel);
-                BaseStatus educationalStatus = new BaseStatus() {
-                };
-                Educational educationalName = null;
-                for (Educational educational : educationals) {
-                    if (questionnaire.getDegreeOfEducationID().equals(educational.getId())) {
-                        educationalName = educational;
-                    }
-                    educationalStatus.add(educational.getId().toString(), educational.getName());
-                }
-                //加载职业
-                Occupation omodel = new Occupation();
-                omodel.setIsEnable(true);
-                List<Occupation> occupations = occupationService.findAll(omodel);
-                BaseStatus occupationStatus = new BaseStatus() {
-                };
-                Occupation occupationName = null;
-                for (Occupation item : occupations) {
-                    if (questionnaire.getOccupationID().equals(item.getId())) {
-                        occupationName = item;
-                    }
-                    occupationStatus.add(item.getId().toString(), item.getName());
-                }
-                setAttr("questionnaireContents", questionnaireContents).
-                        setAttr("contentsLength", contentsLength).
-                        setAttr("questionnaire", questionnaire).
-                        setAttr("project", project).
-                        setAttr("occupationStatus", occupationStatus).
-                        setAttr("occupation", occupationName).
-                        setAttr("educationalStatus", educationalStatus).
-                        setAttr("educational", educationalName).
-                        setAttr("nationStatus", nationStatus).
-                        setAttr("nation", nationName).
-                        render("personMain.html");
+                render("personMain.html");
             } else {
-                setAttr("questionnaireContents", questionnaireContents).
-                        setAttr("contentsLength", contentsLength).
-                        setAttr("questionnaire", questionnaire).
-                        setAttr("project", project).
-                        render("organizationMain.html");
+                render("organizationMain.html");
             }
         }
     }
@@ -593,29 +495,16 @@ public class InformationController extends BaseController {
         if (questionnaire.getCreateUserID() == null) {
             questionnaire.setCreateUserID(loginUser.getId());
         }
-        //调查内容
-        String[] questionnaireContentNames = getParaValues("name");
-        String[] questionnaireContents = getParaValues("content");
-        List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
-        int i = 0;
-        for (String content : questionnaireContents) {
-            QuestionnaireContent questionnaireContent = new QuestionnaireContent();
-            questionnaireContent.setName(questionnaireContentNames[i]);
-            questionnaireContent.setContent(content);
-            questionnaireContent.setCreateTime(new Date());
-            questionnaireContent.setLastAccessTime(new Date());
-            questionnaireContent.setCreateUserID(loginUser.getId());
-            contents.add(questionnaireContent);
-            i++;
+        String files = getPara("file");
+        String[] split = files.split("-");
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (String aSplit : split) {
+            if (StringUtils.isNotEmpty(aSplit) && StringUtils.isNumeric(aSplit)) {
+                ids.add(Integer.parseInt(aSplit));
+            }
         }
-        if (questionnaire.getId() != null) {
-            if (!questionnaireService.updateQuestionnaire(questionnaire, contents, project)) {
-                throw new BusinessException("修改失败!");
-            }
-        } else {
-            if (!questionnaireService.saveQuestionnaire(questionnaire, contents, project)) {
-                throw new BusinessException("保存失败!");
-            }
+        if (!questionnaireService.saveQuestionnaire(questionnaire, ids, project)) {
+            throw new BusinessException("保存失败!");
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -626,14 +515,8 @@ public class InformationController extends BaseController {
     @NotNullPara("id")
     public void questionnaireDelete() {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
-        Long[] contentIds, linkIds;
         if (questionnaire != null) {
-            contentIds = questionnaireContentLinkService.findContentIdByQuestionnaireId(questionnaire.getId());
-            linkIds = new Long[contentIds.length];
-            for (int i = 0; i < contentIds.length; i++) {
-                linkIds[i] = questionnaireContentLinkService.findIdByContentId(contentIds[i]);
-            }
-            if (!questionnaireService.deleteQuestionnaire(questionnaire.getId(), contentIds, linkIds)) {
+            if (!questionnaireService.deleteQuestionnaire(questionnaire)){
                 throw new BusinessException("删除失败!");
             }
         } else {

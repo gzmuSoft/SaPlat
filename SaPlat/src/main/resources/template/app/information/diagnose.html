@@ -91,6 +91,70 @@
 
 
         });
+
+        /**
+         * 文件上传
+         */
+        upload.render({
+            elem: '.upFile'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: $('#modelName').text()
+            }, before: function (res) {
+                $('#upload-progress').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress').addClass('layui-hide');
+                var ele = $(this)[0].item;
+                if (res.code == 0) {
+                    var flag;
+                    util.sendAjax({
+                        type: 'GET',
+                        url: '#(ctxPath)/app/projectUndertake/upFile',
+                        async: false,
+                        data: {
+                            fileId: res.data.fileId,
+                            fieldName: ele.text()
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                if (ele.attr('id') === "EvaEntrust") {
+                                    fileFormId2 = data.data.fileFormId;
+                                } else if (ele.attr('id') === "EvaCover") {
+                                    fileFormId1 = data.data.fileFormId;
+                                } else {
+                                    fileFormId3 = data.data.fileFormId;
+                                }
+                                flag = true;
+                            }
+                        }
+                    });
+                    if (flag) {
+                        // $(ele.text("已上传（更改）"));
+                        ele.css('background','green');
+                    }
+                    if (ele.attr('id') === "EvaEntrust") {
+                        fileId2 = res.data.fileId;
+                    } else if (ele.attr('id') === "EvaCover") {
+                        fileId1 = res.data.fileId;
+                    } else {
+                        fileId3 = res.data.fileId;
+                    }
+                } else if (res.code == 1) {
+                    return false;
+                }
+            }, error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
     });
 
     function pdf(element) {
@@ -264,6 +328,12 @@
 
 <div style="text-align: center">
     <div class="layui-form-item">
+        <div class="layui-row ">
+            <div class="layui-btn-group">
+                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">问卷调查情况统计及分析内容</button>
+                <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
+            </div>
+        </div>
         <div class="layui-input-block">
             <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
             <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>

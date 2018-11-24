@@ -71,6 +71,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         if (model.getProjectID() != null && model.getFileTypeID() != null) {
             columns.eq("projectID", model.getProjectID());
             columns.eq("fileTypeID", model.getFileTypeID());
+        } else if (model.getFileID() != null) {
+            columns.eq("fileTypeID", model.getFileTypeID());
+        }
+        if (model.getRemark() != null) {
+            columns.eq("remark", model.getRemark());
         }
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
@@ -103,6 +108,22 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
+    public FileProject saveFileProjectAndFilesGet(FileProject model) {
+        boolean tx = Db.tx(() -> {
+            if (!save(model)) {
+                return false;
+            }
+            Files files = filesService.findById(model.getFileID());
+            files.setIsEnable(true);
+            return filesService.update(files);
+        });
+        if (tx) {
+            return model;
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateFileProjectAndProject(FileProject fileProject, Project project) {
         return Db.tx(() -> {
             return !(!update(fileProject) || !projectService.update(project));
@@ -128,6 +149,14 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         columns.eq("fileTypeID", fileTypeId);
         columns.eq("projectID", projectId);
         return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<FileProject> findByRemark(Long questionnaireId) {
+        Columns columns = Columns.create();
+        columns.eq("remark", questionnaireId);
+        columns.eq("isEnable",true);
+        return DAO.findListByColumns(columns);
     }
 
     @Override

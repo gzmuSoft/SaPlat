@@ -6,6 +6,7 @@ import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.Questionnaire;
 import io.jboot.admin.service.entity.model.QuestionnaireContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface QuestionnaireService  {
@@ -22,6 +23,7 @@ public interface QuestionnaireService  {
      * 修改与保存的事物回滚
      */
     public boolean saveQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
+    public boolean saveQuestionnaire(Questionnaire questionnaire, ArrayList<Integer> ids, Project project);
     public boolean updateQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
 
     /**
@@ -67,6 +69,8 @@ public interface QuestionnaireService  {
      * @return
      */
     public boolean delete(Questionnaire model);
+
+    public boolean deleteQuestionnaire(Questionnaire model);
 
 
     /**
