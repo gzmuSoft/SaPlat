@@ -1,4 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
+#include("/template/common/layout/_page_layout_all.html")
 #@layout()
 
 #define css()
@@ -29,6 +29,14 @@
         form.on('submit(demo1)', function (data) {
             var serialize = $('#Form').serialize();
             serialize += "&file=" + file;
+            var surveyGroup = getText("surveyGroup");
+            var surveyDesign = getText("surveyDesign");
+            var investigationReport = getText("investigationReport");
+            var mainRiskPointText = getText("mainRiskPoint");
+            serialize = "diagnoses.surveyGroup=" + surveyGroup + "&diagnoses.surveyDesign=" + surveyDesign
+                        + "&diagnoses.investigationReport=" + investigationReport +  "&diagnoses.mainRiskPoint="
+                        + mainRiskPointText + "&" + serialize;
+            // console.log(serialize);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/information/diagnosesSave',
@@ -39,10 +47,17 @@
                 }
             });
         });
+
+        function getText(ele) {
+            return $("iframe[textarea='" + ele + "']").contents().find("body").text();
+        }
+
         var element = '#(diagnoses.toJson())';
         var diagnoses = JSON.parse(element);
         $("#surveyGroup").text(diagnoses.surveyGroup).css("display", "").removeClass("layui-hide");
         $("#surveyDesign").text(diagnoses.surveyDesign).css("display", "").removeClass("layui-hide");
+        $("#investigationReport").text(diagnoses.investigationReport).css("display", "").removeClass("layui-hide");
+        $("#mainRiskPoint").text(diagnoses.mainRiskPoint).css("display", "").removeClass("layui-hide");
         $("#surveyMethod").val(diagnoses.surveyMethod);
         if (diagnoses.surveyWay != null) {
             $("input[name='surveyWays']").each(function () {
@@ -70,6 +85,16 @@
             tool: ['left', 'center', 'right'],
             height: 100
         });
+        //自定义工具栏
+        var investigationReportedit = layedit.build('investigationReport', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
+        //自定义工具栏
+        var mainRiskPointedit = layedit.build('mainRiskPoint', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
 
         var flag = '#(flag)';
         if (flag === "true") {
@@ -89,6 +114,20 @@
                 layedit.sync(surveyGroupedit); //同步编辑内容到textarea #10line
                 if (layedit.getContent(surveyGroupedit).length == 0) {
                     return "调查群体不能为空";
+                }
+            },
+
+            investigationReportedit: function (vale) {
+                layedit.sync(investigationReportedit); //同步编辑内容到textarea #10line
+                if (layedit.getContent(investigationReportedit).length == 0) {
+                    return "问卷调查设计不能为空";
+                }
+            },
+
+            mainRiskPointedit: function (vale) {
+                layedit.sync(mainRiskPointedit); //同步编辑内容到textarea #10line
+                if (layedit.getContent(mainRiskPointedit).length == 0) {
+                    return "问卷调查设计不能为空";
                 }
             },
             sampleRateNumber: function (vale) {
@@ -302,6 +341,24 @@
                                             <a class="media" href="#(files.path)" readonly="readonly"></a>
                                             <a class="layui-btn" id="media">点击查看</a>
                                             <button id="pdf"></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">调查报告：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                        <textarea id="investigationReport" lay-verify="investigationReportedit" placeholder="请填写"
+                                  name="diagnoses.investigationReport"
+                                  class="layui-textarea">#(diagnoses.investigationReport)</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">主要风险点：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
+                                  name="diagnoses.mainRiskPoint"
+                                  class="layui-textarea">#(diagnoses.mainRiskPoint)</textarea>
                                         </div>
                                     </div>
 
