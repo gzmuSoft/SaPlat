@@ -90,6 +90,24 @@ public class FileUploadController extends BaseController {
         }
         renderJson(RestResult.buildSuccess());
     }
+    public void saveOrUpdate(){
+        FileProject fileProject = getBean(FileProject.class, "fileProject");
+        Project project = projectService.findById(fileProject.getProjectID());
+        ProjectFileType projectFileType = projectFileTypeService.findById(fileProject.getFileTypeID());
+        FileProject oldFileProject=fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(),fileProject.getProjectID());
+        if(oldFileProject!=null){
+            oldFileProject.setFileID(fileProject.getFileID());
+            fileProjectService.updateFileProjectAndFiles(oldFileProject);
+        }
+        else {
+            fileProject.setName(projectFileType.getName());
+            fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
+            if (!fileProjectService.saveFileProjectAndFiles(fileProject)) {
+                throw new BusinessException("保存失败,请重试");
+            }
+        }
+        renderJson(RestResult.buildSuccess());
+    }
 
     @NotNullPara({"id", "projectID"})
     public void delete() {
