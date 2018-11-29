@@ -55,7 +55,13 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&flag=#(flag)&id=" + data.id;
+                var url = "#(url)";
+                if (url == "/app/information/chooseRiskExpertise") {
+                    pop_max_show('查看文件', '#(ctxPath)/app/information/riskExpertise?projectID=#(projectId)&id=' + data.id, function () {
+                    });
+                } else {
+                    window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&flag=#(flag)&id=" + data.id;
+                }
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除吗？', function (index) {
                     $.post("#(ctxPath)#(url)Delete", {id: data.id}, function (e) {

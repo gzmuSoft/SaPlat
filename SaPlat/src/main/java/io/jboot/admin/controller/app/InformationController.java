@@ -105,6 +105,9 @@ public class InformationController extends BaseController {
 
     @JbootrpcService
     private InitialRiskExpertiseService initialRiskExpertiseService;
+    @JbootrpcService
+    private ManagementService managementService;
+
 
     /**
      * 资料编辑页面
@@ -543,6 +546,70 @@ public class InformationController extends BaseController {
     }
 
     /**
+     * 查看风险因素及影响概率
+     */
+    @NotNullPara({"projectID", "id"})
+    public void riskExpertise() {
+        String managementName = null;
+        String riskExpertise = null;
+        String riskProbability = "0%";
+        String incidenceExpertise = null;
+        String incidenceProbability = "0%";
+        ExpertGroup expertGroup = new ExpertGroup();
+        InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(getParaToLong("id"));
+        Project project = projectService.findById(getParaToLong("projectID"));
+        if (project != null) {
+            Management management = managementService.findById(project.getManagementID());
+            if (management != null) {
+                managementName = management.getName();
+            }
+        }
+        if (initialRiskExpertise != null) {
+            ExpertGroup tmp = expertGroupService.findById(initialRiskExpertise.getExpertID());
+            if (tmp != null) {
+                expertGroup = tmp;
+            }
+            int n = initialRiskExpertise.getRiskExpertise();
+            switch (n) {
+                case 1:
+                    riskExpertise = "很低";
+                case 2:
+                    riskExpertise = "较低";
+                case 3:
+                    riskExpertise = "中等";
+                case 4:
+                    riskExpertise = "较高";
+                case 5:
+                    riskExpertise = "很高";
+            }
+            n = initialRiskExpertise.getIncidenceExpertise();
+            switch (n) {
+                case 1:
+                    incidenceExpertise = "可忽略";
+                case 2:
+                    incidenceExpertise = "较小";
+                case 3:
+                    incidenceExpertise = "中等";
+                case 4:
+                    incidenceExpertise = "较大";
+                case 5:
+                    incidenceExpertise = "严重";
+            }
+            riskProbability = initialRiskExpertise.getRiskProbability() + "%";
+            incidenceProbability = initialRiskExpertise.getIncidenceProbability() + "%";
+        }
+        setAttr("project", project)
+                .setAttr("managementName", managementName)
+                .setAttr("expertGroup", expertGroup)
+                .setAttr("initialRiskExpertise", initialRiskExpertise)
+                .setAttr("riskProbability", riskProbability)
+                .setAttr("riskExpertise", riskExpertise)
+                .setAttr("incidenceProbability", incidenceProbability)
+                .setAttr("incidenceExpertise", incidenceExpertise)
+                .render("riskExpertise.html");
+    }
+
+    /**
      * 项目风险因素影响程度及概率
      * type
      * 0： 初始风险
@@ -587,6 +654,31 @@ public class InformationController extends BaseController {
             }
         });
         renderJson(new DataTable<InitialRiskExpertise>(pages));
+    }
+
+    /**
+     * 调查问卷数据表格
+     */
+    public void chooseRiskExpertiseDataTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        InitialRiskExpertise initialRiskExpertise = new InitialRiskExpertise();
+        initialRiskExpertise.setProjectID(projectId);
+        initialRiskExpertise.setIsEnable(true);
+        Page<InitialRiskExpertise> page = initialRiskExpertiseService.findPage(initialRiskExpertise, pageNumber, pageSize);
+        page.getList().forEach(p -> {
+            StringBuilder sb = new StringBuilder();
+            if (p.getRemark().equals("initial")) {
+                sb.append("初始风险程度");
+                p.setRemark("初始风险程度");
+            } else if (p.getRemark().equals("result")) {
+                sb.append("採取措施后的风险程度");
+                p.setRemark("採取措施后的风险程度");
+            }
+            p.setName("风险因素及风险程度");
+        });
+        renderJson(new DataTable<InitialRiskExpertise>(page));
     }
 
     /**

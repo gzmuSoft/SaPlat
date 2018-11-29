@@ -1247,7 +1247,7 @@ public class ProjectController extends BaseController {
      * 0 审查团体
      * 1 专业团体
      */
-    @NotNullPara({"id", "projectId", "orgType", "num"})
+    @NotNullPara({"id", "projectId", "orgType", "num", "date"})
     public void inviteReview() {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
@@ -1277,11 +1277,11 @@ public class ProjectController extends BaseController {
         notification.setIsEnable(true);
         notification.setStatus(0);
 
-        Date nowTime = new Date();
-        Calendar time = Calendar.getInstance();
-        //获取七天以后的日期作为申请的失效日期
-        time.setTime(nowTime);
-        time.add(Calendar.DATE, 7);
+//        Date nowTime = new Date();
+//        Calendar time = Calendar.getInstance();
+//        //获取七天以后的日期作为申请的失效日期
+//        time.setTime(nowTime);
+//        time.add(Calendar.DATE, 7);
 
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setName(projectService.findById(projectId).getName());
@@ -1302,7 +1302,7 @@ public class ProjectController extends BaseController {
         if (timeTmp != null) {
             applyInvite.setDeadTime(timeTmp.getDeadTime());
         } else {
-            applyInvite.setDeadTime(time.getTime());
+            applyInvite.setDeadTime(getParaToDate("date"));
         }
         applyInvite.setLastAccessTime(new Date());
         applyInvite.setLastUpdateUserID(user.getId());

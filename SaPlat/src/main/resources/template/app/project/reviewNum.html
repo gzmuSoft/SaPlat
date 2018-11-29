@@ -17,13 +17,20 @@
 
         $('#submit').click(function () {
             var num = $('#num').val();
-            console.log(num);
+            var date = $('#date').val();
+            var nowDate = new Date();
+
+            if (nowDate.getTime() > date.getTime()) {
+                layer.msg("结束时间不能小于当前时间！");
+                return false;
+            }
             if (num >= 1 && num <= 3) {
                 $.getJSON('#(ctxPath)/app/project/inviteReview', {
                     id: id,
                     projectId: projectId,
                     orgType: orgType,
-                    num: num
+                    num: num,
+                    date: date
                 }, function (res) {
                     //????刷新有没有问题
                     pop_close();
@@ -49,6 +56,13 @@
                 <div class="layui-input-block">
                     <input id="num" lay-verify="required" autocomplete="off" placeholder="请输入所需人数" class="layui-input"
                            type="number">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label"><em class="require-mark">*</em>截止时间</label>
+                <div class="layui-input-block">
+                    <input id="date" lay-verify="required" placeholder="截止日期" class="layui-input" type="date">
                 </div>
             </div>
         </div>
