@@ -28,24 +28,15 @@
 
 
     layui.use(['table', 'layer', 'upload', 'element'], function () {
-
+        var $ = layui.jquery;
         function isLive(_fileTypeID,_projectID) {
-            util.sendAjax({
-                type: 'POST',
-                url: '#(ctxPath)/util/isLive',
-                data: {
-                    'fileTypeID': _fileTypeID,
-                    'projectID': _projectID
-                },
-                success: function (data) {
-                    if(data.code="1") {
-                        $("button[fileTypeId*='" + _fileTypeID + "']").text("已上传(更改)");
-                        $("button[fileTypeId*='" + _fileTypeID + "']").attr("isUpdate", "1");
-                    }
-                },
-                unSuccess: function (data) {
+            $.post('#(ctxPath)/util/isLive?fileTypeID='+_fileTypeID+'&projectID='+_projectID, function (data) {
+                if(data.msg=="1") {
+                    $("button[fileTypeId*='" + _fileTypeID + "']").text("已上传(更改)");
+                    $("button[fileTypeId*='" + _fileTypeID + "']").attr("isUpdate", "1");
                 }
             });
+
         }
         isLive("112",projectID);
         isLive("113",projectID);
@@ -693,7 +684,7 @@
                 <!--$('.loading-bg').remove();-->
                 $('#upload-progress').addClass('layui-hide');
                 var ele = $(this)[0].item;
-                if (res.code == 0) {
+                if (res.code == 1) {
                     postUpdateFileID('EvaCover', res.data.fileId, projectID);
                     $(ele.text("已上传（更改）"));
                     $(ele.attr("isUpdate","1"));
@@ -717,9 +708,10 @@
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
                 var ele = $(this)[0].item;
-                if (res.code == 0) {
+                if (res.code == 1) {
                     postUpdateFileID('EvaCover_2', res.data.fileId, projectID);
                     $(ele.text("已上传（更改）"));
+                    $(ele.attr("isUpdate","1"));
                 }
             }, error: function (index, upload) {
                 layer.msg("文件上传错误！请重新尝试！");

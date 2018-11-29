@@ -142,16 +142,16 @@ public class UtilController extends BaseController {
         if(!(fileTypeID==null||projectID==null)){
             FileProject fileProject=fileProjectService.findByFileTypeIdAndProjectId(fileTypeID,projectID);
             if(fileProject!=null) {
-                map.put("code","1");
+                map.put("msg","1");
             }
             else{
-                map.put("code","0");
+                map.put("msg","0");
             }
         }
         else{
             map.put("code","0");
         }
-        renderJson(RestResult.buildSuccess(map));
+        renderJson(map);
     }
 
     @NotNullPara({"fileTypeID","projectID"})
