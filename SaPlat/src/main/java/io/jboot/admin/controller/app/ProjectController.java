@@ -18,6 +18,7 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
@@ -808,25 +809,35 @@ public class ProjectController extends BaseController {
         // 查找每个项目的进度
         if (result.size() > 0) {
             for (Project project : result) {
+                String info = project.getRemark();
                 int progress = 0;
-                EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
-                if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
-                    progress += 20;
-                    List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
-                    if (model != null && model.size() > 0) {
-                        progress += 15;
-                    }
-                    List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
-                    if (diagnoses != null && diagnoses.size() > 0) {
-                        progress += 15;
-                    }
-                    List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
-                    for (ProjectFileType p : list) {
-                        List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
-                        if (fileProjects != null && fileProjects.size() > 0) {
+                if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")){
+                    progress = Integer.parseInt(info.substring(4));
+                } else {
+                    EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
+                    if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
+                        progress += 10;
+                        List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
+                        if (model != null && model.size() > 0) {
                             progress += 10;
                         }
+                        List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
+                        if (diagnoses != null && diagnoses.size() > 0) {
+                            progress += 10;
+                        }
+                        List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
+                        for (ProjectFileType p : list) {
+                            List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
+                            if (fileProjects != null && fileProjects.size() > 0) {
+                                progress += 10;
+                            }
+                        }
                     }
+                    if (progress > 100){
+                        progress = 100;
+                    }
+                    project.setRemark("评估进度" + progress);
+                    projectService.update(project);
                 }
                 project.setAssessmentProgress(Integer.toString(progress));
             }

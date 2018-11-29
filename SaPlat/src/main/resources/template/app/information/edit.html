@@ -65,6 +65,8 @@
                 content.prop("src", "#(ctxPath)/app/fileupload/index?projectID=#(projectId)&flag=#(flag)");
             } else if (html === "/app/fileupload/document"){
                 content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)&flag=#(flag)");
+            } else if (html === "/app/information/toRiskLevel"){
+                content.prop("src", "#(ctxPath)/app/information/toRiskLevel?id=#(projectId)&percent=#(percent)&flag=#(flag)");
             }
             content.css("display","");
         });

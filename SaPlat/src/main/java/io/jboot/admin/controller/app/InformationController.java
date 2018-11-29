@@ -377,10 +377,10 @@ public class InformationController extends BaseController {
         Diagnoses diagnoses = getBean(Diagnoses.class, "diagnoses");
         String[] idList = getParaValues("staffArrangements");
         String file = getPara("file");
-        if (StringUtils.isNotEmpty(file)){
+        if (StringUtils.isNotEmpty(file)) {
             Files files = filesService.findById(file);
             files.setIsEnable(true);
-            if (!filesService.update(files)){
+            if (!filesService.update(files)) {
                 throw new BusinessException("保存失败");
             }
             diagnoses.setRemark(file);
@@ -467,7 +467,7 @@ public class InformationController extends BaseController {
         setAttr("flag", getPara("flag", "false"));
         //选择问卷为空则是创建
         setAttr("projectId", project.getId())
-            .setAttr("project", project);
+                .setAttr("project", project);
         if (questionnaire == null) {
             render("personOrOrganization.html");
         } else {
@@ -525,7 +525,7 @@ public class InformationController extends BaseController {
     public void questionnaireDelete() {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
         if (questionnaire != null) {
-            if (!questionnaireService.deleteQuestionnaire(questionnaire)){
+            if (!questionnaireService.deleteQuestionnaire(questionnaire)) {
                 throw new BusinessException("删除失败!");
             }
         } else {
@@ -646,4 +646,29 @@ public class InformationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
+    /**
+     * 6. 风险等级综合评估
+     */
+    public void toRiskLevel() {
+        String riskLevels = projectService.findById(getParaToLong("id")).getRiskLevels();
+        if (StringUtils.isEmpty(riskLevels)) {
+            riskLevels = "";
+        }
+        setAttr("projectID", getParaToLong("id"))
+                .setAttr("percent", getParaToLong("percent"))
+                .setAttr("flag", getPara("flag", "false"))
+                .setAttr("riskLevels", riskLevels)
+                .render("riskLevel.html");
+    }
+
+    @NotNullPara({"projectId","riskLevels"})
+    public void updateRiskLevels(){
+        Integer projectId = getParaToInt("projectId");
+        Project project = projectService.findById(projectId);
+        project.setRiskLevels(getPara("riskLevels",project.getRiskLevels()));
+        if (!projectService.update(project)){
+            throw new BusinessException("更新失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
 }
