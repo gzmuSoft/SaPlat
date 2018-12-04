@@ -1,0 +1,85 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function (data) {
+
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/risk_point/postUpdate',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                }
+            });
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="model.id" value="#(model.id)">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>项目</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.projectID" placeholder="项目" class="layui-input" value="#(model.projectID)" required
+                       lay-verify="required" STYLE="width: 280PX" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>风险点</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.riskPoint" placeholder="风险点" class="layui-input" value="#(model.riskPoint)" required
+                       lay-verify="required" STYLE="width: 280PX" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>防化措施摘要</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.preventionMeasuresSummary" placeholder="防化措施摘要" class="layui-input" value="#(model.preventionMeasuresSummary)" required
+                       lay-verify="required" STYLE="width: 280PX" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>具体防化措施</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.preventionMeasures" placeholder="具体防化措施" class="layui-input" value="#(model.preventionMeasures)" required
+                       lay-verify="required" STYLE="width: 280PX" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>排序</label>
+            <div class="layui-input-block">
+                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input"
+                       value="#(model.sort)" required lay-verify="required" STYLE="width: 280PX" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="sub" lay-submit>
+                保存
+            </button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end

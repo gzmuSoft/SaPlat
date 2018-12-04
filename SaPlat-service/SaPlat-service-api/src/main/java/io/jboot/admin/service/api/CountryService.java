@@ -32,14 +32,14 @@ public interface CountryService  {
     public List<Country> findAll(Country model);
 
     /**
-     * 分页查询 项目阶段 信息
-     * @param model 项目阶段
+     * 分页查询 国家 信息
+     * @param model 国家
      * @return 页
      */
     public Page<Country> findPage(Country model, int pageNumber, int pageSize);
 
     /**
-     * 根据名称查询 项目阶段 信息
+     * 根据名称查询 国家 信息
      * @param name
      * @return
      */

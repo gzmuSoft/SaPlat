@@ -66,6 +66,8 @@ FROM
 where
     a.id = b.projectID
 and
+    b.status = 3
+and
     a.status = #para(status)
 and
 	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
