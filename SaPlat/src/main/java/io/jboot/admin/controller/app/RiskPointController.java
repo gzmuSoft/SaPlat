@@ -81,8 +81,23 @@ public class RiskPointController extends BaseController {
             organization = new Organization();
             pModel = new Project();
         }
+
+        RiskPoint model = new RiskPoint();
+        if(id > 0 )
+            model.setProjectID(id);
+
+        Page<RiskPoint> page = riskPointService.findPage(model, 1, 30);
+        RiskPoint curRiskPoint = null;
+        if(page == null){
+            page = new Page<RiskPoint>();
+            curRiskPoint = new RiskPoint();
+        }
+        else{
+            curRiskPoint = page.getList().get(0);
+        }
         setAttr("pModel", pModel).
                 setAttr("organization", organization).
+                setAttr("curRiskPoint", curRiskPoint).
                 render("projectRiskPoint.html");
     }
     /**
@@ -98,9 +113,15 @@ public class RiskPointController extends BaseController {
             model.setProjectID(projectID);
 
         Page<RiskPoint> page = riskPointService.findPage(model, pageNumber, pageSize);
-
-        if(page == null)
+        RiskPoint curRiskPoint = null;
+        if(page == null){
             page = new Page<RiskPoint>();
+            curRiskPoint = new RiskPoint();
+        }
+        else{
+            curRiskPoint = page.getList().get(0);
+        }
+        setAttr("curRiskPoint", curRiskPoint).
         renderJson(new DataTable<RiskPoint>(page));
     }
 

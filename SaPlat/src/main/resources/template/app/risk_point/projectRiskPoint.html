@@ -17,38 +17,39 @@
 
         // 表格渲染
         var tableIns = table.render({
-            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
+            elem: '#dataTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dataTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
             , cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'projectName', title: '项目',minWidth:240, sort: true}
                 , {field: 'riskPoint', title: '风险点',minWidth:240, sort: true}
                 , {field: 'preventionMeasuresSummary', title: '防化措施摘要',minWidth:240, sort: true}
-                , {field: 'createTime', title: '创建时间',width:150, sort: true}
-                , {field: 'isEnable', title: '状态', width:100, sort: true,
+                , {field: 'isEnable', title: '状态', width:60, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'}
-                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', minWidth: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/risk_point/projectRiskPointData' + '?projectID=#(pModel.id)'
-            , method: 'get'
             , request: {
-                projectID: $('#projectID').val()
-                , pageName: 'pageNumber' //页码的参数名称，默认：page
+                pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
+            , method: 'get'
             , page: true
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30
             , loading: true
             , done: function (res, curr, count) {
+                // 阻止行里面按钮的点击冒泡
+                this.elem.next().find('.layui-table-body').on('click', '[lay-event]', function (event) {
+                    layui.stope(event);
+                });
             }
         });
 
-        table.on('tool(dateTable)', function (obj) {
+        table.on('tool(dataTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
@@ -99,6 +100,19 @@
             }
         });
 
+        //监听行单击事件（双击事件为：rowDouble）
+        table.on('row(dataTable)', function(obj){
+            var data = obj.data;
+            document.getElementById('riskPointInfo').value = data.riskPoint;
+            document.getElementById('preventionMeasuresSummary').value = data.preventionMeasuresSummary;
+            document.getElementById('preventionMeasures').value = data.preventionMeasures;
+            document.getElementById('sort').value = data.sort;
+            document.getElementById('createTime').value = data.createTime;
+
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
         $("#add").click(function () {
             pop_show('添加风险点', '#(ctxPath)/app/risk_point/add', '450', '330', function () {
                 reloadTable();
@@ -106,7 +120,7 @@
         });
 
         reloadTable = function () {
-            table.reload('dateTable', {
+            table.reload('dataTable', {
                 url: '#(ctxPath)/app/risk_point/projectRiskPointData' + '?projectID=#(pModel.id)'
             });
         };
@@ -122,62 +136,120 @@
     <div class="layui-collapse" lay-filter="test">
         <div class="layui-colla-item">
             <h2 class="layui-colla-title">#(pModel.name)——项目信息</h2>
-            <div class="layui-colla-content">
-            <form class="layui-form" action="">
-                <div class="layui-row layui-col-space10 layui-form-item">
+            <div class="layui-colla-content" style="background-color: #f8f8f8">
+                <form class="layui-form" action="">
+                    <div class="layui-row layui-col-space10 layui-form-item">
 
-                    <div class="layui-inline">
-                        <label class="layui-form-label">项目名称</label>
-                        <div class="layui-input-block" style="width:248px;">
-                            <input type="text" value="#(pModel.name)" autocomplete="off" class="layui-input" readonly/>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">项目名称</label>
+                            <div class="layui-input-block" style="width:248px;">
+                                <input type="text" value="#(pModel.name)" autocomplete="off" class="layui-input"
+                                       readonly/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">项目类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="#(pModel.typeName)" autocomplete="off" class="layui-input"
+                                       readonly/>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">预计金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" value="#number(pModel.amount, ',###')" autocomplete="off"
+                                       class="layui-input" style="width: 170px" readonly/>
+                            </div>
+                            <div class="layui-form-mid layui-word-aux" style="margin-left: -25px">（单位：元）</div>
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">项目类型</label>
-                        <div class="layui-input-block">
-                            <input type="text" value="#(pModel.typeName)" autocomplete="off" class="layui-input" readonly/>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">预计金额</label>
-                        <div class="layui-input-inline">
-                            <input type="text" value="#number(pModel.amount, ',###')" autocomplete="off" class="layui-input"style="width: 170px" readonly/>
-                        </div>
-                        <div class="layui-form-mid layui-word-aux" style="margin-left: -25px">（单位：元）</div>
-                    </div>
-                </div>
 
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">地址</label>
-                        <div class="layui-input-block" style="width:975px;">
-                            <input type="text" value="#(pModel.site)" autocomplete="off" class="layui-input" readonly/>
+                    <div class="layui-row layui-col-space10 layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">地址</label>
+                            <div class="layui-input-block" style="width:975px;">
+                                <input type="text" value="#(pModel.site)" autocomplete="off" class="layui-input"
+                                       readonly/>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="layui-row layui-col-space10 layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">立项部门</label>
-                        <div class="layui-input-block" style="width:975px;">
-                            <input type="text" value="#(organization.name)" autocomplete="off" class="layui-input" readonly/>
+                    <div class="layui-row layui-col-space10 layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">立项部门</label>
+                            <div class="layui-input-block" style="width:975px;">
+                                <input type="text" value="#(organization.name)" autocomplete="off" class="layui-input"
+                                       readonly/>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
             </div>
         </div>
     </div>
 
     <hr>
 
-    <div class="layui-row">
-        <div class="layui-btn-group">
-            #shiroHasPermission('/app/risk_point/add')
-            <button id="add" class="layui-btn layui-btn-small">添加风险点</button>
-            #end
+    <div class="layui-row layui-row layui-col-space15">
+        <div class="layui-col-md7">
+            <div class="layui-card" style="padding: 10px;">
+                <div class="layui-btn-group">
+                    #shiroHasPermission('/app/risk_point/add')
+                    <button id="add" class="layui-btn layui-btn-small">添加风险点</button>
+                    #end
+                </div>
+                <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
+            </div>
         </div>
-        <table id="dateTable" lay-filter="dateTable"></table>
+        <div class="layui-col-md5">
+            <div class="layui-card">
+                <div class="layui-card-header" style="font-size: 18px">风险点信息</div>
+                <div class="layui-card-body layui-text">
+                    <form id="addForm" class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">风险点</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="riskPointInfo" placeholder="风险点" class="layui-input" value="#(curRiskPoint.riskPoint)" required
+                                       lay-verify="required" autocomplete="off"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">措施摘要</label>
+                            <div class="layui-input-block">
+                                <textarea id="preventionMeasuresSummary" class="layui-textarea" value="#(curRiskPoint.preventionMeasuresSummary)" required
+                                      style="height: 120px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasuresSummary)</textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">具体措施</label>
+                            <div class="layui-input-block">
+                                <textarea id="preventionMeasures" class="layui-textarea" value="#(curRiskPoint.preventionMeasures)" required
+                                       style="height: 235px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasures)</textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序</label>
+                            <div class="layui-input-block">
+                                <input id="sort" type="text" class="layui-input" value="#(curRiskPoint.sort)" required
+                                       lay-verify="required" autocomplete="off"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-block">
+                                <input id="createTime" type="text" class="layui-input" value="#(curRiskPoint.createTime)" readonly/>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="layui-btn-container"
+                         style="margin-top: 30px ;margin-right: 30%;width: 280px">
+                        <button type="button" class="layui-btn" name="check" id="check" style="background: #fd5f00">编辑信息</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check2" style="background: #fd5f00">保存信息</button>
+                        <button type="button" class="layui-btn layui-hide" name="check" id="check3">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
