@@ -51,6 +51,7 @@ public class RiskPointController extends BaseController {
 
     @JbootrpcService
     private RoleService roleService;
+
     /**
      * index
      */
@@ -83,16 +84,15 @@ public class RiskPointController extends BaseController {
         }
 
         RiskPoint model = new RiskPoint();
-        if(id > 0 )
+        if (id > 0)
             model.setProjectID(id);
 
         Page<RiskPoint> page = riskPointService.findPage(model, 1, 30);
         RiskPoint curRiskPoint = null;
-        if(page == null){
+        if (page == null) {
             page = new Page<RiskPoint>();
             curRiskPoint = new RiskPoint();
-        }
-        else{
+        } else {
             curRiskPoint = page.getList().get(0);
         }
         setAttr("pModel", pModel).
@@ -100,6 +100,7 @@ public class RiskPointController extends BaseController {
                 setAttr("curRiskPoint", curRiskPoint).
                 render("projectRiskPoint.html");
     }
+
     /**
      * res表格数据
      */
@@ -109,20 +110,20 @@ public class RiskPointController extends BaseController {
         Long projectID = getParaToLong("projectID", 0L);
 
         RiskPoint model = new RiskPoint();
-        if(projectID > 0 )
+        if (projectID > 0) {
             model.setProjectID(projectID);
+        }
 
         Page<RiskPoint> page = riskPointService.findPage(model, pageNumber, pageSize);
         RiskPoint curRiskPoint = null;
-        if(page == null){
+        if (page == null) {
             page = new Page<RiskPoint>();
             curRiskPoint = new RiskPoint();
-        }
-        else{
+        } else {
             curRiskPoint = page.getList().get(0);
         }
         setAttr("curRiskPoint", curRiskPoint).
-        renderJson(new DataTable<RiskPoint>(page));
+                renderJson(new DataTable<RiskPoint>(page));
     }
 
     /**
@@ -137,8 +138,9 @@ public class RiskPointController extends BaseController {
 
         Page<RiskPoint> page = riskPointService.findPage(model, pageNumber, pageSize);
 
-        if(page == null)
+        if (page == null) {
             page = new Page<RiskPoint>();
+        }
         renderJson(new DataTable<RiskPoint>(page));
     }
 

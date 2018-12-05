@@ -125,7 +125,7 @@ public class ProjectController extends BaseController {
         psModel.setIsEnable(true);
         List<ProjectStep> projectStepList = projectStepService.findAll(psModel);
         List<String> roleNameList = new ArrayList<>();
-        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(),true);
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(), true);
         List<Long> authRoleId = new ArrayList<>();
         List<Long> userRoleId = new ArrayList<>();
         for (Auth i : authList) {
@@ -811,34 +811,41 @@ public class ProjectController extends BaseController {
             for (Project project : result) {
                 String info = project.getRemark();
                 int progress = 0;
-                if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")){
-                    progress = Integer.parseInt(info.substring(4));
-                } else {
-                    EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
-                    if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
-                        progress += 10;
-                        List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
-                        if (model != null && model.size() > 0) {
-                            progress += 10;
-                        }
-                        List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
-                        if (diagnoses != null && diagnoses.size() > 0) {
-                            progress += 10;
-                        }
-                        List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
-                        for (ProjectFileType p : list) {
-                            List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
-                            if (fileProjects != null && fileProjects.size() > 0) {
-                                progress += 10;
-                            }
+                //TODO： 评估查表过多，访问速度过慢
+//              原本想通过加字段解决评估列表中疯狂查表的问题，但是目前发现无法实现，一旦指定值以后，这里就查不了所有的表
+//              只有通过在修改内容的时候进行修改评估进度的字段，但是需要每张表进行添加的时候进行修改进度，需要修改不下10个文件
+//              时间不够整理逻辑，暂时先不修复
+//                if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")) {
+//                    progress = Integer.parseInt(info.substring(4));
+//                } else {
+                EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
+                if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
+                    progress += 20;
+                    List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
+                    if (model != null && model.size() > 0) {
+                        progress += 20;
+                    }
+                    List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
+                    if (diagnoses != null && diagnoses.size() > 0) {
+                        progress += 20;
+                    }
+                    List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
+                    for (ProjectFileType p : list) {
+                        List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
+                        if (fileProjects != null && fileProjects.size() > 0) {
+                            progress += 15;
                         }
                     }
-                    if (progress > 100){
-                        progress = 100;
-                    }
-                    project.setRemark("评估进度" + progress);
-                    projectService.update(project);
                 }
+                if (progress > 100) {
+                    progress = 100;
+                }
+                project.setRemark("评估进度" + progress);
+                projectService.update(project);
+//                }
+//                if (progress > 100) {
+//                    progress = 100;
+//                }
                 project.setAssessmentProgress(Integer.toString(progress));
             }
         }

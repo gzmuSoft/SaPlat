@@ -1,5 +1,6 @@
 package io.jboot.admin.controller;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
@@ -9,8 +10,10 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FileProjectService;
 import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
+import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -32,6 +35,10 @@ public class UtilController extends BaseController {
     private FilesService filesService;
 
     @JbootrpcService
+    private ProjectService projectService;
+
+
+    @JbootrpcService
     private FileProjectService fileProjectService;
     @Before(POST.class)
     public void uploadFile() {
@@ -43,16 +50,11 @@ public class UtilController extends BaseController {
         File file = upload.getFile();
         String oldName = file.getName();
         String newName = UUID.randomUUID().toString();
-        // winodws 下文件上传
-        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
-        // linux 下文件上传
-//        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/"));
-
+        // 获取系统文件分隔符
+        String separator = File.separator;
+        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(separator));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        // winodws 下文件上传
-        File newFile = new File(path + "\\" + newName + "." + type);
-        // linux 下文件上传
-//        File newFile = new File(path + "/" + newName + "." + type);
+        File newFile = new File(path + separator + newName + "." + type);
 
         if (!file.renameTo(newFile)) {
             throw new BusinessException("文件上传失败");
@@ -167,6 +169,25 @@ public class UtilController extends BaseController {
             }
             setAttr("files", files);
             render("pdf.html");
+        }
+    }
+
+    /**
+     * 修改项目的评估进度
+     *
+     * @param id 项目id
+     * @param num 进度加多少
+     */
+    public void updateProjectEvaluation(Object id,Integer num){
+        Project project = projectService.findById(id);
+        String info = project.getRemark();
+        if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")) {
+            int progress = Integer.parseInt(info.substring(4));
+            progress += num;
+            project.setRemark("评估进度" + progress);
+            if (!projectService.update(project)){
+                projectService.update(project);
+            }
         }
     }
 }
