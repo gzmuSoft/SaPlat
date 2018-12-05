@@ -167,7 +167,9 @@ public class EvaluationController extends BaseController {
         if (progress > 100){
             progress = 100;
         }
-
+        if (evaScheme == null){
+            evaScheme = new EvaScheme();
+        }
         User user = userService.findById(project.getUserId());
         Organization organization = organizationService.findById(user.getUserID());
         Management management = managementService.findById(project.getManagementID());
