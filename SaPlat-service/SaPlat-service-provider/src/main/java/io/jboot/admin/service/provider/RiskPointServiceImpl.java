@@ -76,6 +76,9 @@ public class RiskPointServiceImpl extends JbootServiceBase<RiskPoint> implements
         if (StrKit.notBlank(model.getName())) {
             columns.like("name", "%" + model.getName() + "%");
         }
+        if (StrKit.notBlank(model.getRiskPoint())) {
+            columns.like("riskPoint", "%" + model.getRiskPoint() + "%");
+        }
         if (model.getProjectID() != null) {
             columns.eq("projectID", model.getProjectID());
         }
@@ -90,6 +93,9 @@ public class RiskPointServiceImpl extends JbootServiceBase<RiskPoint> implements
         Columns columns = Columns.create();
         if (StrKit.notBlank(model.getName())) {
             columns.like("name", "%" + model.getName() + "%");
+        }
+        if (StrKit.notBlank(model.getRiskPoint())) {
+            columns.like("riskPoint", "%" + model.getRiskPoint() + "%");
         }
         if (model.getProjectID() != null) {
             columns.eq("projectID", model.getProjectID());

@@ -684,7 +684,7 @@
                 <!--$('.loading-bg').remove();-->
                 $('#upload-progress').addClass('layui-hide');
                 var ele = $(this)[0].item;
-                if (res.code == 1) {
+                if (res.code == 0) {
                     postUpdateFileID('EvaCover', res.data.fileId, projectID);
                     $(ele.text("已上传（更改）"));
                     $(ele.attr("isUpdate","1"));
@@ -708,7 +708,7 @@
             }, done: function (res) {
                 <!--$('.loading-bg').remove();-->
                 var ele = $(this)[0].item;
-                if (res.code == 1) {
+                if (res.code == 0) {
                     postUpdateFileID('EvaCover_2', res.data.fileId, projectID);
                     $(ele.text("已上传（更改）"));
                     $(ele.attr("isUpdate","1"));
@@ -750,8 +750,8 @@
         if (flag === "true") {
             $('#del').remove();
             $('#add').remove();
-            $("button[fileTypeId*='112']").remove();
-            $("button[fileTypeId*='113']").remove();
+            $("button[fileTypeId*='112']").hide();
+            $("button[fileTypeId*='113']").hide();
         }
     });
 
@@ -799,12 +799,12 @@
 
 #define content()
 <div class="layui-fluid layui-form-pane">
-    <div class="layui-row ">
-        <div class="layui-col-md9">
+    <div class="layui-row x-center">
+        <div class="layui-col-md6">
             <button type="button" class="upFile layui-btn layui-icon" fileTypeId="113"  id="EvaCover" isUpdate="0">上传文件</button>
             <button type="button" class="layui-btn CoverSee">项目初始综合风险指数计算表</button>
         </div>
-        <div class="layui-col-md3">
+        <div class="layui-col-md6">
             <button type="button" class="upFile_2 layui-btn layui-icon" fileTypeId="112" id="EvaCover_2" isUpdate="0">上传文件</button>
             <button type="button" class="layui-btn CoverSee_2">主要单因素风险初始风险程度表</button>
         </div>
@@ -827,12 +827,12 @@
     </div>
     <div class="layui-row">
         <div class="layui-form-item">
-            <fieldset id="table_1" fileTypeId="24" name="采取措施后风险权重" class="layui-elem-field">
+            <fieldset id="table_1" fileTypeId="24"  name="采取措施后风险权重" class="layui-elem-field">
                 <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
                      id="upload-progress_1" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">采取措施后风险权重</label>
+                <label class="layui-form-label" style="width:150px">采取措施后风险权重</label>
                 <div class="layui-btn-group">
                     <button id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
                 </div>
