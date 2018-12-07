@@ -93,7 +93,11 @@ public class RiskPointController extends BaseController {
             page = new Page<RiskPoint>();
             curRiskPoint = new RiskPoint();
         } else {
-            curRiskPoint = page.getList().get(0);
+            if (page.getList().size() > 0) {
+                curRiskPoint = page.getList().get(0);
+            } else {
+                curRiskPoint = new RiskPoint();
+            }
         }
         setAttr("pModel", pModel).
                 setAttr("organization", organization).
@@ -120,7 +124,11 @@ public class RiskPointController extends BaseController {
             page = new Page<RiskPoint>();
             curRiskPoint = new RiskPoint();
         } else {
-            curRiskPoint = page.getList().get(0);
+            if (page.getList().size() > 0) {
+                curRiskPoint = page.getList().get(0);
+            } else {
+                curRiskPoint = new RiskPoint();
+            }
         }
         setAttr("curRiskPoint", curRiskPoint).
                 renderJson(new DataTable<RiskPoint>(page));
