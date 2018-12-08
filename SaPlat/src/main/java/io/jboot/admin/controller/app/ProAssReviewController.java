@@ -116,7 +116,7 @@ public class ProAssReviewController extends BaseController {
     public void recData() {
         Long projectId = getParaToLong("projectId");
         Long fileId = getParaToLong("fileId");
-        //ProjectFileType projectFileType = projectFileTypeService.findByName("7. 预审报告上传");
+        //ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
         //FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
 
         List<ProAssReview> proAssReviews = proAssReviewService.findByFileIdAndProjectId(fileId, projectId);
@@ -139,7 +139,7 @@ public class ProAssReviewController extends BaseController {
     }
 
     private String getPrepReport(Long projectId){
-        ProjectFileType projectFileType = projectFileTypeService.findByName("7. 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
         mReportFileId = fileProject.getFileID();
         Files file = filesService.findById(mReportFileId);
@@ -155,7 +155,7 @@ public class ProAssReviewController extends BaseController {
         User user = AuthUtils.getLoginUser();
 
         //加载文件类型
-        ProjectFileType projectFileType = projectFileTypeService.findByName("7. 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
 
         //加载文件与项目的关联信息
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), projectId);
@@ -208,7 +208,7 @@ public class ProAssReviewController extends BaseController {
             throw new BusinessException("所指定的项目阶段名称已存在");
         }
 
-        ProjectFileType projectFileType = projectFileTypeService.findByName("7. 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), model.getProjectID());
         model.setFileID(fileProject.getFileID());
 
