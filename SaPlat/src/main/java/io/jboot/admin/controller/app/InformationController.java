@@ -618,6 +618,7 @@ public class InformationController extends BaseController {
     @NotNullPara({"projectID", "type"})
     public void toRiskExpertise() {
         Long projectId = getParaToLong("projectID");
+        int type = getParaToInt("type");
         // 获取到当前行的id
         Long id = getParaToLong("id");
         // 设置必要的标识
@@ -626,14 +627,21 @@ public class InformationController extends BaseController {
                 .setAttr("projectId", projectId);
         // 如果为空，就是添加，否则为查看
         if (id == null) {
-            setAttr("expertGroups", expertGroupService.findAll())
-                    .render("initialRiskExpertise.html");
+            setAttr("expertGroups", expertGroupService.findAll());
+            if(type == 0){
+                render("initialRiskExpertise.html");
+            }else if(type == 1){
+                render("resultRiskExpertise.html");
+            }
         } else {
             InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(id);
             ExpertGroup expertGroup = expertGroupService.findById(initialRiskExpertise.getExpertID());
-            setAttr("initialRiskExpertise", initialRiskExpertise)
-                    .setAttr("expertGroup", expertGroup)
-                    .render("initialRiskExpertiseSee.html");
+            setAttr("initialRiskExpertise", initialRiskExpertise).setAttr("expertGroup", expertGroup);
+            if(type == 0){
+                render("initialRiskExpertise.html");
+            }else if(type == 1){
+                render("resultRiskExpertise.html");
+            }
         }
     }
 
