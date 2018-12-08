@@ -36,7 +36,7 @@
             serialize = "diagnoses.surveyGroup=" + surveyGroup + "&diagnoses.surveyDesign=" + surveyDesign
                         + "&diagnoses.investigationReport=" + investigationReport +  "&diagnoses.mainRiskPoint="
                         + mainRiskPointText + "&" + serialize;
-            // console.log(serialize);
+            serialize = encodeURI(serialize);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/information/diagnosesSave',
@@ -346,11 +346,12 @@
                                     </div>
 
                                     <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">主要风险点：</label>
-                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
-                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
-                                  name="diagnoses.mainRiskPoint"
-                                  class="layui-textarea">#(diagnoses.mainRiskPoint)</textarea>
+                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">问卷调查设计：</label>
+                                        <div class="layui-input-block" style="margin-left:148px;width:935px;">
+                                            <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
+                                                      lay-verify="surveyDesignedit" name="diagnoses.surveyDesign">
+                                                   #(diagnoses.surveyDesign)
+                                            </textarea>
                                         </div>
                                     </div>
 
@@ -363,15 +364,17 @@
                                         </div>
                                     </div>
 
+
+
                                     <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">问卷调查设计：</label>
-                                        <div class="layui-input-block" style="margin-left:148px;width:935px;">
-                                            <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
-                                                      lay-verify="surveyDesignedit" name="diagnoses.surveyDesign">
-                                                   #(diagnoses.surveyDesign)
-                                            </textarea>
+                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">主要风险点：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
+                                  name="diagnoses.mainRiskPoint"
+                                  class="layui-textarea">#(diagnoses.mainRiskPoint)</textarea>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
