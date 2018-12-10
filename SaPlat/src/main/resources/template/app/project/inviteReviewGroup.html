@@ -130,7 +130,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'invite') {
-                pop_show('邀请', '#(ctxPath)/app/project/reviewNum?id=' + data.id + '&projectId=' + projectId + '&orgType=' + iObjType, '300', '200', function () {
+                pop_show('邀请', '#(ctxPath)/app/project/reviewNum?id=' + data.id + '&projectId=' + projectId + '&orgType=' + iObjType, '320', '270', function () {
                     //？？？刷新考虑放这里，关闭当前pop_show
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/reviewGroupTable?id=' + $('#id').val() + "&flag=" + iObjType
