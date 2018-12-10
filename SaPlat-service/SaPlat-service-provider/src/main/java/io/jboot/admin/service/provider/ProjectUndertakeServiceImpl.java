@@ -114,7 +114,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             columns.eq("isEnable", projectUndertake.getIsEnable());
         }
         if (StrKit.notBlank(projectUndertake.getName())) {
-            columns.like("name", "%" + projectUndertake.getName() + "%");
+            columns.eq("name", projectUndertake.getName());
         }
         if (projectUndertake.getFacAgencyID() != null) {
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
@@ -128,6 +128,30 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
 
+    }
+
+    @Override
+    public ProjectUndertake findModel(ProjectUndertake projectUndertake) {
+        Columns columns = Columns.create();
+        if (projectUndertake.getApplyOrInvite() != null) {
+            columns.eq("applyOrInvite", projectUndertake.getApplyOrInvite());
+        }
+        if (projectUndertake.getIsEnable() != null) {
+            columns.eq("isEnable", projectUndertake.getIsEnable());
+        }
+        if (StrKit.notBlank(projectUndertake.getName())) {
+            columns.eq("name", projectUndertake.getName());
+        }
+        if (projectUndertake.getFacAgencyID() != null) {
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
+        }
+        if (projectUndertake.getCreateUserID() != null) {
+            columns.eq("createUserID", projectUndertake.getCreateUserID());
+        }
+        if (projectUndertake.getFacAgencyID() != null) {
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
+        }
+        return DAO.findFirstByColumns(columns);
     }
 
     @Override

@@ -73,6 +73,14 @@ public interface ProjectUndertakeService {
     public Page<ProjectUndertake> findPage(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
+     * 通过Model查询对应的1条数据
+     *
+     * @param projectUndertake
+     * @return
+     */
+    public ProjectUndertake findModel(ProjectUndertake projectUndertake);
+
+    /**
      * @param projectUndertake
      * @param pageNumber
      * @param pageSize

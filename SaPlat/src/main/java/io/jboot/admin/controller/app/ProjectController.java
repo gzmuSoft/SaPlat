@@ -232,8 +232,12 @@ public class ProjectController extends BaseController {
                         projectUndertake.setLastAccessTime(date);
                         projectUndertake.setLastUpdateUserID(loginUser.getId());
                         projectUndertake.setIsEnable(true);
-                        if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
-                            throw new BusinessException("保存失败");
+                        //保证数据库中没有重复的数据
+                        ProjectUndertake tmp = projectUndertakeService.findModel(projectUndertake);
+                        if (tmp == null) {
+                            if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
+                                throw new BusinessException("保存失败");
+                            }
                         }
                         jsonData.put("flag", 0);
                     } else if ("委评".equals(project.getAssessmentMode())) {
@@ -565,6 +569,11 @@ public class ProjectController extends BaseController {
                 projectUndertake.setLastAccessTime(new Date());
                 projectUndertake.setLastUpdateUserID(user.getId());
                 projectUndertake.setIsEnable(true);
+                //保证数据库中没有重复的数据
+                ProjectUndertake tmp = projectUndertakeService.findModel(projectUndertake);
+                if (tmp != null) {
+                    projectUndertake = tmp;
+                }
             } else {
                 json.put("status", false);
             }
