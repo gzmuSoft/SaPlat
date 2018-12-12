@@ -497,11 +497,17 @@ public class ProjectUndertakeController extends BaseController {
         String[] sStartDate = gson.fromJson(getPara("ScheduledPlan.startDate"), String[].class);
         String[] sEndDate = gson.fromJson(getPara("ScheduledPlan.endDate"), String[].class);
         String[] sContent = gson.fromJson(getPara("ScheduledPlan.content"), String[].class);
-        Long fileId1 = getParaToLong("fileId1"), fileId2 = getParaToLong("fileId1"), fileId3 = getParaToLong("fileId1");
+        Long fileId1 = getParaToLong("fileId1"), fileId2 = getParaToLong("fileId2"), fileId3 = getParaToLong("fileId3");
         Files files1 = filesService.findById(fileId1), files2 = filesService.findById(fileId2), files3 = filesService.findById(fileId3);
-        files1.setIsEnable(false);
-        files2.setIsEnable(false);
-        files3.setIsEnable(false);
+        if(files1!=null){
+            files1.setIsEnable(true);
+        }
+        if(files2!=null){
+            files2.setIsEnable(true);
+        }
+        if(files3!=null){
+            files3.setIsEnable(true);
+        }
         FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
         FileForm fileForm3 = fileFormService.findById(getParaToLong("fileFormId3"));
         String file2Id = getPara("fileFormId2");
@@ -642,9 +648,9 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("当前项目未上传前期资料");
         }
         ScheduledPlan scheduledPlan = scheduledPlanService.findByEvaSchemeID(evaScheme.getId());
-        FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", " 委托书", evaScheme.getId());
-        FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", " 稳评方案封面", evaScheme.getId());
-        FileForm fileForm3 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", " 报备登记表", evaScheme.getId());
+        FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C委托书", evaScheme.getId());
+        FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C稳评方案封面", evaScheme.getId());
+        FileForm fileForm3 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C报备登记表", evaScheme.getId());
 
         if (fileForm1 != null && fileForm1.getFileID() != null) {
             setAttr("file1src", fileForm1.getFileID());

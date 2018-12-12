@@ -291,7 +291,8 @@
 
 
 <script type="text/javascript">
-    var fileId1 = $("#flag1"), fileId2 = $("#flag2"), fileId3 = $("#flag3")
+    var fileId1 = $("#flag1").text(), fileId2 = $("#flag2").text(), fileId3 = $("#flag3").text();
+    console.log(fileId1);console.log(fileId2);console.log(fileId3);
     layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table', 'upload'], function () {
         /**
          *  操作对象
@@ -300,19 +301,19 @@
          * 文件查看
          */
         $("#CoverSee").click(function () {
-            if (fileId1 === null || fileId1 === "") {
+            if (fileId2 === null || fileId2 === "") {
                 layer.msg("您还没有上传稳评封面哦")
             } else {
-                pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
+                pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
                 });
             }
         });
 
         $("#EntrustSee").click(function () {
-            if (fileId2 === null || fileId2 === "") {
+            if (fileId1 === null || fileId1 === "") {
                 layer.msg("您还没有上传委托书哦")
             } else {
-                pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
+                pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
                 });
             }
         });
