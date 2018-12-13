@@ -200,17 +200,11 @@
         });
     });
 
-    function pdf(element) {
-        element.media({
-            width: 800
-            , height: 600
-            , src: element.attr('href')
-        });
-    }
 
     $("#media").click(function () {
-        $(this).css('display', 'none');
-        pdf($("a.media"));
+
+        pop_show('查看调查范围', '#(ctxPath)/util/pdfView?fileID=' + $(this).attr('fileId'), '', '', function () {
+        });
     });
 
     $("#reset").click(function () {
@@ -330,8 +324,7 @@
                                         <div class="layui-input-block">
                                             <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off" placeholder="系统读取"
                                                    value="#(files.id)" class="layui-input layui-hide" style="margin-left: 135px;">
-                                            <a class="media" href="#(files.path)" readonly="readonly"></a>
-                                            <a class="layui-btn" id="media">点击查看</a>
+                                            <a class="layui-btn" id="media" fileId="#(files.id)">点击查看</a>
                                             <button id="pdf"></button>
                                         </div>
                                     </div>
@@ -388,11 +381,9 @@
 
 <div style="text-align: center">
     <div class="layui-form-item">
-        <div class="layui-row ">
-            <div class="layui-btn-group">
-                <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">问卷调查情况统计及分析内容</button>
-                <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
-            </div>
+        <div class="layui-row" style="margin-bottom: 5px">
+            <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">问卷调查情况统计及分析内容</button>
+            <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
         </div>
         <div class="layui-input-block">
             <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
