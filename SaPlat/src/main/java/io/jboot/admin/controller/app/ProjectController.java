@@ -131,8 +131,11 @@ public class ProjectController extends BaseController {
         for (Auth i : authList) {
             authRoleId.add(i.getRoleId());
         }
+        boolean isManager = false;
         for (UserRole j : userRoles) {
             userRoleId.add(j.getRoleID());
+            if (j.getRoleID() == 11)
+                isManager = true;
         }
         authRoleId.retainAll(userRoleId);
         //取两个集合的交集，返回值为boolean；authRoleId为交集
@@ -141,6 +144,13 @@ public class ProjectController extends BaseController {
         }
 
         List<Management> mList = managementService.findAll(true);
+        if(isManager) // 若当前用户有管理机构立项权限，则从主管部门中移除自己
+        for (int i = 0; i < mList.size(); i++) {
+            if(mList.get(i).getOrgID() == loginUser.getUserID()) {
+                mList.remove(i);
+                break;
+            }
+        }
 
         if (roleNameList.size() != 0) {
             setAttr("roleNameList", roleNameList).setAttr("flag", true)
