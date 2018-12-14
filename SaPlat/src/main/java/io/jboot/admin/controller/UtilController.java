@@ -52,9 +52,11 @@ public class UtilController extends BaseController {
         String newName = UUID.randomUUID().toString();
         // 获取系统文件分隔符
         String separator = File.separator;
-        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(separator));
+        // winodws 下文件上传
+        String path = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("\\"));
         String type = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1);
-        File newFile = new File(path + separator + newName + "." + type);
+        File newFile = new File(path + "\\" + newName + "." + type);
+
 
         if (!file.renameTo(newFile)) {
             throw new BusinessException("文件上传失败");

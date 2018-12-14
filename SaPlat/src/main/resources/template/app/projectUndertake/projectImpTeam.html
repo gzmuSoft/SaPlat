@@ -674,6 +674,7 @@
         /**
          * 文件上传
          */
+
         upload.render({
             elem: '.upFile'
             , url: '#(ctxPath)/util/uploadFile'
@@ -717,14 +718,17 @@
                     });
                     if (flag) {
                         // $(ele.text("已上传（更改）"));
-                        ele.css('background','green');
+                        ele.css('background', 'green');
                     }
                     if (ele.attr('id') === "EvaEntrust") {
                         fileId2 = res.data.fileId;
+                        console.log('f2 '+fileId2)
                     } else if (ele.attr('id') === "EvaCover") {
                         fileId1 = res.data.fileId;
-                    } else {
+                        console.log('f1 '+fileId1)
+                    } else if(ele.attr('id') === "EvaReport") {
                         fileId3 = res.data.fileId;
+                        console.log('f3 '+fileId3)
                     }
                 } else if (res.code == 1) {
                     return false;
@@ -775,6 +779,7 @@
             data.fileFormId2 = fileFormId2;
             data.fileFormId3 = fileFormId3;
 
+            console.log(fileId1);console.log(fileId2);console.log(fileId3);
             data.fileId1 = fileId1;
             data.fileId2 = fileId2;
             data.fileId3 = fileId3;

@@ -20,7 +20,7 @@
             var date = $('#date').val();
             var nowDate = new Date();
 
-            if (nowDate.getTime() > date.getTime()) {
+            if (nowDate.getTime() > date) {
                 layer.msg("结束时间不能小于当前时间！");
                 return false;
             }
@@ -55,14 +55,15 @@
                 <label class="layui-form-label"><em class="require-mark">*</em>人数</label>
                 <div class="layui-input-block">
                     <input id="num" lay-verify="required" autocomplete="off" placeholder="请输入所需人数" class="layui-input"
-                           type="number">
+                           type="number" style="width: 160px">
                 </div>
             </div>
-
+            <br/>
             <div class="layui-inline">
                 <label class="layui-form-label"><em class="require-mark">*</em>截止时间</label>
                 <div class="layui-input-block">
-                    <input id="date" lay-verify="required" placeholder="截止日期" class="layui-input" type="date">
+                    <input id="date" lay-verify="required" placeholder="截止日期" class="layui-input" type="date"
+                           style="width: 160px">
                 </div>
             </div>
         </div>

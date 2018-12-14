@@ -30,8 +30,8 @@ public class FileFormServiceImpl extends JbootServiceBase<FileForm> implements F
     @Override
     public FileForm findFirstByTableNameAndRecordIDAndFileName(String tableName, String fieldName, Long recordID) {
         Columns columns = Columns.create();
-        columns.like("tableName", "%" + tableName.trim() + "%");
-        columns.like("fieldName", "%" + fieldName.trim() + "%");
+        columns.eq("tableName",  tableName);
+        columns.eq("fieldName", fieldName);
         columns.eq("recordID", recordID);
         return DAO.findFirstByColumns(columns);
     }
