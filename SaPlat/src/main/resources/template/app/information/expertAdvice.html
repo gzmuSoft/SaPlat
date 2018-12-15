@@ -111,8 +111,9 @@
                     },
                     error: function () {
                         layer.msg("保存失败");
+                        $('.loading-bg').remove();
                     }
-                })
+                });
                 return false;
             }
         });
