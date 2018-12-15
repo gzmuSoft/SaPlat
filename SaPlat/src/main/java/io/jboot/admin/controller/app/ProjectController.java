@@ -931,8 +931,8 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-
-        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        //找到组织机构对应的服务机构信息
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
         }
