@@ -150,7 +150,7 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
             if (!notification.save()) {
                 return false;
             }
-            if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+            if ((!model.getStatus().equals(AuthStatus.IS_VERIFY))&&(!role1.getName().contains("立项"))) {
                 return true;
             }
             User user = userService.findById(model.getUserId());
@@ -191,12 +191,21 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
                     return false;
                 }
             }
-            List<UserRole> userRoleList = new ArrayList<UserRole>();
+            List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
+            for (UserRole role : userRoleList) {
+                if (model.getUserId().equals(role.getUserID()) && model.getRoleId().equals(role.getRoleID())) {
+                    if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+                        userRoleService.delete(role);
+                    }
+                    return true;
+                }
+            }
+            List<UserRole> oldUserRoleList = new ArrayList<UserRole>();
             UserRole userRole = new UserRole();
             userRole.setRoleID(model.getRoleId());
             userRole.setUserID(model.getUserId());
-            userRoleList.add(userRole);
-            int[] rets = userRoleService.batchSave(userRoleList);
+            oldUserRoleList.add(userRole);
+            int[] rets = userRoleService.batchSave(oldUserRoleList);
             for (int ret : rets) {
                 if (ret < 1) {
                     return false;

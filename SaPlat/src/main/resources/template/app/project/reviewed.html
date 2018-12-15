@@ -51,9 +51,6 @@
                 });
             }else if (obj.event === 'upload') {
                 window.location.href = "#(ctxPath)/app/project/finishUpload?id=" + data.id;
-            }else if (obj.event === 'risk_point') {
-                pop_show_full('查看风险点信息', '#(ctxPath)/app/risk_point/projectRiskPointIndex?id=' + data.id, function () {
-                });
             }
         });
     });
@@ -72,7 +69,6 @@
 </div>
 
 <script type="text/html" id="barOption">
-    <!--<a class="layui-btn layui-btn-xs" lay-event="risk_point">风险点</a>-->
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
     #end

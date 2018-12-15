@@ -931,8 +931,8 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-
-        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        //找到组织机构对应的服务机构信息
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
         }
@@ -1001,9 +1001,11 @@ public class ProjectController extends BaseController {
     public void setProjectAssessFinished() {
         Project projectBean = getBean(Project.class, "project");
         Project project = projectService.findById(projectBean.getId());
-        project.setStatus(ProjectStatus.RECORDKEEPING);//设置项目状态为“项目备案”
+        //设置项目状态为“项目备案”
+        project.setStatus(ProjectStatus.RECORDKEEPING);
         if (projectService.update(project)) {
-            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            //获得当前登录用户信息
+            User user = AuthUtils.getLoginUser();
             Notification notification = new Notification();
             notification.setName("项目评估及审查完成确认");
             notification.setSource("/app/project/setAssessFinished");
