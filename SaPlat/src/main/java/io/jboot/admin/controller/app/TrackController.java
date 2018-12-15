@@ -229,7 +229,7 @@ public class TrackController extends BaseController {
      * 备案项目列表
      */
     @Before(GET.class)
-    @NotNullPara({"pageNumber", "pageSize", "type"})
+    @NotNullPara({"pageNumber", "pageSize", "type", "ownType"})
     public void projectListTableData() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);

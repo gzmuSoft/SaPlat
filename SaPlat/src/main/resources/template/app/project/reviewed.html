@@ -51,9 +51,6 @@
                 });
             }else if (obj.event === 'upload') {
                 window.location.href = "#(ctxPath)/app/project/finishUpload?id=" + data.id;
-            }else if (obj.event === 'risk_point') {
-                pop_show_full('查看风险点信息', '#(ctxPath)/app/risk_point/projectRiskPointIndex?id=' + data.id, function () {
-                });
             }
         });
     });
