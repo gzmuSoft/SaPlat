@@ -67,6 +67,8 @@ public class ProjectUndertakeController extends BaseController {
     private RoleService roleService;
     @JbootrpcService
     private ManagementService managementService;
+    @JbootrpcService
+    private NotificationService notificationService;
 
 //    /**
 //     * 去重
@@ -715,10 +717,25 @@ public class ProjectUndertakeController extends BaseController {
     @RequiresRoles("管理机构")
     @NotNullPara("id")
     public void managementReviewAccept() {
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        Long id = getParaToLong("id");
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
         evaScheme.setStatus("2");
+        Project project = projectService.findById(id);
         if (!evaSchemeService.update(evaScheme)) {
             throw new BusinessException("更新失败");
+        }else{
+            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            Notification notification = new Notification();
+            notification.setName("评估前期资料审核完成");
+            notification.setSource("/app/projectUndertake/managementReviewAccept");
+            notification.setContent("您好!您的《"+project.getName()+"》评估前期资料审核已通过!");
+            notification.setCreateUserID(user.getId());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notification.setReceiverID(project.getCreateUserID().intValue());
+
+            notificationService.save(notification);
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -729,10 +746,24 @@ public class ProjectUndertakeController extends BaseController {
     @RequiresRoles("管理机构")
     @NotNullPara("id")
     public void managementReviewRefuse() {
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        Long id = getParaToLong("id");
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
         evaScheme.setStatus("3");
+        Project project = projectService.findById(id);
         if (!evaSchemeService.update(evaScheme)) {
             throw new BusinessException("更新失败");
+        }else {
+            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            Notification notification = new Notification();
+            notification.setName("评估前期资料审核完成");
+            notification.setSource("/app/projectUndertake/managementReviewAccept");
+            notification.setContent("您好!您的《"+project.getName()+"》评估前期资料审核未通过!");
+            notification.setCreateUserID(user.getId());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notification.setReceiverID(Integer.parseInt(project.getCreateUserID().toString()));
+            notificationService.save(notification);
         }
         renderJson(RestResult.buildSuccess());
     }
