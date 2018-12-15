@@ -33,10 +33,11 @@
             var surveyDesign = getText("surveyDesign");
             var investigationReport = getText("investigationReport");
             var mainRiskPointText = getText("mainRiskPoint");
-            serialize = "diagnoses.surveyGroup=" + surveyGroup + "&diagnoses.surveyDesign=" + surveyDesign
-                        + "&diagnoses.investigationReport=" + investigationReport +  "&diagnoses.mainRiskPoint="
-                        + mainRiskPointText + "&" + serialize;
-            serialize = encodeURI(serialize);
+            var serializeText = "diagnoses.surveyGroup=" + surveyGroup + "&diagnoses.surveyDesign=" + surveyDesign.trim()
+                + "&diagnoses.investigationReport=" + investigationReport +  "&diagnoses.mainRiskPoint="
+                + mainRiskPointText + "&";
+            serializeText = encodeURI(serializeText);
+            serialize = serializeText + serialize;
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/information/diagnosesSave',
@@ -53,6 +54,7 @@
         }
 
         var element = '#(diagnoses.toJson())';
+        console.log(element);
         var diagnoses = JSON.parse(element);
         $("#surveyGroup").text(diagnoses.surveyGroup).css("display", "").removeClass("layui-hide");
         $("#surveyDesign").text(diagnoses.surveyDesign).css("display", "").removeClass("layui-hide");
