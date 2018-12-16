@@ -349,7 +349,9 @@ public class InformationController extends BaseController {
         Map<String, String> invTeamMap = new ConcurrentHashMap<String, String>();
         for (String invTeamID : invTeamIDList) {
             Person person = personService.findById(invTeamID);
-            invTeamMap.put(invTeamID, person.getName());
+            if (person != null){
+                invTeamMap.put(invTeamID, person.getName());
+            }
         }
         setAttr("invTeamMap", invTeamMap);
         setAttr("organization", organization)
