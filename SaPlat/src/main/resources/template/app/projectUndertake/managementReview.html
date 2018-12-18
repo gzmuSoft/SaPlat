@@ -28,11 +28,11 @@
                 , {field: 'name', title: '名称',minWidth: 150,sort:true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 200,sort:true}
-                , {field: 'assessmentMode', title: '评估方式', minWidth: 100,sort:true}
-                , {field: 'createTime', title: '创建时间',minWidth:150, sort: true}
+                , {field: 'assessmentMode', title: '评估方式', Width: 100,sort:true}
+                , {field: 'createTime', title: '创建时间',Width:250, sort: true}
 
                 , {field: 'spell',title:'回复'}, {field: 'remark', title: '备注', minWidth: 200,sort:true}
-                , {title: '操作', minWidth: 240, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
+                , {title: '操作', width: 100, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/projectUndertake/managementReviewTableData'
             , method: 'get'

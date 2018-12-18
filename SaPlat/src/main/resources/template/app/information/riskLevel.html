@@ -73,8 +73,8 @@
             cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
-                , {field: 'createTime', title: '上传时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             ,
             url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID
@@ -117,8 +117,8 @@
             cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
-                , {field: 'createTime', title: '上传时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             ,
             url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_2').attr("fileTypeId") + '&projectID=' + projectID
