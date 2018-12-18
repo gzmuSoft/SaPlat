@@ -25,9 +25,9 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '用户帐号', minWidth: 150,sort:true}
-                , {field: 'phone', title: '电话号码', minWidth: 120, sort: true}
+                , {field: 'phone', title: '电话号码', width: 120, sort: true}
                 , {field: 'email', title: '邮箱', minWidth: 150, sort: true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
+                , {field: 'createTime', title: '创建时间', width: 150,sort:true}
                 , {field: 'lastAccessTime', title: '最后更新时间', width: 150,sort:true}
                 , {field: 'remark', title: '备注', minWidth: 150}
                 , {
@@ -37,7 +37,7 @@
                     sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.UserStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', minWidth: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/user/tableData'
             , method: 'get'
