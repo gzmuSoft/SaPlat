@@ -710,9 +710,9 @@ public class InformationController extends BaseController {
         model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
         model.setRiskExpertise(getParaToInt("riskExpertise"));
         if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
-            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
-            model.setRiskProbability((float) getParaToLong("riskProbability"));
-            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
+            model.setIncidenceProbability(Float.parseFloat(getPara("incidenceProbability")));
+            model.setRiskProbability(Float.parseFloat(getPara("riskProbability")));
+            model.setRiskLevel(Float.parseFloat(getPara("incidenceProbability")) * Float.parseFloat(getPara("riskProbability")));
         }
         model.setRiskFactor(getPara("riskFactor"));
         model.setCreateUserID(user.getId());
