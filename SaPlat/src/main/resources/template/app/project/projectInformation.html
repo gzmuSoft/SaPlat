@@ -155,17 +155,17 @@
                 #[[
                 {{#  if(!d.isUpLoad){ }}
                 ]]#
-                    #[[
-                    {{#  if(d.status===1){ }}
-                    ]]#
-                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upload">上传(必上传)</a>
-                    #[[
-                    {{# } else { }}
-                    ]]#
-                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传(非必上传)</a>
-                    #[[
-                    {{#  } }}
-                    ]]#
+                #[[
+                {{#  if(d.status===1){ }}
+                ]]#
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upload">上传(必上传)</a>
+                #[[
+                {{# } else { }}
+                ]]#
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传(非必上传)</a>
+                #[[
+                {{#  } }}
+                ]]#
                 #[[
                 {{# } else if(d.isUpLoad){ }}
                 ]]#
@@ -407,8 +407,11 @@
                         data.projectId = projectId;
                         $.getJSON(
                             "#(ctxPath)/app/project/projectUploading", data,
-                            function (res) {
-                                projectId = res.projectId;
+                            function (data) {
+                                projectId = data.projectId;
+                                if (data.status === false) {
+                                    layer.msg("该项目建立期间，同名项目已被建立，请重新建立项目，否则将会建立失败");
+                                }
                             });
                     } else if (saveOrUpdate === 0) {
                         data.projectId = projectId;
