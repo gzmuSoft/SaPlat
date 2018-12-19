@@ -78,8 +78,8 @@
             cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
-                , {field: 'createTime', title: '上传时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             ,
             url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID
@@ -847,7 +847,7 @@
                      id="upload-progress_2" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">风险等级</label>
+                <label class="layui-form-label">初始风险排查表</label>
                 <div class="layui-btn-group">
                     <button id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
                 </div>
@@ -863,7 +863,7 @@
                      id="upload-progress_3" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">排除风险</label>
+                <label class="layui-form-label">主要风险筛选表</label>
                 <div class="layui-btn-group">
                     <button id="add_3" class="layui-btn layui-btn-small  add">上传文件</button>
                 </div>
@@ -878,7 +878,7 @@
                      id="upload-progress_4" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">风险结论</label>
+                <label class="layui-form-label">初始风险评估结论</label>
                 <div class="layui-btn-group">
                     <button id="add_4" class="layui-btn layui-btn-small  add">上传文件</button>
                 </div>

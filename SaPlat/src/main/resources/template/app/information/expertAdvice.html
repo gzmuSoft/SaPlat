@@ -111,8 +111,9 @@
                     },
                     error: function () {
                         layer.msg("保存失败");
+                        $('.loading-bg').remove();
                     }
-                })
+                });
                 return false;
             }
         });
@@ -184,7 +185,7 @@
 
             <div class="layui-form-item layui-form-text">
                 <div class="layui-input-block">
-                    <label class="layui-form-label" for="resolving">应采取的相应化解措施</label>
+                    <label class="layui-form-label" for="resolving">建议采集的调查数据</label>
                     <textarea id="resolving" style="display: none;"></textarea>
                 </div>
             </div>

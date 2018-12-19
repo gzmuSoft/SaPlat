@@ -38,7 +38,7 @@
                     sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")'
                 }  , {field: 'remark', title: '备注'}
-                , {fixed: 'right', title: '操作', minWidth: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption', fixed: 'right'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/enterprise/tableData'
             , method: 'get'

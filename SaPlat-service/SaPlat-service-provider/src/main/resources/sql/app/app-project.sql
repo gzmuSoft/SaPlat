@@ -66,7 +66,7 @@ FROM
 where
     a.id = b.projectID
 and
-    b.status = 3
+    b.status = 2
 and
     a.status = #para(status)
 and
