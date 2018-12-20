@@ -9,9 +9,6 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">项目审查</legend>
-    </fieldset>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -38,7 +35,7 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-120'    //容器高度
+            , height: 'full-50'    //容器高度
 
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}

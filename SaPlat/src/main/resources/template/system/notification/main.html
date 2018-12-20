@@ -11,11 +11,20 @@
 #define js()
 <script type="text/javascript">
 
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer', 'laydate'], function () {
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
-            , form = layui.form;
+            , form = layui.form
+            , laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#startDate' //指定元素
+        });
+
+        laydate.render({
+            elem: '#endDate' //指定元素
+        });
 
         // 表格渲染
         var tableIns = table.render({
@@ -124,24 +133,23 @@
     <form id="searchForm" class="layui-form x-center" action="" style="margin: -6px 0">
         <div class="layui-form-pane">
             <div class="layui-form-item"style="margin: 5px 0">
-                <label class="layui-form-label">标题</label>
+                <label class="layui-form-label" style="width:80px;">标题</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" placeholder="标题" class="layui-input"/>
                 </div>
-                <label class="layui-form-label">内容</label>
+                <label class="layui-form-label" style="width:80px;">内容</label>
                 <div class="layui-input-inline">
                     <input type="text" id="content" name="content" placeholder="内容" class="layui-input"/>
-                </div></div>
-            <div class="layui-form-item" style="margin: 5px 0">
-                <label class="layui-form-label">创建时间</label>
-                <div class="layui-input-inline">
-                    <input type="date" id="startDate" name="startDate" placeholder="开始日期" class="layui-input"/>
+                </div>
+                <label class="layui-form-label" style="width:80px;">创建时间</label>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text"  id="startDate" name="startDate" placeholder="开始日期" class="layui-input"/>
                 </div>
                 <div class="layui-form-mid">-</div>
-                <div class="layui-input-inline">
-                    <input type="date" id="endDate" name="endDate" placeholder="结束日期" class="layui-input"/>
+                <div class="layui-input-inline" style="width:110px;">
+                    <input type="text" id="endDate" name="endDate" placeholder="结束日期" class="layui-input"/>
                 </div>
-                <div class="layui-input-inline" style="width : 80px">
+                <div class="layui-input-inline" style="width : 50px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
                     </button>
                 </div>
