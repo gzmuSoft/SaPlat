@@ -364,12 +364,17 @@
                                     <div class="layui-form-item layui-form-text">
                                         <label class="layui-form-label" style="width:100px;margin-left: 18px;">主要风险点：</label>
                                         <div class="layui-input-block " style="margin-left:148px;width: 935px;">
-                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
+                                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
                                   name="diagnoses.mainRiskPoint"
                                   class="layui-textarea">#(diagnoses.mainRiskPoint)</textarea>
                                         </div>
                                     </div>
 
+                                    <div class="layui-row" style="margin-bottom: 5px">
+                                        <label class="layui-form-label x-center"style="width: 180px">问卷调查情况统计及分析内容</label>
+                                        <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">上传文件</button>
+                                        <button type="button" class="layui-btn" id="CoverSee">查看</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -381,13 +386,9 @@
 </div>
 
 
-<div style="text-align: center">
+<div>
     <div class="layui-form-item">
-        <div class="layui-row" style="margin-bottom: 5px">
-            <button type="button" class="upFile layui-btn layui-icon" id="EvaCover" style="background-color: red">问卷调查情况统计及分析内容</button>
-            <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
-        </div>
-        <div class="layui-input-block">
+        <div class="layui-input-block" style="text-align: center">
             <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
             <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>
         </div>

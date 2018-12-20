@@ -11,10 +11,7 @@
 <h2 class="title" align="center" style="color: #00a89a">项目初始风险概率及影响程度专家意见统计表</h2><br>
 <hr align="center" size="2" width="100%"/>
 <div class="layui-row">
-    <div class="layui-btn-group">
-        <button id="add" class="layui-btn layui-btn-small">添加</button>
-    </div>
-    <form class="layui-form">
+    <form class="layui-form" style="float: left;">
         <div class="layui-form-item">
             <label class="layui-form-label" for="expertId">专家团体</label>
             <div class="layui-input-inline">
@@ -27,6 +24,9 @@
             </div>
         </div>
     </form>
+    <div class="layui-btn-group" style="float: right;">
+        <button id="add" class="layui-btn layui-btn-small">添加</button>
+    </div>
     <div class="layui-row">
         <table style="align-content: center;" id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -47,10 +47,11 @@
 #define js()
 <script type="text/javascript">
 
-    layui.use(['table', 'layer', 'form'], function () {
+    layui.use(['table', 'layer', 'form','element'], function () {
         var table = layui.table,
             layer = layui.layer,
             $ = layui.jquery,
+            element = layui.element,
             form = layui.form;
 
         // 审核通过的表格渲染

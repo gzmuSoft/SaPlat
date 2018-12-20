@@ -34,17 +34,17 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-140'    //容器高度
+            , height: 'full-150'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'projectName', title: '项目名称', minWidth: 150,sort:true}
                 , {field: 'name', title: '申请人', minWidth: 100,sort:true}
-                , {field: 'roleId', title: '立项所用身份', minWidth: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")',sort:true}
+                , {field: 'roleId', title: '立项所用身份', width: 120,sort:true, templet: '#statusTpl(roleStatus, "roleId")',sort:true}
                 , {field: 'createTime', title: '申请时间', width: 150,sort:true}
                 , {field: 'reply', title: '回复信息', minWidth: 100}
                 , {field: 'status', title: '状态', width: 100, sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.AuthStatus::me(), "status")'}
-                , {fixed: 'right', title: '操作', minWidth: 170, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 170, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/projectauth/dataTableData'
             , method: 'get'
@@ -138,6 +138,7 @@
             </div>
         </div>
     </form>
+    <hr>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>

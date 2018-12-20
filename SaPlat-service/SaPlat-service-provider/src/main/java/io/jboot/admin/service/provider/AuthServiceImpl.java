@@ -124,82 +124,101 @@ public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthServi
 
     @Override
     public boolean update(Auth model) {
-        return Db.tx(() -> {
 
+        Role role = roleService.findById(model.getRoleId());
+        Notification notification = new Notification();
+        notification.setName("认证结果通知 ");
+        notification.setSource("/app/auth/invite");
+        if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
+            notification.setContent("您好,您申请的 " + role.getName() + " 审核通过");
+        } else {
+            notification.setContent("您好,您申请的 " + role.getName() + " 审核不通过");
+        }
+        notification.setReceiverID(Math.toIntExact(model.getUserId()));
+        notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
+        notification.setCreateTime(new Date());
+        notification.setLastUpdateUserID(userService.findByName(model.getLastUpdUser()).getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+
+        User user = userService.findById(model.getUserId());
+        ExpertGroup expertGroup[] = new ExpertGroup[1];
+        FacAgency facAgency[] =  new FacAgency[1];
+        Management management[] =  new Management[1];
+        Enterprise enterprise[] =  new Enterprise[1];
+        ReviewGroup reviewGroup[] =  new ReviewGroup[1];
+        ProfGroup profGroup[] =  new ProfGroup[1];
+        if ("专家团体".equals(role.getName())) {
+            expertGroup[0] = expertGroupService.findByPersonId(user.getUserID());
+            expertGroup[0].setIsEnable(true);
+        } else if ("服务机构".equals(role.getName())) {
+            facAgency[0] = facAgencyService.findByOrgId(user.getUserID());
+            facAgency[0].setIsEnable(true);
+        } else if ("管理机构".equals(role.getName())) {
+            management[0] = managementService.findByOrgId(user.getUserID());
+            management[0].setIsEnable(true);
+        } else if ("企业机构".equals(role.getName())) {
+            enterprise[0] = enterpriseService.findByOrgId(user.getUserID());
+            enterprise[0].setIsEnable(true);
+        } else if ("审查团体".equals(role.getName())) {
+            reviewGroup[0] = reviewGroupService.findByOrgId(user.getUserID());
+            reviewGroup[0].setIsEnable(true);
+        } else if ("专业团体".equals(role.getName())) {
+            profGroup[0] = profGroupService.findByOrgId(user.getUserID());
+            profGroup[0].setIsEnable(true);
+        }
+
+        List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
+
+        return Db.tx(() -> {
             model.setLastUpdTime(new Date());
             if (!model.update()) {
                 return false;
             }
 
-            Role role1 = roleService.findById(model.getRoleId());
-            Notification notification = new Notification();
-            notification.setName("认证结果通知 ");
-            notification.setSource("/app/auth/invite");
-            if (model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                notification.setContent("您好,您申请的 " + role1.getName() + " 审核通过");
-            } else {
-                notification.setContent("您好,您申请的 " + role1.getName() + " 审核不通过");
-            }
-            notification.setReceiverID(Math.toIntExact(model.getUserId()));
-            notification.setCreateUserID(userService.findByName(model.getLastUpdUser()).getId());
-            notification.setCreateTime(new Date());
-            notification.setLastUpdateUserID(userService.findByName(model.getLastUpdUser()).getId());
-            notification.setLastAccessTime(new Date());
-            notification.setIsEnable(true);
-            notification.setStatus(0);
             if (!notification.save()) {
                 return false;
             }
-            if ((!model.getStatus().equals(AuthStatus.IS_VERIFY))&&(!role1.getName().contains("立项"))) {
+            if ((!model.getStatus().equals(AuthStatus.IS_VERIFY)) && (!role.getName().contains("立项"))) {
                 return true;
             }
-            User user = userService.findById(model.getUserId());
-            if ("专家团体".equals(role1.getName())) {
-                ExpertGroup expertGroup = expertGroupService.findByPersonId(user.getUserID());
-                expertGroup.setIsEnable(true);
-                if (!expertGroupService.update(expertGroup)) {
+
+            if ("专家团体".equals(role.getName())) {
+                if (!expertGroupService.update(expertGroup[0])) {
                     return false;
                 }
-            } else if ("服务机构".equals(role1.getName())) {
-                FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
-                facAgency.setIsEnable(true);
-                if (!facAgencyService.update(facAgency)) {
+            } else if ("服务机构".equals(role.getName())) {
+                if (!facAgencyService.update(facAgency[0])) {
                     return false;
                 }
-            } else if ("管理机构".equals(role1.getName())) {
-                Management management = managementService.findByOrgId(user.getUserID());
-                management.setIsEnable(true);
-                if (!managementService.update(management)) {
+            } else if ("管理机构".equals(role.getName())) {
+                if (!managementService.update(management[0])) {
                     return false;
                 }
-            } else if ("企业机构".equals(role1.getName())) {
-                Enterprise enterprise = enterpriseService.findByOrgId(user.getUserID());
-                enterprise.setIsEnable(true);
-                if (!enterpriseService.update(enterprise)) {
+            } else if ("企业机构".equals(role.getName())) {
+                if (!enterpriseService.update(enterprise[0])) {
                     return false;
                 }
-            } else if ("审查团体".equals(role1.getName())) {
-                ReviewGroup reviewGroup = reviewGroupService.findByOrgId(user.getUserID());
-                reviewGroup.setIsEnable(true);
-                if (!reviewGroupService.update(reviewGroup)) {
+            } else if ("审查团体".equals(role.getName())) {
+                if (!reviewGroupService.update(reviewGroup[0])) {
                     return false;
                 }
-            } else if ("专业团体".equals(role1.getName())) {
-                ProfGroup profGroup = profGroupService.findByOrgId(user.getUserID());
-                profGroup.setIsEnable(true);
-                if (!profGroupService.update(profGroup)) {
+            } else if ("专业团体".equals(role.getName())) {
+                if (!profGroupService.update(profGroup[0])) {
                     return false;
                 }
             }
-            List<UserRole> userRoleList = userRoleService.findListByUserId(model.getUserId());
-            for (UserRole role : userRoleList) {
-                if (model.getUserId().equals(role.getUserID()) && model.getRoleId().equals(role.getRoleID())) {
+
+            for (UserRole roleItem : userRoleList) {
+                if (model.getUserId().equals(roleItem.getUserID()) && model.getRoleId().equals(roleItem.getRoleID())) {
                     if (!model.getStatus().equals(AuthStatus.IS_VERIFY)) {
-                        userRoleService.delete(role);
+                        userRoleService.delete(roleItem);
                     }
                     return true;
                 }
             }
+
             List<UserRole> oldUserRoleList = new ArrayList<UserRole>();
             UserRole userRole = new UserRole();
             userRole.setRoleID(model.getRoleId());
