@@ -82,7 +82,6 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-100'    //容器高度
-
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 100, sort: true}
@@ -112,51 +111,74 @@
             }
         });
 
-        reloadTable = function (projectType, ownType) {
-            table.reload('dateTable', {
-                url: '#(ctxPath)/app/project/projectCollectTableData?projectType=' + projectType + '&ownType=' + ownType
+        function reloadTable(projectType, ownType) {
+            tableIns = table.render({
+                elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+                , id: 'dateTable'
+                , even: true //开启隔行背景
+                , size: 'sm' //小尺寸的表格
+                , height: 'full-100'    //容器高度
+                , cols: [[                  //标题栏
+                    {type: 'numbers', fixed: true, unresize: 'true'}
+                    , {field: 'name', title: '名称', minWidth: 100, sort: true}
+                    , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                    , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
+                    , {field: 'site', title: '地址', minWidth: 150}
+                    , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
+                    , {field: 'status', title: '状态', width: 100, sort: true,
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
+                    , {field: 'createTime', title: '创建时间', width: 150, sort: true}
+                    , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                ]]
+                , where: {
+                    projectType:projectType
+                    , ownType:0
+                } //设定异步数据接口的额外参数
+                , url: '#(ctxPath)/app/project/projectCollectTableData'
+                , method: 'get'
+                , request: {
+                    pageName: 'pageNumber' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , page: true
+                , limits: [30, 60, 90, 150, 300]
+                , limit: 30 //默认采用30
+                , loading: true
+                , done: function (res, curr, count) {
+                }
             });
-        };
+        }
 
         function reloadTableRefuse(projectType, ownType) {
             tableIns = table.render({
                 elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-                ,
-                id: 'dateTable'
-                ,
-                even: true //开启隔行背景
-                ,
-                size: 'sm' //小尺寸的表格
-                ,
-                height: 'full-100'    //容器高度
-                ,
-                contentType: 'application/json; charset=UTF-8'
-                ,
-                cols: [[                  //标题栏
+                , id: 'dateTable'
+                , even: true //开启隔行背景
+                , size: 'sm' //小尺寸的表格
+                , height: 'full-100'    //容器高度
+                , cols: [[                  //标题栏
                     {type: 'numbers', fixed: true, unresize: 'true'}
-                    , {field: 'name', title: '项目名称', width: 300, sort: true}
-                    , {field: 'createTime', title: '驳回时间', width: 300, sort: true}
-                    , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption1'} //这里的toolbar值是模板元素的选择器
+                    , {field: 'name', title: '名称', minWidth: 100, sort: true}
+                    , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                    , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
+                    , {field: 'site', title: '地址', minWidth: 150}
+                    , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
+                    , {field: 'status', title: '状态', width: 100, sort: true,
+                        templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
+                    , {field: 'createTime', title: '驳回时间', width: 150, sort: true}
+                    , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption1'} //这里的toolbar值是模板元素的选择器
                 ]]
-                ,
-                url: '#(ctxPath)/app/project/projectCollectTableData?projectType=' + projectType + '&ownType=' + ownType
-                ,
-                method: 'get'
-                ,
-                request: {
+                , url: '#(ctxPath)/app/project/projectCollectTableData?projectType=' + projectType + '&ownType=' + ownType
+                , method: 'get'
+                , request: {
                     pageName: 'pageNumber' //页码的参数名称，默认：page
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
                 }
-                ,
-                page: true
-                ,
-                limits: [30, 60, 90, 150, 300]
-                ,
-                limit: 30 //默认采用30
-                ,
-                loading: true
-                ,
-                done: function (res, curr, count) {
+                , page: true
+                , limits: [30, 60, 90, 150, 300]
+                , limit: 30 //默认采用30
+                , loading: true
+                , done: function (res, curr, count) {
                 }
             });
         }
@@ -170,7 +192,9 @@
             if (data.value == 3) {
                 reloadTableRefuse($('#projectType').val(), data.value);
             }
-            reloadTable($('#projectType').val(), data.value);
+            else {
+                reloadTable($('#projectType').val(), data.value);
+            }
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -180,7 +204,7 @@
                 pop_show_full('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {
                 });
             } else if (obj.event === 'see1') {
-                pop_show_full('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.projectID, function () {
+                pop_show_full('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {
                 });
             } else if (obj.event === 'know') {
                 layer.open({

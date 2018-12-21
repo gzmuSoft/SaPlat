@@ -2007,6 +2007,7 @@ public class ProjectController extends BaseController {
                 case 3:
                     RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
                     page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
+
                     for (int i = 0; i < page1.getList().size(); i++) {
                         Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
                         if (tmp != null) {
