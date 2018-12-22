@@ -114,6 +114,8 @@
                     , btn: ['残忍拒绝', '我再想想']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
+
+
                     , content: '' +
                     '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
                     '<label class="layui-form-label">拒绝缘由</label>' +
@@ -141,7 +143,7 @@
                 });
 
             } else if (obj.event === 'choose') {
-                pop_show('选择审查人员', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, '1200', '800', function () {
+                pop_max_show('选择审查人员', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, function () {
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/orgReviewTable'
                         , where: {

@@ -20,6 +20,8 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -1266,12 +1268,13 @@ public class ProjectController extends BaseController {
      * 0 审查团体
      * 1 专业团体
      */
-    @NotNullPara({"id", "projectId", "orgType", "num", "date"})
+    @NotNullPara({"id", "projectId", "orgType", "num", "deadTime"})
     public void inviteReview() {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Long projectId = getParaToLong("projectId");
         Long orgId = null;
+        Date dateNow= new Date();
 
         int num = getParaToInt("num");
         int userSource = -1;
@@ -1290,9 +1293,9 @@ public class ProjectController extends BaseController {
         notification.setContent("您好, " + user.getName() + " 希望您的团队派出" + num + "人介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(orgId, 1L).getId().intValue());
         notification.setCreateUserID(user.getId());
-        notification.setCreateTime(new Date());
+        notification.setCreateTime(dateNow);
         notification.setLastUpdateUserID(user.getId());
-        notification.setLastAccessTime(new Date());
+        notification.setLastAccessTime(dateNow);
         notification.setIsEnable(true);
         notification.setStatus(0);
 
@@ -1316,14 +1319,19 @@ public class ProjectController extends BaseController {
         }
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.WAITE);
-        applyInvite.setCreateTime(new Date());
-        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
-        if (timeTmp != null) {
-            applyInvite.setDeadTime(timeTmp.getDeadTime());
-        } else {
-            applyInvite.setDeadTime(getParaToDate("date"));
+        applyInvite.setCreateTime(dateNow);
+        if(getParaToDate("deadTime")==null) {
+            applyInvite.setDeadTime(dateNow);
         }
-        applyInvite.setLastAccessTime(new Date());
+        else{
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                applyInvite.setDeadTime(formatter.parse(getPara("deadTime")));
+            } catch (ParseException e) {
+                applyInvite.setDeadTime(dateNow);
+            }
+        }
+        applyInvite.setLastAccessTime(dateNow);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
@@ -1354,23 +1362,19 @@ public class ProjectController extends BaseController {
                 return;
             }
         }
+        Date nowDate = new Date();
+
         Notification notification = new Notification();
         notification.setName("项目审查工作通知");
         notification.setSource("/app/project/chooseExpert");
         notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
-        notification.setCreateTime(new Date());
+        notification.setCreateTime(nowDate);
         notification.setLastUpdateUserID(user.getId());
-        notification.setLastAccessTime(new Date());
+        notification.setLastAccessTime(nowDate);
         notification.setIsEnable(true);
         notification.setStatus(0);
-
-        Date nowTime = new Date();
-        Calendar time = Calendar.getInstance();
-        //获取七天以后的日期作为申请的失效日期
-        time.setTime(nowTime);
-        time.add(Calendar.DATE, 7);
 
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setName(projectService.findById(getParaToLong("projectId")).getName());
@@ -1381,14 +1385,8 @@ public class ProjectController extends BaseController {
         applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.AGREE);
-        applyInvite.setCreateTime(new Date());
-        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
-        if (timeTmp != null) {
-            applyInvite.setDeadTime(timeTmp.getDeadTime());
-        } else {
-            applyInvite.setDeadTime(time.getTime());
-        }
-        applyInvite.setLastAccessTime(new Date());
+        applyInvite.setCreateTime(nowDate);
+        applyInvite.setLastAccessTime(nowDate);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
@@ -1500,8 +1498,15 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         Long projectId = getParaToLong("projectId");
         Long orgType = getParaToLong("orgType");
-        setAttr("id", id).setAttr("projectId", projectId)
-                .setAttr("orgType", orgType).render("reviewNum.html");
+        String orgName = getPara("orgName");
+        Project pModel = projectService.findById(projectId);
+
+        setAttr("id", id)
+                .setAttr("projectId", projectId)
+                .setAttr("orgType", orgType)
+                .setAttr("orgName", orgName)
+                .setAttr("pModel", pModel)
+                .render("reviewNum.html");
     }
 
     /**
