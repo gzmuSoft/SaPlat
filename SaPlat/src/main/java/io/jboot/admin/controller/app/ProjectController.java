@@ -927,10 +927,9 @@ public class ProjectController extends BaseController {
         FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
+        } else {
+            projectUndertake.setFacAgencyID(loginUser.getId());
         }
-        /*else {
-            projectUndertake.setFacAgencyID(Long.parseLong("0"));
-        }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
