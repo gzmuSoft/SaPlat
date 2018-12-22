@@ -2022,6 +2022,15 @@ public class ProjectController extends BaseController {
         if (iOwnType == 3) {
             renderJson(new DataTable<RejectProjectInfo>(page1));
         } else {
+            for (int i = page.getList().size()-1; i >= 0; i--) {
+                System.out.println("当前pid:"+i+"表格id:"+page.getList().get(i).getPaTypeID()+"选中id："+project.getPaTypeID());
+                if (project.getPaTypeID() != null){
+                    if (page.getList().get(i).getPaTypeID() != project.getPaTypeID()){
+                        page.getList().remove(i);
+                    }
+                }
+            }
+
             renderJson(new DataTable<Project>(page));
         }
     }
