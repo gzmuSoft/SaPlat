@@ -1334,9 +1334,13 @@ public class OrganizationController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Role role = roleService.findById(id);
         UserRole userRole = userRoleService.findByUserIdAndRoleId(user.getId(), role.getParentID());
-        if (userRole == null) {
+        if (userRole == null ) {
             renderJson(RestResult.buildError("亲，请先去认证成为" + role.getName().substring(0, 4) + "再来申请哦~~~"));
             throw new BusinessException("亲，请先去认证成为" + role.getName().substring(0, 4) + "再来申请哦~~~");
+        }
+        if(userRole.getIsEnable().equals(false)){
+            renderJson(RestResult.buildError("亲，你的" + role.getName().substring(0, 4) + "已被禁用，不能申请哦~~~"));
+            throw new BusinessException("亲，你的" + role.getName().substring(0, 4) + "已被禁用，不能申请哦~~~");
         }
         Auth auth = authService.findByUserAndRole(user, id);
         if (auth == null) {
