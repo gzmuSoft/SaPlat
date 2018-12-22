@@ -667,7 +667,7 @@ public class InformationController extends BaseController {
     }
 
     /**
-     * 调查问卷数据表格
+     * 风险因素影响程度数据表格
      */
     public void chooseRiskExpertiseDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
@@ -739,10 +739,10 @@ public class InformationController extends BaseController {
      * 项目风险因素影响程度及概率数据删除
      */
     @NotNullPara("id")
-    public void toInitialRiskExpertiseDelete() {
+    public void chooseRiskExpertiseDelete() {
         Long id = getParaToLong("id");
         InitialRiskExpertise model = initialRiskExpertiseService.findById(id);
-        if (model == null || initialRiskExpertiseService.delete(model)) {
+        if (model == null || !initialRiskExpertiseService.delete(model)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());

@@ -72,7 +72,6 @@ public interface QuestionnaireService  {
 
     public boolean deleteQuestionnaire(Questionnaire model);
 
-
     /**
      * save model to database
      *
