@@ -84,7 +84,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public Project findByProjectName(String ProjectName) {
         Columns columns = Columns.create();
         columns.eq("name", ProjectName);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -165,36 +165,45 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getManagementID() != null) {
             columns.eq("managementID", project.getManagementID());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
-        //Page<Project> projects = DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
-        //return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "createTime desc"));
     }
 
+    Kv generateQueryPara(Project project){
+        Kv c = Kv.create(); //创建一个保存键值对信息的HashMap
+        if (project.getUserId() != null && project.getUserId() != 0) {
+            c.set("userID", project.getUserId());
+        }
+        if (StrKit.notBlank(project.getName())) {
+            c.set("name", project.getName());
+        }
+        if (StrKit.notBlank(project.getStatus())) {
+            c.set("status", project.getStatus());
+        }
+        if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
+            c.set("paTypeID", project.getPaTypeID());
+        }
+        if (project.getMinAmount() != 0.0) {
+            c.set("minAmount", project.getMinAmount());
+        }
+        if (project.getMaxAmount() != 0.0) {
+            c.set("maxAmount", project.getMaxAmount());
+        }
+        if (project.getIsEnable() != null) {
+            c.set("isEnable", project.getIsEnable());
+        }
+        return c;
+    }
     @Override
-    public Page<Project> findPageForCreater(Long userID, int pageNumber, int pageSize) {
-        Kv c = Kv.by("userID", userID);
+    public Page<Project> findPageForCreater(Project project, int pageNumber, int pageSize) {
+        Kv c = generateQueryPara(project);
         SqlPara sqlPara = Db.getSqlPara("app-project.project-by-creater", c);
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 
     @Override
-    public Page<Project> findPageForCreater(Long userID, String status, String name, int pageNumber, int pageSize) {
-        Kv c = Kv.by("userID", userID).set("status", status).set("name", name);
-        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-creater-status", c);
-        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
-    }
-
-    @Override
-    public Page<Project> findPageForService(Long userID, int pageNumber, int pageSize) {
-        Kv c = Kv.by("userID", userID);
+    public Page<Project> findPageForService(Project project, int pageNumber, int pageSize) {
+        Kv c = generateQueryPara(project);
         SqlPara sqlPara = Db.getSqlPara("app-project.project-by-service", c);
-        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
-    }
-
-    @Override
-    public Page<Project> findPageForService(Long userID, String status, String name, int pageNumber, int pageSize) {
-        Kv c = Kv.by("userID", userID).set("status", status).set("name",name);
-        SqlPara sqlPara = Db.getSqlPara("app-project.project-by-service-status", c);
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 
@@ -211,30 +220,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                 ids.add(item.getId());
             }
             Kv c = Kv.by("mgr_list", ids);
+            if (StrKit.notBlank(project.getName())) {
+                c.set("name", project.getName());
+            }
+            if (StrKit.notBlank(project.getStatus())) {
+                c.set("status", project.getStatus());
+            }
             SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr", c);
             return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
         }
         return new Page<Project>();
-    }
-
-    @Override
-    public Page<Project> findPageForMgr(Project project, String status, int pageNumber, int pageSize) {
-        //当前用户对应的管理机构
-        Management curMgr = mgrService.findByOrgId(project.getUserId());
-        if (null != curMgr) {
-            List<Management> result = new ArrayList<Management>();
-            result.add(curMgr);
-            findMgrChildren(curMgr.getId(), result);
-            List<Long> ids = new ArrayList<Long>();
-            for (Management item : result) {
-                ids.add(item.getId());
-            }
-            Kv c = Kv.by("mgr_list", ids).set("status", status).set("name", project.getName());
-            SqlPara sqlPara = Db.getSqlPara("app-project.project-by-mgr-status", c);
-            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
-        }
-        return new Page<Project>();
-
     }
 
     private void findMgrChildren(long mgrId, List<Management> result) {
@@ -256,13 +251,19 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             columns.ge("amount", project.getMinAmount());
             columns.le("amount", project.getMaxAmount());
         }
+        if (StrKit.notBlank(project.getName())) {
+            columns.like("name", "%" + project.getName() + "%");
+        }
+        if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
+            columns.eq("paTypeID", project.getPaTypeID());
+        }
         if (project.getIsPublic() != null) {
             columns.eq("isPublic", project.getIsPublic());
         }
         if (project.getIsEnable() != null) {
             columns.eq("isEnable", project.getIsEnable());
         }
-        if (project.getStatus() != null) {
+        if (StrKit.notBlank(project.getStatus())) {
             columns.eq("status", project.getStatus());
         }
         columns.ne("userId", userId);

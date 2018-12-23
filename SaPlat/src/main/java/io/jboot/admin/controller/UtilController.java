@@ -4,27 +4,25 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.upload.UploadFile;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FileProjectService;
 import io.jboot.admin.service.api.FilesService;
+import io.jboot.admin.service.api.ProjectAssTypeService;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
 import io.jboot.admin.service.entity.model.Project;
+import io.jboot.admin.service.entity.model.ProjectAssType;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Administrator on 2018/7/27.
@@ -37,9 +35,9 @@ public class UtilController extends BaseController {
     @JbootrpcService
     private ProjectService projectService;
 
-
     @JbootrpcService
     private FileProjectService fileProjectService;
+
     @Before(POST.class)
     public void uploadFile() {
         //当前时间

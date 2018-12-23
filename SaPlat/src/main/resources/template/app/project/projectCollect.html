@@ -21,13 +21,28 @@
                         <option value="3">被驳回的</option>
                     </select>
                 </div>
-                <label class="layui-form-label">项目类型</label>
+                <label class="layui-form-label">类型</label>
                 <div class="layui-input-inline">
                     <select id='projectType' name="projectType">
                         <option></option>
                         #statusOption(PaTypeNameList)
                     </select>
                 </div>
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" placeholder="项目名称" class="layui-input"/>
+                </div>
+
+                <label class="layui-form-label" style="width: 120px">预计金额范围：</label>
+                <div class="layui-input-inline" style="width: 120px;">
+                    <input name="minAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
+                    <div id="digitsTip"></div>
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline" style="width: 120px;">
+                    <input name="maxAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
+                </div>
+
                 <div class="layui-input-inline" style="width : 80px">
                     <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
                     </button>
@@ -86,6 +101,7 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 100, sort: true}
                 , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 150}
                 , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
@@ -111,7 +127,7 @@
             }
         });
 
-        function reloadTable(projectType, ownType) {
+        function reloadTable(projectType, ownType, name, minAmount, maxAmount) {
             tableIns = table.render({
                 elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
                 , id: 'dateTable'
@@ -122,6 +138,7 @@
                     {type: 'numbers', fixed: true, unresize: 'true'}
                     , {field: 'name', title: '名称', minWidth: 100, sort: true}
                     , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                    , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
                     , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                     , {field: 'site', title: '地址', minWidth: 150}
                     , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
@@ -132,7 +149,10 @@
                 ]]
                 , where: {
                     projectType:projectType
-                    , ownType:0
+                    , ownType: ownType
+                    , name : name
+                    , minAmount : minAmount
+                    , maxAmount : maxAmount
                 } //设定异步数据接口的额外参数
                 , url: '#(ctxPath)/app/project/projectCollectTableData'
                 , method: 'get'
@@ -149,7 +169,7 @@
             });
         }
 
-        function reloadTableRefuse(projectType, ownType) {
+        function reloadTableRefuse(projectType, ownType, name, minAmount, maxAmount) {
             tableIns = table.render({
                 elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
                 , id: 'dateTable'
@@ -160,6 +180,7 @@
                     {type: 'numbers', fixed: true, unresize: 'true'}
                     , {field: 'name', title: '名称', minWidth: 100, sort: true}
                     , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                    , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
                     , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                     , {field: 'site', title: '地址', minWidth: 150}
                     , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
@@ -168,7 +189,14 @@
                     , {field: 'createTime', title: '驳回时间', width: 150, sort: true}
                     , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption1'} //这里的toolbar值是模板元素的选择器
                 ]]
-                , url: '#(ctxPath)/app/project/projectCollectTableData?projectType=' + projectType + '&ownType=' + ownType
+                , where: {
+                    projectType:projectType
+                    , ownType: ownType
+                    , name : name
+                    , minAmount : minAmount
+                    , maxAmount : maxAmount
+                } //设定异步数据接口的额外参数
+                , url: '#(ctxPath)/app/project/projectCollectTableData'
                 , method: 'get'
                 , request: {
                     pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -184,16 +212,16 @@
         }
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType, data.field.ownType);
+            reloadTable(data.field.projectType, data.field.ownType, data.field.name, data.field.minAmount, data.field.maxAmount);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
         form.on('select(ownTypeSelect)', function(data){
             if (data.value == 3) {
-                reloadTableRefuse($('#projectType').val(), data.value);
+                reloadTableRefuse($('#projectType').val(), data.value, $('#name').val(), $('#minAmount').val(), $('#maxAmount').val());
             }
             else {
-                reloadTable($('#projectType').val(), data.value);
+                reloadTable($('#projectType').val(), data.value, $('#name').val(), $('#minAmount').val(), $('#maxAmount').val());
             }
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
@@ -215,11 +243,11 @@
                             window.location.href = '#(ctxPath)/app/project/know?id=' + data.id;
                         }
 
-                        know(reloadTableRefuse($('#projectType').val(), data.value));
+                        know(reloadTableRefuse($('#projectType').val(), data.value, $('#name').val(), $('#minAmount').val(), $('#maxAmount').val()));
                     }
                     , btn2: function (index, layero) {
                         //按钮【按钮二】的回调
-                        reloadTableRefuse($('#projectType').val(), data.value);
+                        reloadTableRefuse($('#projectType').val(), data.value, $('#name').val(), $('#minAmount').val(), $('#maxAmount').val());
                         //return false 开启该代码可禁止点击该按钮关闭
                     }
                     , cancel: function () {

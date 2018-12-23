@@ -190,18 +190,17 @@ public class TrackController extends BaseController {
      */
     @Before(GET.class)
     public void projectList() {
-        BaseStatus baseStatus = new BaseStatus() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
         };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
         if (PaTypeList != null) {
-            for (ProjectAssType item :
-                    PaTypeList) {
-                baseStatus.add(item.getId().toString(), item.getName());
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList", baseStatus);
+        setAttr("PaTypeNameList", projectTypeStatus);
         render("projectList.html");
     }
 
@@ -257,14 +256,15 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), project.getStatus(), project.getName(), pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForCreater(project, pageNumber, pageSize);
                     for (Project p : page.getList()) {
                         p.setRemark("selfRole");
                     }
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, project.getStatus(), pageNumber, pageSize);
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
                     if (page != null && page.getList() != null) {
                         for (Project p : page.getList()) {
                             p.setRemark("managementRole");
@@ -272,7 +272,8 @@ public class TrackController extends BaseController {
                     }
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), project.getStatus(), project.getName(), pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForService(project, pageNumber, pageSize);
                     for (Project p : page.getList()) {
                         p.setRemark("facRole");
                     }
@@ -333,14 +334,16 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                     page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForCreater(project, pageNumber, pageSize);
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, ProjectStatus.TRACKING, pageNumber, pageSize);
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, project.getName(), pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForService(project, pageNumber, pageSize);
                     break;
                 default:
                     break;

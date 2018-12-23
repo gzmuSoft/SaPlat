@@ -3,23 +3,44 @@
 
 #define css()
 <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
 
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
 </style>
 #end
 
 #define content()
 <div class="layui-fluid">
     <form id="searchForm" class="layui-form x-center" action="">
+        <div class="layui-form-pane">
             <div class="layui-form-item" align="left">
                 <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select id='projectType' name="projectType">
+                            <option></option>
+                            #statusOption(PaTypeNameList)
+                        </select>
+                    </div>
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="name" name="name" placeholder="项目名称" class="layui-input"/>
+                    </div>
                     <label class="layui-form-label" style="width: 120px">预计金额范围：</label>
                     <div class="layui-input-inline" style="width: 120px;">
-                        <input name="minAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
-                        <div id="digitsTip"></div>
+                        <input name="minAmount" placeholder="￥" autocomplete="off" class="layui-input minAmount" type="number"/>
+                        <div id="minDigitsTip"></div>
                     </div>
+
                     <div class="layui-form-mid">-</div>
                     <div class="layui-input-inline" style="width: 120px;">
-                        <input name="maxAmount" placeholder="￥" autocomplete="off" class="layui-input" type="number">
+                        <input name="maxAmount" placeholder="￥" autocomplete="off" class="layui-input maxAmount" type="number"/>
+                        <div id="maxDigitsTip"></div>
                     </div>
                     <div class="layui-input-inline" style="width : 80px">
                         <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
@@ -27,6 +48,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </form>
 
     <div class="layui-row">
@@ -102,7 +124,8 @@
 
 </script>
 #end
-
+<!--showMoney.js用于显示蓝色的金额提示-->
+<!--<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>-->
 #define js()
 <script type="text/javascript">
     layui.use(['table', 'layer', 'form'], function () {
@@ -117,8 +140,9 @@
             , size: 'sm' //小尺寸的表格
             , height: 'full-120'    //容器高度
             , cols: [[                  //标题栏
-                {field: 'name', title: '项目名称', minWidth: 100, sort: true}
-                , {field: 'buildOrgName', title: '立项机构', minWidth: 100}
+                {field: 'name', title: '名称', minWidth: 100, sort: true}
+                , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 100}
                 , {field: 'brief', title: '简介', minWidth: 100}
@@ -157,27 +181,28 @@
         });
 
         form.on('submit(search)', function (data) {
-            console.log(data);
-            reloadTable(data.field.minAmount, data.field.maxAmount);
+            reloadTable(data.field.projectType, data.field.name, data.field.minAmount, data.field.maxAmount);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
-        var reloadTable = function (minAmount, maxAmount) {
+        var reloadTable = function (projectType, name, minAmount, maxAmount) {
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/projectUndertake/projectList'
                 , where: {
-                    minAmount: minAmount,
-                    maxAmount: maxAmount
+                    projectType:projectType
+                    , name : name
+                    , minAmount: minAmount
+                    , maxAmount: maxAmount
                 } //设定异步数据接口的额外参数
             });
         };
     });
 
-    $('#minAmount').on('input propertychange mousemove', function() {
-        var data = $('#minAmount').val();
+    $('.minAmount').bind('input propertychange', function() {
+        var data = $('.minAmount').val();
         var str = digitsConversion(data);
         var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        $("#minDigitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
         var $btip = $("#btip"+bid);
         var offset,h ,w ;
         var timer;
@@ -187,23 +212,24 @@
         w = $(this).width();
         $(".cont").html(str);
         $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+        $btip.css({ "top":offset.top+h}).show();
     });
 
-    $('#minAmount').live("mousemove",function(){
+    $('.minAmount').live("mouseover",function(){
         clearInterval(window.timer);
-        $("#digitsTip").show();
+        $("#minDigitsTip").show();
     });
 
-    $('#minAmount').live("mouseout",function(){
-        $("#digitsTip").hide();
+    $('.minAmount').live("mouseout",function(){
+        $("#minDigitsTip").hide();
     });
 
-    $('#maxAmount').on('input propertychange mousemove', function() {
-        var data = $('#minAmount').val();
+
+    $('.maxAmount').bind('input propertychange', function() {
+        var data = $('.maxAmount').val();
         var str = digitsConversion(data);
         var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
+        $("#maxDigitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
         var $btip = $("#btip"+bid);
         var offset,h ,w ;
         var timer;
@@ -213,17 +239,16 @@
         w = $(this).width();
         $(".cont").html(str);
         $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+        $btip.css({ "top":offset.top+h}).show();
     });
 
-
-    $('#maxAmount').live("mousemove",function(){
+    $('.maxAmount').live("mouseover",function(){
         clearInterval(window.timer);
-        $("#digitsTip").show();
+        $("#maxDigitsTip").show();
     });
 
-    $('#maxAmount').live("mouseout",function(){
-        $("#digitsTip").hide();
+    $('.maxAmount').live("mouseout",function(){
+        $("#maxDigitsTip").hide();
     });
 </script>
 <script type="text/html" id="tplMoney">{{formatCurrency(d.amount)}}</script>

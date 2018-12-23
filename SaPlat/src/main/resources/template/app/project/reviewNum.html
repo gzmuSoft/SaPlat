@@ -20,12 +20,6 @@
     var start = now.getTime();  // 将当前时间转换为时间戳
     var end = start + 24*60*60*1000*7; //结束时间
 
-    //控制输入框的数值在min和max之间
-    function checkNum(val, id, min, max) {
-        if(val == '')return;
-        document.getElementById(id).value = val >= min && val <= max ? val : 1;
-    }
-
     layui.use(['form', 'layer','laydate'], function () {
         var layer = layui.layer
             , laydate = layui.laydate
@@ -45,16 +39,13 @@
         var projectId = "#(projectId)";
         var orgType = "#(orgType)";
 
-        $('#submit').click(function () {
-            var num = $('#num').val();
-            var deadTime = $('#deadTime').val();
-
+        $('#submit').click(function (data) {
             $.getJSON('#(ctxPath)/app/project/inviteReview', {
                 id: id,
                 projectId: projectId,
                 orgType: orgType,
-                num: num,
-                deadTime: deadTime
+                num: $('#num').val(),
+                deadTime: $('#deadTime').val()
             }, function (res) {
                 pop_close();
             });
@@ -69,17 +60,20 @@
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
             <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>截止时间</label>
+                <label class="layui-form-label">截止时间</label>
                 <div class="layui-input-block">
                     <input id="deadTime" lay-verify="required" class="layui-input" type="text"/>
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label"><em class="require-mark">*</em>人数</label>
+                <label class="layui-form-label">邀请人数</label>
                 <div class="layui-input-block">
-                    <input id="num" lay-verify="required" autocomplete="off" placeholder="请输入所需人数(1~3)" class="layui-input"
-                        type="number" style="ime-mode:Disabled"  oninput="checkNum(this.value, this.id, 1, 3)"/>
+                    <select id='num' name="num" lay-filter="numSelect">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
                 </div>
             </div>
 

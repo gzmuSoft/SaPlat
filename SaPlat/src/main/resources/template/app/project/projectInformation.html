@@ -45,7 +45,7 @@
                 <label for="project.amount" style="padding-top: 5px;">预计金额</label>
                 <span>
                 <input type="number" id="project.amount" class="project money" name="project.amount"
-                       style="width:370px;margin-right:  0px;"/>
+                       style="width:370px; margin-right:0px;"/>
                 </span>
                 <div id="digitsTip"></div>
                 <!--<select id="units" name="units"-->
@@ -535,7 +535,7 @@
         });
     });
 
-    $('.money').on('input propertychange', function () {
+    $('.money').bind('input propertychange', function () {
         var data = $('.money').val();
         var str = digitsConversion(data);
         var bid = parseInt(Math.random() * 100000);

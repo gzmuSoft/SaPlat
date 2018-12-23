@@ -98,21 +98,24 @@ WHERE
     #for(id : mgr_list)
       #(for.index > 0 ? ", " : "")#(id)
     #end)
-  order by createTime desc
-#end
-
-#sql("project-by-mgr-status")
-SELECT
-  *
-FROM
-  project
-WHERE
-  managementID in (
-    #for(id : mgr_list)
-      #(for.index > 0 ? ", " : "")#(id)
-    #end) AND status = #para(status)
-	and
-		name like #para(name)
+  #if(name)
+	and	name like concat('%', #para(name) ,'%')
+	#end
+	#if(status)
+	and	status = #para(status)
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+	#if(isEnable)
+	and	isEnable = #para(isEnable)
+	#end
   order by createTime desc
 #end
 
@@ -123,19 +126,24 @@ FROM
   project
 WHERE
   userId = #para(userID)
-    #if(name)
-	and	name like #para(name)
+  #if(name)
+	and	name like concat('%', #para(name) ,'%')
 	#end
-  order by createTime desc
-#end
-
-#sql("project-by-creater-status")
-SELECT
-  *
-FROM
-  project
-WHERE
-  userId = #para(userID) AND status = #para(status)
+	#if(status)
+	and	status = #para(status)
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+	#if(isEnable)
+	and	isEnable = #para(isEnable)
+	#end
   order by createTime desc
 #end
 
@@ -143,34 +151,35 @@ WHERE
 SELECT * FROM
 project
 WHERE ID IN
-(
-	SELECT
-		DISTINCT projectID
-	FROM
-		project_undertake
-	WHERE
-		(facAgencyID = createUserID	AND facAgencyID = #para(userID))
-		OR
-		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2)
-)
-#end
-
-#sql("project-by-service-status")
-SELECT * FROM
-project
-WHERE ID IN
-(
-	SELECT
-		DISTINCT projectID
-	FROM
-		project_undertake
-	WHERE
-		((facAgencyID = createUserID	AND facAgencyID = #para(userID))
-		OR
-		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
-) AND status = #para(status)
-	and
-		name like #para(name)
+  (
+    SELECT
+      DISTINCT projectID
+    FROM
+      project_undertake
+    WHERE
+      ((facAgencyID = createUserID	AND facAgencyID = #para(userID))
+      OR
+      (facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
+  )
+  #if(name)
+  and	name like concat('%', #para(name) ,'%')
+  #end
+  #if(status)
+  and	status = #para(status)
+  #end
+  #if(paTypeID)
+  and	paTypeID = #para(paTypeID)
+  #end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+  #if(isEnable)
+  and	isEnable = #para(isEnable)
+  #end
+  order by createTime desc
 #end
 
 #sql("invitedExpert-by-projectID")

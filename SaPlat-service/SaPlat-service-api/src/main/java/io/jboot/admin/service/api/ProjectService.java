@@ -159,15 +159,10 @@ public interface ProjectService  {
      */
     public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize);
 
-    public Page<Project> findPageForCreater(Long userID, int pageNumber, int pageSize);
+    public Page<Project> findPageForCreater(Project project, int pageNumber, int pageSize);
 
-    public Page<Project> findPageForService(Long userID, int pageNumber, int pageSize);
+    public Page<Project> findPageForService(Project project, int pageNumber, int pageSize);
 
-    public Page<Project> findPageForMgr(Project project, String status, int pageNumber, int pageSize);
-
-    public Page<Project> findPageForCreater(Long userID, String status,String name, int pageNumber, int pageSize);
-
-    public Page<Project> findPageForService(Long userID, String status,String name, int pageNumber, int pageSize);
     /**
      * find model by user and role and isEnable
      *

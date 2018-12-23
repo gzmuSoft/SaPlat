@@ -93,7 +93,6 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-100'    //容器高度
-
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 100, sort: true}
@@ -127,6 +126,7 @@
             , done: function (res, curr, count) {
             }
         });
+
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'uploadBackRecord') {
@@ -140,9 +140,7 @@
                     title: '上传备案文件',
                     content: '#(ctxPath)/app/track/fileUploading?projectId=' + data.id + '&type=0',
                     end: function () {
-                        table.reload('dateTable', {
-                            url: '#(ctxPath)/app/track/projectListTableData'
-                        });
+                        reloadTable($('#projectType').val(), $('#ownType').val());
                     }
                 });
             } else if (obj.event === 'seeBackRecord') {
@@ -162,6 +160,7 @@
                 url: '#(ctxPath)/app/track/projectListTableData?projectType=' + projectType + '&ownType=' + ownType
             });
         };
+
         form.on('submit(search)', function (data) {
             reloadTable(data.field.projectType, data.field.ownType);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

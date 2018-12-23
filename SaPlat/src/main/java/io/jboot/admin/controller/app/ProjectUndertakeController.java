@@ -5,7 +5,9 @@ import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -27,8 +29,6 @@ import java.util.*;
 @RequestMapping("/app/projectUndertake")
 public class ProjectUndertakeController extends BaseController {
 
-    @JbootrpcService
-    InitialRiskExpertiseService initialRiskExpertiseService;
     @JbootrpcService
     private ProjectService projectService;
     @JbootrpcService
@@ -92,6 +92,17 @@ public class ProjectUndertakeController extends BaseController {
      * 跳转榜单页面
      */
     public void toProjectList() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
         render("projectList.html");
     }
 
@@ -105,14 +116,20 @@ public class ProjectUndertakeController extends BaseController {
             int pageNumber = getParaToInt("pageNumber", 1);
             int pageSize = getParaToInt("pageSize", 30);
             Project project = new Project();
-            project.setIsPublic(true);
-            if (getPara("maxAmount") != null) {
+            if (StrKit.notBlank(getPara("name"))) {
+                project.setName(getPara("name"));
+            }
+            if (StrKit.notBlank(getPara("projectType"))) {
+                project.setPaTypeID(Long.parseLong(getPara("projectType")));
+            }
+            if (StrKit.notBlank(getPara("maxAmount"))) {
                 project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
             }
-            if (getPara("maxAmount") != null) {
+            if (StrKit.notBlank(getPara("minAmount"))) {
                 project.setMinAmount(Double.parseDouble(getPara("minAmount")));
             }
             project.setStatus(ProjectStatus.IS_VERIFY);
+            project.setIsPublic(true);
             //获取不是当前用户发布的满足指定条件的项目榜单
             Page<Project> page = projectService.findPageByIsPublic(user.getId(), project, pageNumber, pageSize);
             if (page != null && page.getList().size() > 0) {

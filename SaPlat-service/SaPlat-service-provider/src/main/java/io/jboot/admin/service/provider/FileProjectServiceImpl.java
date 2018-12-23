@@ -126,18 +126,18 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Override
     public boolean updateFileProjectAndProject(FileProject fileProject, Project project) {
         return Db.tx(() -> {
-            return !(!update(fileProject) || !projectService.update(project));
+            return !(!saveOrUpdate(fileProject) || !projectService.update(project));
         });
     }
 
     @Override
     public boolean updateFileProjectAndFiles(FileProject model) {
+        Files files = filesService.findById(model.getFileID());
+        files.setIsEnable(true);
         return Db.tx(() -> {
             if (!update(model)) {
                 return false;
             }
-            Files files = filesService.findById(model.getFileID());
-            files.setIsEnable(true);
             return filesService.update(files);
         });
     }

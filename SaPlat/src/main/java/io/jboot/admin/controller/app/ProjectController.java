@@ -18,7 +18,6 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
-import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -976,7 +975,7 @@ public class ProjectController extends BaseController {
         FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
         Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(true);
-        project.setCreateTime(new Date());
+        project.setStatus(ProjectStatus.RECORDKEEPING);
         if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
             throw new BusinessException("提交失败");
         }
@@ -1966,14 +1965,12 @@ public class ProjectController extends BaseController {
 
     @Before(GET.class)
     public void projectCollect() {
-        BaseStatus baseStatus = new BaseStatus() {
-        };
+        BaseStatus baseStatus = new BaseStatus() { };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
         if (PaTypeList != null) {
-            for (ProjectAssType item :
-                    PaTypeList) {
+            for (ProjectAssType item : PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
@@ -1987,54 +1984,54 @@ public class ProjectController extends BaseController {
     public void projectCollectTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        int iOwnType = getParaToInt("ownType");
+        int iOwnType = getParaToInt("ownType", 0);
         Project project = new Project();
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName(getPara("name"));
+        }
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("maxAmount"))) {
+            project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
+        }
+        if (StrKit.notBlank(getPara("minAmount"))) {
+            project.setMinAmount(Double.parseDouble(getPara("minAmount")));
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
         Page<Project> page = null;
         Page<RejectProjectInfo> page1 = null;
-        if (StrKit.notBlank(getPara("ownType"))) {
-            switch (iOwnType) {
-                case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
-                    break;
-                case 1:
-                    project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
-                    break;
-                case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
-                    break;
-                case 3:
-                    RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
-                    page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
+        switch (iOwnType) {
+            case 0:
+                project.setUserId(AuthUtils.getLoginUser().getId());
+                page = projectService.findPageForCreater(project, pageNumber, pageSize);
+                break;
+            case 1:
+                project.setUserId(AuthUtils.getLoginUser().getUserID());
+                page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                break;
+            case 2:
+                project.setUserId(AuthUtils.getLoginUser().getId());
+                page = projectService.findPageForService(project, pageNumber, pageSize);
+                break;
+            case 3:
+                RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
+                page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
 
-                    for (int i = 0; i < page1.getList().size(); i++) {
-                        Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
-                        if (tmp != null) {
-                            page.getList().get(i).setStatus(tmp.getStatus());
-                        } else {
-                            page.getList().get(i).setFileID(0L);
-                        }
+                for (int i = 0; i < page1.getList().size(); i++) {
+                    Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
+                    if (tmp != null) {
+                        page.getList().get(i).setStatus(tmp.getStatus());
+                    } else {
+                        page.getList().get(i).setFileID(0L);
                     }
-                    break;
-            }
+                }
+                break;
         }
         if (iOwnType == 3) {
             renderJson(new DataTable<RejectProjectInfo>(page1));
         } else {
-            for (int i = page.getList().size()-1; i >= 0; i--) {
-                System.out.println("当前pid:"+i+"表格id:"+page.getList().get(i).getPaTypeID()+"选中id："+project.getPaTypeID());
-                if (project.getPaTypeID() != null){
-                    if (page.getList().get(i).getPaTypeID() != project.getPaTypeID()){
-                        page.getList().remove(i);
-                    }
-                }
-            }
-
             renderJson(new DataTable<Project>(page));
         }
     }
