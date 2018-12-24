@@ -162,7 +162,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" for="select">请选择专家</label>
                 <div class="layui-input-inline">
-                    <select name="expertGroup" lay-filter="aihao" id="select">
+                    <select name="expertGroup" lay-filter="aihao" id="select" lay-search="">
                         #if(expertGroup != null)
                         <option value="#(expertGroup.id)" selected="selected">#(expertGroup.name)</option>
                         #else

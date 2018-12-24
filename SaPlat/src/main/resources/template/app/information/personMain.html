@@ -276,41 +276,28 @@
         // 表格渲染
         var tableIns_1 = table.render({
             elem: '#dateTable_1'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable_1'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '120'    //容器高度
-            ,
-            cols: [[                  //标题栏
+            , id: 'dateTable_1'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '120'    //容器高度
+            , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'id', minWidth: 100}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            ,
-            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
-            ,
-            method: 'get'
-            ,
-            request: {
+            , url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: false
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: false
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('.del').remove();
@@ -331,41 +318,28 @@
 
         var tableIns_2 = table.render({
             elem: '#dateTable_2'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable_2'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '120'    //容器高度
-            ,
-            cols: [[                  //标题栏
+            , id: 'dateTable_2'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '120'    //容器高度
+            , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'id', minWidth: 100}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            ,
-            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_2').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
-            ,
-            method: 'get'
-            ,
-            request: {
+            , url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_2').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: false
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: false
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('.del').remove();
@@ -386,41 +360,28 @@
 
         var tableIns_3 = table.render({
             elem: '#dateTable_3'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable_3'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '120'    //容器高度
-            ,
-            cols: [[                  //标题栏
+            , id: 'dateTable_3'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '120'    //容器高度
+            , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'id', title: 'id', minWidth: 100}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            ,
-            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_3').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
-            ,
-            method: 'get'
-            ,
-            request: {
+            , url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_3').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: false
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: false
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('.del').remove();
@@ -438,7 +399,6 @@
                 $('td[data-field="id"]').addClass("layui-hide");
             }
         });
-
 
         table.on('tool(dateTable_1)', function (obj) {
             var data = obj.data;

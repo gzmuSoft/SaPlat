@@ -319,7 +319,11 @@ public class InformationController extends BaseController {
         }
         setAttr("project", project);
         FileProject fileProject = fileProjectService.findByProjectID(project.getId());
-        Files files = filesService.findById(fileProject.getFileID());
+        Files files = null;
+        if(null != fileProject)
+            files = filesService.findById(fileProject.getFileID());
+        if(null == files)
+            files = new Files();
         setAttr("files", files);
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
         User user = AuthUtils.getLoginUser();
