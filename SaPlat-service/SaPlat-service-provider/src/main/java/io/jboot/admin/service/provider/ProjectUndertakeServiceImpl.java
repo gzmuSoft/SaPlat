@@ -159,6 +159,9 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Columns columns = Columns.create();
         columns.eq("projectID", id);
         columns.eq("facAgencyID", facAgencyID);
+        //去除待确认的项目，2018年12月24日，刘英伟
+        columns.ne("status",0);
+        columns.ne("status",3);
         return fitModel(DAO.findFirstByColumns(columns));
     }
 
