@@ -19,6 +19,18 @@
             "auth.reply": "资料完善，审核通过"
         });
 
+        form.on('switch(auth.status)',function(obj){
+            if(obj.elem.checked===true){
+                form.val("verifyForm", {
+                    "auth.reply": "资料完善，审核通过"
+                });
+            }else{
+                form.val("verifyForm", {
+                    "auth.reply": "资料不完善，请补充"
+                });
+            }
+        });
+
         form.on('submit(sub)', function (data) {
             if(data.form[2].checked == "true") {
                 data.form[2].value = "2";
@@ -56,7 +68,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label"><em class="require-mark">*</em>状态</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="auth.status" lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required" checked>
+                <input type="checkbox" name="auth.status" lay-filter="auth.status"  lay-skin="switch" lay-text="审核通过|审核失败" required lay-verify="required" checked>
             </div>
         </div>
 
