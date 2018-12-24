@@ -68,7 +68,12 @@ where
 and
     b.status = 2
 and
-    a.status = #para(status)
+#if(Remark)
+    (a.status = #para(status)
+	  or	a.status = #para(Remark))
+#else
+	a.status = #para(status)
+#end
 and
 	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
 	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))

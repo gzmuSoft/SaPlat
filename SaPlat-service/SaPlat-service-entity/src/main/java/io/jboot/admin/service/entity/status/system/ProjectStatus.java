@@ -61,6 +61,11 @@ public class ProjectStatus extends BaseStatus {
      */
     public final static String RECORDKEEPED = "11";
 
+    /**
+     * 管理部门审核终审报告中
+     */
+    public final static String FINAL_REPORT_CHECKING = "12";
+
 
     public ProjectStatus() {
         add(CANCEL_VERIFY, "取消审核");
@@ -75,6 +80,7 @@ public class ProjectStatus extends BaseStatus {
         add(RECORDKEEPING, "项目备案");
         add(TRACKING, "项目跟踪");
         add(RECORDKEEPED, "备案文件已上传");
+        add(FINAL_REPORT_CHECKING, "管理部门审核终审报告中");
     }
 
     private static ProjectStatus me;

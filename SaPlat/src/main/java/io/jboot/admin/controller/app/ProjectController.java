@@ -933,6 +933,7 @@ public class ProjectController extends BaseController {
         }
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
+        projectUndertake.setRemark("FINAL_REPORT_CHECKING");
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -975,12 +976,11 @@ public class ProjectController extends BaseController {
         FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
         Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(true);
-        project.setStatus(ProjectStatus.RECORDKEEPING);
+        project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
         if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
             throw new BusinessException("提交失败");
         }
         renderJson(RestResult.buildSuccess());
-
     }
 
     @NotNullPara("id")
