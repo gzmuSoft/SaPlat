@@ -14,6 +14,7 @@ import io.jboot.admin.service.entity.model.*;
 import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.utils.StringUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.util.List;
@@ -74,8 +75,14 @@ public class FileUploadController extends BaseController {
         fileProject.setProjectID(projectID);
         Integer pageNumber = getParaToInt("pageNumber");
         Integer pageSize = getParaToInt("pageSize");
+        String questionnare = getPara("questionnare");
+        // 如果是调查问卷，我要单独处理
+        if (StringUtils.isNotBlank(questionnare)){
+            fileProject.setRemark(questionnare);
+            fileProject.setIsEnable(true);
+        }
         Page<FileProject> page = fileProjectService.findPage(fileProject, pageNumber, pageSize);
-        renderJson(new DataTable<FileProject>(page));
+        renderJson(new DataTable<>(page));
     }
 
 
@@ -85,8 +92,33 @@ public class FileUploadController extends BaseController {
         ProjectFileType projectFileType = projectFileTypeService.findById(fileProject.getFileTypeID());
         fileProject.setName(projectFileType.getName());
         fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
-        if (!fileProjectService.saveFileProjectAndFiles(fileProject)) {
+        fileProject.setProjectID(project.getId());
+        String questionnare = getPara("questionnare");
+        // 如果是调查问卷，我要单独处理
+        if (StringUtils.isNotBlank(questionnare)){
+            fileProject.setRemark(questionnare);
+        }
+        FileProject res = fileProjectService.saveFileProjectAndFilesGet(fileProject);
+        if (res == null) {
             throw new BusinessException("保存失败,请重试");
+        }
+        renderJson(RestResult.buildSuccess(res.getId()));
+    }
+    public void saveOrUpdate(){
+        FileProject fileProject = getBean(FileProject.class, "fileProject");
+        Project project = projectService.findById(fileProject.getProjectID());
+        ProjectFileType projectFileType = projectFileTypeService.findById(fileProject.getFileTypeID());
+        FileProject oldFileProject=fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(),fileProject.getProjectID());
+        if(oldFileProject!=null){
+            oldFileProject.setFileID(fileProject.getFileID());
+            fileProjectService.updateFileProjectAndFiles(oldFileProject);
+        }
+        else {
+            fileProject.setName(projectFileType.getName());
+            fileProject.setCreateUserID(AuthUtils.getLoginUser().getId());
+            if (!fileProjectService.saveFileProjectAndFiles(fileProject)) {
+                throw new BusinessException("保存失败,请重试");
+            }
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -109,7 +141,7 @@ public class FileUploadController extends BaseController {
         if (project == null) {
             throw new BusinessException("项目不存在");
         }
-        ProjectFileType projectFileType = projectFileTypeService.findByName("6. 预审报告上传");
+        ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
         FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
         if (fileProject == null) {
             fileProject = new FileProject();

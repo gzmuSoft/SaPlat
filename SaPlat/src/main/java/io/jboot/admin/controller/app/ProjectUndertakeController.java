@@ -5,7 +5,9 @@ import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.base.common.BaseStatus;
 import io.jboot.admin.base.common.RestResult;
 import io.jboot.admin.base.exception.BusinessException;
 import io.jboot.admin.base.interceptor.NotNullPara;
@@ -27,8 +29,6 @@ import java.util.*;
 @RequestMapping("/app/projectUndertake")
 public class ProjectUndertakeController extends BaseController {
 
-    @JbootrpcService
-    InitialRiskExpertiseService initialRiskExpertiseService;
     @JbootrpcService
     private ProjectService projectService;
     @JbootrpcService
@@ -65,29 +65,44 @@ public class ProjectUndertakeController extends BaseController {
     private AuthProjectService authProjectService;
     @JbootrpcService
     private RoleService roleService;
+    @JbootrpcService
+    private ManagementService managementService;
+    @JbootrpcService
+    private NotificationService notificationService;
 
-    /**
-     * 去重
-     */
-    static String sub(String str) {
-        List list = new ArrayList();
-        StringBuffer sb = new StringBuffer(str);
-        int j = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (list.contains(str.charAt(i))) {
-                sb.deleteCharAt(i - j);
-                j++;
-            } else {
-                list.add(str.charAt(i));
-            }
-        }
-        return sb.toString();
-    }
+//    /**
+//     * 去重
+//     */
+//    static String sub(String str) {
+//        List list = new ArrayList();
+//        StringBuffer sb = new StringBuffer(str);
+//        int j = 0;
+//        for (int i = 0; i < str.length(); i++) {
+//            if (list.contains(str.charAt(i))) {
+//                sb.deleteCharAt(i - j);
+//                j++;
+//            } else {
+//                list.add(str.charAt(i));
+//            }
+//        }
+//        return sb.toString();
+//    }
 
     /**
      * 跳转榜单页面
      */
     public void toProjectList() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
         render("projectList.html");
     }
 
@@ -101,14 +116,20 @@ public class ProjectUndertakeController extends BaseController {
             int pageNumber = getParaToInt("pageNumber", 1);
             int pageSize = getParaToInt("pageSize", 30);
             Project project = new Project();
-            project.setIsPublic(true);
-            if (getPara("maxAmount") != null) {
+            if (StrKit.notBlank(getPara("name"))) {
+                project.setName(getPara("name"));
+            }
+            if (StrKit.notBlank(getPara("projectType"))) {
+                project.setPaTypeID(Long.parseLong(getPara("projectType")));
+            }
+            if (StrKit.notBlank(getPara("maxAmount"))) {
                 project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
             }
-            if (getPara("maxAmount") != null) {
+            if (StrKit.notBlank(getPara("minAmount"))) {
                 project.setMinAmount(Double.parseDouble(getPara("minAmount")));
             }
             project.setStatus(ProjectStatus.IS_VERIFY);
+            project.setIsPublic(true);
             //获取不是当前用户发布的满足指定条件的项目榜单
             Page<Project> page = projectService.findPageByIsPublic(user.getId(), project, pageNumber, pageSize);
             if (page != null && page.getList().size() > 0) {
@@ -132,8 +153,7 @@ public class ProjectUndertakeController extends BaseController {
                 });
             }
             renderJson(new DataTable<Project>(page));
-        }
-        else{
+        } else {
             renderJson(new DataTable<Project>(null));
         }
     }
@@ -149,7 +169,7 @@ public class ProjectUndertakeController extends BaseController {
         pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
         Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
         String strRoleName = roleService.findById(apModel.getRoleId()).getName();
-        setAttr("organization",organization)
+        setAttr("organization", organization)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .render("see.html");
@@ -166,7 +186,7 @@ public class ProjectUndertakeController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Organization organization = organizationService.findById(user.getUserID());//找到组织机构信息
         FacAgency facAgency = null;
-        if(organization != null) {
+        if (organization != null) {
             facAgency = facAgencyService.findByOrgId(organization.getId());//找到组织机构对应的服务机构信息
         }
 
@@ -189,7 +209,7 @@ public class ProjectUndertakeController extends BaseController {
             projectUndertake.setCreateUserID(user.getId());
             projectUndertake.setCreateTime(new Date());
             projectUndertake.setProjectID(id);
-            if(facAgency != null) {
+            if (facAgency != null) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
             }
         }
@@ -273,11 +293,10 @@ public class ProjectUndertakeController extends BaseController {
         }
         */
 
-        if(!applyOrInvite && !flag){//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
+        if (!applyOrInvite && !flag) {//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
             //此时，CreateUserID为申请介入项目评估的服务机构对应用户ID，需要通过user.getUserID()获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
             page = projectUndertakeService.findPageOfApplyIn(user.getId(), pageNumber, pageSize);
-        }
-        else {
+        } else {
             ProjectUndertake projectUndertake = new ProjectUndertake();
 
             projectUndertake.setApplyOrInvite(applyOrInvite);
@@ -285,8 +304,7 @@ public class ProjectUndertakeController extends BaseController {
             if (applyOrInvite && flag) {
                 //applyOrInvite: true, flag: true：查看邀请第三方介入的状态(已通过验证)，无需做特殊处理
                 projectUndertake.setCreateUserID(user.getId());
-            }
-            else {
+            } else {
                 //applyOrInvite: true, flag: false：查看邀请您介入的项目(已通过验证)
                 //找到当前用户所属组织机构对应的服务机构信息
                 FacAgency facAgency = facAgencyService.findByOrgId(user.getUserID());
@@ -418,8 +436,8 @@ public class ProjectUndertakeController extends BaseController {
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(id);
         User user = AuthUtils.getLoginUser();
         Organization org = organizationService.findById(user.getUserID());
-        //List<StructPersonLink> structPersonLinks = structPersonLinkService.findAll();
-        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+//        List<OrgStructure> orgStructures = orgStructureService.findByOrgIdAndType(org.getId(),2);
+        List<OrgStructure> orgStructures = orgStructureService.findByOrgId(org.getId());
 //        for (StructPersonLink structPersonLink : structPersonLinks) {
 //            string.append(structPersonLink.getStructID());
 //        }
@@ -443,9 +461,9 @@ public class ProjectUndertakeController extends BaseController {
         boolean isGetExpert = getParaToBoolean("flag");
         for (StructPersonLink structPersonLink : structPersonLinks) {
             Person person = personService.findById(structPersonLink.getPersonID());
-            if(false == isGetExpert) {
+            if (false == isGetExpert) {
                 persons.add(person);
-            }else {
+            } else {
                 ExpertGroup expertGroupModel = expertGroupService.findByPersonId(person.getId());
                 if (expertGroupModel != null) {
                     persons.add(person);
@@ -498,7 +516,19 @@ public class ProjectUndertakeController extends BaseController {
         String[] sStartDate = gson.fromJson(getPara("ScheduledPlan.startDate"), String[].class);
         String[] sEndDate = gson.fromJson(getPara("ScheduledPlan.endDate"), String[].class);
         String[] sContent = gson.fromJson(getPara("ScheduledPlan.content"), String[].class);
+        Long fileId1 = getParaToLong("fileId1"), fileId2 = getParaToLong("fileId2"), fileId3 = getParaToLong("fileId3");
+        Files files1 = filesService.findById(fileId1), files2 = filesService.findById(fileId2), files3 = filesService.findById(fileId3);
+        if(files1!=null){
+            files1.setIsEnable(true);
+        }
+        if(files2!=null){
+            files2.setIsEnable(true);
+        }
+        if(files3!=null){
+            files3.setIsEnable(true);
+        }
         FileForm fileForm1 = fileFormService.findById(getParaToLong("fileFormId1"));
+        FileForm fileForm3 = fileFormService.findById(getParaToLong("fileFormId3"));
         String file2Id = getPara("fileFormId2");
         FileForm fileForm2 = null;
         if (file2Id != null) {
@@ -520,13 +550,13 @@ public class ProjectUndertakeController extends BaseController {
         if (getPara("status").equals("3")) {
             impTeam.setId(impTeamService.findByProjectId(id).getId());
             evaScheme.setId(evaSchemeService.findByProjectID(id).getId());
-            if (impTeamService.update(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2)) {
+            if (impTeamService.update(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2, fileForm3, files1, files2, files3)) {
                 renderJson(RestResult.buildSuccess("更新成功"));
             } else {
                 renderJson(RestResult.buildError("更新失败"));
                 throw new BusinessException("更新失败");
             }
-        } else if (impTeamService.save(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2)) {
+        } else if (impTeamService.save(impTeam, evaScheme, scheduledPlans, fileForm1, fileForm2, fileForm3, files1, files2, files3)) {
             renderJson(RestResult.buildSuccess("保存成功"));
         } else {
             renderJson(RestResult.buildError("保存失败"));
@@ -575,14 +605,23 @@ public class ProjectUndertakeController extends BaseController {
     }
 
     /**
-     * 管理就够对前期资料进行审核创建
+     * 管理机构对前期资料进行审核创建
      */
     @RequiresRoles("管理机构")
     public void managementReviewTableData() {
+        User user = AuthUtils.getLoginUser();
+        Management management = managementService.findByOrgId(user.getUserID());
+        if (management == null || !management.getIsEnable()) {
+            renderJson(new DataTable<Project>(null));
+            return;
+        }
+        Long managementID = management.getId();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setStatus(ProjectStatus.REVIEW);
+        project.setManagementID(managementID);
+        project.setIsEnable(true);
         Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
         if (page.getList() != null) {
             page.getList().forEach(p -> {
@@ -629,16 +668,18 @@ public class ProjectUndertakeController extends BaseController {
             throw new BusinessException("当前项目未上传前期资料");
         }
         ScheduledPlan scheduledPlan = scheduledPlanService.findByEvaSchemeID(evaScheme.getId());
-        FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "委托书", evaScheme.getId());
-        FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("evaScheme", "稳评方案封面", evaScheme.getId());
+        FileForm fileForm1 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C委托书", evaScheme.getId());
+        FileForm fileForm2 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C稳评方案封面", evaScheme.getId());
+        FileForm fileForm3 = fileFormService.findFirstByTableNameAndRecordIDAndFileName("eva_Scheme", "\uE67C报备登记表", evaScheme.getId());
 
         if (fileForm1 != null && fileForm1.getFileID() != null) {
-            Files file1src = filesService.findById(fileForm1.getFileID());
-            setAttr("file1src", file1src);
+            setAttr("file1src", fileForm1.getFileID());
         }
         if (fileForm2 != null && fileForm2.getFileID() != null) {
-            Files file2src = filesService.findById(fileForm2.getFileID());
-            setAttr("file2src", file2src);
+            setAttr("file2src", fileForm2.getFileID());
+        }
+        if (fileForm3 != null && fileForm3.getFileID() != null) {
+            setAttr("file3src", fileForm3.getFileID());
         }
 
         LeaderGroup leaderGroup = leaderGroupService.findByProjectID(project.getId());
@@ -694,10 +735,25 @@ public class ProjectUndertakeController extends BaseController {
     @RequiresRoles("管理机构")
     @NotNullPara("id")
     public void managementReviewAccept() {
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        Long id = getParaToLong("id");
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
         evaScheme.setStatus("2");
+        Project project = projectService.findById(id);
         if (!evaSchemeService.update(evaScheme)) {
             throw new BusinessException("更新失败");
+        }else{
+            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            Notification notification = new Notification();
+            notification.setName("评估前期资料审核完成");
+            notification.setSource("/app/projectUndertake/managementReviewAccept");
+            notification.setContent("您好!您的《"+project.getName()+"》评估前期资料审核已通过!");
+            notification.setCreateUserID(user.getId());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notification.setReceiverID(project.getCreateUserID().intValue());
+
+            notificationService.save(notification);
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -708,10 +764,24 @@ public class ProjectUndertakeController extends BaseController {
     @RequiresRoles("管理机构")
     @NotNullPara("id")
     public void managementReviewRefuse() {
-        EvaScheme evaScheme = evaSchemeService.findByProjectID(getParaToLong("id"));
+        Long id = getParaToLong("id");
+        EvaScheme evaScheme = evaSchemeService.findByProjectID(id);
         evaScheme.setStatus("3");
+        Project project = projectService.findById(id);
         if (!evaSchemeService.update(evaScheme)) {
             throw new BusinessException("更新失败");
+        }else {
+            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            Notification notification = new Notification();
+            notification.setName("评估前期资料审核完成");
+            notification.setSource("/app/projectUndertake/managementReviewAccept");
+            notification.setContent("您好!您的《"+project.getName()+"》评估前期资料审核未通过!");
+            notification.setCreateUserID(user.getId());
+            notification.setLastUpdateUserID(user.getId());
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notification.setReceiverID(Integer.parseInt(project.getCreateUserID().toString()));
+            notificationService.save(notification);
         }
         renderJson(RestResult.buildSuccess());
     }

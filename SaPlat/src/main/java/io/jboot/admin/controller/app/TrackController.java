@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author LiuChuanJin
  * @version 2.0
- *          -----------------------------
+ * -----------------------------
  * @date 10:05 2018/8/4
  */
 @RequestMapping("/app/track")
@@ -184,35 +184,67 @@ public class TrackController extends BaseController {
         setAttr("mRole", mRole).setAttr("fRole", fRole).
                 setAttr("projectFileTypeID", projectFileTypeID).render("recordDataTransfer.html");
     }
+
     /**
-     *  项目列表
+     * 项目列表
      */
     @Before(GET.class)
-    public void projectList(){
-        BaseStatus baseStatus=new BaseStatus() {};
+    public void projectList() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        if(PaTypeList != null) {
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
+        render("projectList.html");
+    }
+
+    /**
+     * 项目列表
+     */
+    @Before(GET.class)
+    public void projectRecordList() {
+        BaseStatus baseStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
             for (ProjectAssType item :
                     PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList",baseStatus);
-        render("projectList.html");
+        setAttr("PaTypeNameList", baseStatus);
+        render("projectRecordList.html");
     }
 
+    /**
+     * 备案项目列表
+     */
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void projectListTableData(){
+    @NotNullPara({"pageNumber", "pageSize", "type", "ownType"})
+    public void projectListTableData() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        int type = getParaToInt("type");
         Project project = new Project();
-        project.setStatus(ProjectStatus.RECORDKEEPING);
+        if (type == 0) {
+            project.setStatus(ProjectStatus.RECORDKEEPING);
+        } else {
+            project.setStatus(ProjectStatus.RECORDKEEPED);
+        }
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName("%" + getPara("name") + "%");
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
@@ -222,14 +254,29 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForCreater(project, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("selfRole");
+                    }
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                    if (page != null && page.getList() != null) {
+                        for (Project p : page.getList()) {
+                            p.setRemark("managementRole");
+                        }
+                    }
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.RECORDKEEPING, pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForService(project, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("facRole");
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -237,15 +284,16 @@ public class TrackController extends BaseController {
     }
 
     /**
-     *  项目列表
+     * 项目列表
      */
     @Before(GET.class)
-    public void projectRiskList(){
-        BaseStatus baseStatus=new BaseStatus() {};
+    public void projectRiskList() {
+        BaseStatus baseStatus = new BaseStatus() {
+        };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
-        if(PaTypeList != null) {
+        if (PaTypeList != null) {
             for (ProjectAssType item :
                     PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
@@ -261,8 +309,8 @@ public class TrackController extends BaseController {
     }
 
     @Before(GET.class)
-    @NotNullPara({"pageNumber","pageSize"})
-    public void projectRiskListTableData(){
+    @NotNullPara({"pageNumber", "pageSize"})
+    public void projectRiskListTableData() {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
@@ -270,6 +318,11 @@ public class TrackController extends BaseController {
         project.setStatus(ProjectStatus.TRACKING);
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName("%" + getPara("name") + "%");
+        } else {
+            project.setName("%%");
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
@@ -279,14 +332,18 @@ public class TrackController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForCreater(project, pageNumber, pageSize);
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, ProjectStatus.TRACKING, pageNumber, pageSize);
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
                     break;
                 case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), ProjectStatus.TRACKING, pageNumber, pageSize);
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findPageForService(project, pageNumber, pageSize);
+                    break;
+                default:
                     break;
             }
             ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
@@ -294,18 +351,20 @@ public class TrackController extends BaseController {
             if (projectFileType != null) {
                 fileTypeID = projectFileType.getId();
             }
-            for (int i = 0; i < page.getList().size(); i++) {
-                page.getList().get(i).setOwnType(iOwnType);
-                FileProject fileProject = null;
-                if (fileTypeID != null) {
-                    fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
-                }
-                if (fileProject != null) {
-                    page.getList().get(i).setIsUpload(true);
-                    page.getList().get(i).setFileID(fileProject.getFileID());
-                    System.out.println(fileProject.getFileID());
-                } else {
-                    page.getList().get(i).setIsUpload(false);
+            if (page.getList()!=null) {
+                for (int i = 0; i < page.getList().size(); i++) {
+                    page.getList().get(i).setOwnType(iOwnType);
+                    FileProject fileProject = null;
+                    if (fileTypeID != null) {
+                        fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
+                    }
+                    if (fileProject != null) {
+                        page.getList().get(i).setIsUpload(true);
+                        page.getList().get(i).setFileID(fileProject.getFileID());
+                        System.out.println(fileProject.getFileID());
+                    } else {
+                        page.getList().get(i).setIsUpload(false);
+                    }
                 }
             }
         }
@@ -313,20 +372,30 @@ public class TrackController extends BaseController {
     }
 
     /**
-     * 备案文件上传页面
+     * 备案文件/移交表上传页面
+     * @parm type
+     * type: 0 备案文件
+     * type: 1 备案资料移交表
      */
-    @NotNullPara({"projectId"})
+    @NotNullPara({"projectId", "type"})
     public void fileUploading() {
-        Long fileTypeId = projectFileTypeService.findByName("备案资料移交表").getId();
-        setAttr("projectId", getParaToLong("projectId")).setAttr("fileTypeId", fileTypeId).render("fileUploading.html");
+        Long fileTypeId = null;
+        int type = getParaToInt("type");
+        if (type == 0) {
+            fileTypeId = projectFileTypeService.findByName("备案文件").getId();
+        } else {
+            fileTypeId = projectFileTypeService.findByName("备案资料移交表").getId();
+        }
+        setAttr("type", type).setAttr("projectId", getParaToLong("projectId")).setAttr("fileTypeId", fileTypeId).render("fileUploading.html");
     }
 
     /**
      * 项目文件关联
      */
-    @NotNullPara({"fileId", "projectId", "fileTypeId"})
+    @NotNullPara({"fileId", "projectId", "fileTypeId", "type"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
+        int type = getParaToInt("type");
         FileProject model = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
         if (model == null) {
             model = new FileProject();
@@ -334,7 +403,7 @@ public class TrackController extends BaseController {
             model.setFileTypeID(getParaToLong("fileTypeId"));
             model.setCreateTime(new Date());
             model.setCreateUserID(user.getId());
-       } else {
+        } else {
             Files files = filesService.findById(model.getFileID());
             if (files != null) {
                 files.setIsEnable(false);
@@ -348,7 +417,13 @@ public class TrackController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
 
-        if (!fileProjectService.saveOrUpdate(model)) {
+        Project project = projectService.findById(getParaToLong("projectId"));
+        if (project != null && type == 0) {
+            project.setStatus(ProjectStatus.RECORDKEEPED);
+        } else if (project != null && type == 1) {
+            project.setStatus(ProjectStatus.TRACKING);
+        }
+        if (!fileProjectService.updateFileProjectAndProject(model, project)) {
             renderJson(RestResult.buildError("上传失败"));
             throw new BusinessException("上传失败");
         } else {

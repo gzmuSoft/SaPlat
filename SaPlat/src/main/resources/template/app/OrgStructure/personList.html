@@ -12,8 +12,7 @@
     layui.use(['table', 'layer'], function () {
         var table = layui.table
             , layer = layui.layer
-            , $ = layui.jquery
-            , form = layui.form;
+            , $ = layui.jquery;
 
         // 表格渲染
         var tableIns = table.render({
@@ -21,9 +20,10 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-50'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'userAccount', title: '帐号', minWidth: 100,sort:true}
                 , {field: 'name', title: '姓名', minWidth: 80,sort:true}
                 , {field: 'sex', title: '性别', minWidth: 80,sort:true}
                 , {field: 'age', title: '年龄', minWidth: 80,sort:true}
@@ -66,7 +66,7 @@
 
 <script type="text/html" id="barOption">
 
-<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="show">查看信息</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="show">查看信息</a>
 
 </script>
 <script type="text/html" id="status">

@@ -3,34 +3,52 @@
 
 #define css()
 <style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
 
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
 </style>
 #end
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'upload', 'element'], function () {
+    var now = new Date();
+    var start = now.getTime();  // 将当前时间转换为时间戳
+    var end = start + 24*60*60*1000*7; //结束时间
+
+    layui.use(['form', 'layer','laydate'], function () {
+        var layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+
+        laydate.render({
+            elem: '#deadTime'
+            ,type: 'datetime'
+            ,format: 'yyyy-MM-dd HH:mm:ss'
+            ,value: now
+            ,min: start
+            ,max: end
+        });
+
         //操作对象
         var id = "#(id)";
         var projectId = "#(projectId)";
         var orgType = "#(orgType)";
 
-        $('#submit').click(function () {
-            var num = $('#num').val();
-            console.log(num);
-            if (num >= 1 && num <= 3) {
-                $.getJSON('#(ctxPath)/app/project/inviteReview', {
-                    id: id,
-                    projectId: projectId,
-                    orgType: orgType,
-                    num: num
-                }, function (res) {
-                    //????刷新有没有问题
-                    pop_close();
-                });
-            } else {
-                layer.msg("所需人数应为1-3人！");
-            }
+        $('#submit').click(function (data) {
+            $.getJSON('#(ctxPath)/app/project/inviteReview', {
+                id: id,
+                projectId: projectId,
+                orgType: orgType,
+                num: $('#num').val(),
+                deadTime: $('#deadTime').val()
+            }, function (res) {
+                pop_close();
+            });
         });
     });
 
@@ -39,16 +57,46 @@
 
 #define content()
 <div class="x-body">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-        <legend>输入您需要对方派出的人数</legend>
-    </fieldset>
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
-            <div class="layui-inline">
-                <label class="layui-form-label"><em class="require-mark">*</em>人数</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">截止时间</label>
                 <div class="layui-input-block">
-                    <input id="num" lay-verify="required" autocomplete="off" placeholder="请输入所需人数" class="layui-input"
-                           type="number">
+                    <input id="deadTime" lay-verify="required" class="layui-input" type="text"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">邀请人数</label>
+                <div class="layui-input-block">
+                    <select id='num' name="num" lay-filter="numSelect">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">组织名称</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" value="#(orgName)" readonly/>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" value="#(pModel.name)" readonly />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计金额</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" value="#number(pModel.amount, ',###')元" readonly />
                 </div>
             </div>
         </div>

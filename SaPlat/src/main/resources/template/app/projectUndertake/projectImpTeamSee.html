@@ -27,38 +27,43 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.name" >项目名称：</label>
-                                    <div class="layui-input-block" >
+                                    <label class="layui-form-label" for="project.name">项目名称：</label>
+                                    <div class="layui-input-block">
                                         <input type="text" id="project.name" name="project.name" value="#(project.name)"
                                                class="layui-input " style="width: 300px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.roleName" >角色名称：</label>
+                                    <label class="layui-form-label" for="project.roleName">角色名称：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="project.roleName" name="project.roleName" value="#(project.roleName)"
-                                               class="layui-input "  readonly/>
-                                    </div>
-                                </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.amount" >预计金额：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="project.amount" name="project.amount" value="#(project.amount)"
+                                        <input type="text" id="project.roleName" name="project.roleName"
+                                               value="#(project.roleName)"
                                                class="layui-input " readonly/>
                                     </div>
                                 </div>
+
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.assessmentMode" >评估方式：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="project.assessmentMode" name="project.assessmentMode" value="#(project.assessmentMode)"
+                                    <label class="layui-form-label">预计金额</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" value="#number(project.amount, ',###')" autocomplete="off"
+                                               class="layui-input money" readonly/>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">（单位：元）</div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" for="project.assessmentMode">评估方式：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="project.assessmentMode" name="project.assessmentMode"
+                                               value="#(project.assessmentMode)"
                                                class="layui-input " style="width: 80px" readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="project.site" >地址：</label>
-                                    <div class="layui-input-block" >
+                                    <label class="layui-form-label" for="project.site">地址：</label>
+                                    <div class="layui-input-block">
                                         <input type="text" id="project.site" name="project.site" value="#(project.site)"
                                                class="layui-input " style="width: 855px" readonly/>
                                     </div>
@@ -85,26 +90,30 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="leaderGroup.leader" >组长：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="leaderGroup.leader" name="leaderGroup.leader" value="#(leaderGroup.leader)"
+                                    <label class="layui-form-label" for="leaderGroup.leader">组长：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="leaderGroup.leader" name="leaderGroup.leader"
+                                               value="#(leaderGroup.leader)"
                                                class="layui-input " style="width: 200px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="leaderGroup.deputy" >副组长：</label>
+                                    <label class="layui-form-label" for="leaderGroup.deputy">副组长：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="leaderGroup.deputy" name="leaderGroup.deputy" value="#(leaderGroup.deputy)"
-                                               class="layui-input "  style="width: 200px"  readonly/>
+                                        <input type="text" id="leaderGroup.deputy" name="leaderGroup.deputy"
+                                               value="#(leaderGroup.deputy)"
+                                               class="layui-input " style="width: 200px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-row layui-col-space10 layui-form-item">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label" for="leaderGroup.crew" >组员：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="leaderGroup.crew" name="leaderGroup.crew" value="#(leaderGroup.crew)"
-                                               class="layui-input "  style="width: 900px" readonly/>
-                                    </div></div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" for="leaderGroup.crew">组员：</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" id="leaderGroup.crew" name="leaderGroup.crew"
+                                                   value="#(leaderGroup.crew)"
+                                                   class="layui-input " style="width: 900px" readonly/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -119,37 +128,38 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="impTeam.name" style="width: 110px" >小组名称：</label>
-                                    <div class="layui-input-block" >
+                                    <label class="layui-form-label" for="impTeam.name"
+                                           style="width: 110px">小组名称：</label>
+                                    <div class="layui-input-block">
                                         <input type="text" id="impTeam.name" name="impTeam.name" value="#(impTeam.name)"
                                                class="layui-input " style="width: 400px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="leader.name" >组长：</label>
+                                    <label class="layui-form-label" for="leader.name">组长：</label>
                                     <div class="layui-input-block">
                                         <input type="text" id="leader.name" name="leader.name" value="#(leader.name)"
-                                               class="layui-input "  readonly/>
+                                               class="layui-input " readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label" style="width: 110px">副组长：</label>
-                                    <div class="layui-input-block" >
+                                    <div class="layui-input-block">
                                         <input type="text"
                                                value="#for(asLeaderGroup : asLeaderGroups)
                                                     #(asLeaderGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                                                     #end"
-                                               class="layui-input "  style="width: 900px;margin-left: 30px" readonly/>
+                                               class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label"  style="width: 110px">专家成员：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text"  value="#for(expertGroup : expertGroups)
+                                    <label class="layui-form-label" style="width: 110px">专家成员：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#for(expertGroup : expertGroups)
                         #(expertGroup.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
                                                class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
@@ -158,8 +168,8 @@
                             </div>
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label"  style="width: 110px" >现场调查成员：</label>
-                                    <div class="layui-input-block" >
+                                    <label class="layui-form-label" style="width: 110px">现场调查成员：</label>
+                                    <div class="layui-input-block">
                                         <input type="text" value=" #for(invTeam : invTeams)
                         #(invTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
@@ -170,8 +180,8 @@
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
                                     <label class="layui-form-label" style="width: 110px">报告编制成员：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text"  value="#for(repTeam : repTeams)
+                                    <div class="layui-input-block">
+                                        <input type="text" value="#for(repTeam : repTeams)
                         #(repTeam.name) &nbsp;&nbsp;&nbsp;&nbsp;
                         #end"
                                                class="layui-input " style="width: 900px;margin-left: 30px" readonly/>
@@ -224,16 +234,19 @@
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="evaScheme.startDate" style="width: 110px" >总开始时间：</label>
-                                    <div class="layui-input-block" >
-                                        <input type="text" id="evaScheme.startDate" name="evaScheme.startDate" value="#(evaScheme.startDate)"
+                                    <label class="layui-form-label" for="evaScheme.startDate" style="width: 110px">总开始时间：</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="evaScheme.startDate" name="evaScheme.startDate"
+                                               value="#(evaScheme.startDate)"
                                                class="layui-input " style="width: 300px;margin-left: 50px" readonly/>
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label" for="evaScheme.endDate" style="width: 110px">总结束时间：</label>
+                                    <label class="layui-form-label" for="evaScheme.endDate"
+                                           style="width: 110px">总结束时间：</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="evaScheme.endDate" name="evaScheme.endDate" value="#(evaScheme.endDate)"
+                                        <input type="text" id="evaScheme.endDate" name="evaScheme.endDate"
+                                               value="#(evaScheme.endDate)"
                                                class="layui-input " style="width: 300px;margin-left: 50px" readonly/>
                                     </div>
                                 </div>
@@ -242,7 +255,7 @@
                                 <div class="layui-form-item " style="margin-top: 50px;">
                                     <div class="layui-input-block">
                                         #for(scheduledPlan : scheduledPlans)
-                                        <p  style="line-height:30px">
+                                        <p style="line-height:30px">
                                             名称：#(scheduledPlan.name) <br>
                                             起始时间：#(scheduledPlan.startDate) &nbsp;&nbsp;&nbsp;&nbsp;
                                             结束时间：#(scheduledPlan.endDate)<br>
@@ -261,6 +274,14 @@
 
         </div>
     </div>
+    <button type="button" class="layui-btn" id="CoverSee">查看封面</button>
+    <button type="button" class="layui-btn" id="ReportSee">查看报备登记表</button>
+    #if(project.assessmentMode == "委评")
+    <button type="button" class="layui-btn" id="EntrustSee">查看委托书</button>
+    #end
+    <p id="flag1" class="layui-hide">#(file1src)</p>
+    <p id="flag2" class="layui-hide">#(file2src)</p>
+    <p id="flag3" class="layui-hide">#(file3src)</p>
     <button type="button" class="layui-btn layui-icon" id="back">返回</button>
 
 </div>
@@ -270,10 +291,42 @@
 
 
 <script type="text/javascript">
+    var fileId1 = $("#flag1").text(), fileId2 = $("#flag2").text(), fileId3 = $("#flag3").text();
+    console.log(fileId1);console.log(fileId2);console.log(fileId3);
     layui.use(['form', 'layer', 'element', 'table', 'laydate', 'layedit', 'table', 'upload'], function () {
         /**
          *  操作对象
          */
+        /**
+         * 文件查看
+         */
+        $("#CoverSee").click(function () {
+            if (fileId2 === null || fileId2 === "") {
+                layer.msg("您还没有上传稳评封面哦")
+            } else {
+                pop_show('查看封面文件', '#(ctxPath)/util/pdfView?fileID=' + fileId2, '', '', function () {
+                });
+            }
+        });
+
+        $("#EntrustSee").click(function () {
+            if (fileId1 === null || fileId1 === "") {
+                layer.msg("您还没有上传委托书哦")
+            } else {
+                pop_show('查看委托书文件', '#(ctxPath)/util/pdfView?fileID=' + fileId1, '', '', function () {
+                });
+            }
+        });
+
+        $("#ReportSee").click(function () {
+            if (fileId3 === null || fileId3 === "") {
+                layer.msg("您还没有上传报备登记表哦")
+            } else {
+                pop_show('查看报备登记表文件', '#(ctxPath)/util/pdfView?fileID=' + fileId3, '', '', function () {
+                });
+            }
+        });
+
         var layer = layui.layer;
         $('#back').click(function () {
             window.location.href = document.referrer;

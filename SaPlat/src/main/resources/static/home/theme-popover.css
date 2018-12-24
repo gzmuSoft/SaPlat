@@ -1,0 +1,210 @@
+.theme-popover-mask {
+  z-index: 99998;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  opacity:0.4;
+  filter:alpha(opacity=40);
+  display:none
+}
+
+.theme-popover {
+  z-index:99999;
+  position:fixed;
+  top:50%;
+  left:50%;
+  margin:-193px 0 0 -216px;
+  border-radius:8px;
+  background-color:#fff;
+  display:none;
+}
+
+.theme-popover * {
+  font-size: 12px;
+  box-sizing: content-box;
+}
+
+.theme-popover-close {
+  position: absolute;
+  right: -25px;
+  top: -25px;
+  width: 52px;
+  height: 52px;
+  background-image: url('http://www.weaver.com.cn/new/public/search/img/popover-close.png');
+  cursor: pointer;
+  z-index:3;
+}
+
+.theme-popover .tab_container {
+  float: left;
+  width: 100%;
+  position: relative;
+}
+
+.theme-popover .tabs {
+  margin: 0;
+  padding: 0;
+  float: left;
+  list-style: none;
+  height: 46px;
+  border: none;
+  width: 100%;
+}
+
+.theme-popover .tabs li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  height: 45px;
+  width: 50%;
+  line-height: 45px;
+  border: none;
+  margin-bottom: -1px;
+  background: #e0e4e8;
+  overflow: hidden;
+  position: relative;
+}
+
+.theme-popover .tabs .activeTab, .theme-popover .tabs .activeTab a:hover {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.theme-popover .tabs li a {
+  text-decoration: none;
+  color: #242424;
+  display: block;
+  padding: 0 20px;
+  outline: none;
+  text-align: center;
+}
+
+.theme-popover .tabs li a:hover {
+  background: #ccc;
+}
+
+.theme-popover .line {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.theme-popover .fields {
+  padding: 0 20px;
+  border: 1px solid #bfbfbf;
+  border-radius: 5px;
+  width: 345px;
+  margin: 35px auto;
+}
+
+.theme-popover .require {
+  color: red;
+  padding: 0 5px;
+}
+
+.theme-popover .field {
+  height: 45px;
+  line-height: 45px;
+  color: #888888;
+}
+
+.theme-popover .btn {
+  display: block;
+  border: none;
+  height: 45px;
+  width: 385px;
+  border-radius: 5px;
+  background-color: #49a7e0;
+  margin: 0 auto;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.theme-popover button, .theme-popover input[type="button"] {
+  box-sizing: border-box;
+}
+
+.theme-popover #getCode {
+  border: none;
+  height: 30px;
+  background-color: #49a7e0;
+  color: #ffffff;
+  float: right;
+  margin-top: 7px;
+  cursor: pointer;
+  line-height: normal;
+  outline: none;
+  font-size: 12px;
+  padding: 1px 6px;
+}
+
+.theme-popover .disable {
+  background-color: #d5d5d5 !important;
+  cursor: auto !important;
+}
+
+.theme-popover input[type=text] {
+  border: none;
+  outline: none;
+  background-color: #ffffff;
+  font-size: 15px;
+  line-height: normal;
+  width: 275px;
+}
+
+.theme-popover .page {
+  display: none;
+}
+
+.theme-popover .regPage {
+  display: block;
+  width:433px;
+  height:387px;
+}
+
+.theme-popover .wxQcode, .theme-popover .mobiQcode {
+  width: 735px;
+  height: 448px;
+}
+
+.theme-qcode {
+  margin-left: -367px;
+  margin-top: -224px;
+}
+
+/**政务的样式**/
+.thxMain {
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+}
+.closeBtn {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    left: 10%;
+    background: #d0d0d0;
+    padding: 7px 0;
+    width: 80%;
+    border-radius: 5px;
+    color: #5d5b5b;
+    cursor: pointer;
+}
+.closeBtn:hover {
+    background: #8482ef;
+    color: #fff;
+}
+.thxDiv {
+    font-size: 20px;
+    text-align: center;
+    padding-top: 130px;
+    font-weight: bold;
+}
+.thxText {
+    text-align: center;
+    line-height: 30px;
+}

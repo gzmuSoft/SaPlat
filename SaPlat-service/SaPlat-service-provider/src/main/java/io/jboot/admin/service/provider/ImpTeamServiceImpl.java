@@ -56,7 +56,7 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
     }
 
     @Override
-    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm1, FileForm fileForm2) {
+    public boolean save(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> scheduledPlans, FileForm fileForm1, FileForm fileForm2, FileForm fileForm3, Files files1, Files files2, Files files3) {
         return Db.tx(() -> {
             if (!evaScheme.save()) {
                 return false;
@@ -72,7 +72,16 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
             if (fileForm1 != null) {
                 fileForm1.setStatus(true);
                 fileForm1.setRecordID(evaScheme.getId());
-                if (!fileForm1.update()) {
+                if (!fileForm1.update() && !files1.update()) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            if (fileForm3 != null) {
+                fileForm3.setStatus(true);
+                fileForm3.setRecordID(evaScheme.getId());
+                if (!fileForm3.update() && !files3.update()) {
                     return false;
                 }
             } else {
@@ -81,7 +90,7 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
             if (fileForm2 != null) {
                 fileForm2.setStatus(true);
                 fileForm2.setRecordID(evaScheme.getId());
-                if (!fileForm2.update()) {
+                if (!fileForm2.update() && !files2.update()) {
                     return false;
                 }
             }
@@ -90,7 +99,7 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
     }
 
     @Override
-    public boolean update(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> newScheduledPlans, FileForm fileForm1, FileForm fileForm2) {
+    public boolean update(ImpTeam model, EvaScheme evaScheme, List<ScheduledPlan> newScheduledPlans, FileForm fileForm1, FileForm fileForm2, FileForm fileForm3, Files files1, Files files2, Files files3) {
         List<ScheduledPlan> oldScheduledPlan = scheduledPlanService.findListByEvaSchemeID(evaScheme.getId());
         List<FileForm> oldFileForm = fileFormService.findFirstByTableNameAndRecordID("eva_scheme", evaScheme.getId());
         return Db.tx(() -> {
@@ -120,16 +129,27 @@ public class ImpTeamServiceImpl extends JbootServiceBase<ImpTeam> implements Imp
             if (fileForm1 != null) {
                 fileForm1.setStatus(true);
                 fileForm1.setRecordID(evaScheme.getId());
-                if (!fileForm1.update()) {
+                if (!fileForm1.update() && !files1.update()) {
                     return false;
                 }
             } else {
                 return false;
             }
+
+            if (fileForm3 != null) {
+                fileForm3.setStatus(true);
+                fileForm3.setRecordID(evaScheme.getId());
+                if (!fileForm3.update() && !files3.update()) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
             if (fileForm2 != null) {
                 fileForm2.setStatus(true);
                 fileForm2.setRecordID(evaScheme.getId());
-                if (!fileForm2.update()) {
+                if (!fileForm2.update() && !files2.update()) {
                     return false;
                 }
             }

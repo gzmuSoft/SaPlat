@@ -23,10 +23,23 @@
     var projectID = '#(projectID)';
     var fileTypeID = null;
 
+
     var reloadTable;
 
 
     layui.use(['table', 'layer', 'upload', 'element'], function () {
+        var $ = layui.jquery;
+        function isLive(_fileTypeID,_projectID) {
+            $.post('#(ctxPath)/util/isLive?fileTypeID='+_fileTypeID+'&projectID='+_projectID, function (data) {
+                if(data.msg=="1") {
+                    $("button[fileTypeId*='" + _fileTypeID + "']").text("已上传(更改)");
+                    $("button[fileTypeId*='" + _fileTypeID + "']").attr("isUpdate", "1");
+                }
+            });
+
+        }
+        isLive("112",projectID);
+        isLive("113",projectID);
         var table = layui.table
             , layer = layui.layer
             , $ = layui.jquery
@@ -65,8 +78,8 @@
             cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
                 , {field: 'name', title: '名称', minWidth: 200, sort: true}
-                , {field: 'createTime', title: '上传时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             ,
             url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID
@@ -266,6 +279,47 @@
                 }
             }
         });
+
+        var tableIns_6 = table.render({
+            elem: '#dateTable_6'                  //指定原始表格元素选择器（推荐id选择器）
+            ,
+            id: 'dateTable_6'
+            ,
+            even: true //开启隔行背景
+            ,
+            size: 'sm' //小尺寸的表格
+            ,
+            height: '120'    //容器高度
+            ,
+            cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '上传时间', minWidth: 150, sort: true}
+                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            ,
+            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_6').attr("fileTypeId") + '&projectID=' + projectID
+            ,
+            method: 'get'
+            ,
+            request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,
+            page: false
+            ,
+            loading: true
+            ,
+            done: function (res, curr, count) {
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('.del').remove();
+                    $('.add').remove();
+                }
+            }
+        });
+
         table.on('tool(dateTable_1)', function (obj) {
             var data = obj.data;
             if (obj.event === 'del') {
@@ -390,6 +444,33 @@
                         success: function (data) {
                             layer.close(index);
                             reloadTable("dateTable_5");
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            } else if (obj.event === 'view') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                });
+            }
+        });
+
+        table.on('tool(dateTable_6)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/fileupload/delete',
+                        data: {
+                            id: data.id,
+                            projectID: projectID
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            layer.close(index);
+                            reloadTable("dateTable_6");
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -557,6 +638,105 @@
             }
         });
 
+        upload.render({
+            elem: '#add_6'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            //,multiple: true
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: "文档文件"
+            }, before: function (res) {
+                $('#upload-progress_6').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress_6').addClass('layui-hide');
+                if (res.code == 0) {
+                    postFileID('table_6', res.data.fileId, projectID);
+                    return true;
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    return false;
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress_6').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+        upload.render({
+            elem: '.upFile'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+            }, before: function (res) {
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress').addClass('layui-hide');
+                var ele = $(this)[0].item;
+                if (res.code == 0) {
+                    postUpdateFileID('EvaCover', res.data.fileId, projectID);
+                    $(ele.text("已上传（更改）"));
+                    $(ele.attr("isUpdate","1"));
+                }
+            }, error: function (index, upload) {
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+        upload.render({
+            elem: '.upFile_2'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+            }
+            , data: {
+                description: $('#modelName').text()
+            }, before: function (res) {
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                var ele = $(this)[0].item;
+                if (res.code == 0) {
+                    postUpdateFileID('EvaCover_2', res.data.fileId, projectID);
+                    $(ele.text("已上传（更改）"));
+                    $(ele.attr("isUpdate","1"));
+                }
+            }, error: function (index, upload) {
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+
+        $(".CoverSee").click(function () {
+            if ($("button[fileTypeId*='113']").attr("isUpdate")==="0") {
+                layer.msg("还没有上传文件哦")
+            } else {
+                pop_show('查看封面文件', '#(ctxPath)/util/projectFileView?fileTypeID=113&projectID='+projectID, '', '', function () {
+                });
+            }
+        });
+
+        $(".CoverSee_2").click(function () {
+            if ($("button[fileTypeId*='112']").attr("isUpdate")==="0") {
+                layer.msg("还没有上传文件哦")
+            } else {
+                pop_show('查看封面文件', '#(ctxPath)/util/projectFileView?fileTypeID=112&projectID='+projectID, '', '', function () {
+                });
+            }
+        });
+
         reloadTable = function (dateTable) {
             table.reload(dateTable, {
                 url: '#(ctxPath)/app/fileupload/tableData'
@@ -570,6 +750,8 @@
         if (flag === "true") {
             $('#del').remove();
             $('#add').remove();
+            $("button[fileTypeId*='112']").hide();
+            $("button[fileTypeId*='113']").hide();
         }
     });
 
@@ -592,20 +774,65 @@
         })
     }
 
+    function postUpdateFileID(_fileTypeID, _fileID, _projectID) {
+        id = _fileTypeID;
+        util.sendAjax({
+            type: 'POST',
+            url: '#(ctxPath)/app/fileupload/saveOrUpdate',
+            data: {
+                'fileProject.fileID': _fileID,
+                'fileProject.projectID': _projectID,
+                'fileProject.fileTypeID': $("#" + _fileTypeID).attr("fileTypeId")
+            },
+            loadFlag: true,
+            success: function (data) {
+            },
+            unSuccess: function (data) {
+            }
+        })
+    }
+
+
 
 </script>
 #end
 
 #define content()
 <div class="layui-fluid layui-form-pane">
+    <div class="layui-row x-center">
+        <div class="layui-col-md6">
+            <button type="button" class="upFile layui-btn layui-icon" fileTypeId="113"  id="EvaCover" isUpdate="0">上传文件</button>
+            <button type="button" class="layui-btn CoverSee">项目初始综合风险指数计算表</button>
+        </div>
+        <div class="layui-col-md6">
+            <button type="button" class="upFile_2 layui-btn layui-icon" fileTypeId="112" id="EvaCover_2" isUpdate="0">上传文件</button>
+            <button type="button" class="layui-btn CoverSee_2">主要单因素风险初始风险程度表</button>
+        </div>
+    </div>
+
     <div class="layui-row">
         <div class="layui-form-item">
-            <fieldset id="table_1" fileTypeId="24" name="风险权重" class="layui-elem-field">
+            <fieldset id="table_6" fileTypeId="110" name="初始风险权重" class="layui-elem-field">
+                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                     id="upload-progress_6" lay-filter="upload-progress">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+                <label class="layui-form-label">初始风险权重</label>
+                <div class="layui-btn-group">
+                    <button id="add_6" class="layui-btn layui-btn-small add">上传文件</button>
+                </div>
+                <table id="dateTable_6" lay-filter="dateTable_6"></table>
+            </fieldset>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-form-item">
+            <fieldset id="table_1" fileTypeId="24"  name="采取措施后风险权重" class="layui-elem-field">
                 <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
                      id="upload-progress_1" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">风险权重</label>
+                <label class="layui-form-label" style="width:150px">采取措施后风险权重</label>
                 <div class="layui-btn-group">
                     <button id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
                 </div>
@@ -620,7 +847,7 @@
                      id="upload-progress_2" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">风险等级</label>
+                <label class="layui-form-label">初始风险排查表</label>
                 <div class="layui-btn-group">
                     <button id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
                 </div>
@@ -636,7 +863,7 @@
                      id="upload-progress_3" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">排除风险</label>
+                <label class="layui-form-label">主要风险筛选表</label>
                 <div class="layui-btn-group">
                     <button id="add_3" class="layui-btn layui-btn-small  add">上传文件</button>
                 </div>
@@ -651,7 +878,7 @@
                      id="upload-progress_4" lay-filter="upload-progress">
                     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                 </div>
-                <label class="layui-form-label">风险结论</label>
+                <label class="layui-form-label">初始风险评估结论</label>
                 <div class="layui-btn-group">
                     <button id="add_4" class="layui-btn layui-btn-small  add">上传文件</button>
                 </div>
@@ -675,12 +902,9 @@
         </div>
     </div>
 </div>
-</div>
 
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="view" id="view">查看</a>
-
-
     <a class="layui-btn layui-btn-danger layui-btn-xs del" lay-event="del" id="del">删除</a>
 </script>
 

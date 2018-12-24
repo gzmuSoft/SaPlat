@@ -42,7 +42,7 @@
 <script type="text/html" id="riskTrack">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(d.ownType === 2){ }}
+    {{#  if(d.ownType === 0){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="toRisk">管理跟踪资料</a>
     #[[
@@ -57,20 +57,20 @@
 <script type="text/html" id="riskTrackEnd">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(d.ownType === 2 && !d.isUpload){ }}
+    {{#  if(d.ownType === 0 && !d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upLoad">上传跟踪移交表</a>
     #[[
-    {{# } else if(d.ownType === 2 && d.isUpload){ }}
+    {{# } else if(d.ownType === 0 && d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeFile">查看跟踪移交表</a>
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="upLoad">更新</a>
     #[[
-    {{# } else if(d.ownType != 2 && d.isUpload){ }}
+    {{# } else if(d.ownType != 0 && d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeFile">查看跟踪移交表</a>
     #[[
-    {{# } else if(d.ownType != 2 && !d.isUpload){ }}
+    {{# } else if(d.ownType != 0 && !d.isUpload){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm">暂无文件</a>
     #[[
@@ -100,7 +100,7 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-100'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
+
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 100, sort: true}
@@ -114,10 +114,7 @@
                 , {title: '跟踪移交', width: 200, align: 'center', toolbar: '#riskTrackEnd'}
                 , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , where: {
-                ownType:0
-            }
-            , url: '#(ctxPath)/app/track/projectRiskListTableData'
+            , url: '#(ctxPath)/app/track/projectRiskListTableData?ownType=0'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -137,15 +134,15 @@
                 window.location.href = '#(ctxPath)/app/track/toRiskTrackManagement?projectID=' + data.id;
             } else if (obj.event === 'upLoad') {
                 pop_show('上传跟踪资料移交表', '#(ctxPath)/app/project/fileUploading?id=' + riskFileTypeID + '&projectId=' + data.id, '500', '300', function () {
-                    reloadTable("", own);
+                    reloadTable($('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'seeFile') {
-                pop_show('查看跟踪资料移交表', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
-                    reloadTable("", own);
+                pop_show_full('查看跟踪资料移交表', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {
+                    reloadTable($('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
-                    reloadTable("", own);
+                pop_show_full('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {
+                    reloadTable($('#projectType').val(), $('#ownType').val());
                 });
             }
         });

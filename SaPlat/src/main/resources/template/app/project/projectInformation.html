@@ -45,7 +45,7 @@
                 <label for="project.amount" style="padding-top: 5px;">预计金额</label>
                 <span>
                 <input type="number" id="project.amount" class="project money" name="project.amount"
-                       style="width:370px;margin-right:  0px;"/>
+                       style="width:370px; margin-right:0px;"/>
                 </span>
                 <div id="digitsTip"></div>
                 <!--<select id="units" name="units"-->
@@ -155,17 +155,17 @@
                 #[[
                 {{#  if(!d.isUpLoad){ }}
                 ]]#
-                    #[[
-                    {{#  if(d.status===1){ }}
-                    ]]#
-                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upload">上传(必上传)</a>
-                    #[[
-                    {{# } else { }}
-                    ]]#
-                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传(非必上传)</a>
-                    #[[
-                    {{#  } }}
-                    ]]#
+                #[[
+                {{#  if(d.status===1){ }}
+                ]]#
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upload">上传(必上传)</a>
+                #[[
+                {{# } else { }}
+                ]]#
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upload">上传(非必上传)</a>
+                #[[
+                {{#  } }}
+                ]]#
                 #[[
                 {{# } else if(d.isUpLoad){ }}
                 ]]#
@@ -251,11 +251,11 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-150'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
+
             , cols: [[                  //标题栏
                 {field: 'id', title: '编号', align: 'center', width: 100}
-                , {field: 'name', title: '需上传的文件', align: 'center', width: 600}
-                , {title: '操作', minWidth: 240, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'name', title: '需上传的文件', align: 'center', minWidth: 600}
+                , {title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , method: 'post'
             , request: {
@@ -407,8 +407,11 @@
                         data.projectId = projectId;
                         $.getJSON(
                             "#(ctxPath)/app/project/projectUploading", data,
-                            function (res) {
-                                projectId = res.projectId;
+                            function (data) {
+                                projectId = data.projectId;
+                                if (data.status === false) {
+                                    layer.msg("该项目建立期间，同名项目已被建立，请重新建立项目，否则将会建立失败");
+                                }
                             });
                     } else if (saveOrUpdate === 0) {
                         data.projectId = projectId;
@@ -532,7 +535,7 @@
         });
     });
 
-    $('.money').on('input propertychange', function () {
+    $('.money').bind('input propertychange', function () {
         var data = $('.money').val();
         var str = digitsConversion(data);
         var bid = parseInt(Math.random() * 100000);

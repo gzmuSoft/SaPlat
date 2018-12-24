@@ -1,0 +1,48 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+    .title {
+        color: #009688;
+        font-weight: 700;
+        font-family: "微软雅黑";
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer,
+            $ = layui.jquery;
+        $('#initial').click(function () {
+            window.location.href = "#(ctxPath)/app/information/toRiskExpertise?projectID=" + "#(projectId)" + "&type=0";
+        });
+        $('#result').click(function () {
+            window.location.href = "#(ctxPath)/app/information/toRiskExpertise?projectID=" + "#(projectId)" + "&type=1";
+        });
+
+        var flag = '#(flag)';
+        if (flag === "true") {
+            $('#initial').remove();
+            $('#result').remove();
+            $('input').addClass('layui-disabled').attr("disabled", "disabled");
+        }
+    });
+</script>
+#end
+
+#define content()
+<div class="layui-row">
+    <br>
+    <h2 class="title" align="center">添加社会稳定风险评估调查问卷表</h2><br>
+    <br>
+    <div style="width: 580px;height: auto;margin-top: 100px;margin-left: 39%;">
+        <button id="initial" class="layui-btn layui-btn-radius layui-btn-lg">添加初始风险因素及其风险程度</button>
+    </div>
+    <div style="width: 580px;height: auto;margin-top: 20px;margin-left: 38%;">
+        <button id="result" class="layui-btn layui-btn-radius layui-btn-lg">添加採取措施风险因素及其风险程度</button>
+    </div>
+</div>
+#end

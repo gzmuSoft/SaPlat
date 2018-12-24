@@ -1,0 +1,131 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+        // 操作对象
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.jquery;
+
+        form.on('submit(sub)', function (data) {
+
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/risk_point/postUpdate',
+                data: $('#addForm').serialize(),
+                loadFlag: true,
+                success: function (data) {
+                    pop_close();
+                }
+            });
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+#end
+
+#define content()
+<div class="x-body">
+    <form id="addForm" class="layui-form" action="">
+        <input type="hidden" name="model.id" value="#(model.id)">
+        <div class="layui-collapse" lay-filter="test">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title"><font color="red">#(pModel.name)</font>——项目信息</h2>
+                <div class="layui-colla-content" style="background-color: #f8f8f8">
+
+                        <div class="layui-row layui-col-space10 layui-form-item">
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">项目名称</label>
+                                <div class="layui-input-block" style="width:300px;">
+                                    <input type="text" value="#(pModel.name)" autocomplete="off" class="layui-input"
+                                           readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">项目类型</label>
+                                <div class="layui-input-block">
+                                    <input type="text" value="#(pModel.typeName)" autocomplete="off" class="layui-input"
+                                           readonly/>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">预计金额</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" value="#number(pModel.amount, ',###')" autocomplete="off"
+                                           class="layui-input" style="width: 170px" readonly/>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux" style="margin-left: -25px">（单位：元）</div>
+                            </div>
+                        </div>
+
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">地址</label>
+                                <div class="layui-input-block" style="width:975px;">
+                                    <input type="text" value="#(pModel.site)" autocomplete="off" class="layui-input"
+                                           readonly/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-row layui-col-space10 layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">立项部门</label>
+                                <div class="layui-input-block" style="width:975px;">
+                                    <input type="text" value="#(organization.name)" autocomplete="off" class="layui-input"
+                                           readonly/>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>风险点</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.riskPoint" placeholder="风险点" class="layui-input" value="#(model.riskPoint)" required
+                       lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>防化措施摘要</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.preventionMeasuresSummary" placeholder="防化措施摘要" class="layui-input" value="#(model.preventionMeasuresSummary)" required
+                       lay-verify="required" style="height: 120px;" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>具体防化措施</label>
+            <div class="layui-input-block">
+                <input type="text" name="model.preventionMeasures" placeholder="具体防化措施" class="layui-input" value="#(model.preventionMeasures)" required
+                       lay-verify="required" style="height: 235px;" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require-mark">*</em>排序</label>
+            <div class="layui-input-block">
+                <input id="sort" type="text" name="model.sort" placeholder="排序" class="layui-input"
+                       value="#(model.sort)" required lay-verify="required" autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="sub" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+#end

@@ -1,4 +1,4 @@
-#include("/template/common/layout/_page_layout.html")
+#include("/template/common/layout/_page_layout_all.html")
 #@layout()
 
 #define css()
@@ -12,28 +12,262 @@
 </style>
 #end
 
+#define content()
+<br>
+<h2 class="title" align="center">社会稳定风险评估调查分析表</h2><br>
+<hr align="center" size="2" width="100%"/>
+<div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress"
+     lay-filter="upload-progress">
+    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+</div>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <div class="layui-tab-item layui-show">
+        <form class="layui-form" id="Form" onkeydown="if(event.keyCode==13)return false;">
+            <input class="layui-hide" value="#(diagnoses.id)" name="diagnoses.id">
+            <div style="padding: 20px; background-color: #F2F2F2;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header">项目基本信息</div>
+                            <div class="layui-card-body">
+                                <div class="layui-row">
+                                    <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:100px;">评估项目名称：</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="diagnoses.name" autocomplete="off"
+                                                       placeholder="系统读取"
+                                                       value="#(project.name)" class="layui-input" readonly="readonly"
+                                                       style="width:350px; position: absolute; left: 20px;">
+                                                <input type="text" name="diagnoses.project" autocomplete="off"
+                                                       placeholder="系统读取"
+                                                       value="#(project.id)" class="layui-input layui-hide"
+                                                       style="width:400px;position: absolute; left: 20px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md6">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:100px;">负责评估机构：</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" autocomplete="off" placeholder="系统读取"
+                                                       value="#(organization.name)" class="layui-input"
+                                                       readonly="readonly"
+                                                       style="width:350px; position: absolute; left: 20px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:100px;">项目地址：</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="diagnoses.project.site" autocomplete="off"
+                                                       placeholder="系统读取"
+                                                       value="#(project.site)" class="layui-input" readonly="readonly"
+                                                       style="width:855px; position: absolute; left: 20px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header">调查基本信息</div>
+                            <div class="layui-card-body">
+                                <div class="layui-row">
+                                    <div class="layui-col-md4">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label"
+                                                   style="width:100px;margin-left: 18px;">调查方法：</label>
+                                            <div class="layui-input-inline">
+                                                <label>
+                                                    <select lay-verify="required" name="diagnoses.surveyMethod"
+                                                            id="surveyMethod">
+                                                        <option value="">请选择</option>
+                                                        <option value="全面调查">全面调查</option>
+                                                        <option value="抽样调查">抽样调查</option>
+                                                        <option value="个别调查">个别调查</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md5">
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label" style="width:100px;">调查抽样率：</label>
+                                            <div class="layui-input-block">
+                                                <input type="number" lay-verify="required|sampleRateNumber"
+                                                       class="layui-input"
+                                                       onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                                                       onblur="this.v();"
+                                                       name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)"
+                                                       style="width:190px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label"
+                                                   style="width:100px;margin-left: 18px;">调查方式：</label>
+                                            <input type="checkbox" name="surveyWays" value="走访" title="走访"
+                                                   style="margin-left: 135px;">
+                                            <input type="checkbox" name="surveyWays" value="座谈" title="座谈"
+                                                   style="margin-left: 135px;">
+                                            <input type="checkbox" name="surveyWays" value="听证会" title="听证会"
+                                                   style="margin-left: 135px;">
+                                            <input type="checkbox" name="surveyWays" value="电话调查" title="电话调查"
+                                                   style="margin-left: 135px;">
+                                            <input type="checkbox" name="surveyWays" value="邮件询问" title="邮件询问"
+                                                   style="margin-left: 135px;">
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md12">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="width:120px;">现场人员安排：</label>
+                                            <div class="layui-input-block">
+                                                #for (invTeamID : invTeamMap.keySet())
+                                                <input type="checkbox" name="staffArrangements" value="#(invTeamID)"
+                                                       title="#(invTeamMap[invTeamID])" style="margin-left: 13px;">
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"
+                                               style="width:100px;margin-left: 18px; ">调查范围：</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off"
+                                                   placeholder="系统读取"
+                                                   value="#(files.id)" class="layui-input layui-hide"
+                                                   style="margin-left: 135px;">
+                                            <a class="layui-btn" id="media" fileId="#(files.id)">点击查看</a>
+                                            <button id="pdf"></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label"
+                                               style="width:100px;margin-left: 18px;">调查报告：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                        <textarea id="investigationReport" lay-verify="investigationReportedit" placeholder="请填写"
+                                  name="diagnoses.investigationReport"
+                                  class="layui-textarea">#(diagnoses.investigationReport)</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label"
+                                               style="width:100px;margin-left: 18px;">问卷调查设计：</label>
+                                        <div class="layui-input-block" style="margin-left:148px;width:935px;">
+                                            <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
+                                                      lay-verify="surveyDesignedit" name="diagnoses.surveyDesign">
+                                                   #(diagnoses.surveyDesign)
+                                            </textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label"
+                                               style="width:100px;margin-left: 18px;">调查群体：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                        <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写"
+                                  name="diagnoses.surveyGroup"
+                                  class="layui-textarea">#(diagnoses.surveyGroup)</textarea>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label"
+                                               style="width:100px;margin-left: 18px;">主要风险点：</label>
+                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
+                                        <textarea id="mainRiskPoint" lay-verify="mainRiskPointedit" placeholder="请填写"
+                                                  name="diagnoses.mainRiskPoint"
+                                                  class="layui-textarea">#(diagnoses.mainRiskPoint)</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-row" style="margin-bottom: 5px">
+                                        <label class="layui-form-label x-center"
+                                               style="width: 180px">问卷调查情况统计及分析内容</label>
+                                        <button type="button" class="upFile layui-btn layui-icon" id="EvaCover"
+                                                style="background-color: red">上传文件
+                                        </button>
+                                        <button type="button" class="layui-btn" id="CoverSee">查看</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center">
+                        <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
+                        <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+#end
+
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'layedit'], function () {
+    layui.use(['form', 'layer', 'layedit', 'element', 'table', 'laydate', 'upload'], function () {
         var form = layui.form
             , layedit = layui.layedit
+            , layer = layui.layer
+            , upload = layui.upload
+            , element = layui.element
             , $ = layui.jquery;
+        var file = "#(diagnoses.remark)";
+        if (!isNaN(file)) {
+            $('#EvaCover').css("background", "#009688");
+        }
         //监听提交
         form.on('submit(demo1)', function (data) {
+            var serialize = $('#Form').serialize();
+            serialize += "&file=" + file;
+            var surveyGroup = getText("surveyGroup");
+            var surveyDesign = getText("surveyDesign");
+            var investigationReport = getText("investigationReport");
+            var mainRiskPointText = getText("mainRiskPoint");
+            var serializeText = "diagnoses.surveyGroup=" + surveyGroup + "&diagnoses.surveyDesign=" + surveyDesign.trim()
+                + "&diagnoses.investigationReport=" + investigationReport + "&diagnoses.mainRiskPoint="
+                + mainRiskPointText + "&";
+            serializeText = encodeURI(serializeText);
+            serialize = serializeText + serialize;
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/information/diagnosesSave',
-                data: $('#Form').serialize(),
+                data: serialize,
                 loadFlag: true,
                 success: function (data) {
                     window.location.href = document.referrer;
                 }
             });
         });
+
+        function getText(ele) {
+            return $("iframe[textarea='" + ele + "']").contents().find("body").text();
+        }
+
         var element = '#(diagnoses.toJson())';
+        console.log(element);
         var diagnoses = JSON.parse(element);
         $("#surveyGroup").text(diagnoses.surveyGroup).css("display", "").removeClass("layui-hide");
         $("#surveyDesign").text(diagnoses.surveyDesign).css("display", "").removeClass("layui-hide");
+        $("#investigationReport").text(diagnoses.investigationReport).css("display", "").removeClass("layui-hide");
+        $("#mainRiskPoint").text(diagnoses.mainRiskPoint).css("display", "").removeClass("layui-hide");
         $("#surveyMethod").val(diagnoses.surveyMethod);
         if (diagnoses.surveyWay != null) {
             $("input[name='surveyWays']").each(function () {
@@ -61,6 +295,16 @@
             tool: ['left', 'center', 'right'],
             height: 100
         });
+        //自定义工具栏
+        var investigationReportedit = layedit.build('investigationReport', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
+        //自定义工具栏
+        var mainRiskPointedit = layedit.build('mainRiskPoint', {
+            tool: ['left', 'center', 'right'],
+            height: 100
+        });
 
         var flag = '#(flag)';
         if (flag === "true") {
@@ -69,203 +313,110 @@
         }
 
         form.verify({
-            surveyDesignedit: function (vale) {
+            surveyDesignedit: function (value) {
                 layedit.sync(surveyDesignedit); //同步编辑内容到textarea #10line
                 if (layedit.getContent(surveyDesignedit).length == 0) {
                     return "问卷调查设计不能为空";
                 }
             },
 
-            surveyGroupedit: function (vale) {
+            surveyGroupedit: function (value) {
                 layedit.sync(surveyGroupedit); //同步编辑内容到textarea #10line
                 if (layedit.getContent(surveyGroupedit).length == 0) {
                     return "调查群体不能为空";
                 }
             },
-            sampleRateNumber: function (vale) {
-                if (vale >= 100) {
+
+            investigationReportedit: function (value) {
+                layedit.sync(investigationReportedit); //同步编辑内容到textarea #10line
+                if (layedit.getContent(investigationReportedit).length == 0) {
+                    return "问卷调查设计不能为空";
+                }
+            },
+
+            mainRiskPointedit: function (value) {
+                layedit.sync(mainRiskPointedit); //同步编辑内容到textarea #10line
+                if (layedit.getContent(mainRiskPointedit).length == 0) {
+                    return "问卷调查设计不能为空";
+                }
+            },
+            sampleRateNumber: function (value) {
+                if (value >= 100) {
                     return "数值不能大于100"
                 }
-
+                else if (value < 0) {
+                    return "数值不能为负数"
+                }
             }
+        });
+        //创建监听函数
+        var xhrOnProgress = function (fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+            //使用闭包实现监听绑
+            return function () {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
+                    return xhr;
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        };
 
+        /**
+         * 文件查看
+         */
+        $("#CoverSee").click(function () {
+            if (file === null || file === "") {
+                layer.msg("您还没有上传哦")
+            } else {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + file, '', '', function () {
+                });
+            }
+        });
 
+        /**
+         * 文件上传
+         */
+        upload.render({
+            elem: '.upFile'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: "问卷调查情况统计及分析内容"
+            }, before: function (res) {
+                $('#upload-progress').removeClass('layui-hide');
+            }, done: function (res) {
+                $('#upload-progress').addClass('layui-hide');
+                if (res.code == 0) {
+                    file = res.data.fileId;
+                    $('#EvaCover').css("background", "#009688");
+                } else if (res.code == 1) {
+                    return false;
+                }
+            }, error: function (index, upload) {
+                $('#upload-progress').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
         });
     });
 
-    function pdf(element) {
-        element.media({
-            width: 800
-            , height: 600
-            , src: element.attr('href')
-        });
-    }
-
     $("#media").click(function () {
-        $(this).css('display', 'none');
-        pdf($("a.media"));
+        pop_show('查看调查范围', '#(ctxPath)/util/pdfView?fileID=' + $(this).attr('fileId'), '', '', function () {
+        });
     });
 
     $("#reset").click(function () {
         history.go(-1);
     });
 </script>
-#end
-
-#define content()
-<br>
-<h2 class="title" align="center">社会稳定风险评估调查分析表</h2><br>
-<hr align="center" size="2" width="100%"/>
-
-<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-    <!-- <ul class="layui-tab-title"> -->
-    <!-- <li class="layui-this">项目基本信息</li> -->
-    <!-- <li>问卷基本信息</li> -->
-    <!-- <li>调查内容</li> -->
-
-    <!-- </ul> -->
-
-
-    <div class="layui-tab-item layui-show">
-        <form class="layui-form" id="Form">
-            <input class="layui-hide" value="#(diagnoses.id)" name="diagnoses.id">
-            <div style="padding: 20px; background-color: #F2F2F2;">
-                <div class="layui-row layui-col-space15">
-                    <div class="layui-col-md12">
-                        <div class="layui-card">
-                            <div class="layui-card-header">项目基本信息</div>
-                            <div class="layui-card-body">
-                                <div class="layui-row">
-                                    <div class="layui-col-md6">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:100px;">评估项目名称：</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="diagnoses.name" autocomplete="off" placeholder="系统读取"
-                                                       value="#(project.name)" class="layui-input" readonly="readonly" style="width:350px; position: absolute; left: 20px;">
-                                                <input type="text" name="diagnoses.project" autocomplete="off" placeholder="系统读取"
-                                                       value="#(project.id)" class="layui-input layui-hide" style="width:400px;position: absolute; left: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md6">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:100px;">负责评估机构：</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" autocomplete="off" placeholder="系统读取"
-                                                       value="#(organization.name)" class="layui-input" readonly="readonly" style="width:350px; position: absolute; left: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md12">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:100px;">项目地址：</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="diagnoses.project.site" autocomplete="off" placeholder="系统读取"
-                                                       value="#(project.site)" class="layui-input" readonly="readonly" style="width:855px; position: absolute; left: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-row layui-col-space15">
-                    <div class="layui-col-md12">
-                        <div class="layui-card">
-                            <div class="layui-card-header">调查基本信息</div>
-                            <div class="layui-card-body">
-                                <div class="layui-row">
-                                    <div class="layui-col-md4">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:100px;margin-left: 18px;">调查方法：</label>
-                                            <div class="layui-input-inline">
-                                                <label>
-                                                    <select lay-verify="required" name="diagnoses.surveyMethod" id="surveyMethod">
-                                                        <option value="">请选择</option>
-                                                        <option value="全面调查">全面调查</option>
-                                                        <option value="抽样调查">抽样调查</option>
-                                                        <option value="个别调查">个别调查</option>
-                                                    </select>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md5">
-                                        <div class="layui-form-item layui-form-text" >
-                                            <label class="layui-form-label" style="width:100px;">调查抽样率：</label>
-                                            <div class="layui-input-block">
-                                                <input type="number" lay-verify="required|sampleRateNumber" class="layui-input"
-                                                       name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)" min=0 max=100 style="width:190px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md12">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:100px;margin-left: 18px;" >调查方式：</label>
-                                            <input type="checkbox" name="surveyWays" value="走访" title="走访" style="margin-left: 135px;">
-                                            <input type="checkbox" name="surveyWays" value="座谈" title="座谈" style="margin-left: 135px;">
-                                            <input type="checkbox" name="surveyWays" value="听证会" title="听证会" style="margin-left: 135px;">
-                                            <input type="checkbox" name="surveyWays" value="电话调查" title="电话调查" style="margin-left: 135px;">
-                                            <input type="checkbox" name="surveyWays" value="邮件询问" title="邮件询问" style="margin-left: 135px;">
-                                        </div>
-                                    </div>
-                                    <div class="layui-col-md12">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width:120px;">现场人员安排：</label>
-                                            <div class="layui-input-block">
-                                                #for (invTeamID : invTeamMap.keySet())
-                                                <input type="checkbox" name="staffArrangements" value="#(invTeamID)"
-                                                       title="#(invTeamMap[invTeamID])" style="margin-left: 13px;">
-                                                #end
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width:100px;margin-left: 18px; ">调查范围：</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="diagnoses.surveyFieldFileID" autocomplete="off" placeholder="系统读取"
-                                                   value="#(files.id)" class="layui-input layui-hide" style="margin-left: 135px;">
-                                            <a class="media" href="#(files.path)" readonly="readonly"></a>
-                                            <a class="layui-btn" id="media">点击查看</a>
-                                            <button id="pdf"></button>
-                                        </div>
-                                    </div>
-
-                                    <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">调查群体：</label>
-                                        <div class="layui-input-block " style="margin-left:148px;width: 935px;">
-                        <textarea id="surveyGroup" lay-verify="surveyGroupedit" placeholder="请填写"
-                                  name="diagnoses.surveyGroup" class="layui-textarea"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label" style="width:100px;margin-left: 18px;">问卷调查设计：</label>
-                                        <div class="layui-input-block" style="margin-left:148px;width:935px;">
-                        <textarea id="surveyDesign" placeholder="请填写" class="layui-textarea"
-                                  lay-verify="surveyDesignedit" name="diagnoses.surveyDesign"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-<div style="text-align: center">
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
-            <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>
-        </div>
-    </div>
-</div>
 #end

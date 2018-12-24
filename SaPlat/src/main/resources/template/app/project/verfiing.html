@@ -9,9 +9,9 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">立项审核中的项目</legend>
-    </fieldset>
+    <!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px; color: #009688">-->
+        <!--<legend style="font-size: 20px;font-weight: 500;">立项审核中的项目</legend>-->
+    <!--</fieldset>-->
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -39,7 +39,7 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-120'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
+
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 140,sort: true}

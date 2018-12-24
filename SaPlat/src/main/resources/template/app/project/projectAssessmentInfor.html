@@ -44,10 +44,9 @@
             <label class="layui-form-label" for="project.amount"><em class="require-mark">*</em>预计金额</label>
             <div class="layui-input-inline" style="width: 250px">
                 <input type="number" autocomplete="off" id="project.amount" name="project.amount"
-                       value="#number(project.amount, '#')" class="layui-input money"lay-verify="required">
+                       value="#number(project.amount, '#')" class="layui-input money"lay-verify="required" />
             </div>
             <div id="digitsTip"></div>
-            <div class="layui-form-mid layui-word-aux"></div>
         </div>
     </div>
 
@@ -173,7 +172,8 @@
 <!--<script type="text/javascript" src="/static/js/comm_notbar.js"></script>-->
 <!--<script type="text/javascript" src="/static/js/utils.js"></script>-->
 <!--<script type="text/javascript" src="/static/js/ztree/jquery-1.4.4.min.js"></script>-->
-<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>
+<!--showMoney.js用于显示蓝色的金额提示-->
+<!--<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>-->
 <!--js start-->
 #define js()
 <script>
@@ -199,11 +199,11 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: '500'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
+
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '需上传的文件', minWidth: 600}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/fileTable?id=' + projectID + '&paTypeID=' + paTypeID
             , method: 'get'
@@ -315,7 +315,7 @@
         history.go(-1);
     });
 
-    $('.money').on('input propertychange', function() {
+    $('.money').bind('input propertychange', function() {
         var data = $('.money').val();
         var str = digitsConversion(data);
         var bid = parseInt(Math.random()*100000);
@@ -329,7 +329,7 @@
         w = $(this).width();
         $(".cont").html(str);
         $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
+        $btip.css({ "left":offset.left-880 ,  "top":offset.top+h-40}).show();
     });
 
     $('.money').live("mousemove",function(){

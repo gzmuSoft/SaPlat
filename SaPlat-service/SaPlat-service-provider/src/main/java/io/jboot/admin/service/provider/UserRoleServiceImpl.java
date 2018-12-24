@@ -44,6 +44,14 @@ public class UserRoleServiceImpl extends JbootServiceBase<UserRole> implements U
     }
 
     @Override
+    public List<UserRole> findListByUserIDAndIsEnable(Long userId,boolean isEnable){
+        Columns columns = Columns.create();
+        columns.eq("userID", userId);
+        columns.eq("isEnable", isEnable);
+        return DAO.findListByColumns(columns);
+    }
+
+    @Override
     public List<UserRole> findAll() {
         return DAO.findAll();
     }

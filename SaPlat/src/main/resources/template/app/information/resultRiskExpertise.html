@@ -1,0 +1,381 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style type="text/css">
+</style>
+#end
+
+#define content()
+<br>
+<h2 class="title" align="center" style="color: #00a89a">项目採取措施后风险概率及影响程度专家意见统计表</h2><br>
+<hr align="center" size="2" width="100%"/>
+<div class="layui-row">
+    <form class="layui-form" style="float: left;">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="expertId">专家团体</label>
+            <div class="layui-input-inline">
+                <select name="expertId" id="expertId">
+                    <option value="">请选择</option>
+                    #for(expertGroup : expertGroups)
+                    <option value="#(expertGroup.id)">#(expertGroup.name)</option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </form>
+    <div class="layui-btn-group" style="float: right;">
+        <button id="add" class="layui-btn layui-btn-small">添加</button>
+    </div>
+    <div class="layui-row">
+        <table style="align-content: center;" id="dateTable" lay-filter="dateTable"></table>
+    </div>
+
+    <div class="layui-input-block x-center">
+        <button id="submit" class="layui-btn layui-btn-small ">保存</button>
+        &nbsp;&nbsp;
+        <button id="ret" class="layui-btn layui-btn-small ">返回</button>
+    </div>
+
+
+</div>
+
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>
+</script>
+#end
+
+#define js()
+<script type="text/javascript">
+
+    layui.use(['table', 'layer', 'form','element'], function () {
+        var table = layui.table,
+            layer = layui.layer,
+            $ = layui.jquery,
+            element = layui.element,
+            form = layui.form;
+
+        // 审核通过的表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '400'    //容器高度
+
+            , cols: [
+                [                  //标题栏
+                    {field: '0', title: '序号', align: 'center', width: 50, rowspan: 3, type: 'numbers', unresize: 'true'}
+                    , {field: 'riskFactor', title: '风险因素', align: 'center', width: 150, rowspan: 3, edit: true}
+                    , {title: '专家意见（风险概率）', align: 'center', width: 700, colspan: 5, edit: true}
+                    , {
+                    field: 'riskProbability',
+                    title: '风险概率(P)单位(%)',
+                    align: 'center',
+                    width: 150,
+                    rowspan: 3,
+                    edit: true
+                }
+                    , {title: '专家意见（影响程度）', align: 'center', width: 700, colspan: 5, edit: true}
+                    , {
+                    field: 'incidenceProbability',
+                    title: '影响程度概率(Q)单位(%)',
+                    align: 'center',
+                    width: 170,
+                    rowspan: 3,
+                    edit: true
+                }
+                    , {field: 'action', title: '操作', width: 80, align: 'center', rowspan: 3, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                ],
+                [{title: '很高', width: 140, align: 'center'}
+                    , {title: '较高', width: 140, align: 'center'}
+                    , {title: '中等', width: 140, align: 'center'}
+                    , {title: '较低', width: 140, align: 'center'}
+                    , {title: '很低', width: 140, align: 'center'}
+                    , {title: '严重', width: 140, align: 'center'}
+                    , {title: '较大', width: 140, align: 'center'}
+                    , {title: '中等', width: 140, align: 'center'}
+                    , {title: '较小', width: 140, align: 'center'}
+                    , {title: '可忽略', width: 140, align: 'center'}
+                ],
+                [{field: 'riskExpertise', title: '常常会发生', width: 140, align: 'center', event: 'riskExpertise'}
+                    , {field: 'riskExpertise', title: '较多情况下会发生', width: 140, align: 'center', event: 'riskExpertise'}
+                    , {field: 'riskExpertise', title: '某些情况下发生', width: 140, align: 'center', event: 'riskExpertise'}
+                    , {field: 'riskExpertise', title: '极少情况下才发生', width: 140, align: 'center', event: 'riskExpertise'}
+                    , {field: 'riskExpertise', title: '一般情况下不会发生', width: 140, align: 'center', event: 'riskExpertise'}
+                    , {
+                    field: 'incidenceExpertise',
+                    title: '影响涉及面很大',
+                    width: 140,
+                    align: 'center',
+                    event: 'incidenceExpertise'
+                }
+                    , {
+                    field: 'incidenceExpertise',
+                    title: '有较多影响',
+                    width: 140,
+                    align: 'center',
+                    event: 'incidenceExpertise'
+                }
+                    , {
+                    field: 'incidenceExpertise',
+                    title: '某些情况下有影响',
+                    width: 140,
+                    align: 'center',
+                    event: 'incidenceExpertise'
+                }
+                    , {
+                    field: 'incidenceExpertise',
+                    title: '有较小影响',
+                    width: 140,
+                    align: 'center',
+                    event: 'incidenceExpertise'
+                }
+                    , {
+                    field: 'incidenceExpertise',
+                    title: '无影响',
+                    width: 140,
+                    align: 'center',
+                    event: 'incidenceExpertise'
+                }
+                ]
+            ]
+            , data: [{
+                riskFactor: "",
+                riskExpertise: "",
+                riskProbability: "",
+                incidenceExpertise: "",
+                incidenceProbability: ""
+            }]// 默认存在第一行
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
+                /**
+                 * 解决多级表头带来的多余列问题
+                 **/
+                var x = 0;
+                $('.layui-table-body').find('td').each(function (index, element) {
+                    var res = $(this).attr("data-field");
+                    if ((res == 0 && x != 0) || (res > 0)) {
+                        $(this).css("display", "none");
+                    }
+                    if (res == 0) {
+                        x++;
+                    }
+                });
+
+
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('#submit').remove();
+                    $('#del').remove();
+                    $('input').addClass('layui-disabled').attr("disabled", "disabled");
+                }
+
+                /**
+                 * 解决多级表头列的加载顺序恶心人的问题
+                 **/
+                $('td[data-field="riskProbability"]').first().insertAfter($('td[data-field="riskExpertise"]').last());
+
+
+                $('td[data-field="incidenceProbability"]').each(function (index, ele) {
+                    $(this).clone(true).appendTo($(this).parent());
+                    $(this).remove();
+                });
+
+                $('td[data-field="action"]').each(function (index, ele) {
+                    $(this).clone(true).appendTo($(this).parent());
+                    $(this).remove();
+                });
+            }
+        });
+
+        /**
+         * 表格添加事件
+         */
+        var index = table.cache.dateTable.length;
+        $('#add').click(function (e) {
+            var tr = $('<tr data-index="' + index + '"></tr>');
+            var td1 = $('<td data-field="0" align="center"><div class="layui-table-cell laytable-cell-1-0 layuitable-cell-numbers">' + (index + 1) + '</div></td>');
+            var td2 = $('<td data-field="riskFactor" data-edit="true" align="center" ><div class="layui-table-cell laytable-cell-1-riskFactor"></div></td>');
+            var td3 = $('<td data-field="riskExpertise" lay-event="riskExpertise" align="center"><div class="layui-table-cell laytable-cell-1-riskExpertise"></div></td>');
+            var td4 = $('<td data-field="riskExpertise" lay-event="riskExpertise" align="center"><div class="layui-table-cell laytable-cell-1-riskExpertise"></div></td>');
+            var td5 = $('<td data-field="riskExpertise" lay-event="riskExpertise" align="center"><div class="layui-table-cell laytable-cell-1-riskExpertise"></div></td>');
+            var td6 = $('<td data-field="riskExpertise" lay-event="riskExpertise" align="center"><div class="layui-table-cell laytable-cell-1-riskExpertise"></div></td>');
+            var td7 = $('<td data-field="riskExpertise" lay-event="riskExpertise" align="center"><div class="layui-table-cell laytable-cell-1-riskExpertise"></div></td>');
+            var td8 = $('<td data-field="riskProbability" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-riskProbability"></div></td>');
+            var td9 = $('<td data-field="incidenceExpertise" lay-event="incidenceExpertise" align="center"><div class="layui-table-cell laytable-cell-1-incidenceExpertise"></div></td>');
+            var td10 = $('<td data-field="incidenceExpertise" lay-event="incidenceExpertise" align="center"><div class="layui-table-cell laytable-cell-1-incidenceExpertise"></div></td>');
+            var td11 = $('<td data-field="incidenceExpertise" lay-event="incidenceExpertise" align="center"><div class="layui-table-cell laytable-cell-1-incidenceExpertise"></div></td>');
+            var td12 = $('<td data-field="incidenceExpertise" lay-event="incidenceExpertise" align="center"><div class="layui-table-cell laytable-cell-1-incidenceExpertise"></div></td>');
+            var td13 = $('<td data-field="incidenceExpertise" lay-event="incidenceExpertise" align="center"><div class="layui-table-cell laytable-cell-1-incidenceExpertise"></div></td>');
+            var td14 = $('<td data-field="incidenceProbability" data-edit="true" align="center"><div class="layui-table-cell laytable-cell-1-incidenceProbability"></div></td>');
+            var td15 = $('<td data-field="action" align="center" data-off="true"><div class="layui-table-cell laytable-cell-1-action">' +
+                '<a class="layui-btn layui-btn-danger layui-btn-xs" id="del">删除</a></div></td>')
+            tr.append(td1).append(td2).append(td3).append(td4).append(td5).append(td6).append(td7).append(td8).append(td9).append(td10).append(td11).append(td12).append(td13).append(td14).append(td15).appendTo($('tbody').first());
+            table.cache.dateTable.push({
+                "LAY_TABLE_INDEX": index,
+                "riskFactor": "", "riskExpertise": "", "riskProbability": "",
+                "incidenceExpertise": "", "incidenceProbability": ""
+            });
+            index++;
+        });
+
+        /**
+         * 数据验证
+         */
+        table.on('edit(dateTable)', function (obj) {
+            var value = obj.value,
+                oldValue = $(this).prev().text();
+            if (obj.field == "riskProbability" || obj.field == "incidenceProbability") {
+                var reg = /^\d+(?=\.{0,1}\d+$|$)/;
+                if (reg.test(value) && parseFloat(value) > 0 && parseFloat(value) < 100) {
+                    obj.data[obj.field] = value;
+                } else {
+                    layer.msg("请输入合法的数据");
+                    obj.data[obj.field] = oldValue;
+                    $(this).val(oldValue);
+                }
+            }
+        });
+
+        /**
+         * 表格删除事件
+         */
+        $(document).on("click", "#del", function (e) {
+            var tr = $(this).parents("tr")
+            var id = parseInt(tr.attr("data-index"));
+            if (id === 0) {
+                layer.msg("至少保留一项！");
+                return;
+            }
+            tr.remove();
+            $.each(table.cache.dateTable, function (index, value) {
+                if (value.LAY_TABLE_INDEX === id) {
+                    value.LAY_TABLE_INDEX = -1;
+                }
+            });
+        });
+
+        var select = "";
+        form.on('select', function (data) {
+            select = data.value;
+        });
+
+        /**
+         * 保存数据
+         */
+        $('#submit').click(function (e) {
+            var i = 5, o = 0;
+            var riskExpertise = [];
+            var incidenceExpertise = [];
+            $.each($('td[data-field="riskExpertise"] div'), function (index, value) {
+                if (i == 0 && riskExpertise[(index / 5) - 1] === null) {
+                    layer.msg('请选择风险概率专家意见');
+                    return false;
+                } else if (i == 0) {
+                    i = 5;
+                }
+                if (i > 0 && $(value).text() == "√") {
+                    riskExpertise[o] = i;
+                    o++;
+                }
+                i--;
+            });
+
+            i = 5;
+            o = 0;
+            $.each($('td[data-field="incidenceExpertise"] div'), function (index, value) {
+                if (i == 0 && incidenceExpertise[(index / 5) - 1] === null) {
+                    layer.msg('请选择影响程度专家意见');
+                    return false;
+                } else if (i == 0) {
+                    i = 5;
+                }
+                if (i > 0 && $(value).text() === "√") {
+                    incidenceExpertise[o] = i;
+                    o++;
+                }
+                i--;
+            });
+            var flag = true;
+            $.each(table.cache.dateTable, function (index, value) {
+                if (value.LAY_TABLE_INDEX > -1) {
+                    if (incidenceExpertise[index] === null || riskExpertise[index] === null || value.riskFactor === '' || value.riskProbability === '' || value.incidenceProbability === '') {
+                        layer.msg('请将数据填写完整');
+                        flag = false;
+                        return false;
+                    }
+                    if (select.trim() === "") {
+                        layer.msg('请选择专家团体');
+                        flag = false;
+                        return false;
+                    }
+                    var data = {
+                        riskFactor: value.riskFactor,
+                        riskExpertise: riskExpertise[index],
+                        riskProbability: value.riskProbability,
+                        incidenceExpertise: incidenceExpertise[index],
+                        incidenceProbability: value.incidenceProbability,
+                        projectId: '#(projectId)',
+                        expertId: select
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/information/initialRiskExpertise?type=1',
+                        loadFlag: true,
+                        data: data,
+                        error: function (data) {
+                            flag = false;
+                            layer.msg("保存失败");
+                        }
+                    });
+                }
+                value.LAY_TABLE_INDEX = -1;
+            });
+            if (flag) {
+                layer.msg("保存成功！");
+                setTimeout(function () {
+                    window.location.href = document.referrer;
+                }, 1000);
+            }
+        });
+
+        /**
+         * 监听单元格事件
+         */
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'riskExpertise') {
+                $(this).parents('tr').children('[data-field="riskExpertise"]').each(function (ele) {
+                    $(this).children().first().text("");
+                });
+                $(this).children().first().text("√");
+            } else if (obj.event === 'incidenceExpertise') {
+                $(this).parents('tr').children('[data-field="incidenceExpertise"]').each(function (ele) {
+                    $(this).children().first().text("");
+                });
+                $(this).children().first().text("√");
+            }
+        });
+
+        $('#ret').click(function () {
+            window.location.href = "#(ctxPath)/app/information/chooseRiskExpertise?projectID=#(projectId)";
+        });
+
+        var flag = '#(flag)';
+        if (flag === "true") {
+            $('#submit').remove();
+            $('#del').remove();
+            $('input').addClass('layui-disabled').attr("disabled", "disabled");
+        }
+    });
+</script>
+#end

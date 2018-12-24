@@ -16,6 +16,7 @@
     body {
         height: 100%;
     }
+
     span {
         color: #FF5722;
     }
@@ -28,8 +29,10 @@
 <span class="layui-col-md4"><p style="margin: 0 100px;">当前项目：#(project.name)</p></span>
 <span class="layui-col-md4"><p style="margin: 0 100px;">评估方式：#(project.assessmentMode)</p></span>
 <span class="layui-col-md4"><p style="margin: 0 100px;">立项单位：#(organization.name)</p></span>
+<span class="layui-col-md4"><p style="margin: 0 100px;">管理部门：#(management.name)</p></span>
+
 <br>
-<hr class="layui-bg-red" >
+<hr class="layui-bg-red">
 <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="tip">
     <div class="layui-progress-bar layui-bg-red" id="bar" lay-percent="0%"></div>
 </div>
@@ -53,10 +56,10 @@
             if (isSelf === "true") {
                 layer.msg("承接当前项目的服务机构尚未填写稳评资料");
             } else {
-                if("mgr_agency" === "#(entry)" ){
+                if ("mgr_agency" === "#(entry)") {
                     layer.msg("当前项目的服务机构尚未填写稳评资料");
-                }else{
-                    $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + #(project.id));
+                } else {
+                    $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + "#(project.id)");
                 }
             }
         } else if (evaSchemeStatus === "1") {
@@ -65,39 +68,45 @@
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaSchemeStatus === "2") {
             var method = "#(method)";
-            add(flag, 20);
-            add("#(siteSurveyExpertAdvice)", 15);
-            add("#(diagnoses)", 15);
-            add("#(fxqz)", 10);
-            add("#(fxdj)", 10);
-            add("#(pcfx)", 10);
-            add("#(fxjl)", 10);
-            add("#(sxfx)", 10);
+            // 评估前期资料填写完毕后，给他加 20% 进度条
+            var progress = "#(progress)";
+            if (progress !== "") {
+                add("true", parseInt(progress))
+            } else {
+                add(flag, 20);
+                add("#(siteSurveyExpertAdvice)", 15);
+                add("#(diagnoses)", 15);
+                add("#(fxqz)", 10);
+                add("#(fxdj)", 10);
+                add("#(pcfx)", 10);
+                add("#(fxjl)", 10);
+                add("#(sxfx)", 10);
+            }
             if (method === "false") {
                 if (isSelf === "true") {
                     setTimeout(function () {
                         element.progress('tip', percent + '%');
-                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=true");
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=true");
                     }, 500);
                 } else if (isSelf === "false") {
                     layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
                     setTimeout(function () {
                         element.progress('tip', percent + '%');
-                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=false");
+                        $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=false");
                     }, 500);
                 }
             } else if (method === "true") {
                 setTimeout(function () {
                     element.progress('tip', percent + '%');
-                    $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + #(project.id) + "&percent=" + percent + "&flag=false");
+                    $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=false");
                 }, 500);
             }
         } else if (evaSchemeStatus === "3") {
-            if("mgr_agency" === "#(entry)" ){
+            if ("mgr_agency" === "#(entry)") {
                 layer.msg("该项目未通过审核，须创建者重新填写资料。");
-            }else{
+            } else {
                 layer.msg("您的项目未通过审核，请重新填写资料。");
-                $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + #(project.id));
+                $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + "#(project.id)");
             }
         }
 

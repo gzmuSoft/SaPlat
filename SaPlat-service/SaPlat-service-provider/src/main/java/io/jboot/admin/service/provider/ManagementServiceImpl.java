@@ -40,13 +40,44 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
      * @return
      */
     public Management fitModel(Management model) {
-        if (null != model && model.getSuperiorID() > 0) {
+        if (null != model && model.getSuperiorID().intValue() > 0) {
             Management tmp = findById(model.getSuperiorID());
             if (tmp != null) {
                 model.setSuperiorName(tmp.getName());
             }
         }
         return model;
+    }
+
+    /**
+     * 装配完善Page对象中所有对象的数据
+     *
+     * @param page
+     * @return
+     */
+    public Page<Management> fitPage(Page<Management> page) {
+        if (page != null) {
+            List<Management> tList = page.getList();
+            for (Management item : tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配完善List对象中所有对象的数据
+     *
+     * @param list
+     * @return
+     */
+    public List<Management> fitList(List<Management> list) {
+        if (list != null) {
+            for (Management item : list) {
+                fitModel(item);
+            }
+        }
+        return list;
     }
 
     /**
@@ -57,7 +88,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
      */
     @Override
     public List<Management> findAll(boolean isEnable) {
-        return DAO.findListByColumn("isEnable", isEnable);
+        return fitList(DAO.findListByColumn("isEnable", isEnable));
     }
 
     @Override
@@ -136,11 +167,11 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
         if (StrKit.notNull(management.getIsEnable())){
             columns.eq("isEnable", management.getIsEnable());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id"));
     }
 
     @Override
     public List<Management> findListByColumns(Columns columns) {
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 }

@@ -3,21 +3,16 @@ package io.jboot.admin.service.provider;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.admin.service.api.ProjectService;
-import io.jboot.admin.service.api.QuestionnaireContentLinkService;
-import io.jboot.admin.service.api.QuestionnaireContentService;
-import io.jboot.admin.service.entity.model.Project;
-import io.jboot.admin.service.entity.model.QuestionnaireContent;
-import io.jboot.admin.service.entity.model.QuestionnaireContentLink;
+import io.jboot.admin.service.api.*;
+import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.admin.service.api.QuestionnaireService;
-import io.jboot.admin.service.entity.model.Questionnaire;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +27,10 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     QuestionnaireContentLinkService questionnaireContentLinkService;
     @Inject
     ProjectService projectService;
+    @Inject
+    FileProjectService fileProjectService;
+    @Inject
+    FilesService filesService;
 
     /**
      * 根据当前项目ID判断是否有对应的问卷
@@ -50,9 +49,32 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
             return null;
     }
 
+    @Override
+    public boolean deleteQuestionnaire(Questionnaire model) {
+        return Db.tx(() -> {
+            model.setIsEnable(false);
+            if (!update(model)){
+                return false;
+            }
+            List<FileProject> fileProjects = fileProjectService.findByRemark(model.getId());
+            for (FileProject fileProject : fileProjects) {
+                fileProject.setIsEnable(false);
+                if (!fileProjectService.update(fileProject)){
+                    return false;
+                }
+                Files file = filesService.findById(fileProject.getFileID());
+                file.setIsEnable(false);
+                if (!filesService.update(file)){
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
     //删除
     @Override
-    public boolean deleteQuestionnaire(Long questionnaireId, Long[] contentIds, Long[] linkIds){
+    public boolean deleteQuestionnaire(Long questionnaireId, Long[] contentIds, Long[] linkIds) {
         return Db.tx(() -> {
             for (int i = 0; i < linkIds.length; i++) {
                 if (!questionnaireContentLinkService.deleteById(linkIds[i]))
@@ -70,9 +92,9 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
 
     //更新
     @Override
-    public boolean updateQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project){
+    public boolean updateQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project) {
         return Db.tx(() -> {
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 return false;
             }
             //删除原有的关联
@@ -81,14 +103,16 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
             for (Long contentId : contentIds) {
                 Long id = questionnaireContentLinkService.findIdByContentId(contentId);//连接id
                 if (id != null) {
-                    if (!questionnaireContentLinkService.deleteById(id))
+                    if (!questionnaireContentLinkService.deleteById(id)) {
                         return false;
+                    }
                 }
             }
             //删除内容
             for (Long contentId : contentIds) {
-                if (!questionnaireContentService.deleteById(contentId))
+                if (!questionnaireContentService.deleteById(contentId)) {
                     return false;
+                }
             }
             if (!update(questionnaire)) {
                 return false;
@@ -98,7 +122,7 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
             for (QuestionnaireContent content : contents) {
                 if (!questionnaireContentService.save(content)) {
                     return false;
-                }else {
+                } else {
                     questionnaireContentLink = new QuestionnaireContentLink();
                     questionnaireContentLink.setQuestionnaireID(questionnaire.getId());
                     questionnaireContentLink.setQuestionnaireContentID(content.getId());
@@ -116,22 +140,53 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     @Override
     public boolean saveQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project) {
         return Db.tx(() -> {
-            if (!projectService.update(project)){
+            if (!projectService.update(project)) {
                 return false;
             }
             if (!save(questionnaire)) {
                 return false;
             }
             QuestionnaireContentLink questionnaireContentLink;
-            for (QuestionnaireContent content : contents){
+            for (QuestionnaireContent content : contents) {
                 if (!questionnaireContentService.save(content)) {
                     return false;
-                }else {
+                } else {
                     questionnaireContentLink = new QuestionnaireContentLink();
                     questionnaireContentLink.setLastAccessTime(new Date());
                     questionnaireContentLink.setQuestionnaireID(questionnaire.getId());
                     questionnaireContentLink.setQuestionnaireContentID(content.getId());
-                    if (!questionnaireContentLinkService.save(questionnaireContentLink)){
+                    if (!questionnaireContentLinkService.save(questionnaireContentLink)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
+    }
+
+    @Override
+    public boolean saveQuestionnaire(Questionnaire questionnaire, ArrayList<Integer> ids, Project project) {
+        return Db.tx(() -> {
+            if (!projectService.update(project)) {
+                return false;
+            }
+            if (questionnaire.getId() != null) {
+                if (!update(questionnaire)) {
+                    return false;
+                }
+            } else {
+                if (!save(questionnaire)) {
+                    return false;
+                }
+            }
+//            if (!saveOrUpdate(questionnaire)) {
+//                return false;
+//            }
+            for (Integer id : ids) {
+                FileProject fileProject = fileProjectService.findById(id);
+                if (fileProject != null){
+                    fileProject.setRemark(questionnaire.getId().toString());
+                    if (!fileProjectService.saveOrUpdate(fileProject)) {
                         return false;
                     }
                 }
@@ -143,11 +198,11 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     @Override
     public Page<Questionnaire> findPage(Questionnaire model, int pageNumber, int pageSize) {
         Columns columns = Columns.create();
-        if (model.getProjectID() != null){
-            columns.eq("projectID",model.getProjectID());
+        if (model.getProjectID() != null) {
+            columns.eq("projectID", model.getProjectID());
         }
-        if (model.getIsEnable() != null){
-            columns.eq("isEnable",model.getIsEnable());
+        if (model.getIsEnable() != null) {
+            columns.eq("isEnable", model.getIsEnable());
         }
         return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
     }

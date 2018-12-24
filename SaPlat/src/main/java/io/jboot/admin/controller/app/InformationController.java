@@ -20,10 +20,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -108,6 +105,9 @@ public class InformationController extends BaseController {
 
     @JbootrpcService
     private InitialRiskExpertiseService initialRiskExpertiseService;
+    @JbootrpcService
+    private ManagementService managementService;
+
 
     /**
      * 资料编辑页面
@@ -217,7 +217,7 @@ public class InformationController extends BaseController {
             }
             Organization organization = organizationService.findById(user.getUserID());
             FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            if (facAgency == null){
+            if (facAgency == null) {
                 facAgency = projectUndertake.getFacAgency();
             }
             name = facAgency.getName();
@@ -332,14 +332,13 @@ public class InformationController extends BaseController {
             user = userService.findById(projectUndertake.getFacAgencyID());
             organization = organizationService.findById(user.getUserID());
         } else if ("委评".equals(project.getAssessmentMode())) {
-            if(projectUndertake.getApplyOrInvite()){
-                FacAgency facAgency=facAgencyService.findById(projectUndertake.getFacAgencyID());
+            if (projectUndertake.getApplyOrInvite()) {
+                FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
                 organization = organizationService.findById(facAgency.getOrgID());
-                user=userService.findByUserIdAndUserSource(organization.getId(),1);
-            }
-            else{
-                user=userService.findById(projectUndertake.getCreateUserID());
-                organization=organizationService.findById(user.getUserID());
+                user = userService.findByUserIdAndUserSource(organization.getId(), 1);
+            } else {
+                user = userService.findById(projectUndertake.getCreateUserID());
+                organization = organizationService.findById(user.getUserID());
             }
         } else {
             throw new BusinessException("请求错误");
@@ -350,7 +349,9 @@ public class InformationController extends BaseController {
         Map<String, String> invTeamMap = new ConcurrentHashMap<String, String>();
         for (String invTeamID : invTeamIDList) {
             Person person = personService.findById(invTeamID);
-            invTeamMap.put(invTeamID, person.getName());
+            if (person != null){
+                invTeamMap.put(invTeamID, person.getName());
+            }
         }
         setAttr("invTeamMap", invTeamMap);
         setAttr("organization", organization)
@@ -380,12 +381,21 @@ public class InformationController extends BaseController {
     public void diagnosesSave() {
         Diagnoses diagnoses = getBean(Diagnoses.class, "diagnoses");
         String[] idList = getParaValues("staffArrangements");
+        String file = getPara("file");
+        if (StringUtils.isNotEmpty(file)) {
+            Files files = filesService.findById(file);
+            files.setIsEnable(true);
+            if (!filesService.update(files)) {
+                throw new BusinessException("保存失败");
+            }
+            diagnoses.setRemark(file);
+        }
         diagnoses.setStaffArrangements(StringUtils.join(idList, ","));
         String[] surveyWayList = getParaValues("surveyWays");
         diagnoses.setSurveyWay(StringUtils.join(surveyWayList, ","));
         diagnoses.setCreateUserID(AuthUtils.getLoginUser().getId());
         diagnoses.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
-
+        // 没有字段存放“社会稳定风险评估调查分析表”，使用reamrk字段
         if (!diagnosesService.saveOrUpdate(diagnoses)) {
             throw new BusinessException("保存失败");
         }
@@ -415,6 +425,7 @@ public class InformationController extends BaseController {
         Long projectId = getParaToLong("id");
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setProjectID(projectId);
+        questionnaire.setIsEnable(true);
         Page<Questionnaire> page = questionnaireService.findPage(questionnaire, pageNumber, pageSize);
         page.getList().forEach(p -> {
             StringBuilder sb = new StringBuilder();
@@ -424,6 +435,7 @@ public class InformationController extends BaseController {
                 sb.append("调查对象：个人");
             }
             p.setRemark(sb.toString());
+            p.setName("调查问卷");
         });
         renderJson(new DataTable<Questionnaire>(page));
     }
@@ -435,51 +447,17 @@ public class InformationController extends BaseController {
     @NotNullPara("projectId")
     public void personOrOrganization() {
         Project project = projectService.findById(getPara("projectId"));
-        int contentsLength = 0;
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setType(getParaToInt("type"));
         setAttr("flag", getPara("flag", "false"));
+        setAttr("questionnaire", questionnaire).
+                setAttr("project", project).
+                setAttr("projectId", project.getId());
         //判断跳转的页面是哪一个
         if (questionnaire.getType() == 0) {
-            //加载民族
-            Nation nmodel = new Nation();
-            nmodel.setIsEnable(true);
-            List<Nation> nations = nationService.findAll(nmodel);
-            BaseStatus nationStatus = new BaseStatus() {
-            };
-            for (Nation nation : nations) {
-                nationStatus.add(nation.getId().toString(), nation.getName());
-            }
-            //加载学历
-            Educational emodel = new Educational();
-            emodel.setIsEnable(true);
-            List<Educational> educationals = educationalService.findAll(emodel);
-            BaseStatus educationalStatus = new BaseStatus() {
-            };
-            for (Educational educational : educationals) {
-                educationalStatus.add(educational.getId().toString(), educational.getName());
-            }
-            //加载职业
-            Occupation omodel = new Occupation();
-            omodel.setIsEnable(true);
-            List<Occupation> occupations = occupationService.findAll(omodel);
-            BaseStatus occupationStatus = new BaseStatus() {
-            };
-            for (Occupation item : occupations) {
-                occupationStatus.add(item.getId().toString(), item.getName());
-            }
-            setAttr("contentsLength", contentsLength).
-                    setAttr("questionnaire", questionnaire).
-                    setAttr("project", project).
-                    setAttr("occupationStatus", occupationStatus).
-                    setAttr("educationalStatus", educationalStatus).
-                    setAttr("nationStatus", nationStatus).
-                    render("personMain.html");
+            render("personMain.html");
         } else {
-            setAttr("contentsLength", contentsLength).
-                    setAttr("questionnaire", questionnaire).
-                    setAttr("project", project).
-                    render("organizationMain.html");
+            render("organizationMain.html");
         }
     }
 
@@ -493,77 +471,16 @@ public class InformationController extends BaseController {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
         setAttr("flag", getPara("flag", "false"));
         //选择问卷为空则是创建
+        setAttr("projectId", project.getId())
+                .setAttr("project", project);
         if (questionnaire == null) {
-            setAttr("projectId", project.getId()).
-                    render("personOrOrganization.html");
+            render("personOrOrganization.html");
         } else {
-            //加载内容Ids
-            Long[] contentIds = questionnaireContentLinkService.findContentIdByQuestionnaireId(questionnaire.getId());
-            QuestionnaireContent[] questionnaireContents = new QuestionnaireContent[contentIds.length];
-            //内容条数
-            int contentsLength = contentIds.length;
-            //加载内容s
-            for (int i = 0; i < contentIds.length; i++) {
-                questionnaireContents[i] = questionnaireContentService.findById(contentIds[i]);
-            }
-            //判断跳转的页面是哪一个
+            setAttr("questionnaire", questionnaire);
             if (questionnaire.getType() == 0) {
-                //加载民族
-                Nation nmodel = new Nation();
-                nmodel.setIsEnable(true);
-                List<Nation> nations = nationService.findAll(nmodel);
-                BaseStatus nationStatus = new BaseStatus() {
-                };
-                Nation nationName = null;
-                for (Nation nation : nations) {
-                    if (questionnaire.getNationID().equals(nation.getId())) {
-                        nationName = nation;
-                    }
-                    nationStatus.add(nation.getId().toString(), nation.getName());
-                }
-                //加载学历
-                Educational emodel = new Educational();
-                emodel.setIsEnable(true);
-                List<Educational> educationals = educationalService.findAll(emodel);
-                BaseStatus educationalStatus = new BaseStatus() {
-                };
-                Educational educationalName = null;
-                for (Educational educational : educationals) {
-                    if (questionnaire.getDegreeOfEducationID().equals(educational.getId())) {
-                        educationalName = educational;
-                    }
-                    educationalStatus.add(educational.getId().toString(), educational.getName());
-                }
-                //加载职业
-                Occupation omodel = new Occupation();
-                omodel.setIsEnable(true);
-                List<Occupation> occupations = occupationService.findAll(omodel);
-                BaseStatus occupationStatus = new BaseStatus() {
-                };
-                Occupation occupationName = null;
-                for (Occupation item : occupations) {
-                    if (questionnaire.getOccupationID().equals(item.getId())) {
-                        occupationName = item;
-                    }
-                    occupationStatus.add(item.getId().toString(), item.getName());
-                }
-                setAttr("questionnaireContents", questionnaireContents).
-                        setAttr("contentsLength", contentsLength).
-                        setAttr("questionnaire", questionnaire).
-                        setAttr("project", project).
-                        setAttr("occupationStatus", occupationStatus).
-                        setAttr("occupation", occupationName).
-                        setAttr("educationalStatus", educationalStatus).
-                        setAttr("educational", educationalName).
-                        setAttr("nationStatus", nationStatus).
-                        setAttr("nation", nationName).
-                        render("personMain.html");
+                render("personMain.html");
             } else {
-                setAttr("questionnaireContents", questionnaireContents).
-                        setAttr("contentsLength", contentsLength).
-                        setAttr("questionnaire", questionnaire).
-                        setAttr("project", project).
-                        render("organizationMain.html");
+                render("organizationMain.html");
             }
         }
     }
@@ -592,29 +509,16 @@ public class InformationController extends BaseController {
         if (questionnaire.getCreateUserID() == null) {
             questionnaire.setCreateUserID(loginUser.getId());
         }
-        //调查内容
-        String[] questionnaireContentNames = getParaValues("name");
-        String[] questionnaireContents = getParaValues("content");
-        List<QuestionnaireContent> contents = new ArrayList<QuestionnaireContent>();
-        int i = 0;
-        for (String content : questionnaireContents) {
-            QuestionnaireContent questionnaireContent = new QuestionnaireContent();
-            questionnaireContent.setName(questionnaireContentNames[i]);
-            questionnaireContent.setContent(content);
-            questionnaireContent.setCreateTime(new Date());
-            questionnaireContent.setLastAccessTime(new Date());
-            questionnaireContent.setCreateUserID(loginUser.getId());
-            contents.add(questionnaireContent);
-            i++;
+        String files = getPara("file");
+        String[] split = files.split("-");
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (String aSplit : split) {
+            if (StringUtils.isNotEmpty(aSplit) && StringUtils.isNumeric(aSplit)) {
+                ids.add(Integer.parseInt(aSplit));
+            }
         }
-        if (questionnaire.getId() != null) {
-            if (!questionnaireService.updateQuestionnaire(questionnaire, contents, project)) {
-                throw new BusinessException("修改失败!");
-            }
-        } else {
-            if (!questionnaireService.saveQuestionnaire(questionnaire, contents, project)) {
-                throw new BusinessException("保存失败!");
-            }
+        if (!questionnaireService.saveQuestionnaire(questionnaire, ids, project)) {
+            throw new BusinessException("保存失败!");
         }
         renderJson(RestResult.buildSuccess());
     }
@@ -625,14 +529,8 @@ public class InformationController extends BaseController {
     @NotNullPara("id")
     public void questionnaireDelete() {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
-        Long[] contentIds, linkIds;
         if (questionnaire != null) {
-            contentIds = questionnaireContentLinkService.findContentIdByQuestionnaireId(questionnaire.getId());
-            linkIds = new Long[contentIds.length];
-            for (int i = 0; i < contentIds.length; i++) {
-                linkIds[i] = questionnaireContentLinkService.findIdByContentId(contentIds[i]);
-            }
-            if (!questionnaireService.deleteQuestionnaire(questionnaire.getId(), contentIds, linkIds)) {
+            if (!questionnaireService.deleteQuestionnaire(questionnaire)) {
                 throw new BusinessException("删除失败!");
             }
         } else {
@@ -641,13 +539,88 @@ public class InformationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-
     /**
-     * 临时-项目风险因素影响程度及概率
+     * 选择添加的风险因素界面
      */
     @NotNullPara("projectID")
-    public void toInitialRiskExpertise() {
+    public void chooseRiskExpertise() {
+        setAttr("projectId", getPara("projectID")).render("chooseRiskExpertise.html");
+    }
+
+    /**
+     * 查看风险因素及影响概率
+     */
+    @NotNullPara({"projectID", "id"})
+    public void riskExpertise() {
+        String managementName = null;
+        String riskExpertise = null;
+        String riskProbability = "0%";
+        String incidenceExpertise = null;
+        String incidenceProbability = "0%";
+        ExpertGroup expertGroup = new ExpertGroup();
+        InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(getParaToLong("id"));
+        Project project = projectService.findById(getParaToLong("projectID"));
+        if (project != null) {
+            Management management = managementService.findById(project.getManagementID());
+            if (management != null) {
+                managementName = management.getName();
+            }
+        }
+        if (initialRiskExpertise != null) {
+            ExpertGroup tmp = expertGroupService.findById(initialRiskExpertise.getExpertID());
+            if (tmp != null) {
+                expertGroup = tmp;
+            }
+            int n = initialRiskExpertise.getRiskExpertise();
+            switch (n) {
+                case 1:
+                    riskExpertise = "很低";
+                case 2:
+                    riskExpertise = "较低";
+                case 3:
+                    riskExpertise = "中等";
+                case 4:
+                    riskExpertise = "较高";
+                case 5:
+                    riskExpertise = "很高";
+            }
+            n = initialRiskExpertise.getIncidenceExpertise();
+            switch (n) {
+                case 1:
+                    incidenceExpertise = "可忽略";
+                case 2:
+                    incidenceExpertise = "较小";
+                case 3:
+                    incidenceExpertise = "中等";
+                case 4:
+                    incidenceExpertise = "较大";
+                case 5:
+                    incidenceExpertise = "严重";
+            }
+            riskProbability = initialRiskExpertise.getRiskProbability() + "%";
+            incidenceProbability = initialRiskExpertise.getIncidenceProbability() + "%";
+        }
+        setAttr("project", project)
+                .setAttr("managementName", managementName)
+                .setAttr("expertGroup", expertGroup)
+                .setAttr("initialRiskExpertise", initialRiskExpertise)
+                .setAttr("riskProbability", riskProbability)
+                .setAttr("riskExpertise", riskExpertise)
+                .setAttr("incidenceProbability", incidenceProbability)
+                .setAttr("incidenceExpertise", incidenceExpertise)
+                .render("riskExpertise.html");
+    }
+
+    /**
+     * 项目风险因素影响程度及概率
+     * type
+     * 0： 初始风险
+     * 1： 採取措施后的风险
+     */
+    @NotNullPara({"projectID", "type"})
+    public void toRiskExpertise() {
         Long projectId = getParaToLong("projectID");
+        int type = getParaToInt("type");
         // 获取到当前行的id
         Long id = getParaToLong("id");
         // 设置必要的标识
@@ -656,14 +629,21 @@ public class InformationController extends BaseController {
                 .setAttr("projectId", projectId);
         // 如果为空，就是添加，否则为查看
         if (id == null) {
-            setAttr("expertGroups", expertGroupService.findAll())
-                    .render("initialRiskExpertise.html");
+            setAttr("expertGroups", expertGroupService.findAll());
+            if(type == 0){
+                render("initialRiskExpertise.html");
+            }else if(type == 1){
+                render("resultRiskExpertise.html");
+            }
         } else {
             InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(id);
             ExpertGroup expertGroup = expertGroupService.findById(initialRiskExpertise.getExpertID());
-            setAttr("initialRiskExpertise", initialRiskExpertise)
-                    .setAttr("expertGroup", expertGroup)
-                    .render("initialRiskExpertiseSee.html");
+            setAttr("initialRiskExpertise", initialRiskExpertise).setAttr("expertGroup", expertGroup);
+            if(type == 0){
+                render("initialRiskExpertise.html");
+            }else if(type == 1){
+                render("resultRiskExpertise.html");
+            }
         }
     }
 
@@ -687,12 +667,41 @@ public class InformationController extends BaseController {
     }
 
     /**
+     * 风险因素影响程度数据表格
+     */
+    public void chooseRiskExpertiseDataTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long projectId = getParaToLong("id");
+        InitialRiskExpertise initialRiskExpertise = new InitialRiskExpertise();
+        initialRiskExpertise.setProjectID(projectId);
+        initialRiskExpertise.setIsEnable(true);
+        Page<InitialRiskExpertise> page = initialRiskExpertiseService.findPage(initialRiskExpertise, pageNumber, pageSize);
+        page.getList().forEach(p -> {
+            StringBuilder sb = new StringBuilder();
+            if (p.getRemark().equals("initial")) {
+                sb.append("初始风险程度");
+                p.setRemark("初始风险程度");
+            } else if (p.getRemark().equals("result")) {
+                sb.append("採取措施后的风险程度");
+                p.setRemark("採取措施后的风险程度");
+            }
+            p.setName("风险因素及风险程度");
+        });
+        renderJson(new DataTable<InitialRiskExpertise>(page));
+    }
+
+    /**
      * 项目风险因素影响程度及概率数据提交
+     * type
+     * 0： 初始风险
+     * 1： 採取措施后的风险
      */
     @Before(POST.class)
-    @NotNullPara({"projectId", "expertId"})
+    @NotNullPara({"projectId", "expertId", "type"})
     public void initialRiskExpertise() {
         User user = AuthUtils.getLoginUser();
+        int type = getParaToInt("type");
         InitialRiskExpertise model = new InitialRiskExpertise();
         ExpertGroup expertGroup = expertGroupService.findById(getParaToLong("expertId"));
         if (expertGroup == null) {
@@ -703,9 +712,9 @@ public class InformationController extends BaseController {
         model.setIncidenceExpertise(getParaToInt("incidenceExpertise"));
         model.setRiskExpertise(getParaToInt("riskExpertise"));
         if (getPara("riskProbability") != null && getPara("incidenceProbability") != null) {
-            model.setIncidenceProbability((float) getParaToLong("incidenceProbability"));
-            model.setRiskProbability((float) getParaToLong("riskProbability"));
-            model.setRiskLevel((float) getParaToLong("incidenceProbability") * (float) getParaToLong("riskProbability"));
+            model.setIncidenceProbability(Float.parseFloat(getPara("incidenceProbability")));
+            model.setRiskProbability(Float.parseFloat(getPara("riskProbability")));
+            model.setRiskLevel(Float.parseFloat(getPara("incidenceProbability")) * Float.parseFloat(getPara("riskProbability")));
         }
         model.setRiskFactor(getPara("riskFactor"));
         model.setCreateUserID(user.getId());
@@ -713,6 +722,11 @@ public class InformationController extends BaseController {
         model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
         model.setStatus(3);
+        if (type == 0) {
+            model.setRemark("initial");
+        } else {
+            model.setRemark("result");
+        }
         model.setIsEnable(true);
         if (!initialRiskExpertiseService.save(model)) {
             renderJson(RestResult.buildError("保存失败"));
@@ -725,13 +739,38 @@ public class InformationController extends BaseController {
      * 项目风险因素影响程度及概率数据删除
      */
     @NotNullPara("id")
-    public void toInitialRiskExpertiseDelete() {
+    public void chooseRiskExpertiseDelete() {
         Long id = getParaToLong("id");
         InitialRiskExpertise model = initialRiskExpertiseService.findById(id);
-        if (model == null || initialRiskExpertiseService.delete(model)) {
+        if (model == null || !initialRiskExpertiseService.delete(model)) {
             throw new BusinessException("删除失败");
         }
         renderJson(RestResult.buildSuccess());
     }
 
+    /**
+     * 6. 风险等级综合评估
+     */
+    public void toRiskLevel() {
+        String riskLevels = projectService.findById(getParaToLong("id")).getRiskLevels();
+        if (StringUtils.isEmpty(riskLevels)) {
+            riskLevels = "";
+        }
+        setAttr("projectID", getParaToLong("id"))
+                .setAttr("percent", getParaToLong("percent"))
+                .setAttr("flag", getPara("flag", "false"))
+                .setAttr("riskLevels", riskLevels)
+                .render("riskLevel.html");
+    }
+
+    @NotNullPara({"projectId","riskLevels"})
+    public void updateRiskLevels(){
+        Integer projectId = getParaToInt("projectId");
+        Project project = projectService.findById(projectId);
+        project.setRiskLevels(getPara("riskLevels",project.getRiskLevels()));
+        if (!projectService.update(project)){
+            throw new BusinessException("更新失败");
+        }
+        renderJson(RestResult.buildSuccess());
+    }
 }

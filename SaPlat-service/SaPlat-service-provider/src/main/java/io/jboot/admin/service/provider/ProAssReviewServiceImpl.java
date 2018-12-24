@@ -17,6 +17,7 @@ import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,9 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
 
             ProjectFileType projectFileType = projectFileTypeService.findById(item.getFileTypeID());
             Files file = filesService.findById(item.getFileID());
-
+            if(file== null){
+                continue;
+            }
             //构造叶子节点
             //zTree.add(new ZTree(Long.MAX_VALUE, file.getName(), projectFileType.getParentID(), file.getPath(),file.getId()));
             zTree.add(new ZTree(Long.MAX_VALUE, projectFileType.getName(), projectFileType.getParentID(), file.getPath(),file.getId()));

@@ -6,7 +6,7 @@
     .title {
         color: #009688;
         font-weight: 700;
-        font-family: "微软雅黑";
+        font-family: "微软雅黑", serif;
     }
 </style>
 #end
@@ -15,7 +15,6 @@
 <br>
 <h2 class="title" align="center">社会稳定风险评估调查问卷表（个人）</h2><br>
 <div style="margin: 0 10%">
-
     <form class="layui-form" action="">
         <input type="hidden" name="project.id" value="#(project.id)">
         <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
@@ -29,10 +28,12 @@
                             <div class="layui-row">
                                 <div class="layui-col-md12">
                                     <div class="layui-form-item">
-                                        <label class="layui-form-label"  style="width: 120px">评估项目名称：</label>
+                                        <label class="layui-form-label" style="width: 120px">评估项目名称：</label>
                                         <div class="layui-input-block">
-                                            <input  type="text" id="project.name" name="project.name" value="#(project.name)"
-                                                    lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input" style="width: 600px">
+                                            <input type="text" id="project.name" name="project.name"
+                                                   value="#(project.name)"
+                                                   lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                                                   class="layui-input" style="width: 600px">
                                         </div>
                                     </div>
                                 </div>
@@ -64,10 +65,12 @@
                                 <div class="layui-col-md6">
                                     <div class="grid-demo grid-demo-bg1">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label"  style="width: 120px">问卷信息所属部门：</label>
+                                            <label class="layui-form-label" style="width: 120px">问卷信息所属部门：</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="questionnaire.department" lay-verify="required" value="#(questionnaire.department)" autocomplete="off" placeholder="请输入标题"
-                                                       class="layui-input"  style="width:250px;">
+                                                <input type="text" name="questionnaire.department" lay-verify="required"
+                                                       value="#(questionnaire.department)" autocomplete="off"
+                                                       placeholder="请输入标题"
+                                                       class="layui-input" style="width:250px;">
                                             </div>
                                         </div>
                                     </div>
@@ -76,9 +79,12 @@
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
                                             <div class="layui-inline">
-                                                <label class="layui-form-label"  style="width: 120px; margin-left: -40px;" >问卷调查时间：</label>
-                                                <div class="layui-input-inline" >
-                                                    <input type="text" name="questionnaire.surveyTime" id="date" value="#date(questionnaire.surveyTime,'yyyy-MM-dd')" lay-verify="date" placeholder="yyyy-MM-dd"
+                                                <label class="layui-form-label"
+                                                       style="width: 120px; margin-left: -40px;">问卷调查时间：</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="questionnaire.surveyTime" id="date"
+                                                           value="#date(questionnaire.surveyTime,'yyyy-MM-dd')"
+                                                           lay-verify="date" placeholder="yyyy-MM-dd"
                                                            autocomplete="off" class="layui-input" style="width: 250px;">
                                                 </div>
                                             </div>
@@ -92,174 +98,69 @@
 
             </div>
         </div>
-        <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md12">
-                    <div class="layui-card">
-                        <div class="layui-card-header">问卷对象基本情况</div>
-                        <div class="layui-card-body">
-                            <div class="layui-row">
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label"  style="width: 120px">姓名：</label>
-                                        <div class="layui-input-block" >
-                                            <input type="text" name="questionnaire.personName" lay-verify="required" value="#(questionnaire.personName)" placeholder="请输入姓名" autocomplete="off"
-                                                   class="layui-input" style="width: 250px;" >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-col-md6">
-                                    <div class="grid-demo">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width: 120px">性别：</label>
-                                            <div class="layui-input-block" >
-                                                #if(questionnaire.personGender == 2)
-                                                <input type="radio" name="questionnaire.personGender" value=1 title="男">
-                                                <input type="radio" name="questionnaire.personGender" value=2 title="女" checked="checked">
-                                                #else
-                                                <input type="radio" name="questionnaire.personGender" value=1 title="男" checked="checked">
-                                                <input type="radio" name="questionnaire.personGender" value=2 title="女">
-                                                #end
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="layui-row">
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <div class="layui-inline">
-                                            <label class="layui-form-label" style="width:120px">民族：</label>
-                                            <div class="layui-input-inline" style="width: 250px">
-                                                <select name="questionnaire.nationID" lay-verify="required" lay-search="">
-                                                    #if(nation != null)
-                                                    <option value="#(nation.id)">#(nation.name)</option>
-                                                    #else
-                                                    <option value="">直接选择或搜索选择</option>
-                                                    #end
-                                                    #statusOption(nationStatus);
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width: 120px">年龄：</label>
-                                        <div class="layui-input-inline" >
-                                            <input type="number" name="questionnaire.age" lay-verify="required" value="#(questionnaire.age)" autocomplete="off" placeholder="请输入年龄"
-                                                   class="layui-input" style="width: 250px;" >
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="layui-row">
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width:120px">职业：</label>
-                                        <div class="layui-input-inline" style="width: 250px">
-                                            <select name="questionnaire.occupationID" lay-verify="required" lay-search="">
-                                                #if(occupation != null)
-                                                <option value="#(occupation.id)">#(occupation.name)</option>
-                                                #else
-                                                <option value="">直接选择或搜索选择</option>
-                                                #end
-                                                #statusOption(occupationStatus);
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="layui-col-md6">
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label" style="width:120px">联系电话：</label>
-                                        <div class="layui-input-inline" >
-                                            <input type="tel" name="questionnaire.phone" lay-verify="required|phone" value="#(questionnaire.phone)" autocomplete="off" class="layui-input" style="width: 250px;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row">
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width: 120px">身份证号码：</label>
-                                        <div class="layui-input-block" >
-                                            <input type="text" name="questionnaire.IDCard" lay-verify="identity" value="#(questionnaire.IDCard)" placeholder="请输入身份证" autocomplete="off"
-                                                   class="layui-input" style="width: 250px" >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-col-md6">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width: 120px">文化程度：</label>
-                                        <div class="layui-input-inline" style="width: 250px">
-                                            <select name="questionnaire.degreeOfEducationID" lay-verify="required" lay-search="">
-                                                #if(educational != null)
-                                                <option value="#(educational.id)">#(educational.name)</option>
-                                                #else
-                                                <option value="">直接选择或搜索选择</option>
-                                                #end
-                                                #statusOption(educationalStatus);
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width: 120px">居住地址：</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="questionnaire.addr" lay-verify="required" value="#(questionnaire.addr)" autocomplete="off" placeholder="请输入居住地址"
-                                                   class="layui-input" style="width: 690px;" >
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <div style="padding: 20px; margin: 10px;background-color: #F2F2F2;" class="layui-fluid layui-form-pane">
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <fieldset id="table_1" fileTypeId="114" name="调查问卷" class="layui-elem-field">
+                        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                             id="upload-progress_1" lay-filter="upload-progress">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
                         </div>
-                    </div>
+                        <label class="layui-form-label">调查问卷</label>
+                        <div class="layui-btn-group">
+                            <button type="button" id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
+                        </div>
+                        <table id="dateTable_1" lay-filter="dateTable_2"></table>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <fieldset id="table_2" fileTypeId="115" name="访谈表" class="layui-elem-field">
+                        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                             id="upload-progress_2" lay-filter="upload-progress">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                        </div>
+                        <label class="layui-form-label">访谈表</label>
+                        <div class="layui-btn-group">
+                            <button type="button" id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
+                        </div>
+                        <table id="dateTable_2" lay-filter="dateTable_2"></table>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-form-item">
+                    <fieldset id="table_3" fileTypeId="116" name="调查现场" class="layui-elem-field">
+                        <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
+                             id="upload-progress_3" lay-filter="upload-progress">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                        </div>
+                        <label class="layui-form-label">调查现场</label>
+                        <div class="layui-btn-group">
+                            <button type="button" id="add_3" class="layui-btn layui-btn-small add">上传文件</button>
+                        </div>
+                        <table id="dateTable_3" lay-filter="dateTable_3"></table>
+                    </fieldset>
                 </div>
             </div>
         </div>
+
 
         <div style="padding: 20px; margin: 10px;background-color: #F2F2F2;">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">调查内容</div>
+                        <!--<div class="layui-card-header">调查内容</div>-->
                         <div class="layui-card-body">
-                            <ol>
-                                <li class="qwe">
-                                    <div class="layui-form-item">
-                                        <div class="layui-row">
-                                            <div class="layui-col-md10">
-                                                <label class="layui-form-label">调查内容：</label>
-                                                <div class="layui-input-block">
-                                                    #if(questionnaireContents != null)
-                                                    #set(name = questionnaireContents[0].name)
-                                                    #set(content = questionnaireContents[0].content)
-                                                    #else
-                                                    #set(name = null)
-                                                    #set(content = null)
-                                                    #end
-                                                    <input type="text" lay-verify="title" value="#(name)" autocomplete="off" placeholder="请输入调查题目"
-                                                           class="layui-input name" style="width: 600px;">
-                                                    <input type="text" lay-verify="title" value="#(content)" autocomplete="off" placeholder="请输入调查内容"
-                                                           class="layui-input content" style="width: 600px;">
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-md2">
-                                                <button type="button" class="layui-btn" id="add">添加行</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ol>
-                            <br>
+
                             <div style="text-align: center">
                                 <div class="layui-input-block">
-                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
-                                    <button type="button" class="layui-btn" id="ret" >返回</button>
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">
+                                        提交
+                                    </button>
+                                    <button type="button" class="layui-btn" id="ret">返回</button>
                                 </div>
                             </div>
                         </div>
@@ -267,22 +168,42 @@
                 </div>
             </div>
         </div>
-    #for(i = 1; i < contentsLength; i++)
-    <div class="name layui-hide">#(questionnaireContents[i].name)</div>
-    <div class="contents layui-hide">#(questionnaireContents[i].content)</div>
-    #end
-    </form></div>
+    </form>
+</div>
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="view" id="view">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs del" lay-event="del" id="del">删除</a>
+</script>
 #end
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'layedit', 'laydate'], function () {
+    layui.use(['form', 'layer', 'element', 'layedit', 'laydate', 'table', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate
             , $ = layui.jquery
             , string = "?"
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table
             , layedit = layui.layedit;
+        var projectID = "#(project.id)", questionnaireId = "#(questionnaire.id)";
+
+        /**
+         * @return {string}
+         */
+        function S4() {
+            return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        }
+        function guid() {
+            return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        }
+
+        if (questionnaireId == ""){
+            questionnaireId = "questionnaire" + guid();
+        }
+        var files = [];
         var briefIndex = layedit.build('demo', {
             hideTool: ['link', 'unlink', 'face', 'image', 'help']
         });
@@ -291,7 +212,6 @@
             elem: '#date'
         });
 
-
         //返回上一级
         $('#ret').click(function () {
             window.history.go(-1);
@@ -299,7 +219,8 @@
 
         //监听提交
         form.on('submit(demo1)', function (data) {
-            data.field['project.brief'] = layedit.getContent(briefIndex);
+            data.field.file = files.join('-');
+            // data.field['project.brief'] = layedit.getContent(briefIndex);
             util.sendAjax({
                 type: 'POST',
                 url: '#(ctxPath)/app/information/questionnaireAdd' + jointString(),
@@ -312,8 +233,6 @@
             return false;
         });
 
-
-
         function jointString() {
             $(".content").each(function () {
                 string += "content" + "=" + $(this).val() + "&";
@@ -324,70 +243,415 @@
             return string;
         }
 
-        (function(){
-            var content,name;
-            $('.contents').each(function(index){
-                content = $(this).text();
-                name = $('.name').get(index).text();
-                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
-                    "        <div class='layui-row' >\n" +
-                    "            <div class='layui-col-md10'>\n" +
-                    "                <label class='layui-form-label'>调查内容：</label>\n" +
-                    "                <div class='layui-input-block'>\n" +
-                    "                    <input type='text' lay-verify='title' value='"+name+"' autocomplete='off' placeholder='请输入调查题目'\n" +
-                    "                           class='layui-input name' style='width: 600px;'>\n" +
-                    "                    <input type='text' lay-verify='title' value='"+content+"' autocomplete='off' placeholder='请输入调查内容'\n" +
-                    "                           class='layui-input content' style='width: 600px;'>\n" +
-                    "                </div>\n" +
-                    "            </div>\n" +
-                    "            <div class='layui-col-md2'>\n" +
-                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
-                    "            </div>\n" +
-                    "        </div>\n" +
-                    "    </div>" +
-                    "</li>");
-            });
-        }());
+        (function () {
 
-        //添加行
-        $(document).ready(function () {
-            $("#add").click(function () {
-                $("ol").append(" <li class='qwe'><div class='layui-form-item'>\n" +
-                    "        <div class='layui-row' >\n" +
-                    "            <div class='layui-col-md10'>\n" +
-                    "                <label class='layui-form-label'>调查内容：</label>\n" +
-                    "                <div class='layui-input-block'>\n" +
-                    "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查题目'\n" +
-                    "                           class='layui-input name' style='width: 600px;'>\n" +
-                    "                    <input type='text' lay-verify='title' autocomplete='off' placeholder='请输入调查内容'\n" +
-                    "                           class='layui-input content' style='width: 600px;'>\n" +
-                    "                </div>\n" +
-                    "            </div>\n" +
-                    "            <div class='layui-col-md2'>\n" +
-                    "                <button type='button' class='layui-btn layui-btn-danger ' id='del'  >删除</button>\n" +
-                    "            </div>\n" +
-                    "        </div>\n" +
-                    "    </div>" +
-                    "</li>");
-                return false;
-            });
-        });
+        }());
 
         var flag = '#(flag)';
         if (flag === "true") {
             $('#sub').remove();
             $('#del').remove();
-            $('input').addClass('layui-disabled').attr("disabled","disabled");
+            $('input').addClass('layui-disabled').attr("disabled", "disabled");
         }
 
-        //删除行
-        $(document).on("click", "#del", function () {
-            layer.msg("删除！");
-        });
-        $(document).on("click", "#del", function () {
-            $(this).parents("li").remove();
+
+        //创建监听函数
+        var xhrOnProgress = function (fun) {
+            xhrOnProgress.onprogress = fun; //绑定监听
+            //使用闭包实现监听绑
+            return function () {
+                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
+                var xhr = $.ajaxSettings.xhr();
+                //判断监听函数是否为函数
+                if (typeof xhrOnProgress.onprogress !== 'function')
+                    return xhr;
+                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
+                if (xhrOnProgress.onprogress && xhr.upload) {
+                    xhr.upload.onprogress = xhrOnProgress.onprogress;
+                }
+                return xhr;
+            }
+        };
+        // 表格渲染
+        // 表格渲染
+        var tableIns_1 = table.render({
+            elem: '#dateTable_1'                  //指定原始表格元素选择器（推荐id选择器）
+            ,
+            id: 'dateTable_1'
+            ,
+            even: true //开启隔行背景
+            ,
+            size: 'sm' //小尺寸的表格
+            ,
+            height: '120'    //容器高度
+            ,
+            cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: 'id', minWidth: 100}
+                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            ,
+            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            ,
+            method: 'get'
+            ,
+            request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,
+            page: false
+            ,
+            limits: [30, 60, 90, 150, 300]
+            ,
+            limit: 30 //默认采用30
+            ,
+            loading: true
+            ,
+            done: function (res, curr, count) {
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('.del').remove();
+                    $('.add').remove();
+                }
+                $('div.laytable-cell-1-id').each(function () {
+                    if (isNaN($(this).text())) {
+                        // 不是数字
+                    } else {
+                        // 是数字
+                        files.push(parseInt($(this).text()));
+                    }
+                });
+                $('th[data-field="id"]').addClass("layui-hide");
+                $('td[data-field="id"]').addClass("layui-hide");
+            }
         });
 
+        var tableIns_2 = table.render({
+            elem: '#dateTable_2'                  //指定原始表格元素选择器（推荐id选择器）
+            ,
+            id: 'dateTable_2'
+            ,
+            even: true //开启隔行背景
+            ,
+            size: 'sm' //小尺寸的表格
+            ,
+            height: '120'    //容器高度
+            ,
+            cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: 'id', minWidth: 100}
+                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            ,
+            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_2').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            ,
+            method: 'get'
+            ,
+            request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,
+            page: false
+            ,
+            limits: [30, 60, 90, 150, 300]
+            ,
+            limit: 30 //默认采用30
+            ,
+            loading: true
+            ,
+            done: function (res, curr, count) {
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('.del').remove();
+                    $('.add').remove();
+                }
+                $('div.laytable-cell-2-id').each(function () {
+                    if (isNaN($(this).text())) {
+                        // 不是数字
+                    } else {
+                        // 是数字
+                        files.push(parseInt($(this).text()));
+                    }
+                });
+                $('th[data-field="id"]').addClass("layui-hide");
+                $('td[data-field="id"]').addClass("layui-hide");
+            }
+        });
+
+        var tableIns_3 = table.render({
+            elem: '#dateTable_3'                  //指定原始表格元素选择器（推荐id选择器）
+            ,
+            id: 'dateTable_3'
+            ,
+            even: true //开启隔行背景
+            ,
+            size: 'sm' //小尺寸的表格
+            ,
+            height: '120'    //容器高度
+            ,
+            cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: 'id', minWidth: 100}
+                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '上传时间', width: 150, sort: true}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            ,
+            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_3').attr("fileTypeId") + '&projectID=' + projectID + "&questionnare=" + questionnaireId
+            ,
+            method: 'get'
+            ,
+            request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            ,
+            page: false
+            ,
+            limits: [30, 60, 90, 150, 300]
+            ,
+            limit: 30 //默认采用30
+            ,
+            loading: true
+            ,
+            done: function (res, curr, count) {
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('.del').remove();
+                    $('.add').remove();
+                }
+                $('div.laytable-cell-3-id').each(function () {
+                    if (isNaN($(this).text())) {
+                        // 不是数字
+                    } else {
+                        // 是数字
+                        files.push(parseInt($(this).text()));
+                    }
+                });
+                $('th[data-field="id"]').addClass("layui-hide");
+                $('td[data-field="id"]').addClass("layui-hide");
+            }
+        });
+
+
+        table.on('tool(dateTable_1)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/fileupload/delete',
+                        data: {
+                            id: data.id,
+                            projectID: projectID
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            layer.close(index);
+                            reloadTable("dateTable_1");
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            } else if (obj.event === 'view') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                });
+
+            }
+        });
+
+        table.on('tool(dateTable_2)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/fileupload/delete',
+                        data: {
+                            id: data.id,
+                            projectID: projectID
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            layer.close(index);
+                            reloadTable("dateTable_2");
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            } else if (obj.event === 'view') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                });
+            }
+        });
+
+        table.on('tool(dateTable_3)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    util.sendAjax({
+                        type: 'POST',
+                        url: '#(ctxPath)/app/fileupload/delete',
+                        data: {
+                            id: data.id,
+                            projectID: projectID
+                        },
+                        loadFlag: true,
+                        success: function (data) {
+                            layer.close(index);
+                            reloadTable("dateTable_3");
+                        },
+                        unSuccess: function (data) {
+                            layer.close(index);
+                        }
+                    })
+                });
+            } else if (obj.event === 'view') {
+                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                });
+            }
+        });
+
+        upload.render({
+            elem: '#add_1'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            //,multiple: true
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: "文档文件"
+            }, before: function (res) {
+                $('#upload-progress_1').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress_1').addClass('layui-hide');
+                if (res.code == 0) {
+                    postFileID('table_1', res.data.fileId);
+                    return true;
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    return false;
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress_1').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+        upload.render({
+            elem: '#add_2'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            //,multiple: true
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: "文档文件"
+            }, before: function (res) {
+                $('#upload-progress_2').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress_2').addClass('layui-hide');
+                if (res.code == 0) {
+                    postFileID('table_2', res.data.fileId);
+                    return true;
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    return false;
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress_2').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+        upload.render({
+            elem: '#add_3'
+            , url: '#(ctxPath)/util/uploadFile'
+            , accept: 'file'
+            //,multiple: true
+            , exts: 'pdf|png|jpeg|jpg'
+            , xhr: xhrOnProgress
+            , progress: function (value) {//上传进度回调 value进度值
+                element.progress('upload-progress', value + '%')//设置页面进度条
+            }
+            , data: {
+                description: "文档文件"
+            }, before: function (res) {
+                $('#upload-progress_3').removeClass('layui-hide');
+            }, done: function (res) {
+                <!--$('.loading-bg').remove();-->
+                $('#upload-progress_3').addClass('layui-hide');
+                if (res.code == 0) {
+                    postFileID('table_3', res.data.fileId);
+                    return true;
+                } else if (res.code == 1) {
+                    layer.msg("文件上传失败，请重新选择上传！");
+                    return false;
+                }
+            }
+            , error: function (index, upload) {
+                $('#upload-progress_3').addClass('layui-hide');
+                layer.msg("文件上传错误！请重新尝试！");
+            }
+        });
+
+
+        reloadTable = function (dateTable) {
+            table.reload(dateTable, {
+                url: '#(ctxPath)/app/fileupload/tableData'
+                , where: {
+                    fileTypeID: $("#" + dateTable.slice(4).toLowerCase()).attr("fileTypeId"),
+                    projectID: projectID,
+                    questionnare: questionnaireId
+                } //设定异步数据接口的额外参数
+                ,done: function () {
+                    $('th[data-field="id"]').addClass("layui-hide");
+                    $('td[data-field="id"]').addClass("layui-hide");
+                }
+            });
+        };
+
+        function postFileID(_fileTypeID, _fileID) {
+            id = _fileTypeID;
+            util.sendAjax({
+                type: 'POST',
+                url: '#(ctxPath)/app/fileupload/save',
+                data: {
+                    'fileProject.fileID': _fileID,
+                    'fileProject.projectID': projectID,
+                    "questionnare": questionnaireId,
+                    'fileProject.fileTypeID': $("#" + _fileTypeID).attr("fileTypeId")
+                },
+                loadFlag: true,
+                success: function (data) {
+                    console.log(data);
+                    files.push(data.data);
+                    reloadTable("dateT" + id.slice(1));
+                },
+                unSuccess: function (data) {
+                }
+            })
+        }
 
     });
 </script>

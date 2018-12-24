@@ -71,10 +71,10 @@
                 }
                 , {field: 'sort', title: '资源顺序', minWidth: 100, align: 'center',sort:true}
                 , {field: 'type', title: '资源类型', minWidth: 100, align: 'center', templet: '#dataTpl("TYPE_SYSTEM_RES", "type")', sort: true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150, align: 'center',sort:true}
+                , {field: 'createTime', title: '创建时间', width: 150, align: 'center',sort:true}
                 , {field: 'lastUpdateUserID', title: '最后更新人', minWidth: 100, align: 'center', sort: true}
-                , {field: 'lastAccessTime', title: '最后更新时间', minWidth: 150, align: 'center',sort:true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'lastAccessTime', title: '最后更新时间', width: 150, align: 'center',sort:true}
+                , {fixed: 'right', title: '操作', width: 100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/res/resData'
             , method: 'get'

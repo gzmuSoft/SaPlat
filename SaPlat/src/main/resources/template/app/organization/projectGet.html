@@ -34,7 +34,7 @@
         });
 
         $('#approve').click(function () {
-            parent.addTab('card',"组织机构认证","#(ctxPath)/app/organization/prove");
+            parent.addTab('card', "组织机构认证", "#(ctxPath)/app/organization/prove");
         })
 
     });
@@ -59,7 +59,11 @@
     <legend style="font-size: 20px;font-weight: 500;">您已获得的立项权限：</legend>
     <div>
         #for(auth : verify)
-        <button class="layui-btn layui-btn-primary ">#(auth.remark)</button>
+            #if(auth.roleId == authRoleId)
+                <button class="layui-btn layui-btn-primary">#(auth.remark)已禁用</button>
+            #else
+                <button class="layui-btn layui-btn-primary ">#(auth.remark)</button>
+            #end
         #end
     </div>
 </fieldset>

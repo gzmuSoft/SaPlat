@@ -11,6 +11,16 @@ public class ProfGroup extends BaseProfGroup<ProfGroup> {
 
     private boolean isInvite;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public void setIsInvite(boolean isInvite) {
         this.isInvite = isInvite;
     }

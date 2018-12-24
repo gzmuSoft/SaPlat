@@ -19,6 +19,8 @@ import io.jboot.admin.validator.system.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -46,6 +48,9 @@ public class ProjectController extends BaseController {
     private ProjectAssTypeService projectAssTypeService;
 
     @JbootrpcService
+    private SiteSurveyExpertAdviceService siteSurveyExpertAdviceService;
+
+    @JbootrpcService
     private ProjectStepService projectStepService;
 
     @JbootrpcService
@@ -68,6 +73,9 @@ public class ProjectController extends BaseController {
 
     @JbootrpcService
     private OrganizationService organizationService;
+
+    @JbootrpcService
+    private DiagnosesService diagnosesService;
 
     @JbootrpcService
     private FileProjectService fileProjectService;
@@ -102,6 +110,9 @@ public class ProjectController extends BaseController {
     @JbootrpcService
     private ProfGroupService profGroupService;
 
+    @JbootrpcService
+    private PersonService personService;
+
     /**
      * 项目立项基本资料初始化至信息管理界面
      */
@@ -115,11 +126,32 @@ public class ProjectController extends BaseController {
         psModel.setIsEnable(true);
         List<ProjectStep> projectStepList = projectStepService.findAll(psModel);
         List<String> roleNameList = new ArrayList<>();
-        for (int i = 0; i < authList.size(); i++) {
-            roleNameList.add(roleService.findById(authList.get(i).getRoleId()).getName());
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(), true);
+        List<Long> authRoleId = new ArrayList<>();
+        List<Long> userRoleId = new ArrayList<>();
+        for (Auth i : authList) {
+            authRoleId.add(i.getRoleId());
+        }
+        boolean isManager = false;
+        for (UserRole j : userRoles) {
+            userRoleId.add(j.getRoleID());
+            if (j.getRoleID() == 11)
+                isManager = true;
+        }
+        authRoleId.retainAll(userRoleId);
+        //取两个集合的交集，返回值为boolean；authRoleId为交集
+        for (Long i : authRoleId) {
+            roleNameList.add(roleService.findById(i).getName());
         }
 
         List<Management> mList = managementService.findAll(true);
+        if(isManager) // 若当前用户有管理机构立项权限，则从主管部门中移除自己
+        for (int i = 0; i < mList.size(); i++) {
+            if(mList.get(i).getOrgID() == loginUser.getUserID()) {
+                mList.remove(i);
+                break;
+            }
+        }
 
         if (roleNameList.size() != 0) {
             setAttr("roleNameList", roleNameList).setAttr("flag", true)
@@ -150,28 +182,25 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         Date date = new Date();
         Project project = getBean(Project.class, "project");
-
-        //查找是否存在同名项目
-        if (projectService.findFirstByColumn("name", project.getName()) != null) {
-            renderJson(RestResult.buildError("项目资料更新失败"));
-            throw new BusinessException("项目资料更新失败");
-        } else {
-            project.setUserId(loginUser.getId());
-            project.setStatus(ProjectStatus.BUILDING);
-            project.setCreateUserID(loginUser.getId());
-            project.setLastUpdateUserID(loginUser.getId());
-            project.setIsEnable(true);
-            int saveOrUpdate = getParaToInt("saveOrUpdate");
-            if (saveOrUpdate == 1) {
+        Project oldProject = projectService.findById(project.getName());
+        project.setUserId(loginUser.getId());
+        project.setStatus(ProjectStatus.BUILDING);
+        project.setCreateUserID(loginUser.getId());
+        project.setLastUpdateUserID(loginUser.getId());
+        project.setIsEnable(true);
+        int saveOrUpdate = getParaToInt("saveOrUpdate");
+        if (saveOrUpdate == 1) {
+            if (oldProject != null) {
+                JSONObject json1 = new JSONObject();
+                json1.put("status", false);
+                renderJson(json1);
+            } else {
                 Project model = projectService.saveProject(project);
-
                 JSONObject json = new JSONObject();
                 Long projectId = -1L;
-
                 if (model != null) {
                     projectId = model.getId();
                 }
-
                 json.put("projectId", projectId);
                 if (projectId != -1L) {
                     renderJson(json);
@@ -179,79 +208,81 @@ public class ProjectController extends BaseController {
                     renderJson(RestResult.buildError("项目资料上传失败"));
                     throw new BusinessException("项目资料上传失败");
                 }
-            } else if (saveOrUpdate == 0) {
-                JSONObject jsonData = new JSONObject();
-                if (getParaToBoolean("judgeFile")) {
-                    Project projectDb = projectService.findById(getParaToLong("projectId"));
-                    AuthProject authProject = new AuthProject();
-                    authProject.setUserId(loginUser.getId());
-                    authProject.setRoleId(roleService.findByName(projectDb.getRoleName()).getId());
-                    authProject.setProjectId(getParaToLong("projectId"));
-                    authProject.setLastUpdTime(date);
-                    authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
-                    authProject.setName(loginUser.getName());
-
-                    authProject.setLastUpdUser(loginUser.getName());
-                    if ("自评".equals(project.getAssessmentMode())) {
-                        authProject.setStatus(ProjectStatus.REVIEW);
-                        project.setStatus(ProjectStatus.REVIEW);
-
-                        ProjectUndertake projectUndertake = new ProjectUndertake();
-                        projectUndertake.setName(projectDb.getName());
-                        projectUndertake.setCreateUserID(loginUser.getId());
-                        projectUndertake.setProjectID(getParaToLong("projectId"));
-                        projectUndertake.setFacAgencyID(loginUser.getId());
-                        projectUndertake.setApplyOrInvite(true);
-                        projectUndertake.setStatus(2);
-                        projectUndertake.setCreateTime(date);
-                        projectUndertake.setDeadTime(date);
-                        projectUndertake.setLastAccessTime(date);
-                        projectUndertake.setLastUpdateUserID(loginUser.getId());
-                        projectUndertake.setIsEnable(true);
+            }
+        } else if (saveOrUpdate == 0) {
+            JSONObject jsonData = new JSONObject();
+            if (getParaToBoolean("judgeFile")) {
+                Project projectDb = projectService.findById(getParaToLong("projectId"));
+                AuthProject authProject = new AuthProject();
+                authProject.setUserId(loginUser.getId());
+                authProject.setRoleId(roleService.findByName(projectDb.getRoleName()).getId());
+                authProject.setProjectId(getParaToLong("projectId"));
+                authProject.setLastUpdTime(date);
+                authProject.setType(ProjectTypeStatus.INFORMATION_REVIEW);
+                authProject.setName(loginUser.getName());
+                authProject.setLastUpdUser(loginUser.getName());
+                if ("自评".equals(project.getAssessmentMode())) {
+                    authProject.setStatus(ProjectStatus.REVIEW);
+                    project.setStatus(ProjectStatus.REVIEW);
+                    ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(getParaToLong("projectId"), ProjectUndertakeStatus.ACCEPT);
+                    if (projectUndertake == null) {
+                        projectUndertake = new ProjectUndertake();
+                    }
+                    projectUndertake.setName(projectDb.getName());
+                    projectUndertake.setCreateUserID(loginUser.getId());
+                    projectUndertake.setProjectID(getParaToLong("projectId"));
+                    projectUndertake.setFacAgencyID(loginUser.getId());
+                    projectUndertake.setApplyOrInvite(true);
+                    projectUndertake.setStatus(2);
+                    projectUndertake.setCreateTime(date);
+                    projectUndertake.setDeadTime(date);
+                    projectUndertake.setLastAccessTime(date);
+                    projectUndertake.setLastUpdateUserID(loginUser.getId());
+                    projectUndertake.setIsEnable(true);
+                    //保证数据库中没有重复的数据
+                    ProjectUndertake tmp = projectUndertakeService.findModel(projectUndertake);
+                    if (tmp == null) {
                         if (!projectUndertakeService.saveOrUpdate(projectUndertake)) {
                             throw new BusinessException("保存失败");
                         }
-                        jsonData.put("flag", 0);
-                    } else if ("委评".equals(project.getAssessmentMode())) {
-                        authProject.setStatus(ProjectStatus.VERIFIING);
-                        project.setStatus(ProjectStatus.VERIFIING);
-
-                        Notification notification = new Notification();
-                        notification.setName(loginUser.getName());
-                        notification.setSource("/app/project/projectUploading");
-                        notification.setContent("申请《" + projectDb.getName() + "》审核");
-                        notification.setReceiverID(1);
-                        notification.setCreateUserID(loginUser.getId());
-                        notification.setCreateTime(date);
-                        notification.setRecModule(projectDb.getName());
-                        notification.setLastUpdateUserID(loginUser.getId());
-                        notification.setLastAccessTime(date);
-                        notification.setIsEnable(true);
-                        notification.setStatus(0);
-                        notificationService.save(notification);
-                        jsonData.put("flag", 1);
                     }
-
-                    if (authProjectService.saveOrUpdate(authProject)) {
-                        renderJson(RestResult.buildSuccess("项目状态表上传成功"));
-                    } else {
-                        renderJson(RestResult.buildError("项目状态表上传失败"));
-                        throw new BusinessException("项目状态表上传失败");
-                    }
+                    jsonData.put("flag", 0);
+                } else if ("委评".equals(project.getAssessmentMode())) {
+                    authProject.setStatus(ProjectStatus.VERIFIING);
+                    project.setStatus(ProjectStatus.VERIFIING);
+                    Notification notification = new Notification();
+                    notification.setName(loginUser.getName());
+                    notification.setSource("/app/project/projectUploading");
+                    notification.setContent("申请《" + projectDb.getName() + "》审核");
+                    notification.setReceiverID(1);
+                    notification.setCreateUserID(loginUser.getId());
+                    notification.setCreateTime(date);
+                    notification.setRecModule(projectDb.getName());
+                    notification.setLastUpdateUserID(loginUser.getId());
+                    notification.setLastAccessTime(date);
+                    notification.setIsEnable(true);
+                    notification.setStatus(0);
+                    notificationService.save(notification);
+                    jsonData.put("flag", 1);
+                }
+                if (authProjectService.saveOrUpdate(authProject)) {
+                    renderJson(RestResult.buildSuccess("项目状态表上传成功"));
                 } else {
-                    jsonData.put("flag", 2);
+                    renderJson(RestResult.buildError("项目状态表上传失败"));
+                    throw new BusinessException("项目状态表上传失败");
                 }
-                if (getParaToLong("projectId") != -1) {
-                    project.setId(getParaToLong("projectId"));
-                }
-
-                if (projectService.update(project)) {
-                    renderJson(RestResult.buildSuccess("项目资料更新成功"));
-                    renderJson(jsonData);
-                } else {
-                    renderJson(RestResult.buildError("项目资料更新失败"));
-                    throw new BusinessException("项目资料更新失败");
-                }
+            } else {
+                jsonData.put("flag", 2);
+            }
+            if (getParaToLong("projectId") != -1) {
+                project.setId(getParaToLong("projectId"));
+            }
+            if (projectService.update(project)) {
+                renderJson(RestResult.buildSuccess("项目资料更新成功"));
+                renderJson(jsonData);
+            } else {
+                renderJson(RestResult.buildError("项目资料更新失败"));
+                throw new BusinessException("项目资料更新失败");
             }
         }
     }
@@ -293,7 +324,7 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id"})
     public void see() {
-//        User user = AuthUtils.getLoginUser();
+        User user = AuthUtils.getLoginUser();
 //        Long id = getParaToLong("id");
 //        Project model = projectService.findById(id);
 //        model.setTypeName(projectAssTypeService.findById(model.getPaTypeID()).getName());
@@ -327,7 +358,16 @@ public class ProjectController extends BaseController {
             pModel = new Project();
             strRoleName = "";
         }
+
+        //0为无管理权限，1为有管理权限
+        int managementRole = 0;
+        Management management = managementService.findByOrgId(user.getUserID());
+        if (management != null && management.getIsEnable()) {
+            managementRole = 1;
+        }
+
         setAttr("organization", organization)
+                .setAttr("managementRole", managementRole)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .setAttr("entry", "mgr")
@@ -532,6 +572,11 @@ public class ProjectController extends BaseController {
                 projectUndertake.setLastAccessTime(new Date());
                 projectUndertake.setLastUpdateUserID(user.getId());
                 projectUndertake.setIsEnable(true);
+                //保证数据库中没有重复的数据
+                ProjectUndertake tmp = projectUndertakeService.findModel(projectUndertake);
+                if (tmp != null) {
+                    projectUndertake = tmp;
+                }
             } else {
                 json.put("status", false);
             }
@@ -616,8 +661,8 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         FileProject fileProject;
         json.put("judgeFile", true);
-        for (ProjectFileType item:childProjectFileType) {
-            if(item.getStatus()!=null && 1 == item.getStatus()) {
+        for (ProjectFileType item : childProjectFileType) {
+            if (item.getStatus() != null && 1 == item.getStatus()) {
                 fileProject = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), item.getId());
                 if (null == fileProject) {
                     json.put("judgeFile", false);
@@ -755,23 +800,68 @@ public class ProjectController extends BaseController {
             projects = Collections.synchronizedList(new ArrayList<>());
         }
         projects.removeAll(Collections.singleton(null));
+        List<Project> result;
         if (projects.size() < 1 && undertake.size() > 0) {
             // 当委评的不为空，自评的为空
-            renderJson(RestResult.buildSuccess(undertake));
+            result = undertake;
         } else if (projects.size() > 0 && undertake.size() < 1) {
             // 当委评的为空，自评的不为空
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         } else if (projects.size() > 0 && undertake.size() > 0) {
             // 当委评的不为空，自评的不为空
             if (!projects.addAll(undertake)) {
                 // 合并失败
                 throw new BusinessException("数据加载失败。。。");
             }
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         } else {
             // 当两个都为空
-            renderJson(RestResult.buildSuccess(projects));
+            result = projects;
         }
+        // 查找每个项目的进度
+        if (result.size() > 0) {
+            for (Project project : result) {
+                String info = project.getRemark();
+                int progress = 0;
+                //TODO： 评估查表过多，访问速度过慢
+//              原本想通过加字段解决评估列表中疯狂查表的问题，但是目前发现无法实现，一旦指定值以后，这里就查不了所有的表
+//              只有通过在修改内容的时候进行修改评估进度的字段，但是需要每张表进行添加的时候进行修改进度，需要修改不下10个文件
+//              时间不够整理逻辑，暂时先不修复
+//                if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")) {
+//                    progress = Integer.parseInt(info.substring(4));
+//                } else {
+                EvaScheme evaScheme = evaSchemeService.findByProjectID(project.getId());
+                if (evaScheme != null && "2".equals(evaScheme.getStatus())) {
+                    progress += 20;
+                    List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(project.getId());
+                    if (model != null && model.size() > 0) {
+                        progress += 20;
+                    }
+                    List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(project.getId());
+                    if (diagnoses != null && diagnoses.size() > 0) {
+                        progress += 20;
+                    }
+                    List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
+                    for (ProjectFileType p : list) {
+                        List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), project.getId());
+                        if (fileProjects != null && fileProjects.size() > 0) {
+                            progress += 15;
+                        }
+                    }
+                }
+                if (progress > 100) {
+                    progress = 100;
+                }
+                project.setRemark("评估进度" + progress);
+                projectService.update(project);
+//                }
+//                if (progress > 100) {
+//                    progress = 100;
+//                }
+                project.setAssessmentProgress(Integer.toString(progress));
+            }
+        }
+        renderJson(RestResult.buildSuccess(result));
     }
 
     /**
@@ -798,12 +888,10 @@ public class ProjectController extends BaseController {
             // 如果服务机构不为空并且启用
             if (facAgency != null && facAgency.getIsEnable()) {
                 projectUndertake.setFacAgencyID(facAgency.getId());
-                projectUndertake.setCreateUserID(loginUser.getId());
             }
-        // 如果不是组织或者没有启用
-        } else {
-            projectUndertake.setCreateUserID(loginUser.getId());
         }
+        projectUndertake.setCreateUserID(loginUser.getId());
+
         Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
         List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
         List<ProjectUndertake> list = projectUndertakePage.getList();
@@ -836,16 +924,16 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
-
-        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());//找到组织机构对应的服务机构信息
+        //找到组织机构对应的服务机构信息
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
+        } else {
+            projectUndertake.setFacAgencyID(loginUser.getId());
         }
-        /*else {
-            projectUndertake.setFacAgencyID(Long.parseLong("0"));
-        }*/
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
+        projectUndertake.setRemark("FINAL_REPORT_CHECKING");
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
     }
@@ -888,12 +976,11 @@ public class ProjectController extends BaseController {
         FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
         Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(true);
-        project.setCreateTime(new Date());
+        project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
         if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
             throw new BusinessException("提交失败");
         }
         renderJson(RestResult.buildSuccess());
-
     }
 
     @NotNullPara("id")
@@ -906,9 +993,11 @@ public class ProjectController extends BaseController {
     public void setProjectAssessFinished() {
         Project projectBean = getBean(Project.class, "project");
         Project project = projectService.findById(projectBean.getId());
-        project.setStatus(ProjectStatus.RECORDKEEPING);//设置项目状态为“项目备案”
+        //设置项目状态为“项目备案”
+        project.setStatus(ProjectStatus.RECORDKEEPING);
         if (projectService.update(project)) {
-            User user = AuthUtils.getLoginUser();//获得当前登录用户信息
+            //获得当前登录用户信息
+            User user = AuthUtils.getLoginUser();
             Notification notification = new Notification();
             notification.setName("项目评估及审查完成确认");
             notification.setSource("/app/project/setAssessFinished");
@@ -1080,14 +1169,14 @@ public class ProjectController extends BaseController {
 
 
     /**
-     * 渲染专家团体表格数据
+     * 项目承接者渲染被邀请的人员的表格数据
      */
     @NotNullPara({"id"})
     public void invitedExpertTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        //查找当前项目的所有被邀请的专家列表
-        Page<ExpertGroup> page = expertGroupService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
+        //查找当前项目的所有被邀请的人员列表
+        Page<Person> page = personService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
         if (page != null) {
             List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
             int rowCount = page.getList().size();
@@ -1100,7 +1189,7 @@ public class ProjectController extends BaseController {
                 }
             }
         }
-        renderJson(new DataTable<ExpertGroup>(page));
+        renderJson(new DataTable<Person>(page));
     }
 
     /**
@@ -1129,7 +1218,7 @@ public class ProjectController extends BaseController {
         Project project = projectService.findByProjectName(getPara("name"));
         if (project != null) {
             json.put("status", false);
-        }else {
+        } else {
             json.put("status", true);
         }
         renderJson(json);
@@ -1178,12 +1267,13 @@ public class ProjectController extends BaseController {
      * 0 审查团体
      * 1 专业团体
      */
-    @NotNullPara({"id", "projectId", "orgType", "num"})
+    @NotNullPara({"id", "projectId", "orgType", "num", "deadTime"})
     public void inviteReview() {
         User user = AuthUtils.getLoginUser();
         Long id = getParaToLong("id");
         Long projectId = getParaToLong("projectId");
         Long orgId = null;
+        Date dateNow= new Date();
 
         int num = getParaToInt("num");
         int userSource = -1;
@@ -1202,17 +1292,17 @@ public class ProjectController extends BaseController {
         notification.setContent("您好, " + user.getName() + " 希望您的团队派出" + num + "人介入项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(orgId, 1L).getId().intValue());
         notification.setCreateUserID(user.getId());
-        notification.setCreateTime(new Date());
+        notification.setCreateTime(dateNow);
         notification.setLastUpdateUserID(user.getId());
-        notification.setLastAccessTime(new Date());
+        notification.setLastAccessTime(dateNow);
         notification.setIsEnable(true);
         notification.setStatus(0);
 
-        Date nowTime = new Date();
-        Calendar time = Calendar.getInstance();
-        //获取七天以后的日期作为申请的失效日期
-        time.setTime(nowTime);
-        time.add(Calendar.DATE, 7);
+//        Date nowTime = new Date();
+//        Calendar time = Calendar.getInstance();
+//        //获取七天以后的日期作为申请的失效日期
+//        time.setTime(nowTime);
+//        time.add(Calendar.DATE, 7);
 
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setName(projectService.findById(projectId).getName());
@@ -1228,14 +1318,19 @@ public class ProjectController extends BaseController {
         }
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.WAITE);
-        applyInvite.setCreateTime(new Date());
-        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
-        if (timeTmp != null) {
-            applyInvite.setDeadTime(timeTmp.getDeadTime());
-        } else {
-            applyInvite.setDeadTime(time.getTime());
+        applyInvite.setCreateTime(dateNow);
+        if(getParaToDate("deadTime")==null) {
+            applyInvite.setDeadTime(dateNow);
         }
-        applyInvite.setLastAccessTime(new Date());
+        else{
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                applyInvite.setDeadTime(formatter.parse(getPara("deadTime")));
+            } catch (ParseException e) {
+                applyInvite.setDeadTime(dateNow);
+            }
+        }
+        applyInvite.setLastAccessTime(dateNow);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
@@ -1253,7 +1348,7 @@ public class ProjectController extends BaseController {
         JSONObject json = new JSONObject();
         ApplyInvite jud = new ApplyInvite();
         jud.setIsEnable(true);
-        jud.setProjectID(getParaToLong("projectID"));
+        jud.setProjectID(getParaToLong("projectId"));
         jud.setModule(2);
         jud.setBelongToID(null);
         jud.setUserID(user.getId());
@@ -1266,23 +1361,19 @@ public class ProjectController extends BaseController {
                 return;
             }
         }
+        Date nowDate = new Date();
+
         Notification notification = new Notification();
         notification.setName("项目审查工作通知");
         notification.setSource("/app/project/chooseExpert");
         notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
-        notification.setReceiverID(userService.findByUserIdAndUserSource(expertGroupService.findById(getParaToLong("id")).getPersonID(), 0L).getId().intValue());
+        notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
-        notification.setCreateTime(new Date());
+        notification.setCreateTime(nowDate);
         notification.setLastUpdateUserID(user.getId());
-        notification.setLastAccessTime(new Date());
+        notification.setLastAccessTime(nowDate);
         notification.setIsEnable(true);
         notification.setStatus(0);
-
-        Date nowTime = new Date();
-        Calendar time = Calendar.getInstance();
-        //获取七天以后的日期作为申请的失效日期
-        time.setTime(nowTime);
-        time.add(Calendar.DATE, 7);
 
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setName(projectService.findById(getParaToLong("projectId")).getName());
@@ -1292,15 +1383,9 @@ public class ProjectController extends BaseController {
         applyInvite.setUserID(notification.getReceiverID().longValue());
         applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
-        applyInvite.setStatus(ApplyInviteStatus.WAITE);
-        applyInvite.setCreateTime(new Date());
-        ApplyInvite timeTmp = applyInviteService.findByProjectID(getParaToLong("projectId"));
-        if (timeTmp != null) {
-            applyInvite.setDeadTime(timeTmp.getDeadTime());
-        } else {
-            applyInvite.setDeadTime(time.getTime());
-        }
-        applyInvite.setLastAccessTime(new Date());
+        applyInvite.setStatus(ApplyInviteStatus.AGREE);
+        applyInvite.setCreateTime(nowDate);
+        applyInvite.setLastAccessTime(nowDate);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
@@ -1309,11 +1394,11 @@ public class ProjectController extends BaseController {
             //查询当前组织已经邀请的人数
             applyInvite = new ApplyInvite();
             applyInvite.setIsEnable(true);
-            applyInvite.setProjectID(getParaToLong("projectID"));
+            applyInvite.setProjectID(getParaToLong("projectId"));
             applyInvite.setModule(1);
             applyInvite.setBelongToID(user.getId());
             List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-            if (list.size() == getParaToLong("num")) {
+            if (list.size() >= getParaToLong("num")) {
                 //若人数已经达到要求则查询当前组织的审查请求的状态为已选择完成
                 applyInvite.setModule(2);
                 applyInvite.setBelongToID(null);
@@ -1369,20 +1454,36 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Long projectID = getParaToLong("id");
         int flag = getParaToInt("flag");
+        ApplyInvite applyInvite = new ApplyInvite();
+        applyInvite.setModule(2);
+        applyInvite.setIsEnable(true);
+        applyInvite.setProjectID(projectID);
         if (flag == 0) {
+            applyInvite.setUserSource(3);
             ReviewGroup reviewGroup = new ReviewGroup();
             reviewGroup.setIsEnable(true);
             Page<ReviewGroup> page = reviewGroupService.findPage(reviewGroup, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
                 page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(reviewGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+                if (page.getList().get(i).getIsInvite()) {
+                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
+                    applyInvite.setUserID(userId);
+                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+                }
             }
             renderJson(new DataTable<ReviewGroup>(page));
         } else if (flag == 1) {
+            applyInvite.setUserSource(4);
             ProfGroup profGroup = new ProfGroup();
             profGroup.setIsEnable(true);
             Page<ProfGroup> page = profGroupService.findPage(profGroup, pageNumber, pageSize);
             for (int i = 0; i < page.getList().size(); i++) {
                 page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(profGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
+                if (page.getList().get(i).getIsInvite()) {
+                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
+                    applyInvite.setUserID(userId);
+                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+                }
             }
             renderJson(new DataTable<ProfGroup>(page));
         }
@@ -1396,8 +1497,15 @@ public class ProjectController extends BaseController {
         Long id = getParaToLong("id");
         Long projectId = getParaToLong("projectId");
         Long orgType = getParaToLong("orgType");
-        setAttr("id", id).setAttr("projectId", projectId)
-                .setAttr("orgType", orgType).render("reviewNum.html");
+        String orgName = getPara("orgName");
+        Project pModel = projectService.findById(projectId);
+
+        setAttr("id", id)
+                .setAttr("projectId", projectId)
+                .setAttr("orgType", orgType)
+                .setAttr("orgName", orgName)
+                .setAttr("pModel", pModel)
+                .render("reviewNum.html");
     }
 
     /**
@@ -1569,7 +1677,6 @@ public class ProjectController extends BaseController {
         applyInvite.setReply(reply);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setLastAccessTime(new Date());
-
 
         notification.setSource("/app/project/saveInviteReview");
         notification.setRecModule("");
@@ -1858,14 +1965,12 @@ public class ProjectController extends BaseController {
 
     @Before(GET.class)
     public void projectCollect() {
-        BaseStatus baseStatus = new BaseStatus() {
-        };
+        BaseStatus baseStatus = new BaseStatus() { };
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
         if (PaTypeList != null) {
-            for (ProjectAssType item :
-                    PaTypeList) {
+            for (ProjectAssType item : PaTypeList) {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
@@ -1879,40 +1984,50 @@ public class ProjectController extends BaseController {
     public void projectCollectTableData() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        int iOwnType = getParaToInt("ownType");
+        int iOwnType = getParaToInt("ownType", 0);
         Project project = new Project();
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName(getPara("name"));
+        }
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("maxAmount"))) {
+            project.setMaxAmount(Double.parseDouble(getPara("maxAmount")));
+        }
+        if (StrKit.notBlank(getPara("minAmount"))) {
+            project.setMinAmount(Double.parseDouble(getPara("minAmount")));
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());
         Page<Project> page = null;
         Page<RejectProjectInfo> page1 = null;
-        if (StrKit.notBlank(getPara("ownType"))) {
-            switch (iOwnType) {
-                case 0:
-                    page = projectService.findPageForCreater(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
-                    break;
-                case 1:
-                    project.setUserId(AuthUtils.getLoginUser().getUserID());
-                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
-                    break;
-                case 2:
-                    page = projectService.findPageForService(AuthUtils.getLoginUser().getId(), pageNumber, pageSize);
-                    break;
-                case 3:
-                    RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
-                    page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
-                    for (int i = 0; i < page1.getList().size(); i++) {
-                        Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
-                        if (tmp != null) {
-                            page.getList().get(i).setStatus(tmp.getStatus());
-                        } else {
-                            page.getList().get(i).setFileID(0L);
-                        }
+        switch (iOwnType) {
+            case 0:
+                project.setUserId(AuthUtils.getLoginUser().getId());
+                page = projectService.findPageForCreater(project, pageNumber, pageSize);
+                break;
+            case 1:
+                project.setUserId(AuthUtils.getLoginUser().getUserID());
+                page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                break;
+            case 2:
+                project.setUserId(AuthUtils.getLoginUser().getId());
+                page = projectService.findPageForService(project, pageNumber, pageSize);
+                break;
+            case 3:
+                RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
+                page1 = rejectProjectInfoService.findPage(rejectProjectInfo, pageNumber, pageSize);
+
+                for (int i = 0; i < page1.getList().size(); i++) {
+                    Project tmp = projectService.findById(page1.getList().get(i).getProjectID());
+                    if (tmp != null) {
+                        page.getList().get(i).setStatus(tmp.getStatus());
+                    } else {
+                        page.getList().get(i).setFileID(0L);
                     }
-                    break;
-            }
+                }
+                break;
         }
         if (iOwnType == 3) {
             renderJson(new DataTable<RejectProjectInfo>(page1));

@@ -119,6 +119,9 @@ public interface FileProjectService {
 
     public boolean saveFileProjectAndFiles(FileProject model);
 
+    public FileProject saveFileProjectAndFilesGet(FileProject model);
+
+
     /**
      * save model to database
      *
@@ -188,4 +191,5 @@ public interface FileProjectService {
 
     public void keep(List<? extends Model> models, String... attrs);
 
+    List<FileProject> findByRemark(Long questionnaireId);
 }

@@ -8,7 +8,6 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.ProjectUndertakeService;
 import io.jboot.admin.service.entity.model.Notification;
-import io.jboot.admin.service.entity.model.Project;
 import io.jboot.admin.service.entity.model.ProjectUndertake;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
@@ -115,7 +114,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             columns.eq("isEnable", projectUndertake.getIsEnable());
         }
         if (StrKit.notBlank(projectUndertake.getName())) {
-            columns.like("name", "%" + projectUndertake.getName() + "%");
+            columns.eq("name", projectUndertake.getName());
         }
         if (projectUndertake.getFacAgencyID() != null) {
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
@@ -129,6 +128,30 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
 
+    }
+
+    @Override
+    public ProjectUndertake findModel(ProjectUndertake projectUndertake) {
+        Columns columns = Columns.create();
+        if (projectUndertake.getApplyOrInvite() != null) {
+            columns.eq("applyOrInvite", projectUndertake.getApplyOrInvite());
+        }
+        if (projectUndertake.getIsEnable() != null) {
+            columns.eq("isEnable", projectUndertake.getIsEnable());
+        }
+        if (StrKit.notBlank(projectUndertake.getName())) {
+            columns.eq("name", projectUndertake.getName());
+        }
+        if (projectUndertake.getFacAgencyID() != null) {
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
+        }
+        if (projectUndertake.getCreateUserID() != null) {
+            columns.eq("createUserID", projectUndertake.getCreateUserID());
+        }
+        if (projectUndertake.getFacAgencyID() != null) {
+            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
+        }
+        return DAO.findFirstByColumns(columns);
     }
 
     @Override
@@ -212,7 +235,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         Page<ProjectUndertake> page = null;
         // 如果它是组织并且是服务机构
         if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null) {
-            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("createUserID", projectUndertake.getCreateUserID()).set("ID", projectUndertake.getCreateUserID());
+            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID());
             sqlPara = Db.getSqlPara("app-project.project", c);
             // 直接查询委评项目
             page = DAO.paginate(pageNumber, pageSize, sqlPara);

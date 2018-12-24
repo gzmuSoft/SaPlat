@@ -307,7 +307,9 @@ public class ProjectAuthController extends BaseController {
         pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
         Organization organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
         String strRoleName = roleService.findById(apModel.getRoleId()).getName();
+        Management management = managementService.findById(pModel.getManagementID());
         setAttr("organization",organization)
+                .setAttr("management", management)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .render("project.html");

@@ -24,7 +24,6 @@
             <button type="button" class="layui-btn" id="res" style="align-content: center;">返回
             </button>
         </div>
-
     </div>
     <script type="text/html" id="barOption">
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
@@ -60,14 +59,14 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
-            , contentType: 'application/json; charset=UTF-8'
+            , height: 'full-180'    //容器高度
+
             , cols: [[                 //标题栏
                 {field: '0', align: 'center', minWidth: 60, type: 'numbers', unresize: 'true'}
                 , {field: 'name', title: '文件名', minWidth: 300, align: 'center', sort: true}
                 , {field: 'createUserName', title: '上传人员', minWidth: 150, align: 'center', sort: true}
-                , {field: 'createTime', title: '上传时间', minWidth: 200, align: 'center', sort: true}
-                , {field: 'option', title: '操作',minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'createTime', title: '上传时间', width: 150, align: 'center', sort: true}
+                , {field: 'option', title: '操作',width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
             , method: 'get'
@@ -92,7 +91,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '600', '600', function () {
+                pop_show_full('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
                     });

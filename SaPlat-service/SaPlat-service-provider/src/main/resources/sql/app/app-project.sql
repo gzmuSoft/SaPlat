@@ -6,14 +6,6 @@
   where
     (
         facAgencyID = #para(facAgencyID)
-          or
-        (
-          createUserID = #para(ID)
-            AND
-          facAgencyID = #para(ID)
-        )
-          or
-        createUserID = #para(createUserID)
     )
     and
         isEnable = 1
@@ -74,7 +66,14 @@ FROM
 where
     a.id = b.projectID
 and
-    a.status = #para(status)
+    b.status = 2
+and
+#if(Remark)
+    (a.status = #para(status)
+	  or	a.status = #para(Remark))
+#else
+	a.status = #para(status)
+#end
 and
 	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
 	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
@@ -100,17 +99,28 @@ SELECT
 FROM
   project
 WHERE
-  managementID in (#para(mgr_list))
-  order by createTime desc
-#end
-
-#sql("project-by-mgr-status")
-SELECT
-  *
-FROM
-  project
-WHERE
-  managementID in (#para(mgr_list)) AND status = #para(status)
+  managementID in (
+    #for(id : mgr_list)
+      #(for.index > 0 ? ", " : "")#(id)
+    #end)
+  #if(name)
+	and	name like concat('%', #para(name) ,'%')
+	#end
+	#if(status)
+	and	status = #para(status)
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+	#if(isEnable)
+	and	isEnable = #para(isEnable)
+	#end
   order by createTime desc
 #end
 
@@ -121,16 +131,24 @@ FROM
   project
 WHERE
   userId = #para(userID)
-  order by createTime desc
-#end
-
-#sql("project-by-creater-status")
-SELECT
-  *
-FROM
-  project
-WHERE
-  userId = #para(userID) AND status = #para(status)
+  #if(name)
+	and	name like concat('%', #para(name) ,'%')
+	#end
+	#if(status)
+	and	status = #para(status)
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+	#if(isEnable)
+	and	isEnable = #para(isEnable)
+	#end
   order by createTime desc
 #end
 
@@ -138,39 +156,42 @@ WHERE
 SELECT * FROM
 project
 WHERE ID IN
-(
-	SELECT
-		DISTINCT projectID
-	FROM
-		project_undertake
-	WHERE
-		(facAgencyID = createUserID	AND facAgencyID = #para(userID))
-		OR
-		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2)
-)
-#end
-
-#sql("project-by-service-status")
-SELECT * FROM
-project
-WHERE ID IN
-(
-	SELECT
-		DISTINCT projectID
-	FROM
-		project_undertake
-	WHERE
-		((facAgencyID = createUserID	AND facAgencyID = #para(userID))
-		OR
-		(facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
-) AND status = #para(status)
+  (
+    SELECT
+      DISTINCT projectID
+    FROM
+      project_undertake
+    WHERE
+      ((facAgencyID = createUserID	AND facAgencyID = #para(userID))
+      OR
+      (facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND `status` = 2))
+  )
+  #if(name)
+  and	name like concat('%', #para(name) ,'%')
+  #end
+  #if(status)
+  and	status = #para(status)
+  #end
+  #if(paTypeID)
+  and	paTypeID = #para(paTypeID)
+  #end
+	#if(minAmount)
+	and	amount >= #para(minAmount)
+	#end
+	#if(maxAmount)
+	and	amount <= #para(maxAmount)
+	#end
+  #if(isEnable)
+  and	isEnable = #para(isEnable)
+  #end
+  order by createTime desc
 #end
 
 #sql("invitedExpert-by-projectID")
-SELECT * FROM expert_group WHERE personID IN(
+SELECT * FROM person WHERE id IN(
 	SELECT userID FROM sys_user WHERE ID IN(
 		SELECT userID FROM apply_invite
-		WHERE projectID = #para(ID) AND createTime > (
+		WHERE projectID = #para(ID) AND  module = 1 AND isEnable = 1 AND createTime > (
 		  SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
 		)
 	)

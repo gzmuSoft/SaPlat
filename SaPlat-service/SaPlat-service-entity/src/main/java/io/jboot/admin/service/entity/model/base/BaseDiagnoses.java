@@ -57,6 +57,30 @@ public abstract class BaseDiagnoses<M extends BaseDiagnoses<M>> extends JbootMod
 		return getStr("surveyGroup");
 	}
 
+	public void setMainRiskPoint(java.lang.String mainRiskPoint) {
+		set("mainRiskPoint", mainRiskPoint);
+	}
+	
+	public java.lang.String getMainRiskPoint() {
+		return getStr("mainRiskPoint");
+	}
+
+	public void setInvestigationReport(java.lang.String investigationReport) {
+		set("investigationReport", investigationReport);
+	}
+	
+	public java.lang.String getInvestigationReport() {
+		return getStr("investigationReport");
+	}
+
+	public void setSampleRate(java.math.BigDecimal sampleRate) {
+		set("sampleRate", sampleRate);
+	}
+	
+	public java.math.BigDecimal getSampleRate() {
+		return get("sampleRate");
+	}
+
 	public void setSurveyMethod(java.lang.String surveyMethod) {
 		set("surveyMethod", surveyMethod);
 	}
@@ -71,30 +95,6 @@ public abstract class BaseDiagnoses<M extends BaseDiagnoses<M>> extends JbootMod
 	
 	public java.lang.String getSurveyWay() {
 		return getStr("surveyWay");
-	}
-
-	public void setSampleRate(java.math.BigDecimal sampleRate) {
-		set("sampleRate", sampleRate);
-	}
-	
-	public java.math.BigDecimal getSampleRate() {
-		return get("sampleRate");
-	}
-
-	public void setSurveyDesign(java.lang.String surveyDesign) {
-		set("surveyDesign", surveyDesign);
-	}
-	
-	public java.lang.String getSurveyDesign() {
-		return getStr("surveyDesign");
-	}
-
-	public void setStaffArrangements(java.lang.String staffArrangements) {
-		set("staffArrangements", staffArrangements);
-	}
-	
-	public java.lang.String getStaffArrangements() {
-		return getStr("staffArrangements");
 	}
 
 	public void setCreateUserID(java.lang.Long createUserID) {
@@ -151,6 +151,22 @@ public abstract class BaseDiagnoses<M extends BaseDiagnoses<M>> extends JbootMod
 	
 	public java.lang.Boolean getIsEnable() {
 		return get("isEnable");
+	}
+
+	public void setStaffArrangements(java.lang.String staffArrangements) {
+		set("staffArrangements", staffArrangements);
+	}
+	
+	public java.lang.String getStaffArrangements() {
+		return getStr("staffArrangements");
+	}
+
+	public void setSurveyDesign(java.lang.String surveyDesign) {
+		set("surveyDesign", surveyDesign);
+	}
+	
+	public java.lang.String getSurveyDesign() {
+		return getStr("surveyDesign");
 	}
 
 }

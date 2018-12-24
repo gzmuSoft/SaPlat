@@ -185,6 +185,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getLong("passReviewByOverdueCount");
 	}
 
+	public void setRiskLevels(java.lang.String riskLevels) {
+		set("riskLevels", riskLevels);
+	}
+	
+	public java.lang.String getRiskLevels() {
+		return getStr("riskLevels");
+	}
+
 	public void setCreateUserID(java.lang.Long createUserID) {
 		set("createUserID", createUserID);
 	}
