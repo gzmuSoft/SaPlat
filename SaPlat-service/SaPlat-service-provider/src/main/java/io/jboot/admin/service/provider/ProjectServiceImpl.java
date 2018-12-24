@@ -29,6 +29,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     UserServiceImpl userService = new UserServiceImpl();
     OrganizationServiceImpl organizationService = new OrganizationServiceImpl();
     ManagementServiceImpl mgrService = new ManagementServiceImpl();
+    FileProjectServiceImpl fileProjectService = new FileProjectServiceImpl();
 
     /**
      * 装配单个实体对象的数据
@@ -38,12 +39,20 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
      */
     @Override
     public Project fitModel(Project model) {
-        if (null != model && model.getPaTypeID() > 0) {
-            model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
-            User user = userService.findById(model.getUserId());
-            if (user != null) {
-                model.setBuildUserName(user.getName());
-                model.setBuildOrgName(organizationService.findById(user.getUserID()).getName());
+        if (null != model) {
+            if(model.getPaTypeID() > 0) {
+                model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+                User user = userService.findById(model.getUserId());
+                if (user != null) {
+                    model.setBuildUserName(user.getName());
+                    model.setBuildOrgName(organizationService.findById(user.getUserID()).getName());
+                }
+            }
+            if(model.getStatus().equals("10") || model.getStatus().equals("11")) {
+                model.setIsBackRecordUpLoad(true);
+                FileProject fpModel = fileProjectService.findByFileTypeIdAndProjectId(111L, model.getId());
+                if(null != fpModel)
+                    model.setBackRecordFileID(fpModel.getFileID());
             }
         }
         return model;

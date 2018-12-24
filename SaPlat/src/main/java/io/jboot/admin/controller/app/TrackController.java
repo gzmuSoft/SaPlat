@@ -245,8 +245,6 @@ public class TrackController extends BaseController {
         }
         if (StrKit.notBlank(getPara("name"))) {
             project.setName("%" + getPara("name") + "%");
-        } else {
-            project.setName("%%");
         }
         project.setIsEnable(true);
         project.setUserId(AuthUtils.getLoginUser().getId());

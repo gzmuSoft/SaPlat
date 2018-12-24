@@ -54,13 +54,13 @@
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-disable">暂无数据</a>
     #[[
-    {{# } else if(d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
-    ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
-    #[[
     {{# } else if(d.isBackRecordUpLoad){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecord">查看</a>
+    #[[
+    {{# } if(d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     #[[
     {{#  } }}
     ]]#
@@ -137,38 +137,39 @@
                     maxmin: false,
                     shadeClose: false,
                     shade: 0.4,
-                    title: '上传备案資料移交表',
+                    title: '上传备案资料移交表',
                     content: '#(ctxPath)/app/track/fileUploading?projectId=' + data.id + '&type=0',
                     end: function () {
-                        table.reload('dateTable', {
-                            url: '#(ctxPath)/app/track/projectListTableData'
-                        });
+                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                     }
                 });
             } else if (obj.event === 'seeBackRecord') {
                 pop_show('查看备案文件', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordFileID, '', '', function () {
+                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'see') {
                 pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'fileSee') {
                 pop_show_full("项目文件", "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
+                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             }
         });
 
-        reloadTable = function (projectType, ownType) {
+        reloadTable = function (name, projectType, ownType) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/track/projectListTableData?projectType=' + projectType + '&ownType=' + ownType
+                url: '#(ctxPath)/app/track/projectListTableData?name='+ name + '&projectType=' + projectType + '&ownType=' + ownType
             });
         };
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType, data.field.ownType);
+            reloadTable(data.field.name, data.field.projectType, data.field.ownType);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
         form.on('select(ownTypeSelect)', function (data) {
-            reloadTable($('#projectType').val(), data.value);
+            reloadTable($('#name').val(), $('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
