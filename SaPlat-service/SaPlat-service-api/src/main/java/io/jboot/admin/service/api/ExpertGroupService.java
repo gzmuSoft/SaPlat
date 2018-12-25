@@ -2,6 +2,7 @@ package io.jboot.admin.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.admin.service.entity.model.*;
 
 import java.util.Date;
@@ -77,6 +78,13 @@ public interface ExpertGroupService {
      * @return all <ExpertGroup
      */
     public List<ExpertGroup> findAll();
+
+    /**
+     * find all model by orgID
+     *
+     * @return all <ExpertGroup
+     */
+    public List<Record> findAllByOrgId(Long orgId);
 
 
     /**

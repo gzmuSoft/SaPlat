@@ -366,12 +366,48 @@ public class ProjectController extends BaseController {
             managementRole = 1;
         }
 
+        //是否有权限查看评估方案ujmq
+        //管理机构、项目创建者和项目承接者均有权限查看评估方案
+        int authEva = 0;
+        if(1 == managementRole || isLoginUserCreated(pModel,user) || isLoginUserUndertake(pModel,user)){
+            authEva = 1;
+        }
+
         setAttr("organization", organization)
+                .setAttr("authEva",authEva)
                 .setAttr("managementRole", managementRole)
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .setAttr("entry", "mgr")
                 .render("update.html");
+    }
+
+    /**
+     * 判断项目是不是由当前登录用户承接的
+     * */
+    private boolean isLoginUserUndertake(Project project,User loginUser){
+        boolean bIsLoginUserUndertake = false;
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
+        if (projectUndertake != null) {
+            bIsLoginUserUndertake = loginUser.getUserID() == projectUndertake.getFacAgencyID();
+        }
+        if(project.getAssessmentMode().equals("委评")){
+            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+            if (facAgency != null) {
+                User tmp = userService.findByUserIdAndUserSource(facAgency.getOrgID(), roleService.findByName("组织机构").getId());
+                if (tmp != null) {
+                    bIsLoginUserUndertake = loginUser.getUserID() ==  tmp.getId();
+                }
+            }
+        }
+        return bIsLoginUserUndertake;
+    }
+
+    /**
+     * 判断项目是不是由当前登录用户创建的
+     * */
+    private boolean isLoginUserCreated(Project project,User loginUser){
+        return loginUser.getUserID() == project.getCreateUserID();
     }
 
     /**
@@ -1980,7 +2016,19 @@ public class ProjectController extends BaseController {
         }
 
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
-        Long receiverID = projectUndertake.getFacAgencyID();
+        Notification notification = new Notification();
+        notification.setName("项目驳回通知");
+        notification.setContent("您承办的项目《" + project.getName() + "》的结果被管理机构驳回！请立即处理(若未处理七天后自动确认)。");
+        notification.setSource("/app/project/refuse");
+        notification.setRecModule("");
+        Long receiverID = null;
+        if (projectUndertake != null) {
+            receiverID = projectUndertake.getFacAgencyID();
+            notification.setReceiverID(Math.toIntExact(receiverID));
+        } else {
+            renderJson(RestResult.buildError("找不到项目承接者"));
+            throw new BusinessException("找不到项目承接者");
+        }
         if (project.getAssessmentMode().equals("委评")) {
             FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
             if (facAgency != null) {
@@ -1990,17 +2038,7 @@ public class ProjectController extends BaseController {
                 }
             }
         }
-        Notification notification = new Notification();
-        notification.setName("项目驳回通知");
-        notification.setContent("您承办的项目《" + project.getName() + "》的结果被管理机构驳回！请立即处理(若未处理七天后自动确认)。");
-        notification.setSource("/app/project/refuse");
-        notification.setRecModule("");
-        if (projectUndertake != null) {
-            notification.setReceiverID(Math.toIntExact(receiverID));
-        } else {
-            renderJson(RestResult.buildError("找不到项目承接者"));
-            throw new BusinessException("找不到项目承接者");
-        }
+
         notification.setCreateUserID(user.getId());
         notification.setCreateTime(new Date());
         notification.setLastUpdateUserID(user.getId());

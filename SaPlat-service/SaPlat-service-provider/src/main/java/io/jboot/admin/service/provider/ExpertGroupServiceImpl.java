@@ -1,9 +1,12 @@
 package io.jboot.admin.service.provider;
 
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
@@ -116,6 +119,18 @@ public class ExpertGroupServiceImpl extends JbootServiceBase<ExpertGroup> implem
     @Override
     public boolean hasExpertGroup(String name) {
         return findByName(name) != null;
+    }
+
+    /**
+     * find all model by orgID
+     *
+     * @return all <ExpertGroup
+     */
+    @Override
+    public List<Record> findAllByOrgId(Long orgId){
+        Kv para = Kv.by("orgID",orgId);
+        SqlPara sqlPara = Db.getSqlPara("app-OrgStruct.ExportGroupsByOrgId",para);
+        return Db.find(sqlPara);
     }
 
     @Override
