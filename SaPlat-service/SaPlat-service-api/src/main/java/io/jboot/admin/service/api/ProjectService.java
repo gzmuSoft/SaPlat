@@ -82,6 +82,25 @@ public interface ProjectService  {
      */
     public List<Project> findListByColumns(String[] columnNames,String[] values);
 
+    /**
+     * 根据多个列名查询自评审查完成以及上传终审报告待审核的项目
+     *
+     * @param project
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Project> findCheckedSelfPageBySql(Project project, int pageNumber, int pageSize);
+
+    /**
+     * 根据多个列名查询承接的审查完成以及上传终审报告待审核的项目
+     *
+     * @param project
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<Project> findCheckedServicePageBySql(Project project, int pageNumber, int pageSize);
 
     /**
      * find List<Project> by ids and status

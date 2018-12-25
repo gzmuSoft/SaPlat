@@ -81,7 +81,11 @@
     <form id="person" class="layui-form x-center">
         <div class="layui-form-pane">
             <div class="layui-form-item x-center">
+                #if(type == 0)
                 <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">备案文件上传</p>
+                #else
+                <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">备案资料移交表上传</p>
+                #end
             </div>
             <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
                 <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>

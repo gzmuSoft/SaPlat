@@ -113,6 +113,11 @@
         });
     });
 
+    $("#back").click(function () {
+        history.go(-1);
+
+    });
+
 </script>
 #end
 
@@ -140,7 +145,14 @@
         #end
         #else
         <div class="x-center">
-            <h1>你已提交文件</h1><button id="view2" class="layui-btn layui-btn-small" style="margin-top: 30px;">查看文件</button>
+            <h1>你已提交文件</h1>
+            <button id="view2" class="layui-btn layui-btn-small" style="margin-top: 30px;">查看文件</button>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div class="x-center">
+            <button id="back" class="layui-btn layui-btn-small" style="margin-top: 30px;">返回</button>
         </div>
         #end
     </fieldset>

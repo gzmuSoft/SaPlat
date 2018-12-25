@@ -283,6 +283,7 @@ public class TrackController extends BaseController {
         renderJson(new DataTable<Project>(page));
     }
 
+
     /**
      * 项目列表
      */
@@ -353,6 +354,16 @@ public class TrackController extends BaseController {
             }
             if (page.getList()!=null) {
                 for (int i = 0; i < page.getList().size(); i++) {
+                    if (page.getList().get(i).getStatus().equals(ProjectStatus.RECORDKEEPED)) {
+                        //备案资料移交表是否存在
+                        FileProject brt = fileProjectService.findByFileTypeIdAndProjectId(58L, page.getList().get(i).getId());
+                        if (brt != null) {
+                            page.getList().get(i).setBackRecordTransferUpLoad(true);
+                            page.getList().get(i).setBackRecordTransferFileID(brt.getFileID());
+                        } else {
+                            page.getList().get(i).setBackRecordTransferUpLoad(false);
+                        }
+                    }
                     page.getList().get(i).setOwnType(iOwnType);
                     FileProject fileProject = null;
                     if (fileTypeID != null) {
@@ -419,9 +430,10 @@ public class TrackController extends BaseController {
 
         Project project = projectService.findById(getParaToLong("projectId"));
         if (project != null && type == 0) {
+            model.setName("备案文件");
             project.setStatus(ProjectStatus.RECORDKEEPED);
         } else if (project != null && type == 1) {
-            project.setStatus(ProjectStatus.TRACKING);
+            model.setName("备案资料移交表");
         }
         if (!fileProjectService.updateFileProjectAndProject(model, project)) {
             renderJson(RestResult.buildError("上传失败"));
@@ -433,6 +445,21 @@ public class TrackController extends BaseController {
                 renderJson(RestResult.buildError("文件启用失败"));
                 throw new BusinessException("文件启用失败");
             }
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 审核确认进入项目跟踪阶段
+     */
+    @NotNullPara("id")
+    public void gotoTrack() {
+        Project project = projectService.findById(getParaToLong("id"));
+        project.setStatus(ProjectStatus.TRACKING);
+        project.setLastAccessTime(new Date());
+        if (!projectService.saveOrUpdate(project)) {
+            renderJson(RestResult.buildError("更新到跟踪阶段失败"));
+            throw new BusinessException("更新到跟踪阶段失败");
         }
         renderJson(RestResult.buildSuccess());
     }

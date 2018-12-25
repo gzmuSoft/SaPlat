@@ -51,8 +51,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             if(model.getStatus().equals("10") || model.getStatus().equals("11")) {
                 model.setIsBackRecordUpLoad(true);
                 FileProject fpModel = fileProjectService.findByFileTypeIdAndProjectId(111L, model.getId());
-                if(null != fpModel)
+                if (null != fpModel) {
                     model.setBackRecordFileID(fpModel.getFileID());
+                }
             }
         }
         return model;
@@ -395,4 +396,27 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         }
     }
 
+    @Override
+    public Page<Project> findCheckedSelfPageBySql(Project project, int pageNumber, int pageSize) {
+        Kv c = generateQueryPara(project);
+        SqlPara sqlPara = null;
+        if (project != null) {
+            sqlPara = Db.getSqlPara("app-project.project-by-checked-self", c);
+            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+        } else {
+            return new Page<Project>();
+        }
+    }
+
+    @Override
+    public Page<Project> findCheckedServicePageBySql(Project project, int pageNumber, int pageSize) {
+        Kv c = generateQueryPara(project);
+        SqlPara sqlPara = null;
+        if (project != null) {
+            sqlPara = Db.getSqlPara("app-project.project-by-checked-service", c);
+            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+        } else {
+            return new Page<Project>();
+        }
+    }
 }

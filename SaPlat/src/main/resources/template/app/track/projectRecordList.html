@@ -46,19 +46,19 @@
 <script type="text/html" id="backRecord">
     #shiroHasPermission('/app/project/fileUploading')
     #[[
-    {{#  if(!d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
+    {{#  if(!d.isBackRecordTransferUpLoad && d.remark == 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="uploadBackRecord">上传</a>
     #[[
-    {{#  } else if(!d.isBackRecordUpLoad && d.remark != 'facRole'){ }}
+    {{#  } else if(!d.isBackRecordTransferUpLoad && d.remark != 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs layui-btn-disable">暂无数据</a>
     #[[
-    {{# } else if(d.isBackRecordUpLoad){ }}
+    {{# } else if(d.isBackRecordTransferUpLoad){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecord">查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="seeBackRecordTransfer">查看</a>
     #[[
-    {{# } if(d.isBackRecordUpLoad && d.remark == 'facRole'){ }}
+    {{# } else if(d.isBackRecordTransferUpLoad && d.remark == 'facRole'){ }}
     ]]#
     <a class="layui-btn layui-btn-xs" lay-event="uploadBackRecord">更新</a>
     #[[
@@ -71,6 +71,13 @@
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">查看项目详情</a>
     #end
+    #[[
+    {{# if(d.isBackRecordTransferUpLoad && d.remark == 'facRole'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">审核</a>
+    #[[
+    {{#  } }}
+    ]]#
 </script>
 <script type="text/html" id="fileSee">
     #shiroHasPermission('/app/project/see')
@@ -143,8 +150,8 @@
                         reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                     }
                 });
-            } else if (obj.event === 'seeBackRecord') {
-                pop_show('查看备案文件', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordFileID, '', '', function () {
+            } else if (obj.event === 'seeBackRecordTransfer') {
+                pop_show('查看备案资料移交表', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordTransferFileID, '', '', function () {
                     reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'see') {
@@ -155,6 +162,17 @@
                 pop_show_full("项目文件", "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
                     reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
+            } else if (obj.event === 'edit') {
+                layer.confirm('确认审核无误，进入项目跟踪阶段吗？(注意，此操作不可逆转！)', function (index) {
+                    $.post("#(ctxPath)/app/track/gotoTrack", {
+                        id: data.id
+                    }, function () {
+                        layer.msg("操作成功！");
+                        setTimeout(function () {
+                        }, 1000);
+                        reloadTable($('#projectType').val(), 2);
+                    });
+                })
             }
         });
 

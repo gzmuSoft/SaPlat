@@ -124,6 +124,55 @@ WHERE
   order by createTime desc
 #end
 
+#sql("project-by-checked-self")
+SELECT
+  *
+FROM
+  project
+WHERE
+  userId = #para(userID)
+  #if(name)
+	and	name like concat('%', #para(name) ,'%')
+	#end
+	and
+	   (status = 12 or status = 7)
+	#if(assessmentMode)
+	and assessmentMode = #para(assessmentMode)
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+	#if(isEnable)
+	and	isEnable = #para(isEnable)
+	#end
+  order by createTime desc
+#end
+
+#sql("project-by-checked-service")
+SELECT * FROM
+project
+WHERE ID IN
+  (
+    SELECT
+      DISTINCT projectID
+    FROM
+      project_undertake
+    WHERE
+      ((facAgencyID IN (SELECT ID FROM fac_agency WHERE orgID IN (SELECT userID FROM sys_user WHERE ID = #para(userID))) AND status = 2))
+  )
+  #if(name)
+  and	name like concat('%', #para(name) ,'%')
+  #end
+  and (status = 12 or status = 7)
+  #if(paTypeID)
+  and	paTypeID = #para(paTypeID)
+  #end
+  #if(isEnable)
+  and	isEnable = #para(isEnable)
+  #end
+  order by createTime desc
+#end
+
 #sql("project-by-creater")
 SELECT
   *

@@ -19,14 +19,33 @@ public class Project extends BaseProject<Project> {
     private String buildOrgName;
     private String buildUserName;
     private boolean isBackRecordUpLoad;
+    private boolean isBackRecordTransferUpLoad;
     private boolean isRiskTrackUpLoad;
     private Long backRecordFileID;
+    private Long backRecordTransferFileID;
     private String reviewInfo;
     private Integer ownType;
     /**
      * 评估进度
      */
     private Integer assessmentProgress;
+
+    public boolean isBackRecordTransferUpLoad() {
+        return isBackRecordTransferUpLoad;
+    }
+
+    public void setBackRecordTransferUpLoad(boolean backRecordTransferUpLoad) {
+        isBackRecordTransferUpLoad = backRecordTransferUpLoad;
+    }
+
+    public Long getBackRecordTransferFileID() {
+        return backRecordTransferFileID;
+    }
+
+    public void setBackRecordTransferFileID(Long backRecordTransferFileID) {
+        this.backRecordTransferFileID = backRecordTransferFileID;
+    }
+
 
     public String getReviewInfo() {
         StringBuilder sbInfo = new StringBuilder();

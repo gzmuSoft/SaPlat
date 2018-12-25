@@ -869,11 +869,21 @@ public class ProjectController extends BaseController {
      * 通往项目管理界面-审查完成
      */
     public void toReviewed() {
-        render("reviewed.html");
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus).render("reviewed.html");
     }
 
     /**
-     * 项目管理界面-审查完成-表格渲染
+     * 项目管理界面-审查完成-表格渲染(此方法停用)
      */
     public void reviewed() {
         User loginUser = AuthUtils.getLoginUser();
@@ -893,6 +903,141 @@ public class ProjectController extends BaseController {
         projectUndertake.setRemark("FINAL_REPORT_CHECKING");
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
         renderJson(new DataTable<Project>(page));
+    }
+
+    /**
+     * 项目管理界面-审查完成-表格渲染
+     */
+    @Before(GET.class)
+    @NotNullPara({"pageNumber", "pageSize", "ownType"})
+    public void projectListTableData() {
+        User loginUser = AuthUtils.getLoginUser();
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project = new Project();
+        if (StrKit.notBlank(getPara("projectType"))) {
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
+        if (StrKit.notBlank(getPara("name"))) {
+            project.setName("%" + getPara("name") + "%");
+        }
+        project.setIsEnable(true);
+        project.setUserId(AuthUtils.getLoginUser().getId());
+        Page<Project> page = null;
+
+        if (StrKit.notBlank(getPara("ownType"))) {
+            int iOwnType = Integer.parseInt(getPara("ownType"));
+            switch (iOwnType) {
+                case 0:
+                    project.setAssessmentProgress("自评");
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findCheckedSelfPageBySql(project, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("selfRole");
+                    }
+                    break;
+                case 1:
+                    project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
+                    project.setUserId(AuthUtils.getLoginUser().getUserID());
+                    page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                    if (page != null && page.getList() != null) {
+                        for (Project p : page.getList()) {
+                            p.setRemark("managementRole");
+                            ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+                            if (projectFileType != null) {
+                                FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), p.getId());
+                                if (fileProject != null) {
+                                    p.setFileID(fileProject.getFileID());
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    project.setUserId(AuthUtils.getLoginUser().getId());
+                    page = projectService.findCheckedServicePageBySql(project, pageNumber, pageSize);
+                    for (Project p : page.getList()) {
+                        p.setRemark("facRole");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        renderJson(new DataTable<Project>(page));
+    }
+
+    /**
+     * 终审报告审核界面
+     */
+    @Before(GET.class)
+    @NotNullPara("id")
+    public void verifyFinalReportCheck() {
+        Long id = getParaToLong("id");
+        setAttr("id", id).render("verifyFinalReportCheck.html");
+    }
+
+    /**
+     * 管理机构审核终审报告
+     */
+    @NotNullPara("id")
+    public void saveFinalReportCheck() {
+        User loginUser = AuthUtils.getLoginUser();
+        Project project = projectService.findById(getParaToLong("id"));
+        if (project == null) {
+            return;
+        }
+        Object type = getPara("type");
+        Notification notification = new Notification();
+        if (type != null) {
+            type = "通过审核";
+            project.setStatus(ProjectStatus.RECORDKEEPING);
+            project.setLastAccessTime(new Date());
+        } else if (type == null) {
+            type = "审核未通过";
+            ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+            FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
+            Files files = null;
+            if (fileProject != null) {
+                files = filesService.findById(fileProject.getFileID());
+                if (files != null) {
+                    files.setIsEnable(false);
+                }
+                fileProject.setIsEnable(false);
+            }
+            if (!fileProjectService.update(fileProject, files)) {
+                throw new BusinessException("保存失败,请重试");
+            }
+
+            project.setLastAccessTime(new Date());
+            project.setStatus(ProjectStatus.CHECKED);
+        }
+
+        notification.setName("终审报告审核结果通知");
+        notification.setContent(loginUser.getName() + "对项目《" + project.getName() + "》的终审报告的审核结果为：【" + type + "】 ,原因为： " + getPara("reply"));
+        notification.setSource("/app/project/saveFinalReportCheck");
+        if (project.getAssessmentMode().equals("自评")) {
+            notification.setReceiverID(project.getUserId().intValue());
+        } else if (project.getAssessmentMode().equals("委评")) {
+            ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), "2");
+            if (projectUndertake != null) {
+                FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+                if (facAgency != null) {
+                    notification.setReceiverID(facAgency.getCreateUserID().intValue());
+                }
+            }
+        }
+        notification.setCreateUserID(loginUser.getId());
+        notification.setCreateTime(new Date());
+        notification.setRecModule(project.getName());
+        notification.setLastUpdateUserID(loginUser.getId());
+        notification.setLastAccessTime(new Date());
+        notification.setIsEnable(true);
+        notification.setStatus(0);
+        if (!projectService.saveOrUpdate(project, notification)) {
+            throw new BusinessException("保存失败,请重试");
+        }
+        renderJson(RestResult.buildSuccess());
     }
 
     @NotNullPara("id")
