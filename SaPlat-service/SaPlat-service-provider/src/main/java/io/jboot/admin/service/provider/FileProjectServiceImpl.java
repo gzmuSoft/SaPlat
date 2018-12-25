@@ -45,6 +45,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
+    public FileProject findByFileID(Long fileId) {
+        return DAO.findFirstByColumn("fileId", fileId);
+    }
+
+    @Override
     public FileProject findByProjectID(Long projectId) {
         return DAO.findFirstByColumn("projectID", projectId);
     }

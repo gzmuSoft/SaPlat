@@ -2,7 +2,6 @@
 #@layout()
 
 #define css()
-<link rel="stylesheet" href="#(RESOURCE_HOST)/static/css/zTreeStyle/zTreeStyle.css" type="text/css">
 <style>
 
 </style>
@@ -12,12 +11,10 @@
 <script type="text/javascript">
     var element = '#(fileProject.toJson())';
     var fileProject = JSON.parse(element);
-    layui.use(['table', 'layer', 'upload', 'element'], function () {
-        var table = layui.table
-            , layer = layui.layer
-            , $ = layui.jquery
-            , element = layui.element
-            , upload = layui.upload;
+    layui.use(['form', 'layer', 'upload','element'], function () {
+        //操作对象
+        var upload = layui.upload;
+        var element = layui.element;
 
         //创建监听函数
         var xhrOnProgress = function (fun) {
@@ -37,7 +34,7 @@
             }
         }
         upload.render({
-            elem: '#add'
+            elem: '#file'
             , url: '#(ctxPath)/util/uploadFile'
             , accept: 'file'
             //,multiple: true
@@ -57,6 +54,7 @@
                 $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     postFileID(fileProject.fileTypeID, res.data.fileId, fileProject.projectID);
+                    pop_close();
                     return true;
                 } else if (res.code == 1) {
                     layer.msg("文件上传失败，请重新选择上传！");
@@ -68,7 +66,6 @@
                 layer.msg("文件上传错误！请重新尝试！");
             }
         });
-
     });
 
     function postFileID(_fileTypeID, _fileID, _projectID) {
@@ -89,73 +86,27 @@
         })
     }
 
-    $("#sub").click(function () {
-        util.sendAjax({
-            type: 'POST',
-            url: '#(ctxPath)/app/project/finishUploadSub',
-            data: {
-                fileProjectID: fileProject.id
-            },
-            loadFlag: true,
-            success: function (data) {
-                window.location.reload();
-            },
-            unSuccess: function (data) {
-            }
-        });
-    });
-    $("#view").click(function () {
-        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileProject.fileID, '', '', function () {
-        });
-    });
-    $("#view2").click(function () {
-        pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + fileProject.fileID, '', '', function () {
-        });
-    });
-
-    $("#back").click(function () {
-        history.go(-1);
-
-    });
-
 </script>
 #end
 
 #define content()
-<div class="layui-fluid">
-    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
-        <legend class="x-center">终审报告</legend>
-        #if(!fileProject.isEnable)
-        <div class="x-center">
-            <h3>上传终审报告文件</h3>
-            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                 id="upload-progress" lay-filter="upload-progress">
+<div class="x-body">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>文件上传</legend>
+    </fieldset>
+    <form id="person" class="layui-form x-center">
+        <div class="layui-form-pane">
+            <div class="layui-form-item x-center">
+                <p id="modelName" style="font-size: 20px;margin-left: 20px;margin-top: 8px">#(fileProject.name)</p>
+            </div>
+            <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress" lay-filter="upload-progress" >
                 <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
             </div>
-            <button id="add" class="layui-btn layui-btn-small">上传</button>
+            <div class="layui-upload-drag" id="file">
+                <i class="layui-icon"></i>
+                <p>点击上传，或将文件拖拽到此处</p>
+            </div>
         </div>
-        #if(fileProject.fileID!=null)
-        <div class="x-center">
-            <h3>预览终审报告文件</h3>
-            <button id="view" class="layui-btn layui-btn-small">预览</button>
-        </div>
-        <div class="x-center">
-            <h3>提交终审报告文件</h3>
-            <button id="sub" class="layui-btn layui-btn-small">提交</button>
-        </div>
-        #end
-        #else
-        <div class="x-center">
-            <h1>你已提交文件</h1>
-            <button id="view2" class="layui-btn layui-btn-small" style="margin-top: 30px;">查看文件</button>
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <div class="x-center">
-            <button id="back" class="layui-btn layui-btn-small" style="margin-top: 30px;">返回</button>
-        </div>
-        #end
-    </fieldset>
+    </form>
 </div>
 #end
