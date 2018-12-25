@@ -161,6 +161,8 @@ public interface FileProjectService {
 
     public boolean update(FileProject model, Files files);
 
+    public FileProject findByModel(FileProject model);
+
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId);
 
     public void join(Page<? extends Model> page, String joinOnField);

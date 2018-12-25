@@ -929,7 +929,7 @@ public class ProjectController extends BaseController {
             int iOwnType = Integer.parseInt(getPara("ownType"));
             switch (iOwnType) {
                 case 0:
-                    project.setAssessmentProgress("自评");
+                    project.setAssessmentMode("自评");
                     project.setUserId(AuthUtils.getLoginUser().getId());
                     page = projectService.findCheckedSelfPageBySql(project, pageNumber, pageSize);
                     for (Project p : page.getList()) {
@@ -1047,7 +1047,10 @@ public class ProjectController extends BaseController {
             throw new BusinessException("项目不存在");
         }
         ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
-        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
+        FileProject fileProject = new FileProject();
+        fileProject.setFileTypeID(projectFileType.getId());
+        fileProject.setProjectID(project.getId());
+        fileProject = fileProjectService.findByModel(fileProject);
         if (fileProject == null) {
             fileProject = new FileProject();
             fileProject.setName(projectFileType.getName());
@@ -1065,7 +1068,7 @@ public class ProjectController extends BaseController {
         FileProject fileProject = getBean(FileProject.class, "fileProject");
         Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(false);
-        FileProject model = fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(), fileProject.getProjectID());
+        FileProject model = fileProjectService.findByModel(fileProject);
         model.setFileID(fileProject.getFileID());
         if (!fileProjectService.updateFileProjectAndFiles(model)) {
             throw new BusinessException("保存失败,请重试");

@@ -50,7 +50,9 @@
         var evaScheme = '#(evaScheme)';
         var percent = '#(project.assessmentProgress)';
 
-        if(percent < 25 )
+        if(percent === 0)
+            document.getElementById("bar").className = 'layui-progress-bar .layui-bg-darkgrey';
+        else if(percent < 25 )
             document.getElementById("bar").className = 'layui-progress-bar layui-bg-red';
         else if(percent < 50)
             document.getElementById("bar").className = 'layui-progress-bar layui-bg-orange';

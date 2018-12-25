@@ -22,7 +22,11 @@
 </script>
 <script type="text/html" id="progress">
     #[[
-    {{#  if(d.assessmentProgress < 25){ }}
+    {{#  if(d.assessmentProgress == 0){ }}
+    ]]#
+    <span class="layui-badge layui-bg-darkgrey">{{d.assessmentProgress}}%</span>
+    #[[
+    {{#  } else if(d.assessmentProgress < 25){ }}
     ]]#
     <span class="layui-badge layui-bg-red">{{d.assessmentProgress}}%</span>
     #[[

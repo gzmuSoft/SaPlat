@@ -142,6 +142,16 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         });
     }
 
+    @Override
+    public FileProject findByModel(FileProject model) {
+        Columns columns = Columns.create();
+        columns.eq("fileTypeID", model.getFileTypeID());
+        columns.eq("projectID", model.getProjectID());
+        if(model.getIsEnable() != null)
+            columns.eq("isEnable", model.getIsEnable());
+
+        return DAO.findFirstByColumns(columns);
+    }
 
     @Override
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId) {

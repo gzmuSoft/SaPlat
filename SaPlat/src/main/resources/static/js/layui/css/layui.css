@@ -1729,6 +1729,11 @@ a cite {
     background-color: #393D49 !important
 }
 
+.layui-bg-darkgrey {
+    background-color: darkgrey !important;
+    color: red !important
+}
+
 .layui-bg-gray {
     background-color: #eee !important;
     color: #666 !important
