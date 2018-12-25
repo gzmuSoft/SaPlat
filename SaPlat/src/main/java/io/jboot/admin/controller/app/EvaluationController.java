@@ -127,46 +127,6 @@ public class EvaluationController extends BaseController {
             // 如果为自评
             setAttr("method", "true");
         }
-        String info = project.getRemark();
-        int progress = 0;
-        if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")){
-            progress = Integer.parseInt(info.substring(4));
-        }
-        if (StringUtils.isNotEmpty(info) && info.startsWith("评估进度")){
-            progress = Integer.parseInt(info.substring(4));
-        } else {
-            if (evaScheme == null) {
-                evaScheme = new EvaScheme();
-            } else {
-                List<SiteSurveyExpertAdvice> model = siteSurveyExpertAdviceService.findListByProjectId(id);
-                if (model == null || model.size() == 0) {
-                    setAttr("siteSurveyExpertAdvice", "false");
-                } else {
-                    setAttr("siteSurveyExpertAdvice", "true");
-                    progress += 10;
-                }
-                List<Diagnoses> diagnoses = diagnosesService.findListByProjectId(id);
-                if (diagnoses == null || diagnoses.size() == 0) {
-                    setAttr("diagnoses", "false");
-                } else {
-                    setAttr("diagnoses", "true");
-                    progress += 10;
-                }
-            }
-            List<ProjectFileType> list = projectFileTypeService.findListByParentId(projectFileTypeService.findByName("评估文件").getId());
-            for (ProjectFileType p : list) {
-                List<FileProject> fileProjects = fileProjectService.findListByFileTypeIDAndProjectID(p.getId(), id);
-                if (fileProjects != null && fileProjects.size() > 0) {
-                    setAttr(p.getUrl(), "true");
-                    progress += 10;
-                } else {
-                    setAttr(p.getUrl(), "false");
-                }
-            }
-        }
-        if (progress > 100){
-            progress = 100;
-        }
         if (evaScheme == null){
             evaScheme = new EvaScheme();
         }
@@ -174,7 +134,6 @@ public class EvaluationController extends BaseController {
         Organization organization = organizationService.findById(user.getUserID());
         Management management = managementService.findById(project.getManagementID());
         setAttr("project", project)
-                .setAttr("progress",progress)
                 .setAttr("management",management)
                 .setAttr("organization",organization)
                 .setAttr("evaSchemeStatus", evaScheme.getStatus())

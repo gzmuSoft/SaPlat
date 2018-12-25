@@ -1635,7 +1635,7 @@ a cite {
     font-size: 14px
 }
 
-.layui-bg-black, .layui-bg-blue, .layui-bg-cyan, .layui-bg-green, .layui-bg-orange, .layui-bg-red {
+.layui-bg-black, .layui-bg-blue, .layui-bg-cyan, .layui-bg-light-green, .layui-bg-green, .layui-bg-orange, .layui-bg-red {
     color: #fff !important
 }
 
@@ -1678,6 +1678,10 @@ a cite {
 
 .layui-bg-green {
     background-color: #009688 !important
+}
+
+.layui-bg-light-green {
+    background-color: #2fbb20 !important
 }
 
 .layui-bg-cyan {

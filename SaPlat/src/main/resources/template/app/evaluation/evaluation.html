@@ -34,7 +34,7 @@
 <br>
 <hr class="layui-bg-red">
 <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="tip">
-    <div class="layui-progress-bar layui-bg-red" id="bar" lay-percent="0%"></div>
+    <div class="layui-progress-bar" id="bar" lay-percent="#(project.assessmentProgress)%"></div>
 </div>
 <iframe id="next" src="" frameborder="0"></iframe>
 #end
@@ -48,9 +48,19 @@
             , util = layui.util;
         var evaSchemeStatus = '#(evaSchemeStatus)';
         var evaScheme = '#(evaScheme)';
-        var percent = 0;
+        var percent = '#(project.assessmentProgress)';
 
-        var flag = "true";
+        if(percent < 25 )
+            document.getElementById("bar").className = 'layui-progress-bar layui-bg-red';
+        else if(percent < 50)
+            document.getElementById("bar").className = 'layui-progress-bar layui-bg-orange';
+        else if(percent < 75)
+            document.getElementById("bar").className = 'layui-progress-bar layui-bg-blue';
+        else if(percent < 100)
+            document.getElementById("bar").className = 'layui-progress-bar layui-bg-light-green';
+        else if(percent)
+            document.getElementById("bar").className = 'layui-progress-bar layui-bg-green';
+
         var isSelf = "#(isSelf)";
         if (evaSchemeStatus === "") {
             if (isSelf === "true") {
@@ -68,36 +78,19 @@
             $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaSchemeStatus === "2") {
             var method = "#(method)";
-            // 评估前期资料填写完毕后，给他加 20% 进度条
-            var progress = "#(progress)";
-            if (progress !== "") {
-                add("true", parseInt(progress))
-            } else {
-                add(flag, 20);
-                add("#(siteSurveyExpertAdvice)", 15);
-                add("#(diagnoses)", 15);
-                add("#(fxqz)", 10);
-                add("#(fxdj)", 10);
-                add("#(pcfx)", 10);
-                add("#(fxjl)", 10);
-                add("#(sxfx)", 10);
-            }
             if (method === "false") {
                 if (isSelf === "true") {
                     setTimeout(function () {
-                        element.progress('tip', percent + '%');
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=true");
                     }, 500);
                 } else if (isSelf === "false") {
                     layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
                     setTimeout(function () {
-                        element.progress('tip', percent + '%');
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=false");
                     }, 500);
                 }
             } else if (method === "true") {
                 setTimeout(function () {
-                    element.progress('tip', percent + '%');
                     $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=false");
                 }, 500);
             }
@@ -108,20 +101,6 @@
                 layer.msg("您的项目未通过审核，请重新填写资料。");
                 $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + "#(project.id)");
             }
-        }
-
-        function add(name, num) {
-            if (name !== flag) {
-                return;
-            }
-            if (percent >= 100) {
-                return;
-            }
-            percent += num;
-            if (percent > 100) {
-                percent = 100;
-            }
-
         }
     });
 </script>

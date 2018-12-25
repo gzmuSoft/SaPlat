@@ -257,4 +257,12 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 		return getLong("managementID");
 	}
 
+	public void setProgress(java.lang.Integer progress) {
+		set("progress", progress);
+	}
+	
+	public java.lang.Integer getProgress() {
+		return getInt("progress");
+	}
+
 }

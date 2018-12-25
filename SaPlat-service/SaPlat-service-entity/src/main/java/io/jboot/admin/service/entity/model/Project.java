@@ -26,7 +26,7 @@ public class Project extends BaseProject<Project> {
     /**
      * 评估进度
      */
-    private String assessmentProgress;
+    private Integer assessmentProgress;
 
     public String getReviewInfo() {
         StringBuilder sbInfo = new StringBuilder();
@@ -161,12 +161,8 @@ public class Project extends BaseProject<Project> {
         this.ownType = ownType;
     }
 
-    public String getAssessmentProgress() {
+    public Integer getAssessmentProgress() {
+        assessmentProgress = (int)Math.floor(this.getProgress() / 17.0 * 100);
         return assessmentProgress;
     }
-
-    public void setAssessmentProgress(String assessmentProgress) {
-        this.assessmentProgress = assessmentProgress;
-    }
-
 }
