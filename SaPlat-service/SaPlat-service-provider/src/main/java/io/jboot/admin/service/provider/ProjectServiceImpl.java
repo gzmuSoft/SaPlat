@@ -47,6 +47,10 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                     model.setBuildUserName(user.getName());
                     model.setBuildOrgName(organizationService.findById(user.getUserID()).getName());
                 }
+                Management curMgr = mgrService.findById(model.getManagementID());
+                if (null != curMgr) {
+                    model.setManagement(curMgr);
+                }
             }
             if(model.getStatus().equals("10") || model.getStatus().equals("11")) {
                 model.setIsBackRecordUpLoad(true);

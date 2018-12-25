@@ -25,10 +25,30 @@ public class Project extends BaseProject<Project> {
     private Long backRecordTransferFileID;
     private String reviewInfo;
     private Integer ownType;
-    /**
-     * 评估进度
-     */
-    private Integer assessmentProgress;
+    private Integer assessmentProgress; //评估进度
+
+    public Management getManagement() {
+        return management;
+    }
+
+    public void setManagement(Management management) {
+        this.management = management;
+    }
+
+    private Management management; //管理部门
+
+    public String getManagementName() {
+        if(null != this.management)
+            return this.management.getName();
+        else
+            return "未指定管理部门";
+    }
+
+    public void setManagementName(String managementName) {
+        this.managementName = managementName;
+    }
+
+    private String managementName; //管理部门
 
     public boolean isBackRecordTransferUpLoad() {
         return isBackRecordTransferUpLoad;

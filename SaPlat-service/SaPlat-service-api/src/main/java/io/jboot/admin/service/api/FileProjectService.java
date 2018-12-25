@@ -45,7 +45,6 @@ public interface FileProjectService {
      */
     public List<FileProject> findAllByProjectID(Long id);
 
-
     /**
      * 通过项目id 查询文件项目
      *
@@ -53,6 +52,14 @@ public interface FileProjectService {
      * @return 文件项目
      */
     public FileProject findByProjectID(Long projectId);
+
+    /**
+     * 通过文件id 查询文件项目
+     *
+     * @param fileId 文件id
+     * @return 文件项目
+     */
+    public FileProject findByFileID(Long fileId);
 
     /**
      * 通过文件类型id和项目id查询列表

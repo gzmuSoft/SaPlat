@@ -968,36 +968,49 @@ public class ProjectController extends BaseController {
                     project.setAssessmentMode("自评");
                     project.setUserId(AuthUtils.getLoginUser().getId());
                     page = projectService.findCheckedSelfPageBySql(project, pageNumber, pageSize);
-                    for (Project p : page.getList()) {
-                        p.setRemark("selfRole");
-                    }
                     break;
                 case 1:
                     project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
                     page = projectService.findPageForMgr(project, pageNumber, pageSize);
-                    if (page != null && page.getList() != null) {
-                        for (Project p : page.getList()) {
-                            p.setRemark("managementRole");
-                            ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
-                            if (projectFileType != null) {
-                                FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), p.getId());
-                                if (fileProject != null) {
-                                    p.setFileID(fileProject.getFileID());
-                                }
-                            }
-                        }
-                    }
                     break;
                 case 2:
                     project.setUserId(AuthUtils.getLoginUser().getId());
                     page = projectService.findCheckedServicePageBySql(project, pageNumber, pageSize);
-                    for (Project p : page.getList()) {
-                        p.setRemark("facRole");
-                    }
-                    break;
                 default:
                     break;
+            }
+            if (page != null && page.getList() != null) {
+                ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+
+                for (Project p : page.getList()) {
+                    switch (iOwnType) {
+                        case 0:
+                            p.setRemark("selfRole");
+                            break;
+                        case 1:
+                            p.setRemark("managementRole");
+                            break;
+                        case 2:
+                            p.setRemark("facRole");
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (projectFileType != null) {
+                        FileProject fileProject = new FileProject();
+                        fileProject.setProjectID(p.getId());
+                        fileProject.setFileTypeID(projectFileType.getId());
+                        fileProject = fileProjectService.findByModel(fileProject);
+                        if (fileProject != null) {
+                            p.setFileID(fileProject.getFileID());
+                        }
+                        else{
+                            p.setFileID(0L);
+                        }
+                    }
+                }
             }
         }
         renderJson(new DataTable<Project>(page));
@@ -1076,9 +1089,9 @@ public class ProjectController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    @NotNullPara("id")
-    public void finishUpload() {
-        Project project = projectService.findById(getParaToLong("id"));
+    @NotNullPara("projectId")
+    public void finalReportFileUploading() {
+        Project project = projectService.findById(getParaToLong("projectId"));
         if (project == null) {
             throw new BusinessException("项目不存在");
         }
@@ -1097,12 +1110,11 @@ public class ProjectController extends BaseController {
             fileProject = fileProjectService.saveAndGet(fileProject);
         }
         setAttr("fileProject", fileProject);
-        render("finishUpload.html");
+        render("finalReportFileUploading.html");
     }
 
     public void finishUploadSave() {
         FileProject fileProject = getBean(FileProject.class, "fileProject");
-        Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(false);
         FileProject model = fileProjectService.findByModel(fileProject);
         model.setFileID(fileProject.getFileID());
@@ -1112,16 +1124,25 @@ public class ProjectController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
-    @NotNullPara({"fileProjectID"})
+    @NotNullPara({"fileID"})
     public void finishUploadSub() {
-        FileProject fileProject = fileProjectService.findById(getParaToLong("fileProjectID"));
-        Project project = projectService.findById(fileProject.getProjectID());
-        fileProject.setIsEnable(true);
-        project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
-        if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
-            throw new BusinessException("提交失败");
+        FileProject fileProject = fileProjectService.findByFileID(getParaToLong("fileID"));
+        if(null != fileProject) {
+            Project project = projectService.findById(fileProject.getProjectID());
+            fileProject.setIsEnable(true);
+            project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
+            if (!fileProjectService.updateFileProjectAndProject(fileProject, project)) {
+                renderJson(RestResult.buildError("提交失败，请与管理员联系！"));
+                throw new BusinessException("提交失败");
+            }
+            else{
+                renderJson(RestResult.buildSuccess());
+            }
         }
-        renderJson(RestResult.buildSuccess());
+        else{
+            renderJson(RestResult.buildError("提交失败，请与管理员联系！"));
+        }
+
     }
 
     @NotNullPara("id")

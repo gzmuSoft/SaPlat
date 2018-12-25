@@ -9,11 +9,11 @@
 
 #define js()
 <script type="text/javascript">
-
-    layui.use(['table', 'layer'], function () {
+    layui.use(['table', 'layer', 'upload'], function () {
         var table = layui.table
             , layer = layui.layer
-            , form = layui.form;
+            , form = layui.form
+            , upload = layui.upload;
 
         // 表格渲染
         var tableIns = table.render({
@@ -21,20 +21,22 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-50'    //容器高度
+            , height: 'full-100'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {field: 'name', title: '项目名称', minWidth: 150, sort: true}
-                , {field: 'roleName', title: '立项角色', width: 150, sort: true}
+                , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
+                , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
+                , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
-                , {field: 'site', title: '地址', minWidth: 150, sort: true}
+                , {field: 'site', title: '地址', minWidth: 200, sort: true}
                 , {field: 'brief', title: '简介', minWidth: 120}
-                , {field: 'createTime', title: '创建时间', width: 100, sort: true}
+                , {field: 'createTime', title: '立项时间', width: 100, sort: true}
                 , {
-                    field: 'status', title: '状态', width: 150, sort: true,
+                    field: 'status', title: '状态', width: 115, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '终审报告', width: 160, align: 'center', toolbar: '#barFinalReport'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '项目信息', width: 100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
                 ownType: 0,
@@ -56,35 +58,72 @@
 
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
-            if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+            if (obj.event === 'upload') {
+                layer.open({
+                    type: 2,
+                    area: ['500px', '300px'],
+                    fix: false, //不固定
+                    maxmin: false,
+                    shadeClose: false,
+                    shade: 0.4,
+                    title: '上传 "'+ data.name + '" 项目的终审报告',
+                    content: '#(ctxPath)/app/project/finalReportFileUploading?projectId=' + data.id,
+                    end: function () {
+                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                    }
                 });
-            }else if (obj.event === 'upload') {
-                window.location.href = "#(ctxPath)/app/project/finishUpload?id=" + data.id;
             } else if (obj.event === 'seeFile') {
-                pop_show('查看终审报告', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                pop_max_show('查看 "'+ data.name + '" 项目的终审报告', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {
+                });
+            }else if (obj.event === 'update') {
+                layer.open({
+                    type: 2,
+                    area: ['500px', '300px'],
+                    fix: false, //不固定
+                    maxmin: false,
+                    shadeClose: false,
+                    shade: 0.4,
+                    title: '更新 "'+ data.name + '" 项目的终审报告',
+                    content: '#(ctxPath)/app/project/finalReportFileUploading?projectId=' + data.id,
+                    end: function () {
+                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                    }
+                });
+            }else if (obj.event === 'sub') {
+                layer.confirm('确定提交 "<font style="color:red;">'+ data.name + '</font>" 项目的终审报告给项目直管部门审核吗？<br />注意，此操作不可逆转！', function () {
+                    $.post("#(ctxPath)/app/project/finishUploadSub", {
+                        fileID: data.fileID
+                    }, function () {
+                        layer.msg("操作成功！");
+                        setTimeout(function () {
+                        }, 1000);
+                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                    });
+                })
+            }else if (obj.event === 'see') {
+                pop_show('查看 "'+ data.name + '" 项目的详细资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'edit') {
-                pop_show('审核结果', '#(ctxPath)/app/project/verifyFinalReportCheck?id=' + data.id, '440', '265', function () {
-                    reloadTable($('#projectType').val(), 1);
+                pop_show('审核 "'+ data.name + '" 项目的终审报告', '#(ctxPath)/app/project/verifyFinalReportCheck?id=' + data.id, '440', '265', function () {
+                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             }
-
         });
 
-        reloadTable = function (projectType, ownType) {
+        reloadTable = function (name, projectType, ownType) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/project/projectListTableData?projectType=' + projectType + '&ownType=' + ownType
+                url: '#(ctxPath)/app/project/projectListTableData?name=' + name + '&projectType=' + projectType + '&ownType=' + ownType
             });
         };
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType, data.field.ownType);
+            reloadTable(data.field.name, data.field.projectType, data.field.ownType);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
         form.on('select(ownTypeSelect)', function (data) {
-            reloadTable($('#projectType').val(), data.value);
+            reloadTable($('#name').val(), $('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -129,26 +168,34 @@
     </div>
 </div>
 
-<script type="text/html" id="barOption">
-    #shiroHasPermission('/app/project/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    #end
-
+<script type="text/html" id="barFinalReport">
     #[[
-    {{#  if(d.status == '7'){ }}
+    {{#  if(d.status == '7' && d.fileID == null){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="upload">上传终审报告</a>
+    <a class="layui-btn layui-btn-xs" lay-event="upload">上传</a>
+    #[[
+    {{#  } else if(d.status == '7' && d.fileID != 0 ){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="seeFile">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="update">更新</a>
+    <a class="layui-btn layui-btn-xs" lay-event="sub">提交</a>
     #[[
     {{#  } else if(d.status == '12' && d.remark != 'managementRole' ){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs layui-btn-disabled">等待管理机构审核</a>
+    <a class="layui-btn layui-btn-xs" lay-event="seeFile">查看</a>
     #[[
     {{#  } else if(d.remark == 'managementRole' ){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="seeFile">查看终审报告</a>
+    <a class="layui-btn layui-btn-xs" lay-event="seeFile">查看</a>
     <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">审核</a>
     #[[
     {{#  } }}
     ]]#
+</script>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/project/see')
+    <a class="layui-btn layui-btn-xs" lay-event="see">查看</a>
+    #end
 </script>
 #end
