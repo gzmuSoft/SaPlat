@@ -11,6 +11,8 @@ public class FileProject extends BaseFileProject<FileProject> {
 
     private String createUserName;
 
+    private String orginalFileName;
+
     public String getCreateUserName() {
         return createUserName;
     }
@@ -19,6 +21,11 @@ public class FileProject extends BaseFileProject<FileProject> {
         this.createUserName = createUserName;
     }
 
+    public String getOrginalFileName() {
+        return orginalFileName;
+    }
 
-
+    public void setOrginalFileName(String orginalFileName) {
+        this.orginalFileName = orginalFileName;
+    }
 }
