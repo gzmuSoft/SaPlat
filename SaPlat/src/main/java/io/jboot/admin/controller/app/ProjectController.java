@@ -636,53 +636,23 @@ public class ProjectController extends BaseController {
     @NotNullPara({"fileId", "projectId", "fileTypeId"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
-        FileProject model = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
-        if (model == null) {
-            model = new FileProject();
-            model.setProjectID(getParaToLong("projectId"));
-            model.setFileTypeID(getParaToLong("fileTypeId"));
-            model.setCreateTime(new Date());
-            model.setCreateUserID(user.getId());
-        } else {
-            Files files = filesService.findById(model.getFileID());
-            if (files != null) {
-                files.setIsEnable(false);
-                if (!filesService.update(files)) {
-                    renderJson(RestResult.buildError("文件禁用失败"));
-                    throw new BusinessException("文件禁用失败");
-                }
-            }
-        }
+        FileProject model = new FileProject();
+        model.setProjectID(getParaToLong("projectId"));
+        model.setFileTypeID(getParaToLong("fileTypeId"));
+        model.setCreateUserID(user.getId());
         model.setFileID(getParaToLong("fileId"));
-        model.setLastAccessTime(new Date());
         model.setLastUpdateUserID(user.getId());
+        model.setIsEnable(true);
 
-        Long q_fileTypeId = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
-        if (model.getFileTypeID().equals(q_fileTypeId)) {
-            model.setId(null);
-            model.setCreateTime(new Date());
-            if (!fileProjectService.save(model)) {
-                renderJson(RestResult.buildError("上传失败"));
-                throw new BusinessException("上传失败");
-            } else {
-                Files files = filesService.findById(getParaToLong("fileId"));
-                files.setIsEnable(true);
-                if (!filesService.update(files)) {
-                    renderJson(RestResult.buildError("文件启用失败"));
-                    throw new BusinessException("文件启用失败");
-                }
-            }
+        if (!fileProjectService.save(model)) {
+            renderJson(RestResult.buildError("上传失败"));
+            throw new BusinessException("上传失败");
         } else {
-            if (!fileProjectService.saveOrUpdate(model)) {
-                renderJson(RestResult.buildError("上传失败"));
-                throw new BusinessException("上传失败");
-            } else {
-                Files files = filesService.findById(getParaToLong("fileId"));
-                files.setIsEnable(true);
-                if (!filesService.update(files)) {
-                    renderJson(RestResult.buildError("文件启用失败"));
-                    throw new BusinessException("文件启用失败");
-                }
+            Files files = filesService.findById(getParaToLong("fileId"));
+            files.setIsEnable(true);
+            if (!filesService.update(files)) {
+                renderJson(RestResult.buildError("文件启用失败"));
+                throw new BusinessException("文件启用失败");
             }
         }
         renderJson(RestResult.buildSuccess());
@@ -886,20 +856,9 @@ public class ProjectController extends BaseController {
             }
         }
         projectUndertake.setCreateUserID(loginUser.getId());
+        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.REVIEWED));
+        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
 
-        Page<ProjectUndertake> projectUndertakePage = projectUndertakeService.findPageBySql(projectUndertake, pageNumber, pageSize);
-        List<Project> pageList = Collections.synchronizedList(new ArrayList<>());
-        List<ProjectUndertake> list = projectUndertakePage.getList();
-        if (list == null) {
-            list = Collections.synchronizedList(new ArrayList<>());
-        }
-        for (ProjectUndertake p : list) {
-            Project project = projectService.findById(p.getProjectID());
-            if (project != null && project.getStatus().equals(ProjectStatus.REVIEWED)) {
-                pageList.add(project);
-            }
-        }
-        Page<Project> page = new Page<>(pageList, pageNumber, pageSize, projectUndertakePage.getTotalPage(), projectUndertakePage.getTotalRow());
         renderJson(new DataTable<Project>(page));
     }
 

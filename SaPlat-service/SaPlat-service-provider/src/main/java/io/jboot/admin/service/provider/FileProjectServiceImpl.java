@@ -129,12 +129,12 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public boolean updateFileProjectAndProject(FileProject fileProject, Project project) {
+    public boolean updateFileProjectAndProject(FileProject fileProject, Project projectModel) {
+        //boolean result = projectService.update(projectModel);
         return Db.tx(() -> {
-            if(true == (null == fileProject.getId() ? save(fileProject) : update(fileProject))){
-                return projectService.update(project);
-            }
-            else{
+            if(projectService.update(projectModel)){
+                return null == fileProject.getId() ? save(fileProject) : update(fileProject);
+            }else{
                 return false;
             }
         });

@@ -41,8 +41,10 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     @Override
     public Project fitModel(Project model) {
         if (null != model) {
-            if(model.getPaTypeID() > 0) {
-                model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+            try {
+                if (model.getPaTypeID() > 0) {
+                    model.setProjectAssType(projectAssTypeService.findById(model.getPaTypeID()));
+                }
                 User user = userService.findById(model.getUserId());
                 if (user != null) {
                     model.setBuildUserName(user.getName());
@@ -52,13 +54,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                 if (null != curMgr) {
                     model.setManagement(curMgr);
                 }
-            }
-            if(model.getStatus().equals("10") || model.getStatus().equals("11")) {
-                model.setIsBackRecordUpLoad(true);
-                FileProject fpModel = fileProjectService.findByFileTypeIdAndProjectId(111L, model.getId());
-                if (null != fpModel) {
-                    model.setBackRecordFileID(fpModel.getFileID());
+                if (model.getStatus().equals("10") || model.getStatus().equals("11")) {
+                    model.setIsBackRecordUpLoad(true);
+                    FileProject fpModel = fileProjectService.findByFileTypeIdAndProjectId(111L, model.getId());
+                    if (null != fpModel) {
+                        model.setBackRecordFileID(fpModel.getFileID());
+                    }
                 }
+            }
+            catch (Exception ex){
+                return model;
             }
         }
         return model;

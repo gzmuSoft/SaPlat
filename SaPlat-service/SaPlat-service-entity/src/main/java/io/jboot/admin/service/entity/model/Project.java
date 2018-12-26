@@ -18,6 +18,7 @@ public class Project extends BaseProject<Project> {
     private ProjectAssType projectAssType;
     private String buildOrgName;
     private String buildUserName;
+    private String facAgencyName;
     private boolean isBackRecordUpLoad;
     private boolean isBackRecordTransferUpLoad;
     private boolean isRiskTrackUpLoad;
@@ -42,6 +43,14 @@ public class Project extends BaseProject<Project> {
             return this.management.getName();
         else
             return "未指定管理部门";
+    }
+
+    public String getFacAgencyName() {
+        return facAgencyName;
+    }
+
+    public void setFacAgencyName(String facAgencyName) {
+        this.facAgencyName = facAgencyName;
     }
 
     public void setManagementName(String managementName) {
