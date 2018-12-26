@@ -160,3 +160,13 @@ and userSource = 0
     AND
       s.userID = #para(userID)
 #end
+
+#sql("ExportGroupsByOrgId")
+SELECT * FROM expert_group WHERE personID IN
+(
+	SELECT personID FROM struct_person_link WHERE structID IN
+	(
+		SELECT id FROM org_structure where orgID = #para(orgID)
+	)
+)
+#end
