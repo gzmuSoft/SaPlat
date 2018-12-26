@@ -171,7 +171,9 @@ public class ProjectController extends BaseController {
     public void fileUploading() {
         Long id = getParaToLong("id");
         ProjectFileType model = projectFileTypeService.findById(id);
-        setAttr("projectId", getParaToLong("projectId")).setAttr("model", model).render("fileUploading.html");
+        setAttr("projectId", getParaToLong("projectId"))
+                .setAttr("model", model)
+                .render("fileUploading.html");
     }
 
     /**
@@ -900,10 +902,37 @@ public class ProjectController extends BaseController {
         }
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
-        projectUndertake.setRemark("FINAL_REPORT_CHECKING");
+        projectUndertake.setRemark(ProjectStatus.FINAL_REPORT_CHECKING);
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(page));
+        renderJson(new DataTable<Project>(fitFinalFileInfo(page, facAgency != null?true:false)));
     }
+
+    Page<Project> fitFinalFileInfo(Page<Project> page, boolean isFacAgency){
+        if (page != null && page.getList() != null) {
+            ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
+            if (projectFileType != null) {
+                for (Project p : page.getList()) {
+                    FileProject fileProject = new FileProject();
+                    fileProject.setProjectID(p.getId());
+                    fileProject.setFileTypeID(projectFileType.getId());
+                    fileProject = fileProjectService.findByModel(fileProject);
+                    if (fileProject != null) {
+                        p.setFileID(fileProject.getFileID());
+                    } else {
+                        p.setFileID(0L);
+                    }
+                    if (isFacAgency) {
+                        p.setRemark("facRole");
+                    }
+                    else{
+                        p.setRemark("otherRole");
+                    }
+                }
+            }
+        }
+        return page;
+    }
+
 
     /**
      * 项目管理界面-审查完成-表格渲染
@@ -931,7 +960,7 @@ public class ProjectController extends BaseController {
                 case 0:
                     project.setAssessmentMode("自评");
                     project.setUserId(AuthUtils.getLoginUser().getId());
-                    page = projectService.findCheckedSelfPageBySql(project, pageNumber, pageSize);
+                    //page = projectService.findCheckedSelfPageBySql(project, pageNumber, pageSize);
                     break;
                 case 1:
                     project.setStatus(ProjectStatus.FINAL_REPORT_CHECKING);
@@ -940,7 +969,7 @@ public class ProjectController extends BaseController {
                     break;
                 case 2:
                     project.setUserId(AuthUtils.getLoginUser().getId());
-                    page = projectService.findCheckedServicePageBySql(project, pageNumber, pageSize);
+                    //page = projectService.findCheckedServicePageBySql(project, pageNumber, pageSize);
                 default:
                     break;
             }
@@ -1005,7 +1034,6 @@ public class ProjectController extends BaseController {
         if (type != null) {
             type = "通过审核";
             project.setStatus(ProjectStatus.RECORDKEEPING);
-            project.setLastAccessTime(new Date());
         } else if (type == null) {
             type = "审核未通过";
             ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
@@ -1022,7 +1050,6 @@ public class ProjectController extends BaseController {
                 throw new BusinessException("保存失败,请重试");
             }
 
-            project.setLastAccessTime(new Date());
             project.setStatus(ProjectStatus.CHECKED);
         }
 
@@ -1125,9 +1152,9 @@ public class ProjectController extends BaseController {
             //获得当前登录用户信息
             User user = AuthUtils.getLoginUser();
             Notification notification = new Notification();
-            notification.setName("项目评估及审查完成确认");
+            notification.setName("项目终审报告审核完成通知");
             notification.setSource("/app/project/setAssessFinished");
-            notification.setContent("管理部门已经对项目《" + project.getName() + "》进行评估及审查完成的确认操作，进入项目备案阶段");
+            notification.setContent("管理部门已经通过项目《" + project.getName() + "》的终审报告，此项目自动进入项目备案阶段");
             notification.setCreateUserID(user.getId());
             notification.setLastUpdateUserID(user.getId());
             notification.setIsEnable(true);
@@ -1150,10 +1177,10 @@ public class ProjectController extends BaseController {
             //通知admin
             notification.setReceiverID(1);
             notificationService.save(notification);
-            renderJson(RestResult.buildSuccess("项目评估及审查确认完成"));
+            renderJson(RestResult.buildSuccess("项目终审报告审核完成通知"));
         } else {
-            renderJson(RestResult.buildError("项目评估及审查确认失败"));
-            throw new BusinessException("项目评估及审查确认失败");
+            renderJson(RestResult.buildError("项目终审报告审核确认失败"));
+            throw new BusinessException("项目终审报告审核确认失败");
         }
     }
 
@@ -1930,10 +1957,11 @@ public class ProjectController extends BaseController {
         int pageSize = getParaToInt("pageSize", 30);
         Project project = new Project();
         project.setStatus(ProjectStatus.CHECKED);
+        project.setRemark(ProjectStatus.FINAL_REPORT_CHECKING);
         project.setIsEnable(true);
         project.setManagementID(managementID);
-        Page<Project> page = projectService.findPage(project, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(page));
+        Page<Project> page = projectService.findCheckedPage(project, pageNumber, pageSize);
+        renderJson(new DataTable<Project>(fitFinalFileInfo(page, false)));
     }
 
     /**

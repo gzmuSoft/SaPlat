@@ -397,7 +397,10 @@ public class TrackController extends BaseController {
         } else {
             fileTypeId = projectFileTypeService.findByName("备案资料移交表").getId();
         }
-        setAttr("type", type).setAttr("projectId", getParaToLong("projectId")).setAttr("fileTypeId", fileTypeId).render("fileUploading.html");
+        setAttr("type", type)
+                .setAttr("projectId", getParaToLong("projectId"))
+                .setAttr("fileTypeId", fileTypeId)
+                .render("fileUploading.html");
     }
 
     /**
@@ -435,6 +438,7 @@ public class TrackController extends BaseController {
         } else if (project != null && type == 1) {
             model.setName("备案资料移交表");
         }
+
         if (!fileProjectService.updateFileProjectAndProject(model, project)) {
             renderJson(RestResult.buildError("上传失败"));
             throw new BusinessException("上传失败");
