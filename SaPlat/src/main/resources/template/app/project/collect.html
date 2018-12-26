@@ -9,9 +9,6 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">审核汇总</legend>
-    </fieldset>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
@@ -20,12 +17,17 @@
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="see">预审报告</a>
 
-    <a class="layui-btn layui-btn-xs" lay-event="seeFinish">终审报告</a>
+    #[[
+    {{#  if(d.status == '12' && d.fileID != 0){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="seeFinish">终审报告</a>
 
-    <a class="layui-btn layui-btn-xs" lay-event="setFinish">评估完成</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="setFinish">评估完成</a>
 
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="refuse">驳回重评</a>
-
+    #[[
+    {{#  } }}
+    ]]#
 </script>
 #end
 
@@ -40,7 +42,7 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-50'    //容器高度
 
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
@@ -48,11 +50,13 @@
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 150, sort: true, templet: '#tplMoney'}
-                , {field: 'site', title: '地址', minWidth: 150}
-                , {field: 'brief', title: '简介', minWidth: 150}
-                , {field: 'assessmentMode', title: '评估方式', minWidth: 50, sort: true}
-                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 300, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
+                , {field: 'createTime', title: '立项时间', width: 150, sort: true}
+                , {
+                    field: 'status', title: '状态', width: 115, sort: true,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'
+                }
+                , {fixed: 'right', title: '操作', width: 300, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/collectTableData'
             , method: 'get'
@@ -71,17 +75,16 @@
             var data = obj.data;
 
             if (obj.event === 'see') {
-               window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4';
-                // pop_max_show('查看预审报告', '#(ctxPath)/util/pdfView?fileID=' + identity, function () {});
+               //window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4';
+                pop_max_show('查看 "'+ data.name + '" 项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4', function () {});
             }
             else if(obj.event==="setFinish"){
-                pop_show('项目评估完成确认', '#(ctxPath)/app/project/setAssessFinishedView?id=' + data.id, '450', '210', function () {
+                pop_show('项目 "'+ data.name + '" 评估完成确认', '#(ctxPath)/app/project/setAssessFinishedView?id=' + data.id, '450', '210', function () {
                     window.location.reload();
                 });
             }
             else if(obj.event==="seeFinish"){
-                window.location.href = '#(ctxPath)/app/project/finishView?id=' + data.id;
-                // pop_max_show('查看终审报告', '#(ctxPath)/util/pdfView?fileID=' + identity, function () {});
+                pop_max_show('查看 "'+ data.name + '" 项目的终审报告', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {});
             } else if (obj.event === "refuse") {
                 pop_show('驳回重新评估', '#(ctxPath)/app/project/refuseFile?id=' + data.id, '400', '300', function () {
                     window.location.reload();

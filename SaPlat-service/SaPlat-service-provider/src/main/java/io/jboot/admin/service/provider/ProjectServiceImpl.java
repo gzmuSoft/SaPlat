@@ -8,6 +8,7 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.ProjectService;
 import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.entity.model.*;
+import io.jboot.admin.service.entity.status.system.ProjectStatus;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Column;
@@ -391,7 +392,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         SqlPara sqlPara = null;
         if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null && projectUndertake.getStatus() != null) {
             c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus()).set("createUserID", projectUndertake.getCreateUserID());
-            if(projectUndertake.getRemark().equals("FINAL_REPORT_CHECKING"))
+            if(StrKit.notBlank(projectUndertake.getRemark()) && projectUndertake.getRemark().equals(ProjectStatus.FINAL_REPORT_CHECKING.toString()))
                 c.set("Remark", "12");
             sqlPara = Db.getSqlPara("app-project.project-Reviewed", c);
             return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
@@ -401,23 +402,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
-    public Page<Project> findCheckedSelfPageBySql(Project project, int pageNumber, int pageSize) {
+    public Page<Project> findCheckedPage(Project project, int pageNumber, int pageSize) {
         Kv c = generateQueryPara(project);
-        SqlPara sqlPara = null;
-        if (project != null) {
-            sqlPara = Db.getSqlPara("app-project.project-by-checked-self", c);
-            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
-        } else {
-            return new Page<Project>();
+        if(StrKit.notBlank(project.getRemark()) && project.getRemark().equals(ProjectStatus.FINAL_REPORT_CHECKING.toString()))
+            c.set("Remark", "12");
+        if(project.getManagementID() != null && project.getManagementID() != 0){
+            c.set("managementID", project.getManagementID());
         }
-    }
-
-    @Override
-    public Page<Project> findCheckedServicePageBySql(Project project, int pageNumber, int pageSize) {
-        Kv c = generateQueryPara(project);
         SqlPara sqlPara = null;
         if (project != null) {
-            sqlPara = Db.getSqlPara("app-project.project-by-checked-service", c);
+            sqlPara = Db.getSqlPara("app-project.project-by-checked", c);
             return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
         } else {
             return new Page<Project>();

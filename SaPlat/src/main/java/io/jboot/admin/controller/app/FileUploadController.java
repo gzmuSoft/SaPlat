@@ -142,7 +142,11 @@ public class FileUploadController extends BaseController {
             throw new BusinessException("项目不存在");
         }
         ProjectFileType projectFileType = projectFileTypeService.findByName("8. 预审报告上传");
-        FileProject fileProject = fileProjectService.findByFileTypeIdAndProjectId(projectFileType.getId(), project.getId());
+
+        FileProject fileProject = new FileProject();
+        fileProject.setProjectID(project.getId());
+        fileProject.setFileTypeID(projectFileType.getId());
+        fileProject = fileProjectService.findByModel(fileProject);
         if (fileProject == null) {
             fileProject = new FileProject();
             fileProject.setName(projectFileType.getName());
@@ -160,9 +164,8 @@ public class FileUploadController extends BaseController {
 
     public void documentSave() {
         FileProject fileProject = getBean(FileProject.class, "fileProject");
-        Project project = projectService.findById(fileProject.getProjectID());
         fileProject.setIsEnable(false);
-        FileProject model = fileProjectService.findByFileTypeIdAndProjectId(fileProject.getFileTypeID(), fileProject.getProjectID());
+        FileProject model = fileProjectService.findByModel(fileProject);
         model.setFileID(fileProject.getFileID());
         if (!fileProjectService.updateFileProjectAndFiles(model)) {
             throw new BusinessException("保存失败,请重试");
