@@ -13,19 +13,15 @@
 #end
 
 #define content()   <!--隐藏id-->
-
-<div class="x-body">
-    <input type="text" id="id" name="id"
-           class="layui-input layui-disabled layui-hide" value="#(id)" required/>
+    <input type="text" id="id" name="id" class="layui-input layui-disabled layui-hide" value="#(id)" required/>
 
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 
     <script type="text/html" id="barOption">
-        <a class="layui-btn layui-btn-xs" lay-event="invite">审查详情</a>
+        <a class="layui-btn layui-btn-xs" lay-event="invite">审查信息</a>
     </script>
-</div>
 #end
 
 #define js()
@@ -34,22 +30,22 @@
     layui.use(['table', 'layer'], function () {
         var table = layui.table, layer = layui.layer;
 
-
         // 审核通过的表格渲染
         var tableIns = table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
-
+            , height: 'full-50'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '姓名', width: 120, sort: true}
                 , {field: 'sex', title: '性别', width: 100, sort: true}
                 , {field: 'address', title: '地址', minWidth: 300, sort: true}
                 , {field: 'phone', title: '联系电话', width: 110, templet: function(d){return d.user? (d.user.phone||'') : '';}}
-                , {field: 'remark', title: '审查状态', width: 120,
+                , {field: 'createTime', title: '邀请日期', width: 150, sort: true}
+                , {field: 'lastAccessTime', title: '截止日期', width: 150, sort: true}
+                , {field: 'remark', title: '审查状态', width: 190,
                     templet: function(d){
                         if(d.remark == '2'){
                             return '审查中';
@@ -57,6 +53,8 @@
                             return '通过';
                         }else if(d.remark == '4'){
                             return '不通过';
+                        }else if(d.remark == '7') {
+                            return '超时未审查，默认通过';
                         }else {
                             return '状态异常';
                         }
@@ -84,14 +82,8 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'invite') {
-                window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + $('#id').val() + '&roleType=4'
-                /*$.ajax({
-                    type: 'POST',
-                    //url: '#(ctxPath)/app/project/invitedExpert?id=' + data.id + '&projectId=' + $('#id').val(),
-                    success: function () {
-                        window.location.reload();
-                    }
-                 });*/
+                pop_max_show('查看 "'+ data.name + '" 给出的审查信息', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + $('#id').val() + '&roleType=4', function () {
+                });
             }
         });
     });

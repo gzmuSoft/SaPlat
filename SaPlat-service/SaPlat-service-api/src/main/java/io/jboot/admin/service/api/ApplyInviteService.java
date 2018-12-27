@@ -11,6 +11,13 @@ import java.util.List;
 public interface ApplyInviteService  {
 
     /**
+     * 通过项目编号获取该项目的审查截止日期
+     * @param projectID
+     * @return
+     */
+    public ApplyInvite findDeadTimeByProjectID(Long projectID);
+
+    /**
      * 通过架构ID和用户id查询用户的主动申请信息
      * @param structID
      * @param UserID

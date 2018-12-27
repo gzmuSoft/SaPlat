@@ -31,7 +31,7 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     OrganizationServiceImpl organizationService = new OrganizationServiceImpl();
     ManagementServiceImpl mgrService = new ManagementServiceImpl();
     FileProjectServiceImpl fileProjectService = new FileProjectServiceImpl();
-
+    ApplyInviteServiceImpl applyInviteService = new ApplyInviteServiceImpl();
     /**
      * 装配单个实体对象的数据
      *
@@ -61,12 +61,22 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                         model.setBackRecordFileID(fpModel.getFileID());
                     }
                 }
+                if (model.getStatus().equals("5")){//审查状态，则取得截止日期
+                    ApplyInvite aiModel = applyInviteService.findDeadTimeByProjectID(model.getId());
+                    if(aiModel != null)
+                        model.setDeadTime(aiModel.getDeadTime());
+                }
             }
             catch (Exception ex){
                 return model;
             }
         }
         return model;
+    }
+
+    @Override
+    public Project findById(Object id){
+        return fitModel(DAO.findById(id));
     }
 
     /**
