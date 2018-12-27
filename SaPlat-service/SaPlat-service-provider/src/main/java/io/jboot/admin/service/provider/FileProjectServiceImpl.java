@@ -16,6 +16,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -178,6 +179,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         columns.eq("remark", questionnaireId);
         columns.eq("isEnable",true);
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public boolean isExists(FileProject model) {
+        return findByFileTypeIdAndProjectId(model.getFileTypeID(), model.getProjectID()) != null ? true : false;
     }
 
     @Override

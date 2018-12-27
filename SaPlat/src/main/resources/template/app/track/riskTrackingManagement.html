@@ -20,7 +20,7 @@
     #end
 </script>
 
-<script type="text/html" id="toolbar">
+<script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         #if(fRole)
             <button class="layui-btn layui-btn-sm" lay-event="upload">上传</button>
@@ -39,13 +39,12 @@
             layer = layui.layer,
             $ = layui.jquery;
 
-        var tableIns = table.render({
+        table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-50'    //容器高度
-            ,toolbar: '#toolbar'
+            ,toolbar: '#toolbarDemo'
             , cols: [[                 //标题栏
                 {field: '0', align: 'center', minWidth: 60, type: 'numbers', unresize: 'true'}
                 , {field: 'orginalFileName', title: '原始文件名', minWidth: 300, align: 'center', sort: true}
@@ -74,6 +73,18 @@
             }
         });
 
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dateTable)', function(obj){
+            if(obj.event === 'upload'){
+                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
+                    layer.msg("上传成功！");
+                    table.reload('dateTable', {
+                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
+                    });
+                });
+            };
+        });
+
         //监听行操作按钮事件
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
@@ -91,17 +102,6 @@
             }
         });
 
-        //监听头部工具栏按钮事件
-        table.on('toolbar(dateTable)', function(obj){
-            if(obj.event === 'upload'){
-                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
-                    layer.msg("上传成功！");
-                    table.reload('dateTable', {
-                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
-                    });
-                });
-            };
-        });
     });
 </script>
 #end

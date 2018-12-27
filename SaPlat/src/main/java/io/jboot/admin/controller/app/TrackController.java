@@ -152,10 +152,10 @@ public class TrackController extends BaseController {
     }
 
     /**
-     * 跟踪资料移交表-页面
+     * 风险跟踪管理登记表-页面
      */
     public void toTrackData() {
-        Long projectFileTypeID = projectFileTypeService.findByName("跟踪资料移交表").getId();
+        Long projectFileTypeID = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
         List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
         boolean mRole = false, fRole = false;
         for (UserRole u : list) {
@@ -316,8 +316,8 @@ public class TrackController extends BaseController {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        //查询跟踪资料移交表的typeID便于前台使用
-        ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+        //查询风险跟踪管理登记表的typeID便于前台使用
+        ProjectFileType projectFileType = projectFileTypeService.findByName("风险跟踪管理登记表");
         Long fileTypeID = null;
         if (projectFileType != null) {
             fileTypeID = projectFileType.getId();
@@ -363,40 +363,28 @@ public class TrackController extends BaseController {
                 default:
                     break;
             }
-            ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+            ProjectFileType projectFileType = projectFileTypeService.findByName("风险跟踪管理登记表");
             Long fileTypeID = null;
             if (projectFileType != null) {
                 fileTypeID = projectFileType.getId();
             }
             if (page.getList()!=null) {
-                for (int i = 0; i < page.getList().size(); i++) {
-                    page.getList().get(i).setOwnType(iOwnType);
-                    FileProject fileProject = null;
+                FileProject fileProject = new FileProject();
+                for (Project p : page.getList()) {
                     if (fileTypeID != null) {
-                        fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
-                    }
-                    if (fileProject != null) {
-                        page.getList().get(i).setIsUpload(true);
-                    } else {
-                        page.getList().get(i).setIsUpload(false);
+                        fileProject.setFileTypeID(fileTypeID);
+                        fileProject.setProjectID(p.getId());
+                        p.setIsUpload(fileProjectService.isExists(fileProject));
                     }
 
-                    if (page.getList().get(i).getAssessmentMode().equals("自评")) {
-                        page.getList().get(i).setFacAgencyName(page.getList().get(i).getBuildOrgName());
+                    if (p.getAssessmentMode().equals("自评")) {
+                        p.setFacAgencyName(p.getBuildOrgName());
                     }else{
-                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(page.getList().get(i).getId(), "2");
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
                         if(null != puModel){
-                            page.getList().get(i).setFacAgencyName(puModel.getFacAgencyName());
+                            p.setFacAgencyName(puModel.getFacAgencyName());
                         }
                     }
-//                    if(page.getList().get(i).getAssessmentMode().equals("自评")){
-//                        page.getList().get(i).setRemark("facRole");
-//                    }else {
-//                        //查找当前项目的服务机构信息
-//                        ProjectUndertake puModel = projectUndertakeService.findByProjectId(page.getList().get(i).getId());
-//                        if (puModel.getFacAgency().getOrgID() == AuthUtils.getLoginUser().getUserID())//若此项目是当前机构服务的，则设置Remark为facRole
-//                            page.getList().get(i).setRemark("facRole");
-//                    }
                 }
             }
         }
