@@ -74,6 +74,11 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         return model;
     }
 
+    @Override
+    public Project findById(Object id){
+        return fitModel(DAO.findById(id));
+    }
+
     /**
      * find all model
      *
