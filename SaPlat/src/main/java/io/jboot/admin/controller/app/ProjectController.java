@@ -844,21 +844,26 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        ProjectUndertake projectUndertake = new ProjectUndertake();
-        Organization organization = organizationService.findById(loginUser.getUserID());
-        // 如果是组织并且启用
-        if (organization != null && organization.getIsEnable()) {
-            // 获取服务机构
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
-            // 如果服务机构不为空并且启用
-            if (facAgency != null && facAgency.getIsEnable()) {
-                projectUndertake.setFacAgencyID(facAgency.getId());
-            }
-        }
-        projectUndertake.setCreateUserID(loginUser.getId());
-        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.REVIEWED));
-        Page<Project> page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
 
+        Page<Project> page = null;
+        if(loginUser.getUserSource()==1) {
+            ProjectUndertake projectUndertake = new ProjectUndertake();
+            Organization organization = organizationService.findById(loginUser.getUserID());
+            // 如果是组织并且启用
+            if (organization != null && organization.getIsEnable()) {
+                // 获取服务机构
+                FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+                // 如果服务机构不为空并且启用
+                if (facAgency != null && facAgency.getIsEnable()) {
+                    projectUndertake.setFacAgencyID(facAgency.getId());
+                }
+            }
+            projectUndertake.setCreateUserID(loginUser.getId());
+            projectUndertake.setStatus(Integer.valueOf(ProjectStatus.REVIEWED));
+            page = projectService.findPageBySql(projectUndertake, pageNumber, pageSize);
+        }
+        if(null == page)
+            page = new Page<Project>();
         renderJson(new DataTable<Project>(page));
     }
 

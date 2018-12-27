@@ -76,7 +76,10 @@ and
 #end
 and
 	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
-	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
+	#if(facAgencyID)
+	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID))
+	#end
+	)
 #end
 
 #sql("project-undertake-ApplyIn")

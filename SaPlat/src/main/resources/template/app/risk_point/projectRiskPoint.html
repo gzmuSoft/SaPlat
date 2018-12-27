@@ -9,6 +9,7 @@
 
 #define js()
 <script type="text/javascript">
+    var data = null;
     layui.use(['table', 'layer'], function () {
         var table = layui.table
             , layer = layui.layer
@@ -16,12 +17,12 @@
             , form = layui.form;
 
         // 表格渲染
-        var tableIns = table.render({
+        table.render({
             elem: '#dataTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dataTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: '537'    //容器高度
+            , toolbar: '#toolbarDemo'
             , cellMinWidth: 80       //单元格最小宽度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
@@ -49,6 +50,21 @@
             }
         });
 
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dataTable)', function(obj){
+            if (obj.event === 'add') {
+                data = null;
+                document.getElementById('riskPointID').value = '-1';
+                document.getElementById('riskPointInfo').value = '';
+                document.getElementById('preventionMeasuresSummary').value = '';
+                document.getElementById('preventionMeasures').value = '';
+                document.getElementById('sort').value = '1';
+                document.getElementById('createTime').value = getNowFormatDate();
+                $('#save').removeClass("layui-hide");
+                $('#cancel').removeClass("layui-hide");
+            }
+        });
+
         table.on('tool(dataTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'del') {
@@ -59,6 +75,7 @@
                         data: {id: data.id},
                         loadFlag: true,
                         success: function (data) {
+                            setInfoEmpty(); //清空信息
                             layer.close(index);
                             reloadTable();
                         },
@@ -98,7 +115,7 @@
 
         //监听行单击事件（双击事件为：rowDouble）
         table.on('row(dataTable)', function(obj){
-            var data = obj.data;
+            data = obj.data;
             document.getElementById('riskPointID').value = data.id;
             document.getElementById('riskPointInfo').value = data.riskPoint;
             document.getElementById('preventionMeasuresSummary').value = data.preventionMeasuresSummary;
@@ -108,7 +125,10 @@
 
             //标注选中样式
             obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+            $('#save').removeClass("layui-hide");
+            $('#cancel').removeClass("layui-hide");
         });
+
         function getNowFormatDate() {
             var date = new Date();
             var seperator1 = "-";
@@ -127,13 +147,30 @@
             return currentdate;
         }
 
-        $('#add').click(function () {
-            document.getElementById('riskPointID').value = '-1';
+        function setInfoEmpty(){
+            data = null;
+            document.getElementById('riskPointID').value = '';
             document.getElementById('riskPointInfo').value = '';
             document.getElementById('preventionMeasuresSummary').value = '';
             document.getElementById('preventionMeasures').value = '';
-            document.getElementById('sort').value = '1';
-            document.getElementById('createTime').value = getNowFormatDate();
+            document.getElementById('sort').value = '';
+            document.getElementById('createTime').value = '';
+        }
+
+        $('#cancel').click(function () {
+            if(document.getElementById('riskPointID').value == -1){
+                setInfoEmpty();
+                $('#save').addClass("layui-hide");
+                $('#cancel').addClass("layui-hide");
+            }
+            else if(data != null){
+                document.getElementById('riskPointID').value = data.id;
+                document.getElementById('riskPointInfo').value = data.riskPoint;
+                document.getElementById('preventionMeasuresSummary').value = data.preventionMeasuresSummary;
+                document.getElementById('preventionMeasures').value = data.preventionMeasures;
+                document.getElementById('sort').value = data.sort;
+                document.getElementById('createTime').value = data.createTime;
+            }
         });
 
         //保存风险
@@ -149,6 +186,8 @@
                     sort:document.getElementById('sort').value},
                 loadFlag: true,
                 success: function (data) {
+                    $('#save').addClass("layui-hide");
+                    $('#cancel').addClass("layui-hide");
                     reloadTable();
                 }
             });
@@ -160,8 +199,6 @@
             });
         };
     });
-
-
 </script>
 #end
 
@@ -227,60 +264,59 @@
 
     <div class="layui-row layui-row layui-col-space15">
         <div class="layui-col-md7">
-            <div class="layui-card" style="padding: 10px;">
-                <div class="layui-btn-group">
-                    #shiroHasPermission('/app/risk_point/add')
-                    <button id="add" class="layui-btn layui-btn-small">添加风险点</button>
-                    #end
-                </div>
-                <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
+            <div class="layui-card" style="height: 580px;">
+                <div class="layui-card-header" style="font-size: 18px">项目风险点</div>
+                <table style="margin:-5px;" class="layui-table" id="dataTable" lay-filter="dataTable"></table>
             </div>
         </div>
         <div class="layui-col-md5">
             <input type="hidden" id="riskPointID" name="riskPointID" value="#(curRiskPoint.id)">
-            <div class="layui-card">
-                <div class="layui-card-header" style="font-size: 18px">风险点信息</div>
+            <div class="layui-card" style="width: 630px; height: 580px;">
+                <div class="layui-card-header" style="font-size: 18px">风险点详情</div>
                 <div class="layui-card-body layui-text">
                     <form id="addForm" class="layui-form" action="">
                         <div class="layui-form-item">
                             <label class="layui-form-label">风险点</label>
                             <div class="layui-input-block">
                                 <input type="text" id="riskPointInfo" placeholder="请填写风险点..." class="layui-input" value="#(curRiskPoint.riskPoint)" required
-                                       lay-verify="required" autocomplete="off"/>
+                                    lay-verify="required" autocomplete="off"/>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">措施摘要</label>
                             <div class="layui-input-block">
                                 <textarea id="preventionMeasuresSummary" placeholder="请填写措施摘要..." class="layui-textarea" value="#(curRiskPoint.preventionMeasuresSummary)" required
-                                      style="height: 120px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasuresSummary)</textarea>
+                                      style="height: 110px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasuresSummary)</textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">具体措施</label>
                             <div class="layui-input-block">
                                 <textarea id="preventionMeasures" placeholder="请填写具体防范化解措施..." class="layui-textarea" value="#(curRiskPoint.preventionMeasures)" required
-                                       style="height: 235px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasures)</textarea>
+                                       style="height: 205px;" lay-verify="required" autocomplete="off">#(curRiskPoint.preventionMeasures)</textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">排序</label>
-                            <div class="layui-input-block">
-                                <input id="sort" type="text" placeholder="请填写排序值（整数）..." class="layui-input" value="#(curRiskPoint.sort)" required
-                                       lay-verify="required" autocomplete="off"/>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">排序</label>
+                                <div class="layui-input-inline" style="width:167px;">
+                                    <input id="sort" type="text" placeholder="请填写排序值（整数）..." class="layui-input" value="#(curRiskPoint.sort)" required
+                                           lay-verify="required" autocomplete="off"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">创建时间</label>
-                            <div class="layui-input-block">
-                                <input id="createTime" type="text" class="layui-input" value="#(curRiskPoint.createTime)" readonly/>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">添加时间</label>
+                                <div class="layui-input-inline" style="width:168px;">
+                                    <input id="createTime" type="text" class="layui-input" value="#(curRiskPoint.createTime)" readonly/>
+                                </div>
                             </div>
                         </div>
                     </form>
                     <div class="layui-btn-container"
                          style="margin-top: 30px ;margin-right: 30%;width: 280px">
                         #shiroHasPermission('/app/risk_point/add')
-                        <button type="button" class="layui-btn" name="save" id="save" style="background: #fd5f00">保存修改</button>
+                        <button type="button" class="layui-btn layui-hide" name="save" id="save" style="background: #fd5f00">保存修改</button>
+                        <button type="button" class="layui-btn layui-hide" name="cancel" id="cancel">取消</button>
                         #end
                     </div>
                 </div>
@@ -288,6 +324,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        #shiroHasPermission('/app/risk_point/add')
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加风险点</button>
+        #end
+    </div>
+</script>
 
 <script type="text/html" id="barOption">
     #[[

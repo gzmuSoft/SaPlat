@@ -168,6 +168,8 @@ public interface FileProjectService {
 
     public boolean update(FileProject model, Files files);
 
+    public boolean isExists(FileProject model);
+
     public FileProject findByModel(FileProject model);
 
     public FileProject findByFileTypeIdAndProjectId(Long fileTypeId, Long projectId);
