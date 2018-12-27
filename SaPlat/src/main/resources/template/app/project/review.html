@@ -36,7 +36,7 @@
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
             , height: 'full-50'    //容器高度
-
+            , toolbar: '#toolbar'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 120, sort: true}
@@ -44,8 +44,9 @@
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
                 , {field: 'site', title: '地址', minWidth: 150, sort: true}
                 , {field: 'brief', title: '简介', minWidth: 150}
-                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {field: 'reviewInfo', title: '审查信息', minWidth: 150}
+                , {field: 'createTime', title: '立项时间', width: 150, sort: true}
+                , {field: 'deadTime', title: '审查截止时间', width: 150, sort: true}
+                , {field: 'reviewInfo', title: '审查信息', width: 150}
                 , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barOption', width:320} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/reviewTable'
@@ -64,18 +65,20 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_max_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {
+                pop_max_show('查看 "'+ data.name + '" 项目的详情', '#(ctxPath)/app/project/see?id=' + data.id, function () {
                 });
             } else if (obj.event === 'invite') {
-                pop_max_show('邀请审查', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', function () {
-                    window.location.reload();
+                pop_max_show('"'+ data.name + '" 项目的审查邀请', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', function () {
+                    table.reload('dateTable', {
+                        url: '#(ctxPath)/app/project/reviewTable'
+                    });
                 });
             } else if (obj.event === 'invited') {
-                pop_show_full('审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.id, function () {
-                    window.location.reload();
+                pop_show_full('"'+ data.name + '" 项目的审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.id, function () {
                 });
             } else if (obj.event === 'view') {
-                window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4'
+                pop_max_show('查看 "'+ data.name + '" 项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4', function () {
+                });
             }
         });
     });

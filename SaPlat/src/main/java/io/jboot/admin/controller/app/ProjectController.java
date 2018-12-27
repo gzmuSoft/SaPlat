@@ -1333,10 +1333,13 @@ public class ProjectController extends BaseController {
         if (page != null) {
             List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
             int rowCount = page.getList().size();
+            Date now = new Date();
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < aiList.size(); j++) {
                     if (aiList.get(j).getUserID().equals(page.getList().get(i).getUser().getId())) {
                         page.getList().get(i).setRemark(aiList.get(j).getStatus());
+                        page.getList().get(i).setCreateTime(aiList.get(j).getCreateTime());
+                        page.getList().get(i).setLastAccessTime(aiList.get(j).getDeadTime());
                         break;
                     }
                 }
