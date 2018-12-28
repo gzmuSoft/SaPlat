@@ -442,7 +442,21 @@ public class OrgStructureController extends BaseController {
         applyInvite.setName(name);
         applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
         Page<ApplyInvite> list = applyInviteService.findApplyByUserIdOrName(pageNumber, pageSize, applyInvite);
-        renderJson(new DataTable<ApplyInvite>(list));
+        List<Record> applyList = new ArrayList<Record>();
+        for(ApplyInvite apply: list.getList()){
+            User user = userService.findById(apply.getUserID());
+            Record record = new Record();
+            record.set("createTime",apply.getCreateTime());
+            record.set("userID",apply.getUserID());
+            record.set("status",apply.getStatus());
+            //架构名称
+            record.set("name",apply.getName());
+            //用户帐号名称
+            record.set("userName",user.getName());
+            applyList.add(record);
+        }
+        Page<Record> newList = new Page<Record>(applyList,list.getPageNumber(),list.getPageSize(),list.getTotalPage(),list.getTotalRow());
+        renderJson(new DataTable<Record>(newList));
     }
 
     /**
