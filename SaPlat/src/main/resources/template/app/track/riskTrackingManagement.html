@@ -7,41 +7,26 @@
 #end
 
 #define content()
-<br>
-<fieldset class="layui-elem-field layui-field-title" style="margin-top:30px;color: #009688;">
-    <legend style="font-size: 20px;font-weight: 500;">风险跟踪管理登记表</legend>
-</fieldset>
 <div class="layui-row">
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
-    #if(fRole)
-    <div class="layui-form-item" style="text-align: center">
-        <div class="layui-input-inline">
-            <button type="button" id="upload" class="layui-btn" lay-submit="" lay-filter="upload"
-                    style="align-content: center;">上传
-            </button>
-            <button type="button" class="layui-btn" id="res" style="align-content: center;">返回
-            </button>
-        </div>
-    </div>
-    <script type="text/html" id="barOption">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>
-    </script>
-    #else if(!fRole)
-    <script type="text/html" id="barOption">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
-    </script>
-    <div class="layui-form-item" style="text-align: center">
-        <div class="layui-input-inline">
-            <button type="button" class="layui-btn" id="res" style="align-content: center;">返回
-            </button>
-        </div>
-    </div>
-    #end
-
 </div>
+
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see" id="see">查看</a>
+    #if(fRole)
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="del">删除</a>
+    #end
+</script>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        #if(fRole)
+            <button class="layui-btn layui-btn-sm" lay-event="upload">上传</button>
+        #end
+    </div>
+</script>
 #end
 
 #define js()
@@ -54,16 +39,16 @@
             layer = layui.layer,
             $ = layui.jquery;
 
-        var tableIns = table.render({
+        table.render({
             elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-180'    //容器高度
-
+            , height: 'full-50'    //容器高度
+            ,toolbar: '#toolbarDemo'
             , cols: [[                 //标题栏
                 {field: '0', align: 'center', minWidth: 60, type: 'numbers', unresize: 'true'}
-                , {field: 'name', title: '文件名', minWidth: 300, align: 'center', sort: true}
+                , {field: 'orginalFileName', title: '原始文件名', minWidth: 300, align: 'center', sort: true}
+                , {field: 'name', title: '文件类型名称', minWidth: 300, align: 'center', sort: true}
                 , {field: 'createUserName', title: '上传人员', minWidth: 150, align: 'center', sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, align: 'center', sort: true}
                 , {field: 'option', title: '操作',width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
@@ -80,14 +65,27 @@
             , loading: true
             , done: function (res, curr, count) {
 
-                $('.layui-table-body').find('td').each(function (index, element) {
-                    if ($(this).attr("data-field") > 0) {
-                        $(this).css("display", "none");
-                    }
-                });
+            $('.layui-table-body').find('td').each(function (index, element) {
+                if ($(this).attr("data-field") > 0) {
+                    $(this).css("display", "none");
+                }
+            });
             }
         });
 
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dateTable)', function(obj){
+            if(obj.event === 'upload'){
+                pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
+                    layer.msg("上传成功！");
+                    table.reload('dateTable', {
+                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
+                    });
+                });
+            };
+        });
+
+        //监听行操作按钮事件
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
@@ -97,25 +95,11 @@
                     });
                 });
             } else if (obj.event === 'del') {
-                $.post('#(ctxPath)/app/track/deleteRiskTrackingMessage?id=' + data.projectID + '&fileID=' + data.fileID, function () {
-                    table.reload('dateTable', {
-                        url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
-                    });
-                });
-            }
-        });
-
-        $("#res").click(function () {
-            history.go(-1);
-        });
-
-        $("#upload").click(function () {
-            pop_show('上传文件', '#(ctxPath)/app/project/fileUploading?id=' + projectFileTypeID + '&projectId=' + projectID, '500', '300', function () {
-                layer.msg("上传成功！");
+                $.post('#(ctxPath)/app/track/deleteRiskTrackingMessage?fileID=' + data.fileID, function () {})
                 table.reload('dateTable', {
                     url: '#(ctxPath)/app/track/fileTable?id=' + projectID + '&fileTypeID=' + projectFileTypeID
                 });
-            });
+            }
         });
 
     });

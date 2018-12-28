@@ -14,7 +14,7 @@
 #define content()
 <br>
 <h2 class="title" align="center">社会稳定风险评估调查问卷表（个人）</h2><br>
-<div style="margin: 0 10%">
+<div style="margin: 0 auto; width:1215px;">
     <form class="layui-form" action="">
         <input type="hidden" name="project.id" value="#(project.id)">
         <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
@@ -22,37 +22,63 @@
         <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
-                    <div class="layui-card">
-                        <div class="layui-card-header">项目基本信息</div>
-                        <div class="layui-card-body">
-                            <div class="layui-row">
-                                <div class="layui-col-md12">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label" style="width: 120px">评估项目名称：</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" id="project.name" name="project.name"
-                                                   value="#(project.name)"
-                                                   lay-verify="required" autocomplete="off" placeholder="请输入标题"
-                                                   class="layui-input" style="width: 600px">
+                    <div class="layui-collapse" lay-filter="test">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title"><font color="red">#(project.name)</font>——项目信息</h2>
+                            <div class="layui-colla-content" style="background-color: #f8f8f8">
+                                <form class="layui-form" action="">
+                                    <div class="layui-row layui-col-space10 layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">项目名称</label>
+                                            <div class="layui-input-block" style="width:400px;">
+                                                <input type="text" value="#(project.name)" autocomplete="off" class="layui-input"
+                                                       readonly/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">预计金额</label>
+                                            <div class="layui-input-inline" style="width: 400px">
+                                                <input type="text" value="#number(project.amount, ',###')" class="layui-input" readonly/>
+                                            </div>
+                                            <div class="layui-form-mid layui-word-aux" style="margin-left: -90px">（单位：元）</div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="layui-row">
-                                <div class="layui-col-md12">
-                                    <div class="layui-form-item layui-form-text">
-                                        <label class="layui-form-label" style="width: 120px">项目简介：</label>
-                                        <div class="layui-input-block" style="width: 600px;margin: 0 150px">
-            <textarea id="demo" name="project.brief" lay-verify="required"
-                      class="layui-textarea" style="width: 500px">#(project.brief)</textarea>
+                                    <div class="layui-row layui-col-space10 layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">立项部门</label>
+                                            <div class="layui-input-block" style="width:400px;">
+                                                <input type="text" value="#(project.buildOrgName)" autocomplete="off" class="layui-input"
+                                                       readonly/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">管理部门</label>
+                                            <div class="layui-input-block" style="width:400px;">
+                                                <input type="text" value="#(project.managementName)" autocomplete="off" class="layui-input"
+                                                       readonly/>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="layui-row layui-col-space10 layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">项目类型</label>
+                                            <div class="layui-input-block" style="width:400px;">
+                                                <input type="text" value="#(project.projectAssTypeName)" autocomplete="off" class="layui-input" readonly/>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">地址</label>
+                                            <div class="layui-input-block" style="width:400px;">
+                                                <input type="text" value="#(project.site)" autocomplete="off" class="layui-input"
+                                                       readonly/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
         <div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
@@ -65,12 +91,12 @@
                                 <div class="layui-col-md6">
                                     <div class="grid-demo grid-demo-bg1">
                                         <div class="layui-form-item">
-                                            <label class="layui-form-label" style="width: 120px">问卷信息所属部门：</label>
-                                            <div class="layui-input-block">
+                                            <label class="layui-form-label">所属部门</label>
+                                            <div class="layui-input-block" style="width:400px;">
                                                 <input type="text" name="questionnaire.department" lay-verify="required"
                                                        value="#(questionnaire.department)" autocomplete="off"
-                                                       placeholder="请输入标题"
-                                                       class="layui-input" style="width:250px;">
+                                                       placeholder="请输入问卷调查所属部门"
+                                                       class="layui-input">
                                             </div>
                                         </div>
                                     </div>
@@ -79,13 +105,12 @@
                                     <div class="grid-demo">
                                         <div class="layui-form-item">
                                             <div class="layui-inline">
-                                                <label class="layui-form-label"
-                                                       style="width: 120px; margin-left: -40px;">问卷调查时间：</label>
-                                                <div class="layui-input-inline">
+                                                <label class="layui-form-label">调查时间</label>
+                                                <div class="layui-input-block" style="width:400px;">
                                                     <input type="text" name="questionnaire.surveyTime" id="date"
                                                            value="#date(questionnaire.surveyTime,'yyyy-MM-dd')"
                                                            lay-verify="date" placeholder="yyyy-MM-dd"
-                                                           autocomplete="off" class="layui-input" style="width: 250px;">
+                                                           autocomplete="off" class="layui-input">
                                                 </div>
                                             </div>
                                         </div>
@@ -152,9 +177,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <!--<div class="layui-card-header">调查内容</div>-->
                         <div class="layui-card-body">
-
                             <div style="text-align: center">
                                 <div class="layui-input-block">
                                     <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">

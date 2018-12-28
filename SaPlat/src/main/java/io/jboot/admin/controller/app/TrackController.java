@@ -83,6 +83,7 @@ public class TrackController extends BaseController {
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setCreateUserName(userService.findById(page.getList().get(i).getCreateUserID()).getName());
             page.getList().get(i).setName(projectFileTypeService.findById(page.getList().get(i).getFileTypeID()).getName());
+            page.getList().get(i).setOrginalFileName(filesService.findById(page.getList().get(i).getFileID()).getName());
         }
         renderJson(new DataTable<FileProject>(page));
     }
@@ -110,22 +111,23 @@ public class TrackController extends BaseController {
             facID = facAgency.getId();
         }
         boolean fRole = false;
-        for (UserRole u : list) {
-            if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
-                if (project.getAssessmentMode().equals("委评")) {
-                    if (projectUndertake.getFacAgencyID().equals(facID)) {
-                        fRole = true;
-                        break;
-                    }
-                } else {
-                    if (projectUndertake.getFacAgencyID().equals(user.getId())) {
-                        fRole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
+        //查看自己所创建的项目时，可以上传项目跟踪文档
+        if(getParaToLong("ownType") == 0)
+            fRole = true;
+//        if (project.getAssessmentMode().equals("自评") && projectUndertake.getFacAgencyID().equals(user.getId())){
+//            fRole = true;
+//        }else {
+//            for (UserRole u : list) {
+//                if (roleService.findById(u.getRoleID()).getName().equals("服务机构")) {
+//                    if (project.getAssessmentMode().equals("委评")) {
+//                        if (projectUndertake.getFacAgencyID().equals(facID)) {
+//                            fRole = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
         setAttr("fRole", fRole).
                 setAttr("projectFileTypeID", projectFileTypeID)
                 .setAttr("projectID", getParaToLong("projectID"))
@@ -135,9 +137,9 @@ public class TrackController extends BaseController {
     /**
      * 风险跟踪管理登记表-删除
      */
-    @NotNullPara({"id", "fileID"})
+    @NotNullPara("fileID")
     public void deleteRiskTrackingMessage() {
-        FileProject fileProject = fileProjectService.findById(getParaToLong("id"));
+        FileProject fileProject = fileProjectService.findByFileID(getParaToLong("fileID"));
         Files files = filesService.findById(getParaToLong("fileID"));
         if (files != null && fileProject != null) {
             fileProject.setIsEnable(false);
@@ -150,10 +152,10 @@ public class TrackController extends BaseController {
     }
 
     /**
-     * 跟踪资料移交表-页面
+     * 风险跟踪管理登记表-页面
      */
     public void toTrackData() {
-        Long projectFileTypeID = projectFileTypeService.findByName("跟踪资料移交表").getId();
+        Long projectFileTypeID = projectFileTypeService.findByName("风险跟踪管理登记表").getId();
         List<UserRole> list = userRoleService.findListByUserId(AuthUtils.getLoginUser().getId());
         boolean mRole = false, fRole = false;
         for (UserRole u : list) {
@@ -256,30 +258,44 @@ public class TrackController extends BaseController {
                 case 0:
                     project.setUserId(AuthUtils.getLoginUser().getId());
                     page = projectService.findPageForCreater(project, pageNumber, pageSize);
-                    for (Project p : page.getList()) {
-                        p.setRemark("selfRole");
-                    }
                     break;
                 case 1:
                     project.setUserId(AuthUtils.getLoginUser().getUserID());
                     page = projectService.findPageForMgr(project, pageNumber, pageSize);
-                    if (page != null && page.getList() != null) {
-                        for (Project p : page.getList()) {
-                            p.setRemark("managementRole");
-                        }
-                    }
                     break;
                 case 2:
                     project.setUserId(AuthUtils.getLoginUser().getId());
                     page = projectService.findPageForService(project, pageNumber, pageSize);
-                    for (Project p : page.getList()) {
-                        p.setRemark("facRole");
-                    }
                     break;
                 default:
                     break;
             }
+
+            if (page != null && page.getList() != null) {
+                for (Project p : page.getList()) {
+                    switch (iOwnType) {
+                        case 0:
+                            p.setRemark("selfRole");
+                            break;
+                        case 1:
+                            p.setRemark("managementRole");
+                            break;
+                        case 2:
+                            p.setRemark("facRole");
+                            break;
+                    }
+                    if (p.getAssessmentMode().equals("自评")) {
+                        p.setFacAgencyName(p.getBuildOrgName());
+                    }else{
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
+                        if(null != puModel){
+                            p.setFacAgencyName(puModel.getFacAgencyName());
+                        }
+                    }
+                }
+            }
         }
+
         renderJson(new DataTable<Project>(page));
     }
 
@@ -300,8 +316,8 @@ public class TrackController extends BaseController {
                 baseStatus.add(item.getId().toString(), item.getName());
             }
         }
-        //查询跟踪资料移交表的typeID便于前台使用
-        ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+        //查询风险跟踪管理登记表的typeID便于前台使用
+        ProjectFileType projectFileType = projectFileTypeService.findByName("风险跟踪管理登记表");
         Long fileTypeID = null;
         if (projectFileType != null) {
             fileTypeID = projectFileType.getId();
@@ -347,34 +363,27 @@ public class TrackController extends BaseController {
                 default:
                     break;
             }
-            ProjectFileType projectFileType = projectFileTypeService.findByName("跟踪资料移交表");
+            ProjectFileType projectFileType = projectFileTypeService.findByName("风险跟踪管理登记表");
             Long fileTypeID = null;
             if (projectFileType != null) {
                 fileTypeID = projectFileType.getId();
             }
             if (page.getList()!=null) {
-                for (int i = 0; i < page.getList().size(); i++) {
-                    if (page.getList().get(i).getStatus().equals(ProjectStatus.RECORDKEEPED)) {
-                        //备案资料移交表是否存在
-                        FileProject brt = fileProjectService.findByFileTypeIdAndProjectId(58L, page.getList().get(i).getId());
-                        if (brt != null) {
-                            page.getList().get(i).setBackRecordTransferUpLoad(true);
-                            page.getList().get(i).setBackRecordTransferFileID(brt.getFileID());
-                        } else {
-                            page.getList().get(i).setBackRecordTransferUpLoad(false);
-                        }
-                    }
-                    page.getList().get(i).setOwnType(iOwnType);
-                    FileProject fileProject = null;
+                FileProject fileProject = new FileProject();
+                for (Project p : page.getList()) {
                     if (fileTypeID != null) {
-                        fileProject = fileProjectService.findByFileTypeIdAndProjectId(fileTypeID, page.getList().get(i).getId());
+                        fileProject.setFileTypeID(fileTypeID);
+                        fileProject.setProjectID(p.getId());
+                        p.setIsUpload(fileProjectService.isExists(fileProject));
                     }
-                    if (fileProject != null) {
-                        page.getList().get(i).setIsUpload(true);
-                        page.getList().get(i).setFileID(fileProject.getFileID());
-                        System.out.println(fileProject.getFileID());
-                    } else {
-                        page.getList().get(i).setIsUpload(false);
+
+                    if (p.getAssessmentMode().equals("自评")) {
+                        p.setFacAgencyName(p.getBuildOrgName());
+                    }else{
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
+                        if(null != puModel){
+                            p.setFacAgencyName(puModel.getFacAgencyName());
+                        }
                     }
                 }
             }
@@ -397,7 +406,10 @@ public class TrackController extends BaseController {
         } else {
             fileTypeId = projectFileTypeService.findByName("备案资料移交表").getId();
         }
-        setAttr("type", type).setAttr("projectId", getParaToLong("projectId")).setAttr("fileTypeId", fileTypeId).render("fileUploading.html");
+        setAttr("type", type)
+                .setAttr("projectId", getParaToLong("projectId"))
+                .setAttr("fileTypeId", fileTypeId)
+                .render("fileUploading.html");
     }
 
     /**
@@ -407,7 +419,10 @@ public class TrackController extends BaseController {
     public void upFile() {
         User user = AuthUtils.getLoginUser();
         int type = getParaToInt("type");
-        FileProject model = fileProjectService.findByProjectIDAndFileTypeID(getParaToLong("projectId"), getParaToLong("fileTypeId"));
+        FileProject model = new FileProject();
+        model.setProjectID(getParaToLong("projectId"));
+        model.setFileTypeID(getParaToLong("fileTypeId"));
+        model = fileProjectService.findByModel(model);
         if (model == null) {
             model = new FileProject();
             model.setProjectID(getParaToLong("projectId"));
@@ -434,7 +449,9 @@ public class TrackController extends BaseController {
             project.setStatus(ProjectStatus.RECORDKEEPED);
         } else if (project != null && type == 1) {
             model.setName("备案资料移交表");
+            project.setStatus(ProjectStatus.TRACKING);
         }
+
         if (!fileProjectService.updateFileProjectAndProject(model, project)) {
             renderJson(RestResult.buildError("上传失败"));
             throw new BusinessException("上传失败");

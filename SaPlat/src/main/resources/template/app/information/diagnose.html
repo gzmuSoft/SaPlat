@@ -99,12 +99,12 @@
                                     </div>
                                     <div class="layui-col-md5">
                                         <div class="layui-form-item layui-form-text">
-                                            <label class="layui-form-label" style="width:100px;">调查抽样率：</label>
+                                            <label class="layui-form-label" style="width:100px;">调查抽样率(%)：</label>
                                             <div class="layui-input-block">
                                                 <input type="number" lay-verify="required|sampleRateNumber"
                                                        class="layui-input"
-                                                       onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
-                                                       onblur="this.v();"
+                                                       onkeyup="checknum(this)"
+                                                       onblur="overFormat(this)"
                                                        name="diagnoses.sampleRate" value="#(diagnoses.sampleRate)"
                                                        style="width:190px;">
                                             </div>
@@ -418,5 +418,64 @@
     $("#reset").click(function () {
         history.go(-1);
     });
+
+    /**
+     * 实时动态强制更改用户录入
+     * arg1 inputObject
+     **/
+    function checknum(th) {
+        var regStrs = [
+            ['^0(\\d+)$', '$1'], //禁止录入整数部分两位以上，但首位为0
+            ['[^\\d\\.]+$', ''], //禁止录入任何非数字和点
+            ['\\.(\\d?)\\.+', '.$1'], //禁止录入两个以上的点
+            ['^(\\d+\\.\\d{2}).+', '$1'] //禁止录入小数点后两位以上
+        ];
+        for (var i = 0; i < regStrs.length; i++) {
+            var reg = new RegExp(regStrs[i][0]);
+            th.value = th.value.replace(reg, regStrs[i][1]);
+        }
+    }
+    /**
+     * 录入完成后，输入模式失去焦点后对录入进行判断并强制更改，并对小数点进行0补全
+     * arg1 inputObject
+     **/
+    function overFormat(th) {
+        var v = th.value;
+        if (v === '') {
+            v = '0.00';
+        } else if (v === '0') {
+            v = '0.00';
+        } else if (v === '0.') {
+            v = '0.00';
+        }else if (v > 100) {
+            v = '100.00';
+        } else if (/^0+\d+\.?\d*.*$/.test(v)) {
+            v = v.replace(/^0+(\d+\.?\d*).*$/, '$1');
+            v = inp.getRightPriceFormat(v).val;
+        } else if (/^0\.\d$/.test(v)) {
+            v = v + '0';
+        } else if (!/^\d+\.\d{2}$/.test(v)) {
+            if (/^\d+\.\d{2}.+/.test(v)) {
+                v = v.replace(/^(\d+\.\d{2}).*$/, '$1');
+            } else if (/^\d+$/.test(v)) {
+                v = v + '.00';
+            } else if (/^\d+\.$/.test(v)) {
+                v = v + '00';
+            } else if (/^\d+\.\d$/.test(v)) {
+                v = v + '0';
+            } else if (/^[^\d]+\d+\.?\d*$/.test(v)) {
+                v = v.replace(/^[^\d]+(\d+\.?\d*)$/, '$1');
+            } else if (/\d+/.test(v)) {
+                v = v.replace(/^[^\d]*(\d+\.?\d*).*$/, '$1');
+                ty = false;
+            } else if (/^0+\d+\.?\d*$/.test(v)) {
+                v = v.replace(/^0+(\d+\.?\d*)$/, '$1');
+                ty = false;
+            } else {
+                v = '0.00';
+            }
+        }
+        th.value = v;
+    }
 </script>
 #end

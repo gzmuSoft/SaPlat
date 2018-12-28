@@ -76,7 +76,10 @@ and
 #end
 and
 	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
-	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
+	#if(facAgencyID)
+	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID))
+	#end
+	)
 #end
 
 #sql("project-undertake-ApplyIn")
@@ -124,20 +127,21 @@ WHERE
   order by createTime desc
 #end
 
-#sql("project-by-checked-self")
+#sql("project-by-checked")
 SELECT
   *
 FROM
   project
 WHERE
-  userId = #para(userID)
+  managementID = #para(managementID)
+  #if(Remark)
+      and (status = #para(status)
+      or	status = #para(Remark))
+  #else
+    and status = #para(status)
+  #end
   #if(name)
 	and	name like concat('%', #para(name) ,'%')
-	#end
-	and
-	   (status = 12 or status = 7)
-	#if(assessmentMode)
-	and assessmentMode = #para(assessmentMode)
 	#end
 	#if(paTypeID)
 	and	paTypeID = #para(paTypeID)
