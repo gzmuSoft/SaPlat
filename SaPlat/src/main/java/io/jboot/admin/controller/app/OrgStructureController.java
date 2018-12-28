@@ -705,6 +705,7 @@ public class OrgStructureController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long orgType = getParaToLong("orgType");
+        String personName = getPara("name");
         Page<Record> page = structPersonLinkService.OrgPersonListByType(pageNumber, pageSize, OrganizationId, orgType);
         List<Person> list = new ArrayList<Person>();
         Person person;
@@ -714,7 +715,9 @@ public class OrgStructureController extends BaseController {
                 personID = r.get("userID");
                 if (personID != null) {
                     person = personService.findById(personID);
-                    if (person != null) {
+                    if (person != null && personName == null) {
+                        list.add(person);
+                    }else if(personName != null && person.getName().indexOf(personName) != -1){
                         list.add(person);
                     }
                 }
