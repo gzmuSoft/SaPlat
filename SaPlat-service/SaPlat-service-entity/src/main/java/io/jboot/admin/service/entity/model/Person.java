@@ -12,12 +12,20 @@ public class Person extends BasePerson<Person> {
 
     private boolean isInvite;
 
+    private Long inviteId;
+
     public void setIsInvite(boolean isInvite) {
         this.isInvite = isInvite;
     }
 
     public boolean getIsInvite() {
         return this.isInvite;
+    }
+    public void setInviteId(Long inviteId) {
+        this.inviteId = inviteId;
+    }
+    public Long getInviteId() {
+        return this.inviteId;
     }
 
     public void setPower(java.lang.String power) {

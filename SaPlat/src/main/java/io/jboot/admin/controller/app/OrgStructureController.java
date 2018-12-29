@@ -747,6 +747,7 @@ public class OrgStructureController extends BaseController {
             tmp = applyInviteService.findFirstByModel(applyInvite);
             if (tmp != null) {
                 list.get(i).setIsInvite(true);
+                list.get(i).setInviteId(tmp.getId());
             } else {
                 list.get(i).setIsInvite(false);
             }
