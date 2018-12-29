@@ -65,7 +65,7 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'see') {
-                pop_max_show('查看 "'+ data.name + '" 项目的详情', '#(ctxPath)/app/project/see?id=' + data.id, function () {
+                pop_show_full('查看 "'+ data.name + '" 项目的详情', '#(ctxPath)/app/project/see?id=' + data.id, function () {
                 });
             } else if (obj.event === 'invite') {
                 pop_max_show('"'+ data.name + '" 项目的审查邀请', '#(ctxPath)/app/project/inviteChoose?id=' + data.id + '&type=1', function () {
