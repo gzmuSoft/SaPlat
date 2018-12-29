@@ -1445,6 +1445,36 @@ public class ProjectController extends BaseController {
     }
 
     /**
+     * 组织取消选择专家进行具体审查
+     */
+    @NotNullPara({"inviteId","projectId","id"})
+    public void cancelExpert(){
+        Long id = getParaToLong("inviteId");
+        JSONObject json = new JSONObject();
+        Date nowDate = new Date();
+        User user = AuthUtils.getLoginUser();
+        Notification notification = new Notification();
+        if(applyInviteService.deleteById(id) == true){
+            notification.setName("项目审查工作取消通知");
+            notification.setSource("/app/project/chooseExpert");
+            notification.setContent("您好, " + user.getName() + " 已经取消您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查工作，请悉知！");
+            notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(nowDate);
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(nowDate);
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notificationService.save(notification);
+            json.put("status", true);
+        }else{
+            json.put("status", false);
+        }
+        renderJson(json);
+
+    }
+
+    /**
      * 组织选择专家进行具体审查
      */
     @NotNullPara({"id", "projectId", "num"})
