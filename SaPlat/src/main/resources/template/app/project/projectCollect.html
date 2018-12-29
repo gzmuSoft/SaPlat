@@ -21,9 +21,18 @@
                         <option value="3">被驳回的</option>
                     </select>
                 </div>
+                #shiroHasPermission('/app/project/refuseFile')
+                <label class="layui-form-label">下属部门</label>
+                <div class="layui-input-inline">
+                    <select id='managementChilds' name="managementChilds" lay-search="">
+                        <option></option>
+                        #statusOption(ManagementNameList)
+                    </select>
+                </div>
+                #end
                 <label class="layui-form-label">类型</label>
                 <div class="layui-input-inline">
-                    <select id='projectType' name="projectType">
+                    <select id='projectType' name="projectType" lay-search="">
                         <option></option>
                         #statusOption(PaTypeNameList)
                     </select>
@@ -101,11 +110,13 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '名称', minWidth: 100, sort: true}
                 , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
-                , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
+                , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
+                , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
+                , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 150}
                 , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
-                , {field: 'status', title: '状态', width: 100, sort: true,
+                , {field: 'status', title: '状态', width: 115, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
                 , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
@@ -138,11 +149,13 @@
                     {type: 'numbers', fixed: true, unresize: 'true'}
                     , {field: 'name', title: '名称', minWidth: 100, sort: true}
                     , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
-                    , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
+                    , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
+                    , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
+                    , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
                     , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                     , {field: 'site', title: '地址', minWidth: 150}
                     , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
-                    , {field: 'status', title: '状态', width: 100, sort: true,
+                    , {field: 'status', title: '状态', width: 115, sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
                     , {field: 'createTime', title: '创建时间', width: 150, sort: true}
                     , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
@@ -180,11 +193,13 @@
                     {type: 'numbers', fixed: true, unresize: 'true'}
                     , {field: 'name', title: '名称', minWidth: 100, sort: true}
                     , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
-                    , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
+                    , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
+                    , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
+                    , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
                     , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                     , {field: 'site', title: '地址', minWidth: 150}
                     , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
-                    , {field: 'status', title: '状态', width: 100, sort: true,
+                    , {field: 'status', title: '状态', width: 115, sort: true,
                         templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'}
                     , {field: 'createTime', title: '驳回时间', width: 150, sort: true}
                     , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption1'} //这里的toolbar值是模板元素的选择器

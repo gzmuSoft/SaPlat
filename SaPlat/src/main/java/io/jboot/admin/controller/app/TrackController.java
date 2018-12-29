@@ -284,12 +284,15 @@ public class TrackController extends BaseController {
                             p.setRemark("facRole");
                             break;
                     }
-                    if (p.getAssessmentMode().equals("自评")) {
-                        p.setFacAgencyName(p.getBuildOrgName());
-                    }else{
-                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
-                        if(null != puModel){
-                            p.setFacAgencyName(puModel.getFacAgencyName());
+
+                    if(p.getAssessmentMode() != null) {
+                        if (p.getAssessmentMode().equals("自评")) {
+                            p.setFacAgencyName(p.getBuildOrgName());
+                        } else {
+                            ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
+                            if (null != puModel) {
+                                p.setFacAgencyName(puModel.getFacAgencyName());
+                            }
                         }
                     }
                 }
@@ -377,12 +380,14 @@ public class TrackController extends BaseController {
                         p.setIsUpload(fileProjectService.isExists(fileProject));
                     }
 
-                    if (p.getAssessmentMode().equals("自评")) {
-                        p.setFacAgencyName(p.getBuildOrgName());
-                    }else{
-                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
-                        if(null != puModel){
-                            p.setFacAgencyName(puModel.getFacAgencyName());
+                    if(p.getAssessmentMode() != null) {
+                        if (p.getAssessmentMode().equals("自评")) {
+                            p.setFacAgencyName(p.getBuildOrgName());
+                        } else {
+                            ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(p.getId(), "2");
+                            if (null != puModel) {
+                                p.setFacAgencyName(puModel.getFacAgencyName());
+                            }
                         }
                     }
                 }

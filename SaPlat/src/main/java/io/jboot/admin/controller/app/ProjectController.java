@@ -2124,19 +2124,57 @@ public class ProjectController extends BaseController {
 
     @Before(GET.class)
     public void projectCollect() {
-        BaseStatus baseStatus = new BaseStatus() { };
+        BaseStatus paTypeNameStatus = new BaseStatus() { };
+        BaseStatus managementNameStatus = new BaseStatus() { };
+        boolean showSubManagements = false;
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
         if (PaTypeList != null) {
             for (ProjectAssType item : PaTypeList) {
-                baseStatus.add(item.getId().toString(), item.getName());
+                paTypeNameStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList", baseStatus);
+        if(AuthUtils.getLoginUser().getUserSource()==1) {
+            Management management = managementService.findByOrgId(AuthUtils.getLoginUser().getUserID());
+            if(management != null) {
+                showSubManagements = true;
+                List<Management> mList = managementService.findManagementChildren(management.getId());
+                if(mList!=null){
+                    for (Management item : mList) {
+                        managementNameStatus.add(item.getId().toString(), item.getName());
+                    }
+                }
+            }
+        }
+        setAttr("PaTypeNameList", paTypeNameStatus);
+        setAttr("showSubManagements", showSubManagements);
+        setAttr("ManagementNameList", managementNameStatus);
         render("projectCollect.html");
     }
-
+    /**
+     * 装配完善 Page 对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<Project> fitPage(Page<Project> page){
+        if(page != null){
+            List<Project> tList = page.getList();
+            for (Project item: tList) {
+                if(item.getAssessmentMode() == null)
+                    continue;
+                if (item.getAssessmentMode().equals("自评")) {
+                    item.setFacAgencyName(item.getBuildOrgName());
+                }else{
+                    ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(item.getId(), "2");
+                    if(null != puModel){
+                        item.setFacAgencyName(puModel.getFacAgencyName());
+                    }
+                }
+            }
+        }
+        return page;
+    }
 
     @Before(GET.class)
     @NotNullPara({"pageNumber", "pageSize"})
@@ -2164,15 +2202,15 @@ public class ProjectController extends BaseController {
         switch (iOwnType) {
             case 0:
                 project.setUserId(AuthUtils.getLoginUser().getId());
-                page = projectService.findPageForCreater(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForCreater(project, pageNumber, pageSize));
                 break;
             case 1:
                 project.setUserId(AuthUtils.getLoginUser().getUserID());
-                page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForMgr(project, pageNumber, pageSize));
                 break;
             case 2:
                 project.setUserId(AuthUtils.getLoginUser().getId());
-                page = projectService.findPageForService(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForService(project, pageNumber, pageSize));
                 break;
             case 3:
                 RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
@@ -2184,6 +2222,14 @@ public class ProjectController extends BaseController {
                         page.getList().get(i).setStatus(tmp.getStatus());
                     } else {
                         page.getList().get(i).setFileID(0L);
+                    }
+                    if (page.getList().get(i).getAssessmentMode().equals("自评")) {
+                        page.getList().get(i).setFacAgencyName(page.getList().get(i).getBuildOrgName());
+                    }else{
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(page.getList().get(i).getId(), "2");
+                        if(null != puModel){
+                            page.getList().get(i).setFacAgencyName(puModel.getFacAgencyName());
+                        }
                     }
                 }
                 break;
