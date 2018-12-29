@@ -15,7 +15,7 @@
     ul {
         padding: 0px 10px;
     }
-    .ztree li a.level0 {width:180px;height: 30px; text-align: center; display:block; background-color: #008374;border-radius:3px; margin-bottom: 2px}
+    .ztree li a.level0 {width:260px;height: 30px; text-align: center; display:block; background-color: #008374;border-radius:3px; margin-bottom: 2px}
     .ztree li a.level0.cur {background-color: #66A3D2; }
     .ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:14px; font-weight: initial;word-spacing: 2px; line-height:22px;}
     .ztree li a.level0 span.button {	float:right; margin-left: 10px; visibility: visible;display:none;}
@@ -42,8 +42,8 @@
 			switchObj.before(spaceStr);
 		}
 		var spantxt=$("#" + treeNode.tId + "_span").html();
-		if(spantxt.length>12){
-			spantxt=spantxt.substring(0,12)+"...";
+		if(spantxt.length>20){
+			spantxt=spantxt.substring(0,20)+"...";
 			$("#" + treeNode.tId + "_span").html(spantxt);
 		}
 	}
@@ -114,6 +114,9 @@
     }
 
     function zTreeOnClick(event, treeId, treeNode) {
+        if("undefined" === typeof(treeNode.title) || "" === treeNode.title || null === treeNode.title){
+            return;
+        }
         $("#pdf-viewer").children().remove();
         $("#pdf-viewer").append("<a class='media' href=''></a>");
         $("a.media").media({

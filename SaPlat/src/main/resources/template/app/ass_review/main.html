@@ -45,6 +45,9 @@
     };
 
     function zTreeOnClick(event, treeId, treeNode) {
+        if("undefined" === typeof(treeNode.title) || "" === treeNode.title || null === treeNode.title){
+            return;
+        }
         PDFObject.embed(treeNode.title, "#pdfviewer", options);
         layui.use('flow', function () {
             var $ = layui.jquery;

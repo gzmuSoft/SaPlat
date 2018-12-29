@@ -33,8 +33,8 @@
 			switchObj.before(spaceStr);
 		}
 		var spantxt=$("#" + treeNode.tId + "_span").html();
-		if(spantxt.length>12){
-			spantxt=spantxt.substring(0,12)+"...";
+		if(spantxt.length>20){
+			spantxt=spantxt.substring(0,20)+"...";
 			$("#" + treeNode.tId + "_span").html(spantxt);
 		}
 	}
@@ -105,6 +105,9 @@
     }
 
     function zTreeOnClick(event, treeId, treeNode) {
+        if("undefined" === typeof(treeNode.title) || "" === treeNode.title || null === treeNode.title){
+            return;
+        }
         $("#pdf-viewer").children().remove();
         $("#pdf-viewer").append("<a class='media' href=''></a>");
         $("a.media").media({
