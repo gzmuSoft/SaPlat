@@ -212,6 +212,9 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
         if (project.getPaTypeID() != null && project.getPaTypeID() != 0) {
             c.set("paTypeID", project.getPaTypeID());
         }
+        if (project.getManagementID() != null && project.getManagementID() != 0) {
+            c.set("managementID", project.getManagementID());
+        }
         if (project.getMinAmount() != 0.0) {
             c.set("minAmount", project.getMinAmount());
         }
@@ -239,8 +242,14 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
 
     @Override
     public Page<Project> findPageForMgr(Project project, int pageNumber, int pageSize) {
-        //当前用户对应的管理机构
-        Management curMgr = mgrService.findByOrgId(project.getUserId());
+        Management curMgr = null;
+        if (project.getManagementID() != null && project.getManagementID() != 0) {
+            curMgr = mgrService.findById(project.getManagementID());
+        }
+        else {
+            //当前用户对应的管理机构
+            curMgr = mgrService.findByOrgId(project.getUserId());
+        }
         if (null != curMgr) {
             List<Management> result = new ArrayList<Management>();
             result.add(curMgr);

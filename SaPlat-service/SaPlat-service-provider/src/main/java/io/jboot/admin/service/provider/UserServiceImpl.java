@@ -92,7 +92,9 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
 
     @Override
     public boolean hasUser(String name) {
-        return findByName(name) != null;
+        Columns columns = Columns.create();
+        columns.eq("name", name);
+        return DAO.findFirstByColumns(columns) != null;
     }
 
     @Override

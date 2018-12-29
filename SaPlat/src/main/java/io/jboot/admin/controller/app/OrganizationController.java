@@ -90,6 +90,7 @@ public class OrganizationController extends BaseController {
     public void postRegister() {
         Organization organization = getBean(Organization.class, "organization");
         User user = getBean(User.class, "user");
+        user.setName(user.getName().trim());
         if (userService.hasUser(user.getName())) {
             renderJson(RestResult.buildError("用户名已存在"));
             throw new BusinessException("用户名已存在");

@@ -904,14 +904,14 @@ public class ProjectController extends BaseController {
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         projectUndertake.setRemark(ProjectStatus.FINAL_REPORT_CHECKING);
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(fitFinalFileInfo(page, facAgency != null?true:false)));
+        renderJson(new DataTable<Project>(fitPage(fitFinalFileInfo(page, facAgency != null?true:false))));
     }
 
     Page<Project> fitFinalFileInfo(Page<Project> page, boolean isFacAgency){
         if (page != null && page.getList() != null) {
             ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
             if (projectFileType != null) {
-                for (Project p : page.getList()) {
+                 for (Project p : page.getList()) {
                     FileProject fileProject = new FileProject();
                     fileProject.setProjectID(p.getId());
                     fileProject.setFileTypeID(projectFileType.getId());
@@ -2156,6 +2156,7 @@ public class ProjectController extends BaseController {
     public void projectCollect() {
         BaseStatus paTypeNameStatus = new BaseStatus() { };
         BaseStatus managementNameStatus = new BaseStatus() { };
+        //String showSubManagements = "layui-hide";
         boolean showSubManagements = false;
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
@@ -2167,12 +2168,15 @@ public class ProjectController extends BaseController {
         }
         if(AuthUtils.getLoginUser().getUserSource()==1) {
             Management management = managementService.findByOrgId(AuthUtils.getLoginUser().getUserID());
-            if(management != null) {
+            if(management != null && management.getIsEnable() == true) {
                 showSubManagements = true;
                 List<Management> mList = managementService.findManagementChildren(management.getId());
                 if(mList!=null){
                     for (Management item : mList) {
-                        managementNameStatus.add(item.getId().toString(), item.getName());
+                        if(item.getIsEnable() == false)
+                            managementNameStatus.add(item.getId().toString(), item.getName() + "(已禁用)");
+                        else
+                            managementNameStatus.add(item.getId().toString(), item.getName());
                     }
                 }
             }
@@ -2215,6 +2219,9 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         if (StrKit.notBlank(getPara("name"))) {
             project.setName(getPara("name"));
+        }
+        if (StrKit.notBlank(getPara("mcgrID"))) {
+            project.setManagementID(Long.parseLong(getPara("mcgrID")));
         }
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));

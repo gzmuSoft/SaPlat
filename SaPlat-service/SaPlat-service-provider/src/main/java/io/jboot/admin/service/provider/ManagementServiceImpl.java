@@ -95,14 +95,6 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
 
     @Override
     public List<Management> findManagementChildren(long managementId) {
-//        Management curMgr = findById(managementId);
-//        if (null != curMgr) {
-//            List<Management> result = new ArrayList<Management>();
-//            result.add(curMgr);
-//            findMgrChildren(curMgr.getId(), result);
-//            return result;
-//        }
-
         Columns columns = Columns.create();
         columns.eq("superiorID", managementId);
         List<Management> list = findListByColumns(columns);

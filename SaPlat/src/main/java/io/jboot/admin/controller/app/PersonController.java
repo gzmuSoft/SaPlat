@@ -177,6 +177,7 @@ public class PersonController extends BaseController {
         User user = getBean(User.class, "user");
         user.setPhone(person.getPhone());
         user.setUserSource(0);//设置对应的用户来源于“个人群体”的注册
+        user.setName(user.getName().trim());
         if (userService.hasUser(user.getName())) {
             renderJson(RestResult.buildError("用户名已存在"));
             throw new BusinessException("用户名已存在");

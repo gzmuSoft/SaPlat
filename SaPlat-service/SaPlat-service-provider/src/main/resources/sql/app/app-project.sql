@@ -115,6 +115,9 @@ WHERE
 	#if(paTypeID)
 	and	paTypeID = #para(paTypeID)
 	#end
+  #if(managementID)
+  and	managementID = #para(managementID)
+  #end
 	#if(minAmount)
 	and	amount >= #para(minAmount)
 	#end
@@ -193,6 +196,9 @@ WHERE
 	#if(paTypeID)
 	and	paTypeID = #para(paTypeID)
 	#end
+  #if(managementID)
+  and	managementID = #para(managementID)
+  #end
 	#if(minAmount)
 	and	amount >= #para(minAmount)
 	#end
@@ -227,6 +233,9 @@ WHERE ID IN
   #end
   #if(paTypeID)
   and	paTypeID = #para(paTypeID)
+  #end
+  #if(managementID)
+  and	managementID = #para(managementID)
   #end
 	#if(minAmount)
 	and	amount >= #para(minAmount)
