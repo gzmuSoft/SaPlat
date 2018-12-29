@@ -80,7 +80,7 @@ public class ProjectStatus extends BaseStatus {
         add(RECORDKEEPING, "项目备案");
         add(TRACKING, "项目跟踪");
         add(RECORDKEEPED, "备案文件已上传");
-        add(FINAL_REPORT_CHECKING, "管理部门审核终审报告中");
+        add(FINAL_REPORT_CHECKING, "终审报告审核中");
     }
 
     private static ProjectStatus me;

@@ -108,7 +108,6 @@ public class InformationController extends BaseController {
     @JbootrpcService
     private ManagementService managementService;
 
-
     /**
      * 资料编辑页面
      */
@@ -632,8 +631,9 @@ public class InformationController extends BaseController {
                 .setAttr("project", projectService.findById(projectId))
                 .setAttr("projectId", projectId);
         // 如果为空，就是添加，否则为查看
-        if (id == null) {
-            setAttr("expertGroups", expertGroupService.findAll());
+        if (id == null) {//根据当前登录用户所属组织查询所有专家
+            //setAttr("expertGroups", expertGroupService.findAll());
+            setAttr("expertGroups", expertGroupService.findAllByOrgId(AuthUtils.getLoginUser().getUserID()));
             if(type == 0){
                 render("initialRiskExpertise.html");
             }else if(type == 1){

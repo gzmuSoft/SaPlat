@@ -6,6 +6,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.NotificationService;
+import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.api.StructPersonLinkService;
 import io.jboot.admin.service.entity.model.Notification;
 import io.jboot.admin.service.entity.model.StructPersonLink;
@@ -18,6 +19,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Date;
 import java.util.List;
 
 @Bean
@@ -30,6 +32,47 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
 
     @Inject
     private StructPersonLinkService structPersonLinkService;
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public ApplyInvite fitModel(ApplyInvite model){
+        Date now = new Date();
+        if(model.getDeadTime().before(now))
+            model.setStatus("7");
+        return model;
+    }
+    /**
+     * 装配完善 list 对象中所有对象的数据
+     * @param list
+     * @return
+     */
+    public List<ApplyInvite> fitList(List<ApplyInvite> list){
+        if(list != null){
+            for (ApplyInvite item: list) {
+                fitModel(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 装配完善 Page 对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<ApplyInvite> fitPage(Page<ApplyInvite> page){
+        if(page != null){
+            List<ApplyInvite> tList = page.getList();
+            for (ApplyInvite item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
     @Override
     public Page<ApplyInvite> findListByUserIdOrUserName(int pageNumber, int pageSize, ApplyInvite applyInvite){
         Columns columns = Columns.create();
@@ -39,7 +82,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if(StrKit.notBlank(applyInvite.getName())){
             columns.like("name","%" + applyInvite.getName() + "%");
         }
-        return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"createTime desc");
+        return fitPage(DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"createTime desc"));
     }
     @Override
     public Page<ApplyInvite> findApplyByUserIdOrName(int pageNumber,int pageSize,ApplyInvite applyInvite){
@@ -53,7 +96,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if(StrKit.notBlank(applyInvite.getName())){
             columns.like("name","%" + applyInvite.getName() + "%");
         }
-        return DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"createTime desc");
+        return fitPage(DAO.paginateByColumns(pageNumber,pageSize,columns.getList(),"createTime desc"));
     }
 
     @Override
@@ -93,7 +136,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getRemark() != null) {
             columns.eq("remark", model.getRemark());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
@@ -122,7 +165,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getCreateUserID() != null) {
             columns.eq("createUserID", model.getCreateUserID());
         }
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     /**
@@ -137,7 +180,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         SqlPara sqlPara = null;
         c = Kv.by("ID", projectID);
         sqlPara = Db.getSqlPara("app-project.lastInvited-by-projectID", c);
-        return DAO.paginate(1, Integer.MAX_VALUE, sqlPara).getList();
+        return fitList(DAO.paginate(1, Integer.MAX_VALUE, sqlPara).getList());
     }
 
     @Override
@@ -148,9 +191,15 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     public boolean saveOrUpdateAndSend(ApplyInvite applyInvite,Notification notification){
         return Db.tx(()->applyInvite.saveOrUpdate() && notificationService.save(notification));
     }
+
     @Override
     public ApplyInvite findByStructIDAndUserID(Long structID, Long UserID){
         return DAO.findFirst("SELECT * FROM `apply_invite` where deadTime >= now() and userID=? and structID=? and module = 0 and status = 0 ORDER BY deadTime DESC limit 1", UserID, structID);
+    }
+
+    @Override
+    public ApplyInvite findDeadTimeByProjectID(Long projectID){
+        return DAO.findFirst("SELECT * FROM `apply_invite` where projectID=? AND module=1 AND `status`>=2 ORDER BY deadTime DESC limit 1", projectID);
     }
 
     @Override

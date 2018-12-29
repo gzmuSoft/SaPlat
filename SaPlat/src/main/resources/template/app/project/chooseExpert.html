@@ -135,7 +135,8 @@
 
         $('#search').click(function () {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/expert_group/tableData?name=' + $('#name').val()
+
+                url: '#(ctxPath)/app/OrgStructure/personForOrgListApi?orgType='+ orgType + '&projectID=' + projectID + '&name=' + $('#name').val()
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });

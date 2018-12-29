@@ -16,6 +16,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -42,6 +43,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("projectID", id);
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public FileProject findByFileID(Long fileId) {
+        return DAO.findFirstByColumn("fileId", fileId);
     }
 
     @Override
@@ -124,9 +130,14 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     }
 
     @Override
-    public boolean updateFileProjectAndProject(FileProject fileProject, Project project) {
+    public boolean updateFileProjectAndProject(FileProject fileProject, Project projectModel) {
+        //boolean result = projectService.update(projectModel);
         return Db.tx(() -> {
-            return !(!saveOrUpdate(fileProject) || !projectService.update(project));
+            if(projectService.update(projectModel)){
+                return null == fileProject.getId() ? save(fileProject) : update(fileProject);
+            }else{
+                return false;
+            }
         });
     }
 
@@ -168,6 +179,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         columns.eq("remark", questionnaireId);
         columns.eq("isEnable",true);
         return DAO.findListByColumns(columns);
+    }
+
+    @Override
+    public boolean isExists(FileProject model) {
+        return findByFileTypeIdAndProjectId(model.getFileTypeID(), model.getProjectID()) != null ? true : false;
     }
 
     @Override

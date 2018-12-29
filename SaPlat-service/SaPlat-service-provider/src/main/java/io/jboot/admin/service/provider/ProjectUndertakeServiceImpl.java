@@ -73,7 +73,9 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
                 model.setProject(projectService.fitModel(projectService.findById(model.getProjectID())));
             }
             if (model.getFacAgencyID() > 0) {
-                model.setFacAgency(faService.findById(model.getFacAgencyID()));
+                if(model.getProjectAssessmentMode().equals("委评")) {
+                    model.setFacAgency(faService.findById(model.getFacAgencyID()));
+                }
             }
         }
         return model;
