@@ -442,7 +442,21 @@ public class OrgStructureController extends BaseController {
         applyInvite.setName(name);
         applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
         Page<ApplyInvite> list = applyInviteService.findApplyByUserIdOrName(pageNumber, pageSize, applyInvite);
-        renderJson(new DataTable<ApplyInvite>(list));
+        List<Record> applyList = new ArrayList<Record>();
+        for(ApplyInvite apply: list.getList()){
+            User user = userService.findById(apply.getUserID());
+            Record record = new Record();
+            record.set("createTime",apply.getCreateTime());
+            record.set("userID",apply.getUserID());
+            record.set("status",apply.getStatus());
+            //架构名称
+            record.set("name",apply.getName());
+            //用户帐号名称
+            record.set("userName",user.getName());
+            applyList.add(record);
+        }
+        Page<Record> newList = new Page<Record>(applyList,list.getPageNumber(),list.getPageSize(),list.getTotalPage(),list.getTotalRow());
+        renderJson(new DataTable<Record>(newList));
     }
 
     /**
@@ -705,6 +719,7 @@ public class OrgStructureController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Long orgType = getParaToLong("orgType");
+        String personName = getPara("name");
         Page<Record> page = structPersonLinkService.OrgPersonListByType(pageNumber, pageSize, OrganizationId, orgType);
         List<Person> list = new ArrayList<Person>();
         Person person;
@@ -714,7 +729,9 @@ public class OrgStructureController extends BaseController {
                 personID = r.get("userID");
                 if (personID != null) {
                     person = personService.findById(personID);
-                    if (person != null) {
+                    if (person != null && personName == null) {
+                        list.add(person);
+                    }else if(personName != null && person.getName().indexOf(personName) != -1){
                         list.add(person);
                     }
                 }
@@ -730,6 +747,7 @@ public class OrgStructureController extends BaseController {
             tmp = applyInviteService.findFirstByModel(applyInvite);
             if (tmp != null) {
                 list.get(i).setIsInvite(true);
+                list.get(i).setInviteId(tmp.getId());
             } else {
                 list.get(i).setIsInvite(false);
             }

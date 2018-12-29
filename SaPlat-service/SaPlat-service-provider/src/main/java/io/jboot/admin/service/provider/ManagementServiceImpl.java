@@ -12,6 +12,7 @@ import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
 
 @Bean
@@ -80,6 +81,7 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
         return list;
     }
 
+
     /**
      * 获取所有数据
      *
@@ -89,6 +91,24 @@ public class ManagementServiceImpl extends JbootServiceBase<Management> implemen
     @Override
     public List<Management> findAll(boolean isEnable) {
         return fitList(DAO.findListByColumn("isEnable", isEnable));
+    }
+
+    @Override
+    public List<Management> findManagementChildren(long managementId) {
+        Columns columns = Columns.create();
+        columns.eq("superiorID", managementId);
+        List<Management> list = findListByColumns(columns);
+        if ((null != list) && (list.size() >= 0)) {
+            List<Management> result = new ArrayList<Management>();
+            result.addAll(list);
+            for (Management item : list) {
+                List<Management> r = findManagementChildren(item.getId());
+                if (r != null)
+                    result.addAll(r);
+            }
+            return result;
+        }
+        return null;
     }
 
     @Override

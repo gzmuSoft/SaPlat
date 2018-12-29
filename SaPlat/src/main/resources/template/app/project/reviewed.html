@@ -21,12 +21,14 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
+            , toolbar: '#toolbar'
             , height: 'full-100'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
+                , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
                 , {field: 'site', title: '地址', minWidth: 200, sort: true}
                 , {field: 'brief', title: '简介', minWidth: 120}
@@ -176,7 +178,7 @@
 
 <script type="text/html" id="barFinalReport">
     #[[
-    {{#  if(d.status == '7' && d.fileID == null){ }}
+    {{#  if(d.status == '7' && d.fileID == 0){ }}
     ]]#
     <a class="layui-btn layui-btn-xs" lay-event="upload">上传</a>
     #[[

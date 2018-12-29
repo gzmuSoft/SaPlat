@@ -48,6 +48,13 @@ public interface ManagementService  {
     public List<Management> findAll(boolean isEnable);
 
     /**
+     * 根据管理机构的ID，获取其下属的所有机构
+     * @param managementId 管理机构的ID
+     * @return 对应管理机构管辖的所有机构
+     */
+    public List<Management> findManagementChildren(long managementId);
+
+    /**
      * delete model by primary key
      *
      * @param id

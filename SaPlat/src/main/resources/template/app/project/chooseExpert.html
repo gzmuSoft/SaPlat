@@ -47,7 +47,7 @@
     #[[
     {{# } else if(d.isInvite){ }}
     ]]#
-    <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">√已选择</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="uninvite">取消选择</a>
     #[[
     {{#  } }}
     ]]#
@@ -113,12 +113,30 @@
                             return false;
                         }
                     });
+            }else if(obj.event === 'uninvite'){
+                console.log(data);
+                //取消功能
+                $.getJSON(
+                    '#(ctxPath)/app/project/cancelExpert?inviteId='+ data.inviteId + '&projectId=' + projectID  + "&id=" + data.id,
+                    function (res) {
+                        if (res.status) {
+                            table.reload('dateTable', {
+                                url: '#(ctxPath)/app/OrgStructure/personForOrgListApi?orgType=' + orgType + "&projectID=" + projectID
+                            });
+                        } else {
+                            layer.msg("取消选择失败！");
+                            table.reload('dateTable', {
+                                url: '#(ctxPath)/app/OrgStructure/personForOrgListApi?orgType=' + orgType + "&projectID=" + projectID
+                            });
+                        }
+                    });
             }
         });
 
         $('#search').click(function () {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/expert_group/tableData?name=' + $('#name').val()
+
+                url: '#(ctxPath)/app/OrgStructure/personForOrgListApi?orgType='+ orgType + '&projectID=' + projectID + '&name=' + $('#name').val()
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });

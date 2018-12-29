@@ -904,14 +904,14 @@ public class ProjectController extends BaseController {
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
         projectUndertake.setRemark(ProjectStatus.FINAL_REPORT_CHECKING);
         Page<Project> page = projectService.findReviewedPageBySql(projectUndertake, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(fitFinalFileInfo(page, facAgency != null?true:false)));
+        renderJson(new DataTable<Project>(fitPage(fitFinalFileInfo(page, facAgency != null?true:false))));
     }
 
     Page<Project> fitFinalFileInfo(Page<Project> page, boolean isFacAgency){
         if (page != null && page.getList() != null) {
             ProjectFileType projectFileType = projectFileTypeService.findByName("终审报告");
             if (projectFileType != null) {
-                for (Project p : page.getList()) {
+                 for (Project p : page.getList()) {
                     FileProject fileProject = new FileProject();
                     fileProject.setProjectID(p.getId());
                     fileProject.setFileTypeID(projectFileType.getId());
@@ -1493,6 +1493,36 @@ public class ProjectController extends BaseController {
             throw new BusinessException("邀请失败");
         }
         renderJson();
+    }
+
+    /**
+     * 组织取消选择专家进行具体审查
+     */
+    @NotNullPara({"inviteId","projectId","id"})
+    public void cancelExpert(){
+        Long id = getParaToLong("inviteId");
+        JSONObject json = new JSONObject();
+        Date nowDate = new Date();
+        User user = AuthUtils.getLoginUser();
+        Notification notification = new Notification();
+        if(applyInviteService.deleteById(id) == true){
+            notification.setName("项目审查工作取消通知");
+            notification.setSource("/app/project/chooseExpert");
+            notification.setContent("您好, " + user.getName() + " 已经取消您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》的审查工作，请悉知！");
+            notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
+            notification.setCreateUserID(user.getId());
+            notification.setCreateTime(nowDate);
+            notification.setLastUpdateUserID(user.getId());
+            notification.setLastAccessTime(nowDate);
+            notification.setIsEnable(true);
+            notification.setStatus(0);
+            notificationService.save(notification);
+            json.put("status", true);
+        }else{
+            json.put("status", false);
+        }
+        renderJson(json);
+
     }
 
     /**
@@ -2124,19 +2154,61 @@ public class ProjectController extends BaseController {
 
     @Before(GET.class)
     public void projectCollect() {
-        BaseStatus baseStatus = new BaseStatus() { };
+        BaseStatus paTypeNameStatus = new BaseStatus() { };
+        BaseStatus managementNameStatus = new BaseStatus() { };
+        //String showSubManagements = "layui-hide";
+        boolean showSubManagements = false;
         ProjectAssType model = new ProjectAssType();
         model.setIsEnable(true);
         List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
         if (PaTypeList != null) {
             for (ProjectAssType item : PaTypeList) {
-                baseStatus.add(item.getId().toString(), item.getName());
+                paTypeNameStatus.add(item.getId().toString(), item.getName());
             }
         }
-        setAttr("PaTypeNameList", baseStatus);
+        if(AuthUtils.getLoginUser().getUserSource()==1) {
+            Management management = managementService.findByOrgId(AuthUtils.getLoginUser().getUserID());
+            if(management != null && management.getIsEnable() == true) {
+                showSubManagements = true;
+                List<Management> mList = managementService.findManagementChildren(management.getId());
+                if(mList!=null){
+                    for (Management item : mList) {
+                        if(item.getIsEnable() == false)
+                            managementNameStatus.add(item.getId().toString(), item.getName() + "(已禁用)");
+                        else
+                            managementNameStatus.add(item.getId().toString(), item.getName());
+                    }
+                }
+            }
+        }
+        setAttr("PaTypeNameList", paTypeNameStatus);
+        setAttr("showSubManagements", showSubManagements);
+        setAttr("ManagementNameList", managementNameStatus);
         render("projectCollect.html");
     }
-
+    /**
+     * 装配完善 Page 对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<Project> fitPage(Page<Project> page){
+        if(page != null){
+            List<Project> tList = page.getList();
+            for (Project item: tList) {
+                if(item.getAssessmentMode() == null)
+                    continue;
+                if (item.getAssessmentMode().equals("自评")) {
+                    item.setFacAgencyName(item.getBuildOrgName());
+                }else{
+                    ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(item.getId(), "2");
+                    if(null != puModel){
+                        item.setFacAgencyName(puModel.getFacAgencyName());
+                    }
+                }
+            }
+        }
+        return page;
+    }
 
     @Before(GET.class)
     @NotNullPara({"pageNumber", "pageSize"})
@@ -2147,6 +2219,9 @@ public class ProjectController extends BaseController {
         Project project = new Project();
         if (StrKit.notBlank(getPara("name"))) {
             project.setName(getPara("name"));
+        }
+        if (StrKit.notBlank(getPara("mcgrID"))) {
+            project.setManagementID(Long.parseLong(getPara("mcgrID")));
         }
         if (StrKit.notBlank(getPara("projectType"))) {
             project.setPaTypeID(Long.parseLong(getPara("projectType")));
@@ -2164,15 +2239,15 @@ public class ProjectController extends BaseController {
         switch (iOwnType) {
             case 0:
                 project.setUserId(AuthUtils.getLoginUser().getId());
-                page = projectService.findPageForCreater(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForCreater(project, pageNumber, pageSize));
                 break;
             case 1:
                 project.setUserId(AuthUtils.getLoginUser().getUserID());
-                page = projectService.findPageForMgr(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForMgr(project, pageNumber, pageSize));
                 break;
             case 2:
                 project.setUserId(AuthUtils.getLoginUser().getId());
-                page = projectService.findPageForService(project, pageNumber, pageSize);
+                page = fitPage(projectService.findPageForService(project, pageNumber, pageSize));
                 break;
             case 3:
                 RejectProjectInfo rejectProjectInfo = new RejectProjectInfo();
@@ -2184,6 +2259,14 @@ public class ProjectController extends BaseController {
                         page.getList().get(i).setStatus(tmp.getStatus());
                     } else {
                         page.getList().get(i).setFileID(0L);
+                    }
+                    if (page.getList().get(i).getAssessmentMode().equals("自评")) {
+                        page.getList().get(i).setFacAgencyName(page.getList().get(i).getBuildOrgName());
+                    }else{
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(page.getList().get(i).getId(), "2");
+                        if(null != puModel){
+                            page.getList().get(i).setFacAgencyName(puModel.getFacAgencyName());
+                        }
                     }
                 }
                 break;
