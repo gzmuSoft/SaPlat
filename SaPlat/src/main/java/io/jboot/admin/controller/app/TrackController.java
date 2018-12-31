@@ -83,7 +83,7 @@ public class TrackController extends BaseController {
         for (int i = 0; i < page.getList().size(); i++) {
             page.getList().get(i).setCreateUserName(userService.findById(page.getList().get(i).getCreateUserID()).getName());
             page.getList().get(i).setName(projectFileTypeService.findById(page.getList().get(i).getFileTypeID()).getName());
-            page.getList().get(i).setOrginalFileName(filesService.findById(page.getList().get(i).getFileID()).getName());
+            //page.getList().get(i).setOrginalFileName(filesService.findById(page.getList().get(i).getFileID()).getName());
         }
         renderJson(new DataTable<FileProject>(page));
     }

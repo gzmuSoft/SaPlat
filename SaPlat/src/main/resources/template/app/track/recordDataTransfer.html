@@ -15,8 +15,9 @@
     <table id="dateTable" lay-filter="dateTable"></table>
 </div>
 
-#if(fRole && !mRole )
+
 <script type="text/html" id="barOption">
+    #if(fRole && !mRole )
     #[[
     {{#  if(d.isUpload && d.remark == '1'){ }}
     ]]#
@@ -29,9 +30,9 @@
     #[[
     {{#  } }}
     ]]#
-</script>
-#else if(mRole && !fRole)
-<script type="text/html" id="barOption">
+
+    #else if(mRole && !fRole)
+
     #[[
     {{#  if(d.isUpload){ }}
     ]]#
@@ -43,9 +44,9 @@
     #[[
     {{#  } }}
     ]]#
-</script>
-#else if(mRole && fRole)
-<script type="text/html" id="barOption">
+
+    #else if(mRole && fRole)
+
     #[[
     {{#  if(d.isUpload && d.remark == '1'){ }}
     ]]#
