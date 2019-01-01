@@ -40,7 +40,7 @@
             , limit: 30 //默认采用30
             , loading: true
             , where: {
-                projectId: "#(projectId)"
+                projectID: "#(projectID)"
             }
             , done: function (res, curr, count) {
                 $('[data-field="id"]').css("display", "none");
@@ -61,7 +61,7 @@
                     pop_max_show('查看文件', '#(ctxPath)/app/information/riskExpertise?projectID=#(projectID)&id=' + data.id, function () {
                     });
                 } else {
-                    window.location.href = "#(ctxPath)#(url)?projectID=#(projectId)&flag=#(flag)&id=" + data.id;
+                    window.location.href = "#(ctxPath)#(url)?projectID=#(projectID)&flag=#(flag)&id=" + data.id;
                 }
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除吗？', function (index) {
