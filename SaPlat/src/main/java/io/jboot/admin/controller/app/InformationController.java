@@ -179,6 +179,19 @@ public class InformationController extends BaseController {
     }
 
     /**
+     * 调查问卷
+     */
+    @NotNullPara("projectID")
+    public void questionnaireList() {
+        String url = getPara("url");
+        Long projectID = getParaToLong("projectID");
+        setAttr("url", url)
+        .setAttr("flag", getPara("flag", "false"))
+        .setAttr("projectID", projectID)
+        .render("questionnaireList.html");
+    }
+
+    /**
      * 专家数据
      */
     public void expertAdviceDataTable() {
@@ -425,7 +438,7 @@ public class InformationController extends BaseController {
     public void questionnaireDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long projectId = getParaToLong("id");
+        Long projectId = getParaToLong("projectID");
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setProjectID(projectId);
         questionnaire.setIsEnable(true);
@@ -447,15 +460,15 @@ public class InformationController extends BaseController {
     /**
      * personOrOrganization
      */
-    @NotNullPara("projectId")
+    @NotNullPara("projectID")
     public void personOrOrganization() {
-        Project project = projectService.findById(getPara("projectId"));
+        Project project = projectService.findById(getPara("projectID"));
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setType(getParaToInt("type"));
         setAttr("flag", getPara("flag", "false"));
         setAttr("questionnaire", questionnaire).
                 setAttr("project", project).
-                setAttr("projectId", project.getId());
+                setAttr("projectID", project.getId());
         //判断跳转的页面是哪一个
         if (questionnaire.getType() == 0) {
             render("personMain.html");
@@ -474,7 +487,7 @@ public class InformationController extends BaseController {
         Questionnaire questionnaire = questionnaireService.findById(getParaToLong("id"));
         setAttr("flag", getPara("flag", "false"));
         //选择问卷为空则是创建
-        setAttr("projectId", project.getId())
+        setAttr("projectID", project.getId())
                 .setAttr("project", project);
         if (questionnaire == null) {
             render("personOrOrganization.html");
@@ -495,17 +508,12 @@ public class InformationController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         //项目资料
         Project project = getBean(Project.class, "project");
-        project.setLastAccessTime(new Date());
         project.setLastUpdateUserID(loginUser.getId());
         //调查问卷
         Questionnaire questionnaire = getBean(Questionnaire.class, "questionnaire");
         //因bug手动获取
         questionnaire.setIDCard(getPara("questionnaire.IDCard"));
         //修改则有问卷id 创建则没有
-        questionnaire.setLastAccessTime(new Date());
-        if (questionnaire.getCreateTime() == null) {
-            questionnaire.setCreateTime(new Date());
-        }
         if (questionnaire.getProjectID() == null) {
             questionnaire.setProjectID(project.getId());
         }

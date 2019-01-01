@@ -29,72 +29,44 @@
             , layedit = layui.layedit
             , form = layui.form;
 
-        //创建监听函数
-        var xhrOnProgress = function (fun) {
-            xhrOnProgress.onprogress = fun; //绑定监听
-            //使用闭包实现监听绑
-            return function () {
-                //通过$.ajaxSettings.xhr();获得XMLHttpRequest对象
-                var xhr = $.ajaxSettings.xhr();
-                //判断监听函数是否为函数
-                if (typeof xhrOnProgress.onprogress !== 'function')
-                    return xhr;
-                //如果有监听函数并且xhr对象支持绑定时就把监听函数绑定上去
-                if (xhrOnProgress.onprogress && xhr.upload) {
-                    xhr.upload.onprogress = xhrOnProgress.onprogress;
-                }
-                return xhr;
-            }
-        };
         //自定义工具栏
         var riskLevelsedit = layedit.build('riskLevels', {
             tool: ['left', 'center', 'right'],
-            height: 100
+            height: 200
         });
 
         form.verify({
             riskLevelsedit: function (vale) {
                 layedit.sync(riskLevelsedit); //同步编辑内容到textarea #10line
             }
-
         });
+
         // 表格渲染
         var tableIns_1 = table.render({
             elem: '#dateTable_1'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable_1'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '120'    //容器高度
-            ,
-            cols: [[                  //标题栏
+            , id: 'dateTable_1'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '260'    //容器高度
+            , toolbar: '#toolbarTable'
+            , defaultToolbar:[]
+            , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'orginalFileName', title: '名称', minWidth: 200, sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            ,
-            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_1').attr("fileTypeId") + '&projectID=' + projectID
-            ,
-            method: 'get'
-            ,
-            request: {
+            , url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=118&projectID=' + projectID
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: false
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: false
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('.del').remove();
@@ -105,40 +77,29 @@
 
         var tableIns_2 = table.render({
             elem: '#dateTable_2'                  //指定原始表格元素选择器（推荐id选择器）
-            ,
-            id: 'dateTable_2'
-            ,
-            even: true //开启隔行背景
-            ,
-            size: 'sm' //小尺寸的表格
-            ,
-            height: '120'    //容器高度
-            ,
-            cols: [[                  //标题栏
+            , id: 'dateTable_2'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: '260'    //容器高度
+            , toolbar: '#toolbarTable'
+            , defaultToolbar:[]
+            , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称', minWidth: 200, sort: true}
+                , {field: 'orginalFileName', title: '名称', minWidth: 200, sort: true}
                 , {field: 'createTime', title: '上传时间', width: 150, sort: true}
                 , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            ,
-            url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=' + $('#table_2').attr("fileTypeId") + '&projectID=' + projectID
-            ,
-            method: 'get'
-            ,
-            request: {
+            , url: '#(ctxPath)/app/fileupload/tableData?fileTypeID=119&projectID=' + projectID
+            , method: 'get'
+            , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             }
-            ,
-            page: false
-            ,
-            limits: [30, 60, 90, 150, 300]
-            ,
-            limit: 30 //默认采用30
-            ,
-            loading: true
-            ,
-            done: function (res, curr, count) {
+            , page: false
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , done: function (res, curr, count) {
                 var flag = '#(flag)';
                 if (flag === "true") {
                     $('.del').remove();
@@ -162,7 +123,7 @@
                         loadFlag: true,
                         success: function (data) {
                             layer.close(index);
-                            reloadTable("dateTable_1");
+                            reloadTable("dateTable_1", 118);
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -170,7 +131,7 @@
                     })
                 });
             } else if (obj.event === 'view') {
-                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                pop_max_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {
                 });
             }
         });
@@ -189,7 +150,7 @@
                         loadFlag: true,
                         success: function (data) {
                             layer.close(index);
-                            reloadTable("dateTable_2");
+                            reloadTable("dateTable_2", 119);
                         },
                         unSuccess: function (data) {
                             layer.close(index);
@@ -197,86 +158,46 @@
                     })
                 });
             } else if (obj.event === 'view') {
-                pop_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, '', '', function () {
+                pop_max_show('查看文件', '#(ctxPath)/util/pdfView?fileID=' + data.fileID, function () {
                 });
             }
         });
+
         $("#riskLevels").text("#(riskLevels)");
         function getText(ele) {
             return $("iframe[textarea='" + ele + "']").contents().find("body").text();
         }
-        upload.render({
-            elem: '#add_1'
-            , url: '#(ctxPath)/util/uploadFile'
-            , accept: 'file'
-            //,multiple: true
-            , exts: 'pdf|png|jpeg|jpg'
-            , xhr: xhrOnProgress
-            , progress: function (value) {//上传进度回调 value进度值
-                element.progress('upload-progress', value + '%')//设置页面进度条
-            }
-            , data: {
-                description: "拟采取防化措施后主要风险程度计算"
-            }, before: function (res) {
-                $('#upload-progress_1').removeClass('layui-hide');
-            }, done: function (res) {
-                <!--$('.loading-bg').remove();-->
-                $('#upload-progress_1').addClass('layui-hide');
-                if (res.code == 0) {
-                    postFileID('table_1', res.data.fileId, projectID);
-                    return true;
-                } else if (res.code == 1) {
-                    layer.msg("文件上传失败，请重新选择上传！");
-                    return false;
-                }
-            }
-            , error: function (index, upload) {
-                $('#upload-progress_1').addClass('layui-hide');
-                layer.msg("文件上传错误！请重新尝试！");
-            }
+
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dateTable_1)', function(obj){
+            if(obj.event === 'upload'){
+                pop_show('上传 "拟采取防化措施后主要风险程度计算" 文件', '#(ctxPath)/app/project/fileUploading?id=118&projectId=' + projectID, '500', '300', function () {
+                    layer.msg("上传成功！");
+                    reloadTable("dateTable_1", 118);
+                });
+            };
         });
 
-        upload.render({
-            elem: '#add_2'
-            , url: '#(ctxPath)/util/uploadFile'
-            , accept: 'file'
-            //,multiple: true
-            , exts: 'pdf|png|jpeg|jpg'
-            , xhr: xhrOnProgress
-            , progress: function (value) {//上传进度回调 value进度值
-                element.progress('upload-progress', value + '%')//设置页面进度条
-            }
-            , data: {
-                description: "拟采取防化措施后主要风险风险指数计算"
-            }, before: function (res) {
-                $('#upload-progress_2').removeClass('layui-hide');
-            }, done: function (res) {
-                <!--$('.loading-bg').remove();-->
-                $('#upload-progress_2').addClass('layui-hide');
-                if (res.code == 0) {
-                    postFileID('table_2', res.data.fileId, projectID);
-                    return true;
-                } else if (res.code == 1) {
-                    layer.msg("文件上传失败，请重新选择上传！");
-                    return false;
-                }
-            }
-            , error: function (index, upload) {
-                $('#upload-progress_2').addClass('layui-hide');
-                layer.msg("文件上传错误！请重新尝试！");
-            }
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dateTable_2)', function(obj){
+            if(obj.event === 'upload'){
+                pop_show('上传 "拟采取防化措施后主要风险风险指数计算" 文件', '#(ctxPath)/app/project/fileUploading?id=119&projectId=' + projectID, '500', '300', function () {
+                    layer.msg("上传成功！");
+                    reloadTable("dateTable_2", 119);
+                });
+            };
         });
 
-
-        reloadTable = function (dateTable) {
+        reloadTable = function (dateTable, fileTypeId) {
             table.reload(dateTable, {
                 url: '#(ctxPath)/app/fileupload/tableData'
                 , where: {
-                    fileTypeID: $("#" + dateTable.slice(4).toLowerCase()).attr("fileTypeId"),
+                    fileTypeID: fileTypeId,
                     projectID: projectID
                 } //设定异步数据接口的额外参数
             });
         };
+
         var flag = '#(flag)';
         if (flag === "true") {
             $('#del').remove();
@@ -304,72 +225,43 @@
         });
     });
 
-    function postFileID(_fileTypeID, _fileID, _projectID) {
-        id = _fileTypeID;
-        util.sendAjax({
-            type: 'POST',
-            url: '#(ctxPath)/app/fileupload/save',
-            data: {
-                'fileProject.fileID': _fileID,
-                'fileProject.projectID': _projectID,
-                'fileProject.fileTypeID': $("#" + _fileTypeID).attr("fileTypeId")
-            },
-            loadFlag: true,
-            success: function (data) {
-                reloadTable("dateT" + id.slice(1));
-            },
-            unSuccess: function (data) {
-            }
-        })
-    }
-
 </script>
 #end
 
 #define content()
-<div class="layui-fluid layui-form-pane">
-    <div class="layui-row">
-        <div class="layui-form-item">
-            <fieldset id="table_1" fileTypeId="118" name="拟采取防化措施后主要风险程度计算" class="layui-elem-field">
-                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                     id="upload-progress_1" lay-filter="upload-progress">
-                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-                </div>
-                <label class="layui-form-label" style="width: 300px;">拟采取防化措施后主要风险程度计算</label>
-                <div class="layui-btn-group">
-                    <button id="add_1" class="layui-btn layui-btn-small add">上传文件</button>
-                </div>
-                <table id="dateTable_1" lay-filter="dateTable_1"></table>
-            </fieldset>
-        </div>
+<div class="layui-card">
+    <div class="layui-card-header">拟采取防化措施后主要风险程度计算</div>
+    <div class="layui-card-body">
+        <table id="dateTable_1" lay-filter="dateTable_1"></table>
     </div>
-    <div class="layui-row">
-        <div class="layui-form-item">
-            <fieldset id="table_2" fileTypeId="119" name="拟采取防化措施后主要风险风险指数计算" class="layui-elem-field">
-                <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true"
-                     id="upload-progress_2" lay-filter="upload-progress">
-                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
-                </div>
-                <label class="layui-form-label" style="width: 300px;">拟采取防化措施后主要风险风险指数计算</label>
-                <div class="layui-btn-group">
-                    <button id="add_2" class="layui-btn layui-btn-small add">上传文件</button>
-                </div>
-                <table id="dateTable_2" lay-filter="dateTable_2"></table>
-            </fieldset>
-        </div>
+</div>
+<div class="layui-card">
+    <div class="layui-card-header">拟采取防化措施后主要风险风险指数计算</div>
+    <div class="layui-card-body">
+        <table id="dateTable_2" lay-filter="dateTable_2"></table>
     </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">风险等级综合评估：</label>
-        <div class="layui-input-block ">
-            <textarea id="riskLevels" lay-verify="riskLevelsedit" placeholder="请填写"
-                      name="riskLevels"
-                      class="layui-textarea">#(riskLevels)</textarea>
-        </div>
+</div>
+<div class="layui-card">
+    <div class="layui-card-header">风险等级综合评估</div>
+    <div class="layui-card-body">
+        <textarea id="riskLevels" lay-verify="riskLevelsedit" placeholder="请填写"
+                  name="riskLevels"
+                  class="layui-textarea">#(riskLevels)</textarea>
     </div>
+</div>
+<div>
     <button type="submit" class="layui-btn" id="sub">
         保存
     </button>
 </div>
+
+<script type="text/html" id="toolbarTable">
+    <div class="layui-btn-container">
+        #shiroHasPermission('/app/project/evaluation')
+        <button class="layui-btn layui-btn-sm" lay-event="upload">上传文件</button>
+        #end
+    </div>
+</script>
 
 <script type="text/html" id="barOption">
     <a class="layui-btn layui-btn-xs" lay-event="view" id="view">查看</a>
