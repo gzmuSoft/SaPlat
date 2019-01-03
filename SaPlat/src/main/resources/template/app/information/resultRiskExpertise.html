@@ -7,9 +7,6 @@
 #end
 
 #define content()
-<br>
-<h2 class="title" align="center" style="color: #00a89a">项目採取措施后风险概率及影响程度专家意见统计表</h2><br>
-<hr align="center" size="2" width="100%"/>
 <div class="layui-row">
     <form class="layui-form" style="float: left;">
         <div class="layui-form-item">
@@ -33,11 +30,7 @@
 
     <div class="layui-input-block x-center">
         <button id="submit" class="layui-btn layui-btn-small ">保存</button>
-        &nbsp;&nbsp;
-        <button id="ret" class="layui-btn layui-btn-small ">返回</button>
     </div>
-
-
 </div>
 
 <script type="text/html" id="barOption">
@@ -343,7 +336,8 @@
             if (flag) {
                 layer.msg("保存成功！");
                 setTimeout(function () {
-                    window.location.href = document.referrer;
+                    layer.close(layer.index);
+                    window.parent.location.reload();
                 }, 1000);
             }
         });
@@ -364,10 +358,6 @@
                 });
                 $(this).children().first().text("√");
             }
-        });
-
-        $('#ret').click(function () {
-            window.location.href = "#(ctxPath)/app/information/chooseRiskExpertise?projectID=#(projectId)";
         });
 
         var flag = '#(flag)';

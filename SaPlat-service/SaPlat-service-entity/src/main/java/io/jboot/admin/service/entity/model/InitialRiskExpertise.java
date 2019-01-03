@@ -8,5 +8,21 @@ import io.jboot.admin.service.entity.model.base.BaseInitialRiskExpertise;
  */
 @Table(tableName = "initial_risk_expertise", primaryKey = "id")
 public class InitialRiskExpertise extends BaseInitialRiskExpertise<InitialRiskExpertise> {
+    /**
+     * 获取专家姓名
+     * @return 专家姓名
+     */
+    public String getExpertName() {
+        return expertName;
+    }
 
+    /**
+     * 设置专家姓名
+     * @param expertName 新的专家姓名
+     */
+    public void setExpertName(String expertName) {
+        this.expertName = expertName;
+    }
+
+    private String expertName;//专家姓名
 }

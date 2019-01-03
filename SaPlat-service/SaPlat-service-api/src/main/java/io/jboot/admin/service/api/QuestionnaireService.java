@@ -25,7 +25,7 @@ public interface QuestionnaireService  {
     public boolean saveQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
     public boolean saveQuestionnaire(Questionnaire questionnaire, ArrayList<Integer> ids, Project project);
     public boolean updateQuestionnaire(Questionnaire questionnaire, List<QuestionnaireContent> contents, Project project);
-
+    public boolean saveQuestionnaire(Questionnaire questionnaire, String questionnaireOldID);
     /**
      * 删除的事物回滚
      */

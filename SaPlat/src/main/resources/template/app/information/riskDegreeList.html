@@ -24,13 +24,20 @@
             , toolbar: '#toolbarTable'
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称', minWidth: 200}
-                , {field: 'department', title: '所属部门', minWidth: 200}
-                , {field: 'surveyTime', title: '调查时间', minWidth: 200, templet: "<div>{{layui.util.toDateString(d.surveyTime, 'yyyy-MM-dd')}}</div>"}
-                , {field: 'remark', title: '其他信息', minWidth: 400}
-                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'expertName', title: '专家姓名', width: 120}
+                , {field: 'remark', title: '类型', width: 140}
+                , {field: 'riskFactor', title: '风险因素', minWidth: 200}
+                , {field: 'riskExpertise', title: '风险概率专家意见', width: 130,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.RiskExpertise::me(), "riskExpertise")'}
+                , {field: 'riskProbability', title: '风险概率(P)单位(%)', width: 140}
+                , {field: 'incidenceExpertise', title: '影响程度专家意见', width: 130,
+                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.IncidenceExpertise::me(), "incidenceExpertise")'}
+                , {field: 'incidenceProbability', title: '影响程度概率(Q)单位(%)', width: 165}
+                , {field: 'riskLevel', title: '风险程度（R=p*q）', width: 140}
+                , {field: 'createTime', title: '填写时间', width: 150}
+                , {fixed: 'right', title: '操作', width: 80, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/information/questionnaireDataTable'
+            , url: '#(ctxPath)/app/information/toInitialRiskExpertiseDataTable'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
@@ -56,13 +63,13 @@
         table.on('tool(dateTable)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                pop_show_full('编辑 "'+ data.department + '"调查问卷信息', '#(ctxPath)/app/information/questionnaire?projectID=#(projectID)&flag=#(flag)&type=' + data.type + '&id=' + data.id, function () {
+                pop_show_full('编辑风险因素及其风险程度', '#(ctxPath)/app/information/toRiskExpertise?projectID=#(projectID)&flag=#(flag)&type=' + data.remark + '&id=' + data.id, function () {
                     layer.msg("操作成功！");
                     reloadTable();
                 });
             } else if (obj.event === 'delete') {
                 layer.confirm('确定删除吗？', function (index) {
-                    $.post("#(ctxPath)/app/information/questionnaireDelete", {id: data.id}, function (e) {
+                    $.post("#(ctxPath)/app/information/chooseRiskExpertiseDelete", {id: data.id}, function (e) {
                         layer.close(index);
                         layer.msg("删除成功！");
                         reloadTable();
@@ -73,14 +80,13 @@
 
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable)', function(obj){
-            if(obj.event === 'person'){
-                pop_show_full('添加个人调查问卷表', "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=0", function () {
+            if(obj.event === 'initial'){
+                pop_show_full('添加初始风险因素及其风险程度', "#(ctxPath)/app/information/toRiskExpertise?projectID=#(projectID)&type=initial", function () {
                     layer.msg("操作成功！");
                     reloadTable();
                 });
-                //window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=0";
-            }else if(obj.event === 'organization'){
-                pop_show_full('添加团体问卷调查表', "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=1", function () {
+            }else if(obj.event === 'result'){
+                pop_show_full('添加采取措施后风险因素及其风险程度', "#(ctxPath)/app/information/toRiskExpertise?projectID=#(projectID)&type=result", function () {
                     layer.msg("操作成功！");
                     reloadTable();
                 });
@@ -89,7 +95,7 @@
 
         reloadTable = function () {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/information/questionnaireDataTable'
+                url: '#(ctxPath)/app/information/toInitialRiskExpertiseDataTable'
                 , where: {
                     projectID: "#(projectID)"
                 } //设定异步数据接口的额外参数
@@ -111,14 +117,14 @@
 <script type="text/html" id="toolbarTable">
     <div class="layui-btn-container">
         #shiroHasPermission('/app/project/evaluation')
-        <button class="layui-btn layui-btn-sm" lay-event="person">添加个人调查问卷表</button>
-        <button class="layui-btn layui-btn-sm" lay-event="organization">添加团体问卷调查表</button>
+        <button class="layui-btn layui-btn-sm" lay-event="initial">添加初始风险因素及其风险程度</button>
+        <button class="layui-btn layui-btn-sm" lay-event="result">添加采取措施后风险因素及其风险程度</button>
         #end
     </div>
 </script>
 
 <script type="text/html" id="barOption">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">查看&编辑</a>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">查看&编辑</a>-->
     <a class="layui-btn layui-btn-warm layui-btn-xs del" lay-event="delete" id="del">删除</a>
 </script>
 
