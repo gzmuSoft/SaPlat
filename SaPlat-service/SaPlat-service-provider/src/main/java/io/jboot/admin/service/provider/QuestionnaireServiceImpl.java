@@ -1,8 +1,10 @@
 package io.jboot.admin.service.provider;
 
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.admin.service.api.*;
 import io.jboot.admin.service.entity.model.*;
 import io.jboot.aop.annotation.Bean;
@@ -167,9 +169,9 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     @Override
     public boolean saveQuestionnaire(Questionnaire questionnaire, ArrayList<Integer> ids, Project project) {
         return Db.tx(() -> {
-//            if (!projectService.update(project)) {
-//                return false;
-//            }
+            if (!projectService.update(project)) {
+                return false;
+            }
             if (questionnaire.getId() != null) {
                 if (!update(questionnaire)) {
                     return false;
@@ -192,6 +194,27 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
                 }
             }
             return true;
+        });
+    }
+    public int updatefileProjectRemark(String questionnaireID, String questionnaireOldID) {
+        return Db.update("UPDATE file_project SET remark='" + questionnaireID + "' WHERE remark='" + questionnaireOldID + "'");
+    }
+
+    @Override
+    public boolean saveQuestionnaire(Questionnaire questionnaire, String questionnaireOldID){
+        return Db.tx(() -> {
+            if (questionnaire.getId() != null) {
+                if (!update(questionnaire)) {
+                    return false;
+                }
+            } else {
+                if (!save(questionnaire)) {
+                    return false;
+                }
+            }
+
+            int iAffect = updatefileProjectRemark(questionnaire.getId().toString(), questionnaireOldID);
+            return iAffect > 0 ? true : false;
         });
     }
 

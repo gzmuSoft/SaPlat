@@ -13,7 +13,7 @@
 
 #define js()
 <script type="text/javascript">
-    layui.use(['form', 'layer', 'element', 'layedit', 'laydate', 'table', 'upload'], function () {
+    layui.use(['form', 'layer', 'element', 'laydate', 'table', 'upload'], function () {
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate
@@ -37,7 +37,6 @@
         if (questionnaireId == ""){
             questionnaireId = "questionnaire" + guid();
         }
-        var files = [];
 
         //日期
         laydate.render({
@@ -51,7 +50,6 @@
             $('input').addClass('layui-disabled').attr("disabled", "disabled");
         }
 
-        // 表格渲染
         // 表格渲染
         var tableIns_1 = table.render({
             elem: '#dateTable_1'                  //指定原始表格元素选择器（推荐id选择器）
@@ -247,7 +245,7 @@
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable_2)', function(obj){
             if(obj.event === 'upload'){
-                pop_show('上传 "访谈表" 文件', '#(ctxPath)/app/project/fileUploading?id=115&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
+                pop_show('上传 "访谈表" 文件', '#(ctxPath)/app/information/fileUploading?id=115&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
                     layer.msg("上传成功！");
                     reloadTable("dateTable_2", 115);
                 });
@@ -257,7 +255,7 @@
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable_3)', function(obj){
             if(obj.event === 'upload'){
-                pop_show('上传 "调查现场" 文件', '#(ctxPath)/app/project/fileUploading?id=116&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
+                pop_show('上传 "调查现场" 文件', '#(ctxPath)/app/information/fileUploading?id=116&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
                     layer.msg("上传成功！");
                     reloadTable("dateTable_3", 116);
                 });
@@ -288,6 +286,8 @@
                 loadFlag: true,
                 success: function (data) {
                     //window.close();
+                    layer.close(layer.index);
+                    window.parent.location.reload();
                 }
             });
             return false;
@@ -298,13 +298,13 @@
 
 #define content()
 
-<div style="padding: 20px;margin: 10px; background-color: #F2F2F2;">
+<div style="padding: 15px; margin-bottom:15px; background-color:white;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-collapse" lay-filter="test">
                 <div class="layui-colla-item">
                     <h2 class="layui-colla-title"><font color="red">#(project.name)</font>——项目信息</h2>
-                    <div class="layui-colla-content" style="background-color: #f8f8f8">
+                    <div class="layui-colla-content">
                         <form class="layui-form" action="">
                             <div class="layui-row layui-col-space10 layui-form-item">
                                 <div class="layui-inline">
@@ -370,9 +370,9 @@
 
 <form id="qForm" class="layui-form" action="">
 
-    <input type="hidden" name="projectID" value="#(project.id)">
-    <input type="hidden" name="type" value="#(questionnaire.type)">
-    <input type="hidden" name="questionnaireID" value="#(questionnaire.id)">
+    <input type="hidden" name="project.id" value="#(project.id)">
+    <input type="hidden" name="questionnaire.type" value="#(questionnaire.type)">
+    <input type="hidden" name="questionnaire.id" value="#(questionnaire.id)">
 
     <div class="layui-card">
         <div class="layui-card-header">问卷基本信息</div>

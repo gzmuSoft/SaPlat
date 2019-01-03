@@ -65,7 +65,9 @@
                 content.prop("src", "#(ctxPath)/app/fileupload/index?projectID=#(projectId)&flag=#(flag)");
             } else if (html === "/app/fileupload/document"){
                 content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)&flag=#(flag)");
-            } else if (html === "/app/information/questionnaire"){
+            } else if (html === "/app/information/chooseRiskExpertise"){
+                content.prop("src", "#(ctxPath)/app/information/riskDegreeList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");
+            }  else if (html === "/app/information/questionnaire"){
                 content.prop("src", "#(ctxPath)/app/information/questionnaireList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");
             } else if (html === "/app/information/toRiskLevel"){
                 content.prop("src", "#(ctxPath)/app/information/toRiskLevel?id=#(projectId)&percent=#(percent)&flag=#(flag)");

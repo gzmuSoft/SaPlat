@@ -206,6 +206,19 @@ public class InformationController extends BaseController {
     }
 
     /**
+     * 5. 初始风险因素及其风险程度
+     */
+    @NotNullPara("projectID")
+    public void riskDegreeList() {
+        String url = getPara("url");
+        Long projectID = getParaToLong("projectID");
+        setAttr("url", url)
+                .setAttr("flag", getPara("flag", "false"))
+                .setAttr("projectID", projectID)
+                .render("riskDegreeList.html");
+    }
+
+    /**
      * 专家数据
      */
     public void expertAdviceDataTable() {
@@ -521,29 +534,22 @@ public class InformationController extends BaseController {
     public void questionnaireAdd() {
         User loginUser = AuthUtils.getLoginUser();
         //项目资料
-        //Project project = getBean(Project.class, "project");
+        Project project = getBean(Project.class, "project");
         String questionnaireId= getPara("questionnaireId");
-        Long projectID = getParaToLong("projectID");
         //project.setLastUpdateUserID(loginUser.getId());
         //调查问卷
         Questionnaire questionnaire = getBean(Questionnaire.class, "questionnaire");
 
         //修改则有问卷id 创建则没有
         if (questionnaire.getProjectID() == null) {
-            questionnaire.setProjectID(projectID);
+            questionnaire.setProjectID(project.getId());
         }
         if (questionnaire.getCreateUserID() == null) {
             questionnaire.setCreateUserID(loginUser.getId());
         }
-        String files = getPara("file");
-        String[] split = files.split("-");
-        ArrayList<Integer> ids = new ArrayList<>();
-        for (String aSplit : split) {
-            if (StringUtils.isNotEmpty(aSplit) && StringUtils.isNumeric(aSplit)) {
-                ids.add(Integer.parseInt(aSplit));
-            }
-        }
-        if (!questionnaireService.saveQuestionnaire(questionnaire, ids, project)) {
+        questionnaire.setLastUpdateUserID(loginUser.getId());
+
+        if (!questionnaireService.saveQuestionnaire(questionnaire, questionnaireId)) {
             throw new BusinessException("保存失败!");
         }
         renderJson(RestResult.buildSuccess());
@@ -646,7 +652,7 @@ public class InformationController extends BaseController {
     @NotNullPara({"projectID", "type"})
     public void toRiskExpertise() {
         Long projectId = getParaToLong("projectID");
-        int type = getParaToInt("type");
+        String type = getPara("type", "initial");
         // 获取到当前行的id
         Long id = getParaToLong("id");
         // 设置必要的标识
@@ -657,18 +663,18 @@ public class InformationController extends BaseController {
         if (id == null) {//根据当前登录用户所属组织查询所有专家
             //setAttr("expertGroups", expertGroupService.findAll());
             setAttr("expertGroups", expertGroupService.findAllByOrgId(AuthUtils.getLoginUser().getUserID()));
-            if(type == 0){
+            if(type.equals("initial")){
                 render("initialRiskExpertise.html");
-            }else if(type == 1){
+            }else if(type.equals("result")){
                 render("resultRiskExpertise.html");
             }
         } else {
             InitialRiskExpertise initialRiskExpertise = initialRiskExpertiseService.findById(id);
             ExpertGroup expertGroup = expertGroupService.findById(initialRiskExpertise.getExpertID());
             setAttr("initialRiskExpertise", initialRiskExpertise).setAttr("expertGroup", expertGroup);
-            if(type == 0){
+            if(type.equals("initial")){
                 render("initialRiskExpertise.html");
-            }else if(type == 1){
+            }else if(type.equals("result")){
                 render("resultRiskExpertise.html");
             }
         }
@@ -680,14 +686,20 @@ public class InformationController extends BaseController {
     public void toInitialRiskExpertiseDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long projectId = getParaToLong("id");
+        Long projectId = getParaToLong("projectID");
         InitialRiskExpertise initialRiskExpertise = new InitialRiskExpertise();
         initialRiskExpertise.setProjectID(projectId);
         Page<InitialRiskExpertise> pages = initialRiskExpertiseService.findPage(initialRiskExpertise, pageNumber, pageSize);
         pages.getList().forEach(model -> {
+            if (model.getRemark().equals("initial")) {
+                model.setRemark("初始");
+            } else if (model.getRemark().equals("result")) {
+                model.setRemark("采取措施后");
+            }
             ExpertGroup expertGroup = expertGroupService.findById(model.getExpertID());
             if (expertGroup != null) {
-                model.setRemark("专家名称：" + expertGroup.getName());
+                //model.setRemark("专家名称：" + expertGroup.getName());
+                model.setExpertName(expertGroup.getName());
             }
         });
         renderJson(new DataTable<InitialRiskExpertise>(pages));
@@ -710,8 +722,8 @@ public class InformationController extends BaseController {
                 sb.append("初始风险程度");
                 p.setRemark("初始风险程度");
             } else if (p.getRemark().equals("result")) {
-                sb.append("採取措施后的风险程度");
-                p.setRemark("採取措施后的风险程度");
+                sb.append("采取措施后的风险程度");
+                p.setRemark("采取措施后的风险程度");
             }
             p.setName("风险因素及风险程度");
         });
