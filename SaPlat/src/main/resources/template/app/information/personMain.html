@@ -44,16 +44,6 @@
             elem: '#date'
         });
 
-        function jointString() {
-            $(".content").each(function () {
-                string += "content" + "=" + $(this).val() + "&";
-            });
-            $(".name").each(function () {
-                string += "name" + "=" + $(this).val() + "&";
-            });
-            return string;
-        }
-
         var flag = '#(flag)';
         if (flag === "true") {
             $('#sub').remove();
@@ -247,7 +237,7 @@
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable_1)', function(obj){
             if(obj.event === 'upload'){
-                pop_show('上传 "调查问卷" 文件', '#(ctxPath)/app/project/fileUploading?id=114&projectId=' + projectID, '500', '300', function () {
+                pop_show('上传 "调查问卷" 文件', '#(ctxPath)/app/information/fileUploading?id=114&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
                     layer.msg("上传成功！");
                     reloadTable("dateTable_1", 114);
                 });
@@ -257,7 +247,7 @@
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable_2)', function(obj){
             if(obj.event === 'upload'){
-                pop_show('上传 "访谈表" 文件', '#(ctxPath)/app/project/fileUploading?id=115&projectId=' + projectID, '500', '300', function () {
+                pop_show('上传 "访谈表" 文件', '#(ctxPath)/app/project/fileUploading?id=115&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
                     layer.msg("上传成功！");
                     reloadTable("dateTable_2", 115);
                 });
@@ -267,7 +257,7 @@
         //监听头部工具栏按钮事件
         table.on('toolbar(dateTable_3)', function(obj){
             if(obj.event === 'upload'){
-                pop_show('上传 "调查现场" 文件', '#(ctxPath)/app/project/fileUploading?id=116&projectId=' + projectID, '500', '300', function () {
+                pop_show('上传 "调查现场" 文件', '#(ctxPath)/app/project/fileUploading?id=116&projectId=' + projectID + '&questionnaireId=' + questionnaireId, '500', '300', function () {
                     layer.msg("上传成功！");
                     reloadTable("dateTable_3", 116);
                 });
@@ -288,15 +278,16 @@
 
         //监听提交
         form.on('submit(sub)', function (data) {
-            data.field.file = files.join('-');
+            data.field.questionnaireId = questionnaireId;
+            //data.field.file = files.join('-');
             // data.field['project.brief'] = layedit.getContent(briefIndex);
             util.sendAjax({
                 type: 'POST',
-                url: '#(ctxPath)/app/information/questionnaireAdd' + jointString(),
+                url: '#(ctxPath)/app/information/questionnaireAdd',
                 data: $.param(data.field),
                 loadFlag: true,
                 success: function (data) {
-                    window.close();
+                    //window.close();
                 }
             });
             return false;
@@ -441,7 +432,7 @@
     </div>
 
     <div>
-        <button type="submit" class="layui-btn" id="sub">
+        <button type="submit" lay-submit="" lay-filter="sub" class="layui-btn" id="sub">
             保存
         </button>
     </div>

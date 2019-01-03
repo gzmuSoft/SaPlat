@@ -167,9 +167,9 @@ public class QuestionnaireServiceImpl extends JbootServiceBase<Questionnaire> im
     @Override
     public boolean saveQuestionnaire(Questionnaire questionnaire, ArrayList<Integer> ids, Project project) {
         return Db.tx(() -> {
-            if (!projectService.update(project)) {
-                return false;
-            }
+//            if (!projectService.update(project)) {
+//                return false;
+//            }
             if (questionnaire.getId() != null) {
                 if (!update(questionnaire)) {
                     return false;

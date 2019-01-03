@@ -109,6 +109,20 @@ public class InformationController extends BaseController {
     private ManagementService managementService;
 
     /**
+     * 文件上传页面
+     */
+    @NotNullPara({"id", "projectId", "questionnaireId"})
+    public void fileUploading() {
+        Long id = getParaToLong("id");
+        String questionnaireId = getPara("questionnaireId");
+        ProjectFileType model = projectFileTypeService.findById(id);
+        setAttr("projectId", getParaToLong("projectId"))
+                .setAttr("model", model)
+                .setAttr("questionnaireId", questionnaireId)
+                .render("fileUploading.html");
+    }
+
+    /**
      * 资料编辑页面
      */
     @NotNullPara("id")
@@ -507,15 +521,16 @@ public class InformationController extends BaseController {
     public void questionnaireAdd() {
         User loginUser = AuthUtils.getLoginUser();
         //项目资料
-        Project project = getBean(Project.class, "project");
-        project.setLastUpdateUserID(loginUser.getId());
+        //Project project = getBean(Project.class, "project");
+        String questionnaireId= getPara("questionnaireId");
+        Long projectID = getParaToLong("projectID");
+        //project.setLastUpdateUserID(loginUser.getId());
         //调查问卷
         Questionnaire questionnaire = getBean(Questionnaire.class, "questionnaire");
-        //因bug手动获取
-        questionnaire.setIDCard(getPara("questionnaire.IDCard"));
+
         //修改则有问卷id 创建则没有
         if (questionnaire.getProjectID() == null) {
-            questionnaire.setProjectID(project.getId());
+            questionnaire.setProjectID(projectID);
         }
         if (questionnaire.getCreateUserID() == null) {
             questionnaire.setCreateUserID(loginUser.getId());
