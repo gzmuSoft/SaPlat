@@ -1,0 +1,135 @@
+#include("/template/common/layout/_page_layout_all.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['layer', 'form', 'table'], function () {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            util = layui.util,
+            table = layui.table;
+
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-80'    //容器高度
+            , toolbar: '#toolbarTable'
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: true}
+                , {field: 'id', title: '编号', width: 60}
+                , {field: 'name', title: '名称', minWidth: 200}
+                , {field: 'remark', title: '其他信息', minWidth: 400}
+                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+            ]]
+            , url: '#(ctxPath)/app/information/questionnaireDataTable'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , where: {
+                projectID: "#(projectID)"
+            }
+            , done: function (res, curr, count) {
+                $('[data-field="id"]').css("display", "none");
+                var flag = '#(flag)';
+                if (flag === "true") {
+                    $('#add').remove();
+                    $('#del').remove();
+                    $('.del').remove();
+                }
+            }
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                var url = "#(url)";
+                if (url == "/app/information/chooseRiskExpertise") {
+                    pop_max_show('查看文件', '#(ctxPath)/app/information/riskExpertise?projectID=#(projectID)&id=' + data.id, function () {
+                    });
+                } else {
+                    window.location.href = "#(ctxPath)#(url)?projectID=#(projectID)&flag=#(flag)&id=" + data.id;
+                }
+            } else if (obj.event === 'delete') {
+                layer.confirm('确定删除吗？', function (index) {
+                    $.post("#(ctxPath)#(url)Delete", {id: data.id}, function (e) {
+                        layer.close(index);
+                        layer.msg("删除成功！");
+                        reloadTable();
+                    });
+                });
+            }
+        });
+
+        //监听头部工具栏按钮事件
+        table.on('toolbar(dateTable)', function(obj){
+            if(obj.event === 'person'){
+                pop_show_full('添加个人调查问卷表', "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=0", function () {
+                    layer.msg("操作成功！");
+                    reloadTable();
+                });
+                //window.location.href = "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=0";
+            }else if(obj.event === 'organization'){
+                pop_show_full('添加团体问卷调查表', "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=1", function () {
+                    layer.msg("操作成功！");
+                    reloadTable();
+                });
+            };
+        });
+
+        reloadTable = function () {
+            table.reload('dateTable', {
+                url: '#(ctxPath)/app/information/questionnaireDataTable'
+                , where: {
+                    projectID: projectID
+                } //设定异步数据接口的额外参数
+            });
+        };
+
+        var flag = '#(flag)';
+        if (flag === "true") {
+            $('#add').remove();
+            $('#del').remove();
+        }
+
+        $('#add').click(function () {
+            pop_show_full('添加个人调查问卷表', "#(ctxPath)/app/information/personOrOrganization?projectID=#(projectID)&type=0", function () {
+                layer.msg("操作成功！");
+                reloadTable();
+            });
+        });
+    });
+</script>
+#end
+
+#define content()
+<table id="dateTable" lay-filter="dateTable"></table>
+
+<script type="text/html" id="toolbarTable">
+    <div class="layui-btn-container">
+        #shiroHasPermission('/app/project/evaluation')
+        <button class="layui-btn layui-btn-sm" lay-event="person">添加个人调查问卷表</button>
+        <button class="layui-btn layui-btn-sm" lay-event="organization">添加团体问卷调查表</button>
+        #end
+    </div>
+</script>
+
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs del" lay-event="delete" id="del">删除</a>
+</script>
+
+#end

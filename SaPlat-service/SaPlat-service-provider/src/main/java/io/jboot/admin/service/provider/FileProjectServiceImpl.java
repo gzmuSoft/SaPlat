@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.service.api.FileProjectService;
 import io.jboot.admin.service.api.FilesService;
 import io.jboot.admin.service.api.ProjectService;
+import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.entity.model.FileProject;
 import io.jboot.admin.service.entity.model.Files;
 import io.jboot.admin.service.entity.model.Project;
@@ -25,7 +26,7 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implements FileProjectService {
+public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implements FileProjectService{
 
     @Inject
     private FilesService filesService;
@@ -33,26 +34,69 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
     @Inject
     private ProjectService projectService;
 
+    /**
+     * 装配完善 list 对象中所有对象的数据
+     * @param list
+     * @return
+     */
+    public List<FileProject> fitList(List<FileProject> list){
+        if(list != null){
+            for (FileProject item: list) {
+                fitModel(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 装配完善 Page 对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<FileProject> fitPage(Page<FileProject> page){
+        if(page != null){
+            List<FileProject> tList = page.getList();
+            for (FileProject item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+
+    /**
+     * 装配单个实体对象的数据
+     * @param model
+     * @return
+     */
+    public FileProject fitModel(FileProject model){
+        if(model != null) {
+            Files fModel = filesService.findById(model.getFileID());
+            if(fModel != null)
+                model.setOrginalFileName(fModel.getName());
+        }
+        return model;
+    }
+    
     @Override
     public List<FileProject> findListById(Long id) {
-        return DAO.findListByColumn(Column.create("parentID", id));
+        return fitList(DAO.findListByColumn(Column.create("parentID", id)));
     }
 
     @Override
     public List<FileProject> findAllByProjectID(Long id) {
         Columns columns = Columns.create();
         columns.eq("projectID", id);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
     public FileProject findByFileID(Long fileId) {
-        return DAO.findFirstByColumn("fileId", fileId);
+        return fitModel(DAO.findFirstByColumn("fileId", fileId));
     }
 
     @Override
     public FileProject findByProjectID(Long projectId) {
-        return DAO.findFirstByColumn("projectID", projectId);
+        return fitModel(DAO.findFirstByColumn("projectID", projectId));
     }
 
     @Override
@@ -60,7 +104,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("fileTypeID", fileTypeID);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -68,7 +112,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("fileTypeID", fileTypeID);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -86,7 +130,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         if (model.getIsEnable() != null) {
             columns.eq("isEnable", model.getIsEnable());
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id");
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id"));
     }
 
     @Override
@@ -124,7 +168,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
             return filesService.update(files);
         });
         if (tx) {
-            return model;
+            return fitModel(model);
         }
         return null;
     }
@@ -161,7 +205,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         if(model.getIsEnable() != null)
             columns.eq("isEnable", model.getIsEnable());
 
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -170,7 +214,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         columns.eq("fileTypeID", fileTypeId);
         columns.eq("projectID", projectId);
         columns.eq("isEnable", true);
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 
     @Override
@@ -178,7 +222,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("remark", questionnaireId);
         columns.eq("isEnable",true);
-        return DAO.findListByColumns(columns);
+        return fitList(DAO.findListByColumns(columns));
     }
 
     @Override
@@ -196,6 +240,6 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         if (!model.save()) {
             return null;
         }
-        return model;
+        return fitModel(model);
     }
 }
