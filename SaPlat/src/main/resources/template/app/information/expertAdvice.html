@@ -118,10 +118,6 @@
             }
         });
 
-
-        $('#back').click(function (obj) {
-            window.location.href = document.referrer;
-        });
         var flag = '#(flag)';
         if (flag === "true") {
             $('#save').remove();
@@ -134,17 +130,13 @@
 
 #define content()
 <div class="layui-fluid ">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;color: #009688">
-        <legend>社会稳定风险评估现场踏勘专家意见表</legend>
-    </fieldset>
-
     <form class="layui-form x-center" action="">
         <div class="layui-form-pane">
             <div class="layui-row">
                 <div class="layui-col-md4">
             <div class="layui-form-item">
                 <label class="layui-form-label">制表单位</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 300px;">
                     <input type="text" id="name" name="name" value="#(name)"
                            class="layui-input" readonly/>
                 </div>
@@ -153,15 +145,15 @@
                 <div class="layui-col-md4">
             <div class="layui-form-item">
                 <label class="layui-form-label">日期</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-inline" style="width: 100px;">
                     <input type="text" id="date" name="date" value="#(date)"
                            class="layui-input" readonly/>
                 </div>
             </div></div>
                 <div class="layui-col-md4">
             <div class="layui-form-item">
-                <label class="layui-form-label" for="select">请选择专家</label>
-                <div class="layui-input-inline">
+                <label class="layui-form-label" for="select">专家</label>
+                <div class="layui-input-inline" style="width: 150px;">
                     <select name="expertGroup" lay-filter="aihao" id="select" lay-search="">
                         #if(expertGroup != null)
                         <option value="#(expertGroup.id)" selected="selected">#(expertGroup.name)</option>
@@ -201,7 +193,6 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="save">保存</button>
-                    <button type="button" class="layui-btn layui-btn-warm" id="back">返回</button>
                 </div>
             </div>
         </div>

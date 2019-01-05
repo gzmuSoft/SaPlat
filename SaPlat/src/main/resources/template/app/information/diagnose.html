@@ -13,9 +13,6 @@
 #end
 
 #define content()
-<br>
-<h2 class="title" align="center">社会稳定风险评估调查分析表</h2><br>
-<hr align="center" size="2" width="100%"/>
 <div class="layui-progress layui-hide" style="margin-bottom:10px" lay-showpercent="true" id="upload-progress"
      lay-filter="upload-progress">
     <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
@@ -211,7 +208,6 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block" style="text-align: center">
                         <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1" id="sub">提交</button>
-                        <button type="button" class="layui-btn layui-btn-primary" id="reset">返回</button>
                     </div>
                 </div>
             </div>
@@ -413,10 +409,6 @@
     $("#media").click(function () {
         pop_show('查看调查范围', '#(ctxPath)/util/pdfView?fileID=' + $(this).attr('fileId'), '', '', function () {
         });
-    });
-
-    $("#reset").click(function () {
-        history.go(-1);
     });
 
     /**
