@@ -56,6 +56,21 @@ public class OrgStructureController extends BaseController {
     @JbootrpcService
     private ExpertGroupService expertGroupService;
 
+    @JbootrpcService
+    private ManagementService managementService;
+
+    @JbootrpcService
+    private EnterpriseService enterpriseService;
+
+    @JbootrpcService
+    private FacAgencyService facAgencyService;
+
+    @JbootrpcService
+    private ProfGroupService profGroupService;
+
+    @JbootrpcService
+    private ReviewGroupService reviewGroupService;
+
     /**
      * index
      */
@@ -66,9 +81,41 @@ public class OrgStructureController extends BaseController {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < auth.size(); i++) {
             //获取已经认证的具体类型
-            list.add(roleService.findById(auth.get(i).getRoleId()).getName());
+            String roleName = roleService.findById(auth.get(i).getRoleId()).getName();
+            switch(roleName){
+                case "管理机构":
+                    Management management =  managementService.findByOrgId(loginUser.getUserID());
+                    if(management != null && management.getIsEnable()){
+                        list.add(roleName);
+                    }
+                    break;
+                case "企业机构":
+                    Enterprise enterprise =  enterpriseService.findByOrgId(loginUser.getUserID());
+                    if(enterprise != null && enterprise.getIsEnable()){
+                        list.add(roleName);
+                    }
+                    break;
+                case "服务机构":
+                    FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
+                    if(facAgency != null && facAgency.getIsEnable()){
+                        list.add(roleName);
+                    }
+                    break;
+                case "审查团体":
+                    ReviewGroup reviewGroup = reviewGroupService.findByOrgId(loginUser.getUserID());
+                    if(reviewGroup != null && reviewGroup.getIsEnable()){
+                        list.add(roleName);
+                    }
+                    break;
+                case "专业团体":
+                    ProfGroup profGroup = profGroupService.findByOrgId(loginUser.getUserID());
+                    if(profGroup != null && profGroup.getIsEnable()){
+                        list.add(roleName);
+                    }
+                    break;
+            }
         }
-        if (auth != null && auth.size() > 0) {
+        if (list != null && list.size() > 0) {
             setAttr("nameList", list).render("prove.html");
             //已经存在认证机构状态
         } else {
@@ -96,6 +143,16 @@ public class OrgStructureController extends BaseController {
     public void addStructure() {
         Organization organization = organizationService.findById(AuthUtils.getLoginUser().getUserID());
         String orgType = getPara("orgType");
+        /*
+        *  orgType =='0' 管理机构
+        *  orgType =='1' 企业机构
+        *  orgType =='2' 服务机构
+        *  orgType =='3' 审查团体
+        *  orgType =='4' 专业团体
+        *
+        * */
+        //先查询是否有权限
+        //roleService.findById()
         Long parentID = (getParaToLong("parentID") != null) ? getParaToLong("parentID") : 0;
         String parentStructName = null;
         if(parentID == 0){
