@@ -56,19 +56,26 @@ public class OrgStructureController extends BaseController {
     @JbootrpcService
     private ExpertGroupService expertGroupService;
 
+    @JbootrpcService
+    private UserRoleService userRoleService;
+
     /**
      * index
      */
     public void index() {
         User loginUser = AuthUtils.getLoginUser();
         //获取已经认证通过的角色信息
-        List<Auth> auth = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
+        List<UserRole> userRoles = userRoleService.findListByUserIDAndIsEnable(loginUser.getId(), true);
+//        List<Auth> auth = authService.findListByUserIdAndStatusAndType(loginUser.getId(), AuthStatus.IS_VERIFY, TypeStatus.ORGANIZATION);
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < auth.size(); i++) {
-            //获取已经认证的具体类型
-            list.add(roleService.findById(auth.get(i).getRoleId()).getName());
+        for (int i = 0; i < userRoles.size(); i++) {
+            //获取已经认证的具体类型L
+            Role role= roleService.findById(userRoles.get(i).getRoleID());
+            if(role.getParentID()==3L) {
+                list.add(role.getName());
+            }
         }
-        if (auth != null && auth.size() > 0) {
+        if (userRoles != null && userRoles.size() > 0) {
             setAttr("nameList", list).render("prove.html");
             //已经存在认证机构状态
         } else {

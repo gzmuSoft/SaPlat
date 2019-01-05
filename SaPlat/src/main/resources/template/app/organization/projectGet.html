@@ -37,6 +37,25 @@
             parent.addTab('card', "组织机构认证", "#(ctxPath)/app/organization/prove");
         })
 
+        form.on('submit(cancel)', function (data) {
+            var id = data.elem.name;
+            layer.confirm('真的取消申请吗', function (index) {
+                util.sendAjax({
+                    type: 'POST',
+                    url: '#(ctxPath)/app/organization/cancelProjectAuth',
+                    data: {id: id},
+                    loadFlag: true,
+                    success: function (data) {
+                        layer.close(index);
+                        window.location.reload();
+                    },
+                    unSuccess: function (data) {
+                        layer.close(index);
+                    }
+                })
+            });
+        })
+
     });
 
 
@@ -71,7 +90,7 @@
     <legend style="font-size: 20px;font-weight: 500;">正在等待审核的立项权限：</legend>
     <div>
         #for(auth : verifying)
-        <button class="layui-btn layui-btn-normal ">#(auth.remark)</button>
+        <button lay-submit lay-filter="cancel" class="layui-btn layui-btn-normal" name="#(auth.roleId)">#(auth.remark)</button>
         #end
     </div>
 </fieldset>
