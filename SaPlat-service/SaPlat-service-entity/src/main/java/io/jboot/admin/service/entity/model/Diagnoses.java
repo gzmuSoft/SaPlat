@@ -8,5 +8,4 @@ import io.jboot.admin.service.entity.model.base.BaseDiagnoses;
  */
 @Table(tableName = "diagnoses", primaryKey = "id")
 public class Diagnoses extends BaseDiagnoses<Diagnoses> {
-	
 }

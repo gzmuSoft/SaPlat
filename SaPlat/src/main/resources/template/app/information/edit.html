@@ -65,7 +65,13 @@
                 content.prop("src", "#(ctxPath)/app/fileupload/index?projectID=#(projectId)&flag=#(flag)");
             } else if (html === "/app/fileupload/document"){
                 content.prop("src", "#(ctxPath)/app/fileupload/document?id=#(projectId)&percent=#(percent)&flag=#(flag)");
-            } else if (html === "/app/information/chooseRiskExpertise"){
+            }
+            else if (html === "/app/information/expertAdvice"){
+                content.prop("src", "#(ctxPath)/app/information/expertAdviceList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");
+            } else if (html === "/app/information/diagnoses"){
+                content.prop("src", "#(ctxPath)/app/information/diagnosesList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");
+            }
+            else if (html === "/app/information/chooseRiskExpertise"){
                 content.prop("src", "#(ctxPath)/app/information/riskDegreeList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");
             }  else if (html === "/app/information/questionnaire"){
                 content.prop("src", "#(ctxPath)/app/information/questionnaireList?projectID=#(projectId)&percent=#(percent)&flag=#(flag)");

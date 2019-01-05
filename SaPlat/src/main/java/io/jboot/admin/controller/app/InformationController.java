@@ -219,16 +219,41 @@ public class InformationController extends BaseController {
     }
 
     /**
+     * 调查问卷
+     */
+    @NotNullPara("projectID")
+    public void expertAdviceList() {
+        String url = getPara("url");
+        Long projectID = getParaToLong("projectID");
+        setAttr("url", url)
+                .setAttr("flag", getPara("flag", "false"))
+                .setAttr("projectID", projectID)
+                .render("expertAdviceList.html");
+    }
+
+    /**
+     * 调查问卷
+     */
+    @NotNullPara("projectID")
+    public void diagnosesList() {
+        String url = getPara("url");
+        Long projectID = getParaToLong("projectID");
+        setAttr("url", url)
+                .setAttr("flag", getPara("flag", "false"))
+                .setAttr("projectID", projectID)
+                .render("diagnosesList.html");
+    }
+
+    /**
      * 专家数据
      */
     public void expertAdviceDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long projectId = getParaToLong("id");
+        Long projectId = getParaToLong("projectID");
         SiteSurveyExpertAdvice model = new SiteSurveyExpertAdvice();
         model.setProjectID(projectId);
         Page<SiteSurveyExpertAdvice> page = siteSurveyExpertAdviceService.findPage(model, pageNumber, pageSize);
-        page.getList().forEach(p -> p.setRemark("专家：" + expertGroupService.findById(p.getExpertID()).getName()));
 
         renderJson(new DataTable<SiteSurveyExpertAdvice>(page));
     }
@@ -408,7 +433,7 @@ public class InformationController extends BaseController {
     public void diagnosesDataTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
-        Long projectId = getParaToLong("id");
+        Long projectId = getParaToLong("projectID");
         Diagnoses diagnoses = new Diagnoses();
         diagnoses.setProject(projectId);
         Page<Diagnoses> page = diagnosesService.findPage(diagnoses, pageNumber, pageSize);

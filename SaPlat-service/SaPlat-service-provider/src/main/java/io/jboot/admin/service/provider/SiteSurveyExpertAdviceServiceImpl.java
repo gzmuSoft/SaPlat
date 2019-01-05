@@ -1,6 +1,9 @@
 package io.jboot.admin.service.provider;
 
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.admin.service.api.ExpertGroupService;
+import io.jboot.admin.service.api.SaPlatService;
+import io.jboot.admin.service.entity.model.ExpertGroup;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.SiteSurveyExpertAdviceService;
 import io.jboot.admin.service.entity.model.SiteSurveyExpertAdvice;
@@ -15,16 +18,65 @@ import java.util.List;
 @Bean
 @Singleton
 @JbootrpcService
-public class SiteSurveyExpertAdviceServiceImpl extends JbootServiceBase<SiteSurveyExpertAdvice> implements SiteSurveyExpertAdviceService {
+public class SiteSurveyExpertAdviceServiceImpl extends JbootServiceBase<SiteSurveyExpertAdvice> implements SiteSurveyExpertAdviceService{
 
-    @Override
+    private ExpertGroupServiceImpl expertGroupService=new ExpertGroupServiceImpl();
+
+    /**
+     * 装配完善 list 对象中所有对象的数据
+     * @param list
+     * @return
+     */
+    public List<SiteSurveyExpertAdvice> fitList(List<SiteSurveyExpertAdvice> list){
+        if(list != null){
+            for (SiteSurveyExpertAdvice item: list) {
+                fitModel(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 装配完善 Page 对象中所有对象的数据
+     * @param page
+     * @return
+     */
+    public Page<SiteSurveyExpertAdvice> fitPage(Page<SiteSurveyExpertAdvice> page){
+        if(page != null){
+            List<SiteSurveyExpertAdvice> tList = page.getList();
+            for (SiteSurveyExpertAdvice item: tList) {
+                fitModel(item);
+            }
+        }
+        return page;
+    }
+    /**
+     * 装配单个实体对象的数据
+     *
+     * @param model
+     * @return
+     */
+    public SiteSurveyExpertAdvice fitModel(SiteSurveyExpertAdvice model) {
+        if (null != model) {
+            try {
+                ExpertGroup expertGroup = expertGroupService.findById(model.getExpertID());
+                if (expertGroup != null) {
+                    model.setExpertName(expertGroup.getName());
+                }
+            } catch (Exception ex){
+                return model;
+            }
+        }
+        return model;
+    }
+
     public SiteSurveyExpertAdvice findByColumn(String columnName, String value, String logic) {
-        return DAO.findFirstByColumn(Column.create(columnName, value, logic));
+        return fitModel(DAO.findFirstByColumn(Column.create(columnName, value, logic)));
     }
 
     @Override
     public List<SiteSurveyExpertAdvice> findListByProjectId(Long projectId) {
-        return DAO.findListByColumn(Column.create("projectID", projectId));
+        return fitList(DAO.findListByColumn(Column.create("projectID", projectId)));
     }
 
     @Override
@@ -39,7 +91,7 @@ public class SiteSurveyExpertAdviceServiceImpl extends JbootServiceBase<SiteSurv
         if (siteSurveyExpertAdvice.getName() != null) {
             columns.like("name", "%" + siteSurveyExpertAdvice.getName() + "%");
         }
-        return DAO.paginateByColumns(pageNumber, pageSize, columns.getList());
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList()));
     }
 
 
@@ -52,6 +104,6 @@ public class SiteSurveyExpertAdviceServiceImpl extends JbootServiceBase<SiteSurv
         for (int i = 0; i < columnNames.length; i++) {
             columns.eq(columnNames[i], values[i]);
         }
-        return DAO.findFirstByColumns(columns);
+        return fitModel(DAO.findFirstByColumns(columns));
     }
 }

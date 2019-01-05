@@ -1375,6 +1375,20 @@ public class OrganizationController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
+    @Before(POST.class)
+    public void cancelProjectAuth(){
+        Long id = getParaToLong("id");
+        User user = AuthUtils.getLoginUser();
+        Auth auth = authService.findByUserAndRole(user, id);
+        if (auth != null) {
+            if(!authService.delete(auth)){
+                renderJson(RestResult.buildError("取消失败"));
+                throw new BusinessException("取消失败");
+            }
+        }
+        renderJson(RestResult.buildSuccess());
+    }
+
     public void projectVerify() {
         Long notiId = getParaToLong("notiId");
         Long roleId = getParaToLong("roleId");
