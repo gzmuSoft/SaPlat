@@ -38,6 +38,8 @@ FROM
 where
     a.id = b.projectID
 and
+    b.status = 2
+and
     a.status = #para(status)
 and
     (b.facAgencyID = #para(facAgencyID)
