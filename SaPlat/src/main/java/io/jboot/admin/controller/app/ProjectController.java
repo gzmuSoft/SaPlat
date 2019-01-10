@@ -1994,7 +1994,7 @@ public class ProjectController extends BaseController {
         project.setIsEnable(true);
         project.setManagementID(managementID);
         Page<Project> page = projectService.findCheckedPage(project, pageNumber, pageSize);
-        renderJson(new DataTable<Project>(fitFinalFileInfo(page, false)));
+        renderJson(new DataTable<Project>(fitFinalFileInfo(fitPage(page), false)));
     }
 
     /**

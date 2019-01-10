@@ -28,6 +28,10 @@
     #[[
     {{#  } }}
     ]]#
+
+    #shiroHasPermission('/app/project/see')
+    <a class="layui-btn layui-btn-xs" lay-event="seeProject">项目详情</a>
+    #end
 </script>
 #end
 
@@ -49,6 +53,7 @@
                 , {field: 'name', title: '项目名称', minWidth: 100, sort: true}
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
+                , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
                 , {field: 'amount', title: '预计金额(单位：元)', width: 150, sort: true, templet: '#tplMoney'}
                 , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
                 , {field: 'createTime', title: '立项时间', width: 150, sort: true}
@@ -56,7 +61,7 @@
                     field: 'status', title: '状态', width: 115, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ProjectStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', width: 300, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 360, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/collectTableData'
             , method: 'get'
@@ -77,6 +82,9 @@
             if (obj.event === 'see') {
                //window.location.href = '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4';
                 pop_max_show('查看 "'+ data.name + '" 项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4', function () {});
+            }
+            else if (obj.event === 'seeProject') {
+                pop_max_show('查看 "'+ data.name + '" 项目的资料', '#(ctxPath)/app/project/see?id=' + data.id, function () {});
             }
             else if(obj.event==="setFinish"){
                 pop_show('项目 "'+ data.name + '" 评估完成确认', '#(ctxPath)/app/project/setAssessFinishedView?id=' + data.id, '450', '210', function () {
