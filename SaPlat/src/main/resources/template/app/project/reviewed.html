@@ -26,6 +26,8 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
+                , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
+                , {field: 'assessmentMode', title: '评估方式', width: 120, sort: true}
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
                 , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
@@ -41,7 +43,6 @@
                 , {fixed: 'right', title: '项目信息', width: 100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , where: {
-                ownType: 0,
                 type: 0
             }
             , url: '#(ctxPath)/app/project/reviewed'
@@ -71,7 +72,7 @@
                     title: '上传 "'+ data.name + '" 项目的终审报告',
                     content: '#(ctxPath)/app/project/finalReportFileUploading?projectId=' + data.id,
                     end: function () {
-                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                        reloadTable($('#name').val(), $('#projectType').val());
                     }
                 });
             } else if (obj.event === 'seeFile') {
@@ -88,7 +89,7 @@
                     title: '更新 "'+ data.name + '" 项目的终审报告',
                     content: '#(ctxPath)/app/project/finalReportFileUploading?projectId=' + data.id,
                     end: function () {
-                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                        reloadTable($('#name').val(), $('#projectType').val());
                     }
                 });
             }else if (obj.event === 'sub') {
@@ -99,28 +100,28 @@
                         layer.msg("操作成功！");
                         setTimeout(function () {
                         }, 1000);
-                        reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                        reloadTable($('#name').val(), $('#projectType').val());
                     });
                 })
             }else if (obj.event === 'see') {
                 pop_show('查看 "'+ data.name + '" 项目的详细资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
-                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                    reloadTable($('#name').val(), $('#projectType').val());
                 });
             } else if (obj.event === 'edit') {
                 pop_show('审核 "'+ data.name + '" 项目的终审报告', '#(ctxPath)/app/project/verifyFinalReportCheck?id=' + data.id, '440', '265', function () {
-                    reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
+                    reloadTable($('#name').val(), $('#projectType').val());
                 });
             }
         });
 
-        reloadTable = function (name, projectType, ownType) {
+        reloadTable = function (name, projectType) {
             table.reload('dateTable', {
-                url: '#(ctxPath)/app/project/reviewed?name=' + name + '&projectType=' + projectType + '&ownType=' + ownType
+                url: '#(ctxPath)/app/project/reviewed?name=' + name + '&projectType=' + projectType
             });
         };
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.name, data.field.projectType, data.field.ownType);
+            reloadTable(data.field.name, data.field.projectType);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
@@ -142,14 +143,6 @@
                 <label class="layui-form-label">项目名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" placeholder="项目名称" class="layui-input"/>
-                </div>
-                <label class="layui-form-label">项目归属</label>
-                <div class="layui-input-inline">
-                    <select id='ownType' name="ownType" lay-filter="ownTypeSelect">
-                        <option value="0" selected>我创建的</option>
-                        <option value="1">我管理的</option>
-                        <option value="2">我承接的</option>
-                    </select>
                 </div>
                 <label class="layui-form-label" hidden>项目类型</label>
                 <div class="layui-input-inline" hidden>
@@ -186,7 +179,7 @@
     ]]#
     <a class="layui-btn layui-btn-xs" lay-event="seeFile">查看</a>
         #[[
-        {{#  if(d.remark == 'facRole'){ }}
+        {{#  if(d.remark == 'facRole' || d.assessmentMode == '自评'){ }}
         ]]#
         <a class="layui-btn layui-btn-xs" lay-event="update">更新</a>
         <a class="layui-btn layui-btn-xs" lay-event="sub">提交</a>

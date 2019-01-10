@@ -67,21 +67,25 @@ FROM
     project as a, project_undertake as b
 where
     a.id = b.projectID
-and
+  and
     b.status = 2
-and
-#if(Remark)
-    (a.status = #para(status)
-	  or	a.status = #para(Remark))
-#else
-	a.status = #para(status)
-#end
-and
-	((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
-	#if(facAgencyID)
-	OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID))
+  and
+  #if(Remark)
+      (a.status = #para(status)
+      or	a.status = #para(Remark))
+  #else
+    a.status = #para(status)
+  #end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
 	#end
-	)
+  and
+    #if(facAgencyID)
+      ((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
+      OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
+    #else
+      a.createUserID = #para(createUserID)
+    #end
 #end
 
 #sql("project-undertake-ApplyIn")

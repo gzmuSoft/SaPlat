@@ -417,10 +417,16 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     public Page<Project> findReviewedPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
         Kv c;
         SqlPara sqlPara = null;
-        if (projectUndertake.getFacAgencyID() != null && projectUndertake.getCreateUserID() != null && projectUndertake.getStatus() != null) {
-            c = Kv.by("facAgencyID", projectUndertake.getFacAgencyID()).set("status", projectUndertake.getStatus()).set("createUserID", projectUndertake.getCreateUserID());
+        if (projectUndertake.getCreateUserID() != null && projectUndertake.getStatus() != null) {
+            c = Kv.by("status", projectUndertake.getStatus()).set("createUserID", projectUndertake.getCreateUserID());
+            if(projectUndertake.getFacAgencyID() != null && projectUndertake.getFacAgencyID() != 0){
+                c.set("facAgencyID", projectUndertake.getFacAgencyID());
+            }
             if(StrKit.notBlank(projectUndertake.getRemark()) && projectUndertake.getRemark().equals(ProjectStatus.FINAL_REPORT_CHECKING.toString()))
                 c.set("Remark", "12");
+            if (projectUndertake.getProject()!=null && projectUndertake.getProject().getPaTypeID() != null && projectUndertake.getProject().getPaTypeID() != 0) {
+                c.set("paTypeID", projectUndertake.getProject().getPaTypeID());
+            }
             sqlPara = Db.getSqlPara("app-project.project-Reviewed", c);
             return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
         } else {

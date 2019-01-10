@@ -891,14 +891,18 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        Project project = null;
+        if (StrKit.notBlank(getPara("projectType"))) {
+            project = new Project();
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
+        }
 
         ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setProject(project);
         //找到组织机构对应的服务机构信息
         FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
             projectUndertake.setFacAgencyID(facAgency.getId());
-        } else {
-            projectUndertake.setFacAgencyID(loginUser.getId());
         }
         projectUndertake.setCreateUserID(loginUser.getId());
         projectUndertake.setStatus(Integer.valueOf(ProjectStatus.CHECKED));
@@ -2192,17 +2196,19 @@ public class ProjectController extends BaseController {
      * @return
      */
     public Page<Project> fitPage(Page<Project> page){
-        if(page != null){
+        if(page != null) {
             List<Project> tList = page.getList();
-            for (Project item: tList) {
-                if(item.getAssessmentMode() == null)
-                    continue;
-                if (item.getAssessmentMode().equals("自评")) {
-                    item.setFacAgencyName(item.getBuildOrgName());
-                }else{
-                    ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(item.getId(), "2");
-                    if(null != puModel){
-                        item.setFacAgencyName(puModel.getFacAgencyName());
+            if (tList != null) {
+                for (Project item : tList) {
+                    if (item.getAssessmentMode() == null)
+                        continue;
+                    if (item.getAssessmentMode().equals("自评")) {
+                        item.setFacAgencyName(item.getBuildOrgName());
+                    } else {
+                        ProjectUndertake puModel = projectUndertakeService.findByProjectIdAndStatus(item.getId(), "2");
+                        if (null != puModel) {
+                            item.setFacAgencyName(puModel.getFacAgencyName());
+                        }
                     }
                 }
             }
