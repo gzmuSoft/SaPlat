@@ -27,7 +27,7 @@
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
                 , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
-                , {field: 'assessmentMode', title: '评估方式', width: 120, sort: true}
+                , {field: 'assessmentMode', title: '评估方式', width: 100, sort: true}
                 , {field: 'buildOrgName', title: '立项机构', minWidth: 150, sort: true}
                 , {field: 'managementName', title: '管理部门', minWidth: 150, sort: true}
                 , {field: 'facAgencyName', title: '服务机构', minWidth: 150, sort: true}
@@ -125,11 +125,10 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
 
-        form.on('select(ownTypeSelect)', function (data) {
+        form.on('select(projectTypeSelect)', function (data) {
             reloadTable($('#name').val(), $('#projectType').val(), data.value);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
-
     });
 </script>
 <script type="text/html" id="tplMoney">{{formatCurrency(d.amount)}}</script>
@@ -146,7 +145,7 @@
                 </div>
                 <label class="layui-form-label" hidden>项目类型</label>
                 <div class="layui-input-inline" hidden>
-                    <select id='projectType' name="projectType">
+                    <select id='projectType' name="projectType" lay-filter="projectTypeSelect">
                         <option></option>
                         #statusOption(PaTypeNameList)
                     </select>

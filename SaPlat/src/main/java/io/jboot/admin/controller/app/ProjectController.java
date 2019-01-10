@@ -758,7 +758,17 @@ public class ProjectController extends BaseController {
      * 通往项目管理界面-评估中
      */
     public void evaluation() {
-        render("evaluation.html");
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus).render("evaluation.html");
     }
 
     /**
@@ -766,67 +776,37 @@ public class ProjectController extends BaseController {
      */
     public void evaluationTable() {
         User loginUser = AuthUtils.getLoginUser();
-        List<UserRole> roles = userRoleService.findListByUserId(loginUser.getId());
-        Role role = roleService.findByName("服务机构");
-        boolean flag = false;
-        for (UserRole userRole : roles) {
-            if (userRole.getRoleID().equals(role.getId())) {
-                flag = true;
-                break;
-            }
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Project project = null;
+        if (StrKit.notBlank(getPara("projectType"))) {
+            project = new Project();
+            project.setPaTypeID(Long.parseLong(getPara("projectType")));
         }
 
-        // 初始化评估列表
-        List<Project> undertake = Collections.synchronizedList(new ArrayList<>());
-        // 如果是服务机构,查找委评的项目
-        if (flag) {
-            // 查找服务机构
-            Organization organization = organizationService.findById(loginUser.getUserID());
-            FacAgency facAgency = facAgencyService.findByOrgId(organization.getId());
+        ProjectUndertake projectUndertake = new ProjectUndertake();
+        projectUndertake.setProject(project);
 
-            // 当他为申请的时候,以当前用户登录的 id 作为创建者 id 查找 申请 成功的项目
-            List<ProjectUndertake> projectUndertakeList1 = projectUndertakeService.findByCreateUserIDAndStatusAndAOI(loginUser.getId(), ProjectUndertakeStatus.ACCEPT, false);
-            undertake = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList1, ProjectStatus.REVIEW);
-            if (undertake == null) {
-                undertake = Collections.synchronizedList(new ArrayList<>());
-            }
+        if (StrKit.notBlank(getPara("name"))) {
+            projectUndertake.setName(getPara("name"));
+        }
 
-            // 当他为邀请的时候,以当前用户的服务机构 id 作为服务机构 id 查找 邀请 成功的项目
-            List<ProjectUndertake> projectUndertakeList2 = projectUndertakeService.findListByFacAgencyIdAndStatusAndAOI(facAgency.getId(), ProjectUndertakeStatus.ACCEPT, true);
-            List<Project> undertakeTmp = projectService.findListByProjectUndertakeListAndStatus(projectUndertakeList2, ProjectStatus.REVIEW);
-            if (undertakeTmp != null && undertakeTmp.size() > 0) {
-                undertake.addAll(undertakeTmp);
-            }
+        //找到组织机构对应的服务机构信息
+        FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
+        if (facAgency != null) {
+            projectUndertake.setFacAgencyID(facAgency.getId());
         }
-        // 排除是空的类
-        undertake.removeAll(Collections.singleton(null));
-        // 不论是不是服务机构，都要查找自评的项目。
-        List<Project> projects = projectService.findListByColumns(new String[]{"userId", "status", "isEnable"},
-                new String[]{loginUser.getId().toString(), ProjectStatus.REVIEW, "1"});
-        // 防止查出的是 null 的情况
-        if (projects == null) {
-            projects = Collections.synchronizedList(new ArrayList<>());
+        projectUndertake.setCreateUserID(loginUser.getId());
+        projectUndertake.setStatus(Integer.valueOf(ProjectStatus.REVIEW));
+
+        //找到组织机构对应的管理机构信息
+        Management management = managementService.findByOrgId(loginUser.getUserID());
+        if (management != null) {
+            projectUndertake.setLastUpdateUserID(management.getId());
         }
-        projects.removeAll(Collections.singleton(null));
-        List<Project> result;
-        if (projects.size() < 1 && undertake.size() > 0) {
-            // 当委评的不为空，自评的为空
-            result = undertake;
-        } else if (projects.size() > 0 && undertake.size() < 1) {
-            // 当委评的为空，自评的不为空
-            result = projects;
-        } else if (projects.size() > 0 && undertake.size() > 0) {
-            // 当委评的不为空，自评的不为空
-            if (!projects.addAll(undertake)) {
-                // 合并失败
-                throw new BusinessException("数据加载失败。。。");
-            }
-            result = projects;
-        } else {
-            // 当两个都为空
-            result = projects;
-        }
-        renderJson(RestResult.buildSuccess(result));
+
+        Page<Project> page = projectService.findReviewingPageBySql(projectUndertake, pageNumber, pageSize);
+        renderJson(new DataTable<Project>(fitPage(page)));
     }
 
     /**

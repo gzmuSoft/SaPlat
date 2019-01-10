@@ -414,6 +414,44 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
     }
 
     @Override
+    public Page<Project> findReviewingPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
+        Kv c;
+        SqlPara sqlPara = null;
+        if (projectUndertake.getCreateUserID() != null && projectUndertake.getStatus() != null) {
+            c = Kv.by("status", projectUndertake.getStatus()).set("createUserID", projectUndertake.getCreateUserID());
+            if(projectUndertake.getFacAgencyID() != null && projectUndertake.getFacAgencyID() != 0){
+                c.set("facAgencyID", projectUndertake.getFacAgencyID());
+            }
+            if(projectUndertake.getLastUpdateUserID() != null && projectUndertake.getLastUpdateUserID() != 0){
+                //当前用户对应的管理机构
+                Management curMgr = mgrService.findById(projectUndertake.getLastUpdateUserID());
+                if (null != curMgr) {
+                    List<Management> result = new ArrayList<Management>();
+                    result.add(curMgr);
+                    findMgrChildren(curMgr.getId(), result);
+                    List<Long> ids = new ArrayList<Long>();
+                    for (Management item : result) {
+                        ids.add(item.getId());
+                    }
+                    c.set("managementID", projectUndertake.getLastUpdateUserID());
+                    c.set("mgr_list", ids);
+                }
+            }
+            if(StrKit.notBlank(projectUndertake.getRemark()) && projectUndertake.getRemark().equals(ProjectStatus.FINAL_REPORT_CHECKING.toString()))
+                c.set("Remark", "12");
+            if(StrKit.notBlank(projectUndertake.getName()))
+                c.set("name", projectUndertake.getName());
+            if (projectUndertake.getProject()!=null && projectUndertake.getProject().getPaTypeID() != null && projectUndertake.getProject().getPaTypeID() != 0) {
+                c.set("paTypeID", projectUndertake.getProject().getPaTypeID());
+            }
+            sqlPara = Db.getSqlPara("app-project.project-Reviewing", c);
+            return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
+        } else {
+            return new Page<Project>();
+        }
+    }
+
+    @Override
     public Page<Project> findReviewedPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize) {
         Kv c;
         SqlPara sqlPara = null;
@@ -424,6 +462,8 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
             }
             if(StrKit.notBlank(projectUndertake.getRemark()) && projectUndertake.getRemark().equals(ProjectStatus.FINAL_REPORT_CHECKING.toString()))
                 c.set("Remark", "12");
+            if(StrKit.notBlank(projectUndertake.getName()))
+                c.set("name", projectUndertake.getName());
             if (projectUndertake.getProject()!=null && projectUndertake.getProject().getPaTypeID() != null && projectUndertake.getProject().getPaTypeID() != 0) {
                 c.set("paTypeID", projectUndertake.getProject().getPaTypeID());
             }

@@ -60,6 +60,42 @@ and
     b.facAgencyID = #para(facAgencyID)
 #end
 
+#sql("project-Reviewing")
+SELECT
+    a.*
+FROM
+    project as a, project_undertake as b
+where
+    a.id = b.projectID
+  and
+    b.status = 2
+  and
+  #if(Remark)
+      (a.status = #para(status)
+      or	a.status = #para(Remark))
+  #else
+    a.status = #para(status)
+  #end
+  #if(name)
+	and	a.name like concat('%', #para(name) ,'%')
+	#end
+	#if(paTypeID)
+	and	paTypeID = #para(paTypeID)
+	#end
+  and
+    #if(facAgencyID)
+      ((a.assessmentMode='自评' and b.facAgencyID = #para(createUserID))
+      OR (a.assessmentMode='委评' and b.facAgencyID = #para(facAgencyID)))
+    #else if(managementID)
+      managementID in (
+      #for(id : mgr_list)
+        #(for.index > 0 ? ", " : "")#(id)
+      #end)
+    #else
+      a.createUserID = #para(createUserID)
+    #end
+#end
+
 #sql("project-Reviewed")
 SELECT
     a.*
@@ -76,6 +112,9 @@ where
   #else
     a.status = #para(status)
   #end
+  #if(name)
+	and	a.name like concat('%', #para(name) ,'%')
+	#end
 	#if(paTypeID)
 	and	paTypeID = #para(paTypeID)
 	#end

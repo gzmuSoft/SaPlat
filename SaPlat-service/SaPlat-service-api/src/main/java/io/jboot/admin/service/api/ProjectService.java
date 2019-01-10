@@ -72,6 +72,14 @@ public interface ProjectService  {
      * @param pageSize
      * @return
      */
+    public Page<Project> findReviewingPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
+
+    /**
+     * @param projectUndertake
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     public Page<Project> findReviewedPageBySql(ProjectUndertake projectUndertake, int pageNumber, int pageSize);
 
     /**
