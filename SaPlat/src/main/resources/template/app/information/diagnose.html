@@ -9,6 +9,9 @@
         border: none;
         border-radius: 15px;
     }
+    .EvaCover {
+        background-color: red !important;
+    }
 </style>
 #end
 
@@ -193,8 +196,8 @@
                                     <div class="layui-row" style="margin-bottom: 5px">
                                         <label class="layui-form-label x-center"
                                                style="width: 180px">问卷调查情况统计及分析内容</label>
-                                        <button type="button" class="upFile layui-btn layui-icon" id="EvaCover"
-                                                style="background-color: red">上传文件
+                                        <button type="button" class="EvaCover upFile layui-btn layui-icon " id="EvaCover"
+                                                >上传文件
                                         </button>
                                         <button type="button" class="layui-btn" id="CoverSee">查看</button>
                                     </div>
@@ -226,8 +229,8 @@
             , element = layui.element
             , $ = layui.jquery;
         var file = "#(diagnoses.remark)";
-        if (!isNaN(file)) {
-            $('#EvaCover').css("background", "#009688");
+        if (file != null && file != "") {
+            $('#EvaCover').removeClass("EvaCover");
         }
         //监听提交
         form.on('submit(demo1)', function (data) {
@@ -395,7 +398,7 @@
                 $('#upload-progress').addClass('layui-hide');
                 if (res.code == 0) {
                     file = res.data.fileId;
-                    $('#EvaCover').css("background", "#009688");
+                    $('#EvaCover').removeClass("EvaCover");
                 } else if (res.code == 1) {
                     return false;
                 }
