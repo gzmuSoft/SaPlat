@@ -126,7 +126,7 @@
         });
 
         form.on('select(projectTypeSelect)', function (data) {
-            reloadTable($('#name').val(), $('#projectType').val(), data.value);
+            reloadTable($('#name').val(), $('#projectType').val());
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
     });
@@ -145,7 +145,7 @@
                 </div>
                 <label class="layui-form-label" hidden>项目类型</label>
                 <div class="layui-input-inline" hidden>
-                    <select id='projectType' name="projectType" lay-filter="projectTypeSelect">
+                    <select id='projectType' name="projectType" lay-filter="projectTypeSelect" lay-search="">
                         <option></option>
                         #statusOption(PaTypeNameList)
                     </select>
