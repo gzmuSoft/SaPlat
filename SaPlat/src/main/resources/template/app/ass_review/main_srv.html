@@ -104,6 +104,46 @@
         });
     }
 
+    ////////浏览器视口的高度
+    function windowHeight() {
+        var myHeight = 0;
+        if (typeof(window.innerHeight) == 'number') {
+            //Non-IE
+            myHeight = window.innerHeight;
+        } else if (document.documentElement && (document.documentElement.clientHeight)) {
+            //IE 6+ in 'standards compliant mode'
+            myHeight = document.documentElement.clientHeight;
+        } else if (document.body && (document.body.clientHeight)) {
+            //IE 4 compatible
+            myHeight = document.body.clientHeight;
+        }
+        return myHeight;
+    }
+    /////////浏览器视口的宽度
+    function windowWidth() {
+        var myWidth = 0;
+        if (typeof(window.innerWidth) == 'number') {
+            //Non-IE
+            myWidth = window.innerWidth;
+        } else if (document.documentElement && (document.documentElement.clientWidth)) {
+            //IE 6+ in 'standards compliant mode'
+            myWidth = document.documentElement.clientWidth;
+        } else if (document.body && (document.body.clientWidth)) {
+            //IE 4 compatible
+            myWidth = document.body.clientWidth;
+        }
+        return myWidth;
+    }
+    /**** 当前页面高度 ****/
+    function pageHeight() {
+        return document.body.scrollHeight;
+    }
+
+    /**** 当前页面宽度 ****/
+    function pageWidth() {
+        return document.body.scrollWidth;
+    }
+
     function zTreeOnClick(event, treeId, treeNode) {
         if("undefined" === typeof(treeNode.title) || "" === treeNode.title || null === treeNode.title){
             return;
@@ -111,8 +151,8 @@
         $("#pdf-viewer").children().remove();
         $("#pdf-viewer").append("<a class='media' href=''></a>");
         $("a.media").media({
-            width: 800
-            , height: 600
+            width:pageWidth()/2-80
+            ,height:pageHeight()
             , autoplay:true
             , src:treeNode.title
         });

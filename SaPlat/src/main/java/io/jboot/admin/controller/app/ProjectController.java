@@ -18,6 +18,7 @@ import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.ProjectValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1444,12 +1445,18 @@ public class ProjectController extends BaseController {
 //        time.setTime(nowTime);
 //        time.add(Calendar.DATE, 7);
 
+
         ApplyInvite applyInvite = new ApplyInvite();
         applyInvite.setName(projectService.findById(projectId).getName());
         applyInvite.setModule(2);
         applyInvite.setCreateUserID(user.getId());
         applyInvite.setProjectID(projectId);
         applyInvite.setUserID(notification.getReceiverID().longValue());
+
+        ApplyInvite applyInviteTmp = applyInviteService.findFirstByModel(applyInvite);
+        if(applyInviteTmp!=null)
+            applyInvite.setId(applyInviteTmp.getId());
+
         applyInvite.setSort(num);
         if (userSource != -1) {
             applyInvite.setUserSource(userSource);
@@ -1628,17 +1635,33 @@ public class ProjectController extends BaseController {
         applyInvite.setModule(2);
         applyInvite.setIsEnable(true);
         applyInvite.setProjectID(projectID);
+        DateTime now = DateTime.now();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (flag == 0) {
             applyInvite.setUserSource(3);
             ReviewGroup reviewGroup = new ReviewGroup();
             reviewGroup.setIsEnable(true);
             Page<ReviewGroup> page = reviewGroupService.findPage(reviewGroup, pageNumber, pageSize);
-            for (int i = 0; i < page.getList().size(); i++) {
-                page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(reviewGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
-                if (page.getList().get(i).getIsInvite()) {
-                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
-                    applyInvite.setUserID(userId);
-                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+            if(page != null && page.getList()!=null) {
+                User uModel = null;
+                ApplyInvite aiModel = null;
+                for (ReviewGroup item : page.getList()) {
+                    uModel = userService.findByUserIdAndUserSource(item.getOrgID(), 1L);
+                    if (uModel != null) {
+                        applyInvite.setUserID(uModel.getId());
+                        aiModel = applyInviteService.findFirstByModel(applyInvite);
+                        if (aiModel != null) {
+                            item.setIsInvite(true);
+                            item.setRemark(sdf.format(aiModel.getDeadTime()));
+                            if(aiModel.getStatus().equals("0") && aiModel.getDeadTime().before(now.toDate())){
+                                item.setStatus("7");
+                            }else{
+                                item.setStatus(aiModel.getStatus());
+                            }
+                        } else {
+                            item.setIsInvite(false);
+                        }
+                    }
                 }
             }
             renderJson(new DataTable<ReviewGroup>(page));
@@ -1647,12 +1670,27 @@ public class ProjectController extends BaseController {
             ProfGroup profGroup = new ProfGroup();
             profGroup.setIsEnable(true);
             Page<ProfGroup> page = profGroupService.findPage(profGroup, pageNumber, pageSize);
-            for (int i = 0; i < page.getList().size(); i++) {
-                page.getList().get(i).setIsInvite(applyInviteService.findIsInvite(userService.findByUserIdAndUserSource(profGroupService.findById(page.getList().get(i).getId()).getOrgID(), 1L).getId(), projectID));
-                if (page.getList().get(i).getIsInvite()) {
-                    Long userId = userService.findByUserIdAndUserSource(page.getList().get(i).getOrgID(), 1).getId();
-                    applyInvite.setUserID(userId);
-                    page.getList().get(i).setStatus(applyInviteService.findFirstByModel(applyInvite).getStatus());
+            if(page != null && page.getList()!=null) {
+                User uModel = null;
+                ApplyInvite aiModel = null;
+                for (ProfGroup item : page.getList()) {
+                    uModel = userService.findByUserIdAndUserSource(item.getOrgID(), 1L);
+                    if (uModel != null) {
+                        applyInvite.setUserID(uModel.getId());
+                        aiModel = applyInviteService.findFirstByModel(applyInvite);
+                        if (aiModel != null) {
+                            item.setIsInvite(true);
+                            item.setStatus(aiModel.getStatus());
+                            item.setRemark(sdf.format(aiModel.getDeadTime()));
+                            if(aiModel.getStatus().equals("0") && aiModel.getDeadTime().before(now.toDate())){
+                                item.setStatus("7");
+                            }else{
+                                item.setStatus(aiModel.getStatus());
+                            }
+                        } else {
+                            item.setIsInvite(false);
+                        }
+                    }
                 }
             }
             renderJson(new DataTable<ProfGroup>(page));
