@@ -14,20 +14,24 @@
 
 #define content()
 <div class="x-body">
-    <label class="layui-form-label">组织名称</label>
     <div class="layui-input-inline">
-        <div class="layui-input-inline">
-            <input type="text" id="name" name="name" placeholder="组织名称" class="layui-input"/>
-        </div>
-        <div class="layui-input-inline" style="width : 80px">
-            <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
-            </button>
-        </div>
+        <form class="layui-form" action="">
+            <input type="checkbox" name="ObjType" title="审查团体" lay-filter="switchCheck" checked>
+
+            <div class="layui-input-inline">
+            <label class="layui-form-label">名称</label>
+
+                <input type="text" style="width: 400px;" id="name" name="name" placeholder="请输入要检索的组织名称" class="layui-input"/>
+            </div>
+
+            <div class="layui-input-inline" style="width : 80px">
+                <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
+                </button>
+            </div>
+        </form>
     </div>
-    <div class="layui-input-inline">
-        <button class="layui-btn" id="reviewGroup">选择审查团体</button>
-        &nbsp;&nbsp;
-        <button class="layui-btn" id="profGroup">选择专业团体</button>
+    <div class="layui-input-inline" style="float: right;">
+        <button class="layui-btn layui-btn-normal" id="OK" style="margin: 0 auto">完成</button>
     </div>
 
     <!--隐藏id-->
@@ -38,37 +42,32 @@
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 
-    <div class="layui-input-inline x-center">
-        <button class="layui-btn" id="OK" style="margin: 0 auto">完成</button>
-    </div>
-
     <script type="text/html" id="barOption">
         #shiroHasPermission('/app/project/inviteReview')
         #[[
         {{#  if(!d.isInvite){ }}
         ]]#
         <a class="layui-btn layui-btn-xs" lay-event="invite">邀请</a>
-
         #[[
         {{# } else if(d.isInvite && d.status == '0'){ }}
         ]]#
-        <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">待同意</a>
-
+        <a class="layui-btn layui-btn-xs layui-btn-normal" disabled="disabled">待同意</a>
         #[[
         {{# } else if(d.isInvite && d.status == '1'){ }}
         ]]#
-        <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">被拒绝</a>
-
+        <a class="layui-btn layui-btn-xs layui-btn-danger" disabled="disabled">被拒绝</a>
         #[[
         {{# } else if(d.isInvite && d.status == '5'){ }}
         ]]#
-        <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">分配人员中</a>
-
+        <a class="layui-btn layui-btn-msblue layui-btn-xs" disabled="disabled">分配人员中</a>
         #[[
         {{# } else if(d.isInvite && d.status == '6'){ }}
         ]]#
-        <a class="layui-btn layui-btn-disabled layui-btn-xs" disabled="disabled">人员分配完成</a>
-
+        <a class="layui-btn layui-btn-green layui-btn-xs" disabled="disabled">人员分配完成</a>
+        #[[
+        {{# } else if(d.isInvite && d.status == '7'){ }}
+        ]]#
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invite">逾期，重发邀请</a>
         #[[
         {{#  } }}
         ]]#
@@ -83,10 +82,10 @@
     var iObjType = 0;
     var projectId = "#(id)";
 
-    layui.use(['table', 'layer'], function () {
-        var table = layui.table
+    layui.use(['table', 'form', 'layer'], function () {
+        var form = layui.form
+            ,table = layui.table
             , layer = layui.layer;
-
 
         // 审核通过的表格渲染
         var tableIns = table.render({
@@ -94,7 +93,7 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-100'    //容器高度
 
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
@@ -111,7 +110,8 @@
                         }
                     }
                 }
-                , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {field: 'remark', title: '截止日期', width: 150}
+                , {fixed: 'right', title: '操作', width: 150, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/reviewGroupTable?id=' + $('#id').val() + "&flag=" + iObjType
             , method: 'get'
@@ -139,15 +139,10 @@
             }
         });
 
-        $('#reviewGroup').click(function () {
-            iObjType = 0;
-            table.reload('dateTable', {
-                url: '#(ctxPath)/app/project/reviewGroupTable?id=' + $('#id').val() + "&flag=" + iObjType
-            });
-        });
-
-        $('#profGroup').click(function () {
-            iObjType = 1;
+        form.on('checkbox(switchCheck)', function(data){
+            this.title=this.checked ? '审查团体':'专业团体';
+            iObjType = this.checked ? 0 : 1;
+            form.render('checkbox');
             table.reload('dateTable', {
                 url: '#(ctxPath)/app/project/reviewGroupTable?id=' + $('#id').val() + "&flag=" + iObjType
             });
