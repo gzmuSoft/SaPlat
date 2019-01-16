@@ -22,20 +22,20 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-120'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
-                , {title: '架构', minWidth: 150,sort:true, align: 'center', toolbar: '#structure'}
-                , {title: '内容', minWidth: 500, align: 'center', toolbar: '#content'}
-                , {field: 'createTime', title: '注册时间', minWidth: 150, sort: true}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {title: '架构', field: 'name', width: 300, sort:true}
+                , {title: '内容', minWidth: 500, templet: '#contentTpl'}
+                , {title: '申请时间', field: 'createTime', width: 150, sort: true}
+                , {title: '操作', fixed: 'right', width: 185, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/OrgStructure/showApplyApi'
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page
-            }                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-
+            }
+            , limitName: 'pageSize' //每页数据量的参数名，默认：limit
             , page: true
             , limits: [30, 60, 90, 150, 300]
             , limit: 30 //默认采用30
@@ -81,7 +81,7 @@
                     layer.close(index);
                 });
             }else if(obj.event == 'personInfo'){
-                    pop_show('查看人员信息', '#(ctxPath)/app/OrgStructure/showNoticePersonInfo?UserId=' + data.userID , '', '', function () {
+                    pop_show('查看人员信息', '#(ctxPath)/app/OrgStructure/showNoticePersonInfo?UserId=' + data.userID , '535', '425', function () {
                 });
             }
         });
@@ -130,17 +130,11 @@
     </div>
 
 </div>
-<script type="text/html" id="structure">
-    #[[
-    {{ d.name }}
-    ]]#
-</script>
-<script type="text/html" id="content">
 
-    用户【#[[{{ d.userName}}]]#】(uid:#[[{{ d.userID}}]]#)申请加入架构#[[{{ d.name}}]]#，是否同意？
+<script type="text/html" id="contentTpl">
+    用户 <a class="layui-table-link" lay-event="personInfo">【#[[{{ d.userName}}]]#】(uid:#[[{{ d.userID}}]]#)</a> 申请加入架构 <font style="color: #F581B1;">#[[{{ d.name}}]]#</font>，是否同意？
 </script>
 <script type="text/html" id="barOption">
-
     <a class="layui-btn layui-btn-xs" lay-event="personInfo">用户信息</a>
     #[[
     {{#  if(d.status == '0'){ }}

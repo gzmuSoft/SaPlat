@@ -25,13 +25,13 @@
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '架构名称', minWidth: 150,sort:true}
-                , {field: 'orgTypeName', title: '组织类型', minWidth: 150, toolbar: '#orgName'}
+                , {field: 'orgTypeName', title: '组织类型', width: 120, toolbar: '#orgName'}
                 // , {field: 'orgID', title: '组织编号', minWidth: 150,sort:true}
                 , {field: 'parentName', title: '上级架构', minWidth: 100,sort:true}
                 // , {field: 'createUserID', title: '创建用户ID', minWidth: 100,sort:true}
-                , {field: 'createTime', title: '创建时间', minWidth: 150,sort:true}
+                , {field: 'createTime', title: '创建时间', width: 150,sort:true}
                 // , {field: 'remark', title: '备注', minWidth: 100}
-                , {fixed: 'right', title: '操作', minWidth: 260, align: 'center', toolbar: '#barOption'}
+                , {fixed: 'right', title: '操作', width: 260, align: 'center', toolbar: '#barOption'}
 
             ]]
             , url: '#(ctxPath)/app/OrgStructure/tableData?orgType=#(orgType)'
@@ -66,7 +66,7 @@
                     reloadTable($('#name').val());
                 });
             }else if (obj.event === 'showPerson') {
-                pop_show('查看架构成员', '#(ctxPath)/app/OrgStructure/showPerson?structureID=' + data.id + '&orgType=#(orgType)', '', '', function () {
+                pop_max_show('查看架构成员', '#(ctxPath)/app/OrgStructure/showPerson?structureID=' + data.id + '&orgType=#(orgType)', function () {
                 });
             }
         });

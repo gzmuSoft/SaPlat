@@ -11,6 +11,16 @@ import io.jboot.admin.service.entity.model.base.BaseApplyInvite;
 public class ApplyInvite extends BaseApplyInvite<ApplyInvite> {
     private String groupType;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    private String userName;
+
     public String getGroupType() {
         return groupType;
     }

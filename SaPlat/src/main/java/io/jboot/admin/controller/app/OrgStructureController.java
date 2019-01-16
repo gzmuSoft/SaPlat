@@ -244,6 +244,9 @@ public class OrgStructureController extends BaseController {
     public void showPerson() {
         Long sid = getParaToLong("structureID");
         int orgType = getParaToInt("orgType");
+        OrgStructure osModel = orgStructureService.findById(sid);
+        if (osModel != null)
+            setAttr("structureName", osModel.getName());
         setAttr("sid", sid)
                 .setAttr("orgType",orgType)
                 .render("showPerson.html");
@@ -254,10 +257,10 @@ public class OrgStructureController extends BaseController {
      */
     @NotNullPara({"structureID"})
     public void StructurePersonList() {
-        int pageNumber = getParaToInt("pageNumber",1);
-        int pageSize = getParaToInt("pageSize",30);
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
         Long sid = getParaToLong("structureID");
-        Page<Record> page = structPersonLinkService.findPersonListByStructId(pageNumber,pageSize,sid);
+        Page<Record> page = structPersonLinkService.findPersonListByStructId(pageNumber, pageSize, sid);
         renderJson(new DataTable<Record>(page));
 //        Map<String, Object> structPersonLinkList = structPersonLinkService.findByStructIdAndUsername(sid);
 //        renderJson(structPersonLinkList);
@@ -449,21 +452,14 @@ public class OrgStructureController extends BaseController {
         applyInvite.setName(name);
         applyInvite.setBelongToID(AuthUtils.getLoginUser().getId());
         Page<ApplyInvite> list = applyInviteService.findApplyByUserIdOrName(pageNumber, pageSize, applyInvite);
-        List<Record> applyList = new ArrayList<Record>();
-        for(ApplyInvite apply: list.getList()){
-            User user = userService.findById(apply.getUserID());
-            Record record = new Record();
-            record.set("createTime",apply.getCreateTime());
-            record.set("userID",apply.getUserID());
-            record.set("status",apply.getStatus());
-            //架构名称
-            record.set("name",apply.getName());
-            //用户帐号名称
-            record.set("userName",user.getName());
-            applyList.add(record);
+        if(list != null && list.getList()!=null){
+            for (ApplyInvite item : list.getList()) {
+                User user = userService.findById(item.getUserID());
+                if(user != null)
+                    item.setUserName(user.getName());
+            }
         }
-        Page<Record> newList = new Page<Record>(applyList,list.getPageNumber(),list.getPageSize(),list.getTotalPage(),list.getTotalRow());
-        renderJson(new DataTable<Record>(newList));
+        renderJson(new DataTable<ApplyInvite>(list));
     }
 
     /**
