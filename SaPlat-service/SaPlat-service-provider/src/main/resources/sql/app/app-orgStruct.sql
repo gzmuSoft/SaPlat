@@ -17,7 +17,7 @@
        person.ID
       ,person.personID
       ,user.name
-      ,user.ID
+      ,user.ID as userID
       ,person.structID
       ,person.createUserID
       ,person.createTime

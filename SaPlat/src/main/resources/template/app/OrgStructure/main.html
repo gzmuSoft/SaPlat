@@ -55,14 +55,14 @@
         table.on('tool(dateTable)', function(obj) {
             var data = obj.data;
             if (obj.event === 'addPerson') {
-                pop_show('添加架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id + '&orgType=#(orgType)', '', '', function () {
+                pop_show('添加架构人员', '#(ctxPath)/app/OrgStructure/addPerson?id=' + data.id + '&orgType=#(orgType)', '570', '370', function () {
                 });
             }else if(obj.event === 'update'){
-                pop_show('修改架构信息', '#(ctxPath)/app/OrgStructure/updateStructure?id=' + data.id, '', '', function () {
+                pop_show('修改架构信息', '#(ctxPath)/app/OrgStructure/updateStructure?id=' + data.id, '520', '390', function () {
                     reloadTable($('#name').val());
                 });
             }else if(obj.event === 'addStructure'){
-                pop_show('添加子架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)&parentID=' + data.id, '','',function () {
+                pop_show('添加子架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)&parentID=' + data.id, '500','320',function () {
                     reloadTable($('#name').val());
                 });
             }else if (obj.event === 'showPerson') {
@@ -72,7 +72,7 @@
         });
         //添加架构
         $("#add").click(function(){
-            pop_show('添加根架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)','','', function(){
+            pop_show('添加根架构','#(ctxPath)/app/OrgStructure/addStructure?orgType=#(orgType)','560','330', function(){
                 reloadTable($('#name').val());
             });
         });
