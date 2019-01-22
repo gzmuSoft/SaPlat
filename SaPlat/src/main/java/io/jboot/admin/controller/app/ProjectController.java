@@ -344,7 +344,7 @@ public class ProjectController extends BaseController {
                 pModel = new Project();
             }
 
-            pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
+            //pModel.setTypeName(projectAssTypeService.findById(pModel.getPaTypeID()).getName());
             organization = organizationService.findById(userService.findById(pModel.getUserId()).getUserID()); //获取组织信息
             if (null == organization) {
                 organization = new Organization();
@@ -393,13 +393,13 @@ public class ProjectController extends BaseController {
         ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndStatus(project.getId(), ProjectUndertakeStatus.ACCEPT);
         if (projectUndertake != null) {
             bIsLoginUserUndertake = loginUser.getUserID() == projectUndertake.getFacAgencyID();
-        }
-        if(project.getAssessmentMode().equals("委评")){
-            FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
-            if (facAgency != null) {
-                User tmp = userService.findByUserIdAndUserSource(facAgency.getOrgID(), roleService.findByName("组织机构").getId());
-                if (tmp != null) {
-                    bIsLoginUserUndertake = loginUser.getUserID() ==  tmp.getId();
+            if (project.getAssessmentMode().equals("委评")) {
+                FacAgency facAgency = facAgencyService.findById(projectUndertake.getFacAgencyID());
+                if (facAgency != null) {
+                    //User tmp = userService.findByUserIdAndUserSource(facAgency.getOrgID(), roleService.findByName("组织机构").getId());
+                    //if (tmp != null) {
+                    bIsLoginUserUndertake = loginUser.getUserID() == facAgency.getOrgID();
+                    //}
                 }
             }
         }
