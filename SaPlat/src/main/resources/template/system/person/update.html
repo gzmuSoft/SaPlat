@@ -29,7 +29,7 @@
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
         $("button").click(function () {
-            pop_show('查看图片', '#(ctxPath)/util/pdfView?fileID='+$(this).val(),'', '', function () {
+            pop_show('查看身份证', '#(ctxPath)/util/pdfView?fileID='+$(this).val() + '&isID=1','350', '232', function () {
             });
         })
     });
@@ -80,11 +80,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">身份证：</label>
             <div class="layui-input-inline">
-                <button type="button" class="layui-btn" style="margin: 0 100px" value="#(person.identity)">
+                #if(person.identity != null)
+                <button type="button" class="layui-btn layui-btn-sm" value="#(person.identity)">
                     点击查看
                 </button>
+                #else
+                <input type="text" class="layui-input" value="未上传" style="width: 300px" readonly/>
+                #end
             </div>
-
         </div>
 
         <div class="layui-form-item">

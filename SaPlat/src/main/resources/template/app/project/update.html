@@ -39,7 +39,7 @@
                     $("#eva-scheme-process").removeClass("layui-hide");
                     break;
                 case "6":/*立项中，查看项目资料详情*/
-
+                    $("#pretrial-report").addClass("layui-hide");
                     break;
                 case "5":
                     $("#eva-scheme").removeClass("layui-hide");
@@ -66,7 +66,7 @@
             } else if (managementRole === '0') {
                 layer.msg("您尚未认证为管理机构，无法查看。");
             }*/
-            if('0' === authEva){
+            if('1' === authEva){
                 pop_show_full("评估方案", "#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)", function () {
                 });
             }else{

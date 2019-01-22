@@ -70,9 +70,11 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
      */
     public FileProject fitModel(FileProject model){
         if(model != null) {
-            Files fModel = filesService.findById(model.getFileID());
-            if(fModel != null)
-                model.setOrginalFileName(fModel.getName());
+            if(model.getFileID() != null && filesService != null) {
+                Files fModel = filesService.findById(model.getFileID());
+                if (fModel != null)
+                    model.setOrginalFileName(fModel.getName());
+            }
         }
         return model;
     }

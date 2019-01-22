@@ -9,6 +9,7 @@
 #define js()
 
 <script type="text/javascript">
+
     ////////浏览器视口的高度
     function windowHeight() {
         var myHeight = 0;
@@ -22,7 +23,7 @@
             //IE 4 compatible
             myHeight = document.body.clientHeight;
         }
-        return myHeight-32;
+        return myHeight-24;
     }
     /////////浏览器视口的宽度
     function windowWidth() {
@@ -37,22 +38,13 @@
             //IE 4 compatible
             myWidth = document.body.clientWidth;
         }
-        return myWidth-26;
-    }
-    /**** 当前页面高度 ****/
-    function pageHeight() {
-        return document.body.scrollHeight;
-    }
-
-    /**** 当前页面宽度 ****/
-    function pageWidth() {
-        return document.body.scrollWidth;
+        return myWidth-24;
     }
 
     function pdf(element) {
         element.media({
-            width:windowWidth()
-            ,height:windowHeight()
+            width:windowWidth
+            ,height:windowHeight
             , src: "../" + element.attr('href')
         });
     }

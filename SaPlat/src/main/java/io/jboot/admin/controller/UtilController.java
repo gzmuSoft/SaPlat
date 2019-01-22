@@ -79,12 +79,17 @@ public class UtilController extends BaseController {
     @NotNullPara("fileID")
     public void pdfView() {
         Long fileID = getParaToLong("fileID");
+        int isID = getParaToInt("isID", 0);
         Files files = filesService.findById(fileID);
         if (files == null) {
             throw new BusinessException("文件不存在");
         }
         setAttr("files", files);
-        render("pdf.html");
+        if(isID == 1) {
+            render("idView.html");
+        } else{
+            render("pdf.html");
+        }
     }
 
     /**
