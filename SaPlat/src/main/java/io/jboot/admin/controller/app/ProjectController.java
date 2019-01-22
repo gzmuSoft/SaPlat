@@ -398,7 +398,7 @@ public class ProjectController extends BaseController {
                 if (facAgency != null) {
                     //User tmp = userService.findByUserIdAndUserSource(facAgency.getOrgID(), roleService.findByName("组织机构").getId());
                     //if (tmp != null) {
-                    bIsLoginUserUndertake = loginUser.getUserID() == facAgency.getOrgID();
+                    bIsLoginUserUndertake = loginUser.getUserID().equals(facAgency.getOrgID());
                     //}
                 }
             }
