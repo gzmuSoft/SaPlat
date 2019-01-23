@@ -40,7 +40,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
      */
     public ApplyInvite fitModel(ApplyInvite model){
         Date now = new Date();
-        if(model.getDeadTime().before(now))
+        if(model.getModule() == 2 && model.getDeadTime().before(now))
             model.setStatus("7");
         return model;
     }
