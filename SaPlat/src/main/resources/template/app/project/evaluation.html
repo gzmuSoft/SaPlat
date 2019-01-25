@@ -39,20 +39,20 @@
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">项目资料</a>
 
+    #shiroHasPermission('/app/project/inviteReview')
     #[[
-    {{#  if(d.spell == '1'){ }}
+    {{#  if(d.sort == 1){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="see_eva_scheme">稳评方案</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="see1">评估详情</a>
     #[[
     {{#  } }}
     ]]#
     #end
 
-    #shiroHasPermission('/app/project/inviteReview')
     #[[
-    {{#  if(d.sort == 1){ }}
+    {{#  if(d.spell == '1'){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="see1">评估详情</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="see_eva_scheme">稳评方案</a>
     #[[
     {{#  } }}
     ]]#
