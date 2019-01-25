@@ -117,7 +117,7 @@
                 , {field: 'brief', title: '简介', minWidth: 150}
                 , {field: 'createTime', title: '立项时间', width: 150, sort: true}
                 , {fixed: 'right', field: 'assessmentProgress',title: '评估进度', width: 100, align: 'center', sort: true, toolbar: '#progress'} //这里的toolbar值是模板元素的选择器
-                , {fixed: 'right', title: '操作', width: 230, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 230, toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/evaluationTable'
             , method: 'get'
