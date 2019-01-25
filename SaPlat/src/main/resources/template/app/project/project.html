@@ -34,7 +34,7 @@
                 , {field: 'isUpLoad', title: '状态', align: 'center', width: 120, templet: '#isUpLoadTpl', sort: true}
                 , {title: '操作', width: 120, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/system/projectauth/fileTable?id=' + #(model.id) + '&paTypeID=' + #(model.paTypeID)
+            , url: '#(ctxPath)/app/project/fileTable?id=' + #(model.id) + '&paTypeID=' + #(model.paTypeID)
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page

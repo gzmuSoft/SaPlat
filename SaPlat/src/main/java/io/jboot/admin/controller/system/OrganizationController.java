@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.system;
 
 import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
@@ -10,12 +11,17 @@ import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.FileFormService;
 import io.jboot.admin.service.api.OrganizationService;
+import io.jboot.admin.service.api.UserService;
 import io.jboot.admin.service.entity.model.FileForm;
 import io.jboot.admin.service.entity.model.Organization;
+import io.jboot.admin.service.entity.model.User;
 import io.jboot.admin.service.entity.status.system.DataStatus;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.OrganizationValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 
 import java.util.Date;
 
@@ -26,6 +32,8 @@ import java.util.Date;
  */
 @RequestMapping("/system/organization")
 public class OrganizationController extends BaseController {
+    @JbootrpcService
+    private UserService userService;
 
     @JbootrpcService
     private OrganizationService organizationService;
@@ -147,5 +155,39 @@ public class OrganizationController extends BaseController {
         Organization organization = organizationService.findById(id);
         String path = organization.getCertificate();
         setAttr("certificate", path).render("view.html");
+    }
+
+    /**
+     * 修改密码
+     */
+    @Before(GET.class)
+    @NotNullPara("id")
+    public void changepwd() {
+        User user = userService.findByUserIdAndUserSource(getParaToLong("id"), 1);
+        setAttr("user", user).render("../organizationrole/changepwd.html");
+    }
+
+    /**
+     * 修改密码提交
+     */
+    @Before({POST.class})
+    public void postChangepwd() {
+        User sysUser = getBean(User.class, "user");
+
+        String pwd = getPara("newPwd");
+
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
+        pwd = hash.toHex();
+        sysUser.setPwd(pwd);
+        sysUser.setSalt(salt);
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setRemark("修改用户密码");
+
+        if (!userService.update(sysUser)) {
+            throw new BusinessException("修改密码失败");
+        }
+
+        renderJson(RestResult.buildSuccess());
     }
 }

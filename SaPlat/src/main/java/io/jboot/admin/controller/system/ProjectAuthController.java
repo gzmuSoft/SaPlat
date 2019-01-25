@@ -30,6 +30,12 @@ import java.util.List;
 public class ProjectAuthController extends BaseController {
 
     @JbootrpcService
+    private ProjectFileTypeService projectFileTypeService;
+
+    @JbootrpcService
+    private FileProjectService fileProjectService;
+
+    @JbootrpcService
     private AuthService authService;
 
 
@@ -313,5 +319,34 @@ public class ProjectAuthController extends BaseController {
                 .setAttr("model", pModel)
                 .setAttr("roleName", strRoleName)
                 .render("project.html");
+    }
+
+    /**
+     * 立项中-文件列表表格渲染
+     */
+    @NotNullPara({"id", "paTypeID"})
+    public void fileTable() {
+        int pageNumber = getParaToInt("pageNumber", 1);
+        int pageSize = getParaToInt("pageSize", 30);
+        Long id = getParaToLong("id");
+        ProjectAssType projectAssType = projectAssTypeService.findById(getParaToLong("paTypeID"));
+        if (projectAssType != null) {
+            ProjectFileType parentProjectFileType = projectFileTypeService.findByName(projectAssType.getName());
+            ProjectFileType childProjectFileType = new ProjectFileType();
+            childProjectFileType.setParentID(parentProjectFileType.getId());
+            Page<ProjectFileType> page = projectFileTypeService.findPage(childProjectFileType, pageNumber, pageSize);
+            for (int i = 0; i < page.getList().size(); i++) {
+                FileProject fileProject = fileProjectService.findByProjectIDAndFileTypeID(id, page.getList().get(i).getId());
+                if (fileProject != null) {
+                    page.getList().get(i).setFileID(fileProject.getFileID());
+                    page.getList().get(i).setIsUpLoad(true);
+                } else {
+                    page.getList().get(i).setIsUpLoad(false);
+                }
+            }
+            renderJson(new DataTable<ProjectFileType>(page));
+        } else {
+            renderJson(new DataTable<ProjectFileType>(null));
+        }
     }
 }

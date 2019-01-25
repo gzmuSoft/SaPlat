@@ -272,8 +272,7 @@ public class OrganizationRoleController extends Controller {
         sysUser.setPwd(pwd);
         sysUser.setSalt(salt);
         sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
-        sysUser.setLastAccessTime(new Date());
-        sysUser.setRemark("用户修改密码");
+        sysUser.setRemark("修改用户密码");
 
         if (!userService.update(sysUser)) {
             throw new BusinessException("修改密码失败");

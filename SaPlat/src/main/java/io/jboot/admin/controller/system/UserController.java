@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.system;
 
 import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
@@ -256,4 +257,38 @@ public class UserController extends BaseController {
         renderJson(RestResult.buildSuccess());
     }
 
+
+    /**
+     * 修改密码
+     */
+    @Before(GET.class)
+    @NotNullPara("id")
+    public void resetPwd() {
+        User user = userService.findById(getParaToLong("id"));
+        setAttr("user", user).render("resetPwd.html");
+    }
+
+    /**
+     * 修改密码提交
+     */
+    @Before({POST.class})
+    public void postResetPwd() {
+        User sysUser = getBean(User.class, "user");
+
+        String pwd = getPara("newPwd");
+
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
+        pwd = hash.toHex();
+        sysUser.setPwd(pwd);
+        sysUser.setSalt(salt);
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setRemark("修改用户密码");
+
+        if (!userService.update(sysUser)) {
+            throw new BusinessException("修改密码失败");
+        }
+
+        renderJson(RestResult.buildSuccess());
+    }
 }

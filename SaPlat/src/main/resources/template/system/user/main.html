@@ -46,7 +46,7 @@
                     sort:true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.UserStatus::me(), "status")'
                 }
-                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/system/user/tableData'
             , method: 'get'
@@ -108,6 +108,12 @@
                         unSuccess: function (data) {
                             layer.close(index);
                         }
+                    });
+                });
+            } else if (obj.event === 'pwd') {
+                layer.confirm('是否确定给 用户帐号为：“' + data.name + '”的用户修改密码?', function (index) {
+                    pop_show('改密', '#(ctxPath)/system/user/resetPwd?id=' + data.id, '400', '300', function () {
+                        layer.close(index);
                     });
                 });
             }
@@ -204,5 +210,6 @@
     <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
     #end
     --#
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="pwd">改密</a>
 </script>
 #end

@@ -23,29 +23,21 @@ import java.util.List;
 @JbootrpcService
 public class AuthServiceImpl extends JbootServiceBase<Auth> implements AuthService {
 
-    @JbootrpcService
-    private UserRoleService userRoleService;
+    private UserRoleServiceImpl userRoleService = new UserRoleServiceImpl();
 
-    @JbootrpcService
-    private RoleService roleService;
+    private RoleServiceImpl roleService = new RoleServiceImpl();
 
-    @JbootrpcService
-    private UserService userService;
+    private UserServiceImpl userService = new UserServiceImpl();
 
-    @JbootrpcService
-    private ExpertGroupService expertGroupService;
+    private ExpertGroupServiceImpl expertGroupService = new ExpertGroupServiceImpl();
 
-    @JbootrpcService
-    private ManagementService managementService;
+    private ManagementServiceImpl managementService = new ManagementServiceImpl();
 
-    @JbootrpcService
-    private EnterpriseService enterpriseService;
+    private EnterpriseServiceImpl enterpriseService = new EnterpriseServiceImpl();
 
-    @JbootrpcService
-    private FacAgencyService facAgencyService;
+    private FacAgencyServiceImpl facAgencyService = new FacAgencyServiceImpl();
 
-    @JbootrpcService
-    private ProfGroupService profGroupService;
+    private ProfGroupServiceImpl profGroupService = new ProfGroupServiceImpl();
 
     @JbootrpcService
     private ReviewGroupService reviewGroupService;

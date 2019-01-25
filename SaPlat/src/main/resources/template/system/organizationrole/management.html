@@ -93,7 +93,7 @@
                     });
                 });
             } else if (obj.event === 'pwd') {
-                layer.confirm('是否确认为该组织改密?', function (index) {
+                layer.confirm('是否确定给 名称为：“' + data.name + '”的管理机构修改密码?', function (index) {
                     pop_show('改密', '#(ctxPath)/system/organizationrole/changepwd?orgID=' + data.orgID, '400', '300', function () {
                         layer.close(index);
                     });

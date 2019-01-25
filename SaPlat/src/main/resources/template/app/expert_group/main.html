@@ -33,7 +33,7 @@
             , height: 'full-120'    //容器高度
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: true}
-                , {field: 'name', title: '名称', minWidth: 150, sort: true}
+                , {field: 'name', title: '姓名', minWidth: 150, sort: true}
                 , {field: 'userName', title: '用户账号', minWidth: 150, sort: true}
                 , {field: 'profess', title: '专业资格内容', minWidth: 200, sort: true}
                 , {field: 'worktime', title: '工作时间', width: 150, sort: true}
@@ -41,7 +41,7 @@
                 , {field: 'createTime', title: '创建时间',width:150, sort: true}
                 , {field: 'isEnable', title: '状态', width:80, sort: true,
                     templet: '#statusTpl(io.jboot.admin.service.entity.status.system.DataStatus::me(), "isEnable")' }
-                , {fixed: 'right', title: '操作', width: 130, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/expert_group/tableData'
             , method: 'get'
@@ -86,6 +86,12 @@
                         unSuccess: function (data) {
                             layer.close(index);
                         }
+                    });
+                });
+            } else if (obj.event === 'pwd') {
+                layer.confirm('是否确定给 姓名为：“'+ data.name + '”，用户账号为：“' + data.userName + '”的专家修改密码?', function (index) {
+                    pop_show('改密', '#(ctxPath)/system/person/changepwd?personID=' + data.personID, '400', '300', function () {
+                        layer.close(index);
                     });
                 });
             }
@@ -176,5 +182,6 @@
     {{#  } }}
     ]]#
 
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="pwd">改密</a>
 </script>
 #end

@@ -1,6 +1,7 @@
 package io.jboot.admin.controller.system;
 
 import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.admin.base.common.RestResult;
@@ -9,10 +10,16 @@ import io.jboot.admin.base.interceptor.NotNullPara;
 import io.jboot.admin.base.rest.datatable.DataTable;
 import io.jboot.admin.base.web.base.BaseController;
 import io.jboot.admin.service.api.PersonService;
+import io.jboot.admin.service.api.UserService;
+import io.jboot.admin.service.entity.model.Organization;
 import io.jboot.admin.service.entity.model.Person;
+import io.jboot.admin.service.entity.model.User;
+import io.jboot.admin.support.auth.AuthUtils;
 import io.jboot.admin.validator.system.PersonValidator;
 import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.web.controller.annotation.RequestMapping;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 
 import java.util.Date;
 
@@ -21,6 +28,9 @@ import java.util.Date;
  */
 @RequestMapping("/system/person")
 public class PersonController extends BaseController {
+    @JbootrpcService
+    private UserService userService;
+
     @JbootrpcService
     private PersonService personService;
 
@@ -121,6 +131,40 @@ public class PersonController extends BaseController {
         if (!personService.useOrunuse(person)) {
             renderJson(RestResult.buildError("操作失败，用户可能未通过审核"));
             return;
+        }
+
+        renderJson(RestResult.buildSuccess());
+    }
+
+    /**
+     * 修改密码
+     */
+    @Before(GET.class)
+    @NotNullPara("personID")
+    public void changepwd() {
+        User user = userService.findByUserIdAndUserSource(getParaToLong("personID"), 0);
+        setAttr("user", user).render("changepwd.html");
+    }
+
+    /**
+     * 修改密码提交
+     */
+    @Before({POST.class})
+    public void postChangepwd() {
+        User sysUser = getBean(User.class, "user");
+
+        String pwd = getPara("newPwd");
+
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash("md5", pwd, salt, 2);
+        pwd = hash.toHex();
+        sysUser.setPwd(pwd);
+        sysUser.setSalt(salt);
+        sysUser.setLastUpdateUserID(AuthUtils.getLoginUser().getId());
+        sysUser.setRemark("修改用户密码");
+
+        if (!userService.update(sysUser)) {
+            throw new BusinessException("修改密码失败");
         }
 
         renderJson(RestResult.buildSuccess());
