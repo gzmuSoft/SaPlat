@@ -38,7 +38,24 @@
 <script type="text/html" id="barOption">
     #shiroHasPermission('/app/project/see')
     <a class="layui-btn layui-btn-xs" lay-event="see">项目资料</a>
+
+    #[[
+    {{#  if(d.spell == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="see_eva_scheme">稳评方案</a>
+    #[[
+    {{#  } }}
+    ]]#
+    #end
+
+    #shiroHasPermission('/app/project/inviteReview')
+    #[[
+    {{#  if(d.sort == 1){ }}
+    ]]#
     <a class="layui-btn layui-btn-xs" lay-event="see1">评估详情</a>
+    #[[
+    {{#  } }}
+    ]]#
     #end
 </script>
 <script type="text/html" id="progress">
@@ -100,7 +117,7 @@
                 , {field: 'brief', title: '简介', minWidth: 150}
                 , {field: 'createTime', title: '立项时间', width: 150, sort: true}
                 , {fixed: 'right', field: 'assessmentProgress',title: '评估进度', width: 100, align: 'center', sort: true, toolbar: '#progress'} //这里的toolbar值是模板元素的选择器
-                , {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 230, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/project/evaluationTable'
             , method: 'get'
@@ -116,6 +133,9 @@
                  });
             } else if (obj.event === 'see1') {
                 window.location.href = "#(ctxPath)/app/evaluation/evaluationInformation?id=" + data.id;
+            } else if (obj.event === 'see_eva_scheme') {
+                pop_max_show('查看“'+data.name +'”项目的稳评方案', "#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + data.id, function () {
+                });
             }
         });
 
