@@ -31,7 +31,7 @@
                 , {field: 'createTime', title: '立项时间',width:250, sort: true}
                 , {field: 'spell',title:'回复', width: 200}
                 , {field: 'remark', title: '备注', minWidth: 200, sort:true}
-                , {fixed: 'right', title: '操作', width: 100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
+                , {fixed: 'right', title: '操作', width: 166, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
             , url: '#(ctxPath)/app/projectUndertake/managementReviewTableData'
             , method: 'get'
@@ -49,7 +49,6 @@
                 ,type: 'desc'
             }
             , done: function (res, curr, count) {
-                $('[data-field=spell]').addClass("layui-hide");
             }
         });
 

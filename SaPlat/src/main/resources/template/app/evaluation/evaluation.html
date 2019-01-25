@@ -66,18 +66,18 @@
         var isSelf = "#(isSelf)";
         if (evaSchemeStatus === "") {
             if (isSelf === "true") {
-                layer.msg("承接当前项目的服务机构尚未填写稳评资料");
+                layer.msg("承接当前项目的服务机构尚未填写稳评方案");
             } else {
                 if ("mgr_agency" === "#(entry)") {
-                    layer.msg("当前项目的服务机构尚未填写稳评资料");
+                    layer.msg("当前项目的服务机构尚未填写稳评方案");
                 } else {
                     $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + "#(project.id)");
                 }
             }
         } else if (evaSchemeStatus === "1") {
             $('#next').remove();
-            layer.msg("您的项目正在审核中，请耐心等待。。。");
-            $('<h1>您的项目正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
+            layer.msg("项目的稳评方案正在审核中，请耐心等待。。。");
+            $('<h1>项目的稳评方案正在审核中，请耐心等待。。。</h1>').appendTo($('body'));
         } else if (evaSchemeStatus === "2") {
             var method = "#(method)";
             if (method === "false") {
@@ -86,7 +86,7 @@
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=true");
                     }, 500);
                 } else if (isSelf === "false") {
-                    layer.msg("恭喜您，您的项目已经通过审核，请完善下面的资料！");
+                    layer.msg("此项目的稳评方案已经通过审核，请完善下面的资料！");
                     setTimeout(function () {
                         $('#next').prop("src", "#(ctxPath)/app/information/edit?id=" + "#(project.id)" + "&percent=" + percent + "&flag=false");
                     }, 500);
@@ -98,9 +98,9 @@
             }
         } else if (evaSchemeStatus === "3") {
             if ("mgr_agency" === "#(entry)") {
-                layer.msg("该项目未通过审核，须创建者重新填写资料。");
+                layer.msg("该项目的稳评方案未通过审核，须服务机构重新填写资料。");
             } else {
-                layer.msg("您的项目未通过审核，请重新填写资料。");
+                layer.msg("该项目的稳评方案未通过审核，请重新填写资料。");
                 $('#next').prop("src", "#(ctxPath)/app/projectUndertake/toProjectImpTeam?id=" + "#(project.id)");
             }
         }

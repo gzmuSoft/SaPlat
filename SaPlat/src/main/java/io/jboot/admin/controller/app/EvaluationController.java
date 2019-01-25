@@ -94,7 +94,7 @@ public class EvaluationController extends BaseController {
                 UserRole userRole = userRoleService.findByUserIdAndRoleId(u.getId(), role.getId());
                 // 验证角色
                 if (userRole == null) {
-                    throw new BusinessException("请先认证服务机构！");
+                    throw new BusinessException("当前用户不是此项目的评估服务机构，不能对此项目进行评估！");
                 }
                 User user = AuthUtils.getLoginUser();
                 Organization organization = organizationService.findById(user.getUserID());

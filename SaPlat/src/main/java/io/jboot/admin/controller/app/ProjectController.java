@@ -779,6 +779,7 @@ public class ProjectController extends BaseController {
         User loginUser = AuthUtils.getLoginUser();
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        boolean isFacAgency = false;
         Project project = null;
         if (StrKit.notBlank(getPara("projectType"))) {
             project = new Project();
@@ -795,6 +796,7 @@ public class ProjectController extends BaseController {
         //找到组织机构对应的服务机构信息
         FacAgency facAgency = facAgencyService.findByOrgId(loginUser.getUserID());
         if (facAgency != null) {
+            isFacAgency = true;
             projectUndertake.setFacAgencyID(facAgency.getId());
         }
         projectUndertake.setCreateUserID(loginUser.getId());
@@ -807,6 +809,23 @@ public class ProjectController extends BaseController {
         }
 
         Page<Project> page = projectService.findReviewingPageBySql(projectUndertake, pageNumber, pageSize);
+
+        if (page.getList() != null) {
+            boolean finalIsFacAgency = isFacAgency;
+            page.getList().forEach(p -> {
+                EvaScheme evaScheme = evaSchemeService.findByProjectID(p.getId());
+                if (evaScheme != null) {
+                    p.setSpell("1");
+                } else {
+                    p.setSpell("0");
+                }
+
+                if(finalIsFacAgency ||(p.getAssessmentMode().equals("自评") && p.getCreateUserID()==loginUser.getId()))
+                    p.setSort(1);
+                else
+                    p.setSort(0);
+            });
+        }
         renderJson(new DataTable<Project>(fitPage(page)));
     }
 

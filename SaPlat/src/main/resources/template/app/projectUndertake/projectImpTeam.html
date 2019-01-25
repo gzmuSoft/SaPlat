@@ -599,7 +599,7 @@
         }
 
         /**
-         * 判总日期是否不正确
+         * 判断日期是否不正确
          */
         function dateIsCorrect() {
             var startDate = new Date($('#startDate').val());
@@ -855,32 +855,40 @@
                 //if ($("#impTeamName").val() != null && $("#impTeamName").val() !== '') {
                 if (tableNull()) {
                     if (layedit.getText(index1) != null && layedit.getText(index1) !== "" && layedit.getText(index2) != null && layedit.getText(index2) !== "" && layedit.getText(index3) != null && layedit.getText(index3) !== "" && layedit.getText(index4) != null && layedit.getText(index4) !== "") {
-                        var ajaxTimeoutTest = $.ajax({
-                            type: 'POST',
-                            timeout: 3000,
-                            url: '#(ctxPath)/app/projectUndertake/ImpTeam',
-                            data: dataString(),
-                            loadFlag: true,
-                            success: function (data) { //请求成功的回调函数
-                                window.parent.location.reload();
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index);
-                                layer.msg("操作成功");
-                            },
-                            error: function (data) { //请求失败的回调函数
-                                string = "?";
-                                layer.msg("操作失败");
-                            },
-                            complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
-                                if (status === 'timeout') {//超时,status还有success,error等值的情况
-                                    ajaxTimeoutTest.abort();
+                        if (fileId1 === null || fileId1 === "") {
+                            layer.msg("请先上传稳评封面，然后再保存！")
+                        } else if (fileId3 === null || fileId3 === "") {
+                            layer.msg("请先上传报备登记表，然后再保存！")
+                        }else if (fileId2 === null || fileId2 === "") {
+                            layer.msg("请先上传委托书，然后再保存！")
+                        }  else {
+                            var ajaxTimeoutTest = $.ajax({
+                                type: 'POST',
+                                timeout: 3000,
+                                url: '#(ctxPath)/app/projectUndertake/ImpTeam',
+                                data: dataString(),
+                                loadFlag: true,
+                                success: function (data) { //请求成功的回调函数
+                                    window.parent.location.reload();
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                    layer.msg("操作成功");
+                                },
+                                error: function (data) { //请求失败的回调函数
                                     string = "?";
-                                    layer.msg("请求超时");
+                                    layer.msg("操作失败");
+                                },
+                                complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
+                                    if (status === 'timeout') {//超时,status还有success,error等值的情况
+                                        ajaxTimeoutTest.abort();
+                                        string = "?";
+                                        layer.msg("请求超时");
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } else {
-                        layer.msg("必填项不能为空！");
+                        layer.msg("所有信息都不能为空，请补充完善再提交！");
                         return false;
                     }
                 } else {
@@ -888,10 +896,11 @@
                 }
                 //}
             } else {
-                layer.msg("计划日期填写错误！");
+                layer.msg("计划日期未设置或设置错误，请先更正！");
             }
             return false;
         });
+
         $("tr[data-index=0]").children("td[data-field*=Date]").children("div").addClass("dateC");
         $("tr[data-index=0]").children("td[data-field*=Date]").children("div").each(function () {
             laydate.render({
