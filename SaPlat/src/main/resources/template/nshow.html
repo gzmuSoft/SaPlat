@@ -1,9 +1,43 @@
+<link rel="stylesheet" href="../static/home/home.css">
+<title>社会稳定风险评估系统--保民和</title>
+<meta name="description" content="社会稳定风险评估系统为全国第一家社会稳定风险评估办公自动化产品">
+<meta name="keywords" content="保民和,稳评,流程管理,协同管理">
 #include("/template/common/layout/_page_layout.html")
 #@layout()
 
 #define css()
 <style>
+    #copyright p {
+        margin-bottom: 0px;
+        color: #666666;
+        font-size: 12px;
+    }
+    #header{
+        transition: background-color 1s;
+        -moz-transition: background-color 1s;	/* Firefox 4 */
+        -webkit-transition: background-color 1s;	/* Safari 和 Chrome */
+        -o-transition: background-color 1s;	/* Opera */
+        height: 50px;
+        margin: 0 -20px;
+        margin-top: -10px;
+    }
 
+    body {
+        padding-bottom: 50px;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 100%;
+        height: 60px;
+        line-height: 25px;
+        background-color: #eee;
+        z-index: 9999;
+    }
 </style>
 #end
 
@@ -14,6 +48,27 @@
 #end
 
 #define content()
+<div id="header" style="background: rgba(102, 179, 255, 0.8);padding-right: 17px; height:71px;line-height: 25px;">
+    <br>
+    <div style="width: 100%; display: inline-block;">
+        <div style="margin-left: 85%; float: left; padding-right:30px;">
+            <a class="login"
+               style="color: white; font-size: 20px; font-weight: 200; text-decoration: none;"
+               href="#(ctxPath)/nlist">资&nbsp;讯</a>
+        </div>
+        <div style="float: left; padding-right:30px;">
+            <a class="login"
+               style="color: white;font-size: 20px; font-weight: 200; text-decoration: none;"
+               href="#(ctxPath)/login">登&nbsp;录</a>
+        </div>
+        <div style="padding-right:30px;">
+            <a class="register"
+               style="color: white;font-size: 20px; font-weight: 200; text-decoration: none;"
+               href="#(ctxPath)/register">注&nbsp;册</a>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="news-list">
         <h2>#(model.title)</h2>
@@ -23,9 +78,13 @@
         <div style="padding-left: 30px;padding-right: 30px">
             #(model.content)
         </div>
-        <footer class="copyright">
-            Copyright &nbsp; 2016 DreamBoy All rights reserved.
-        </footer>
+        <div style="clear: both;"></div>
     </div>
+</div>
+
+<div id="footer" style="background: rgba(102, 179, 255, 0.8);text-align: center;
+            height: 60px; padding-top:10px; color: white;">
+    版权所有 © <a href="http://www.gzbmhwp.com/" target="_blank" style="color: white">贵州保民和社会稳定风险评估有限公司</a> 中国·贵州·贵阳<br/>
+    备案证书号：黔ICP备18009264号-2
 </div>
 #end

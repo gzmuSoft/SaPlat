@@ -94,11 +94,20 @@ public class MainController extends BaseController {
     }
 
     public void nshow() {
-        int id = getParaToInt("id");
-        News model = newsService.findById(id);
-        System.out.println(model.toString());
-        setAttr("model", model).
-                render("nshow.html");
+        try {
+            int id = getParaToInt("id");
+            News model = newsService.findById(id);
+            if (model != null) {
+                System.out.println(model.toString());
+                setAttr("model", model).
+                        render("nshow.html");
+            } else {
+                redirect("/nlist");
+            }
+        }
+        catch(Exception ex){
+            redirect("/nlist");
+        }
     }
 
     public void nlist() {
@@ -110,6 +119,7 @@ public class MainController extends BaseController {
         //System.out.println("newsTable.getData():" + newsTable.getData().toString());
         setAttr("newsList", newsTable.getData()).
                 setAttr("current", current).
+                setAttr("totalPage", page.getTotalPage()).
                 render("nlist.html");
     }
 
@@ -121,6 +131,7 @@ public class MainController extends BaseController {
         DataTable newsTable = new DataTable<News>(page);
         setAttr("newsList", newsTable.getData()).
                 setAttr("current", current).
+                setAttr("totalPage", page.getTotalPage()).
                 render("nlist.html");
     }
 

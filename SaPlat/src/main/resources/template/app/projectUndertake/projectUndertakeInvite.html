@@ -25,7 +25,7 @@
                     <div class="list-stat layui-row">
                         <div class="layui-col-xs3 layui-col-md2 Label">
                             <i class="layui-icon layui-icon-note"></i>
-                            <a href="javascript:;" onclick="showFacAgencyInfo({{item.facAgencyID}})">申请委评机构：{{item.facAgencyName}}</a>
+                            <a href="javascript:;">立项单位：{{item.project.buildOrgName}}</a>
                         </div>
 
                         <div class="layui-col-xs3 layui-col-md2 Label">
@@ -57,7 +57,7 @@
                                 #[[
                                 {{#  } else if(item.status == 3){ }}
                                 ]]#
-                                <font color="#d2691e">已被他人承接</font>
+                                <font color="#d2691e">已被其他单位承接</font>
                                 #[[
                                 {{#  } }}
                                 ]]#
@@ -118,10 +118,6 @@
         });
     };
 
-    var showFacAgencyInfo = function (facAgencyID) {
-        pop_show_fixtop('查看服务机构资料', '#(ctxPath)/app/project/seeFacAgency?id=' + facAgencyID, '20', '1030', '', function () {
-        });
-    };
     var agree, refuse;
     var pageSize = 10;
     layui.use(['layer', 'laypage', 'laytpl', 'form'], function () {
@@ -136,13 +132,14 @@
         });
 
         agree = function (projectUndertakeID) {
-            layer.confirm('确定接受项目的委评申请吗？(此操作不可逆！)', function (index) {
+            var index = layer.confirm();
+            layer.confirm(index,{content: '确定接受委评邀请吗？(此操作不可逆！)',offset:20}, function (index) {
                 $.post("#(ctxPath)/app/projectUndertake/invite", {
                     id: projectUndertakeID,
                     invite: 2,
-                    flag: false
+                    flag: true
                 }, function () {
-                    layer.msg("同意委评申请成功！");
+                    layer.msg("同意委评邀请成功！");
                     reloadData(1, $('#status').val(), $('#name').val());
                 });
             });
@@ -153,6 +150,7 @@
                 type: 1
                 , title: false //不显示标题栏
                 , closeBtn: false
+                , offset: '20px'
                 , area: '300px;'
                 , shade: 0.8
                 , id: 'LAY_layuipro' //设定一个id，防止重复弹出
@@ -173,9 +171,9 @@
                             id: projectUndertakeID,
                             reply: textarea.value,
                             invite: 1,
-                            flag: false
+                            flag: true
                         }, function () {
-                            layer.msg("拒绝委评申请成功！");
+                            layer.msg("拒绝委评邀请成功！");
                             reloadData(1, $('#status').val(), $('#name').val());
                         });
                     });
@@ -226,7 +224,7 @@
             var params = {
                 pageNumber:curPage
                 , pageSize:pageSize
-                , applyOrInvite: false
+                , applyOrInvite: true
                 , flag: false
                 , status: status
                 , name : name
@@ -248,7 +246,7 @@
                         callback({
                             pageNumber: conf.curr
                             , pageSize: pageSize
-                            , applyOrInvite: false
+                            , applyOrInvite: true
                             , flag: false
                             , status: status
                             , name : name
@@ -257,7 +255,6 @@
                 });
             });
         };
-
         reloadData(1, $('#status').val(), $('#name').val());
     });
 </script>
@@ -274,8 +271,6 @@
                         <select id='status' name="status">
                             <option value=""></option>
                             <option value="0">待确认</option>
-                            <option value="1">已拒绝</option>
-                            <option value="2">已同意</option>
                             <option value="3">已被其他单位承接</option>
                         </select>
                     </div>
@@ -283,6 +278,7 @@
                     <div class="layui-input-inline">
                         <input type="text" id="name" name="name" placeholder="项目名称" class="layui-input"/>
                     </div>
+
                     <div class="layui-input-inline" style="width : 80px">
                         <button class="layui-btn" lay-submit="" lay-filter="search"><i class="layui-icon">&#xe615;</i>
                         </button>

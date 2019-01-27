@@ -33,6 +33,45 @@ function pop_show(title,url,w,h,f){
 	});
 }
 
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	t       左上角位置（缺省调默认值）
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+function pop_show_fixtop(title,url,t,w,h,f){
+    if (title == null || title == '') {
+        title=false;
+    };
+    if (url == null || url == '') {
+        url="404.html";
+    };
+    if (t == null || t == '') {
+        t=10;
+    };
+    if (w == null || w == '') {
+        w=800;
+    };
+    if (h == null || h == '') {
+        h=($(window).height() - 50);
+    };
+    layer.open({
+        type: 2,
+        area: [w+'px', h +'px'],
+        offset: t+'px',
+        fix: false, //不固定
+        maxmin: true,
+        shadeClose: true,
+        shade:0.4,
+        title: title,
+        content: url,
+        end: f
+    });
+}
+
 function pop_show_full(title,url,f){
     if (title == null || title == '') {
             title=false;

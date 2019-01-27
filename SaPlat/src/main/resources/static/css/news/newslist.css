@@ -25,7 +25,7 @@ a {
     background-size: 100% 54px;
 }
 .container {
-    width: 1000px;
+    width: 90%;
     margin: 0 auto;
 }
 .navbar .navbar-content a {
@@ -55,7 +55,7 @@ a {
     border: 1px solid #DDD;
     padding: 30px 20px;
 
-    min-height: 300px;
+    /*min-height: 300px;*/
 }
 .news-list:hover {
     box-shadow: 0 0 5px 3px #CCC;
@@ -76,13 +76,13 @@ a {
 
 .news-list-left {
     float: left;
-    width: 729px;
+    width: 75%;
     margin-bottom: 50px;
 }
 
 .news-list-right {
     float: right;
-    width: 229px;
+    width: 20%;
 }
 
 .news-list-item {
@@ -94,7 +94,7 @@ a {
 }
 .news-des {
     padding-bottom: 20px;
-    border-bottom: 2px solid #CCC;
+    border-bottom: 1px solid #47bdf5;
 }
 .news-title {
     font-size: 23px;
@@ -115,16 +115,6 @@ a {
 }
 .news-content-des {
     line-height: 28px;
-}
-
-.copyright {
-    clear: both;
-    text-align: center;
-    color: gray;
-
-    border-top: 2px solid #CCC;
-    margin-top: 50px;
-    padding: 20px 0;
 }
 
 h2{

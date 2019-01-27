@@ -6,7 +6,6 @@
 #end
 
 #define content()
-<div style="padding: 20px; background-color: #F2F2F2;">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
@@ -90,7 +89,6 @@
             </div>
         </div>
     </div>
-</div>
 #end
 
 #define js()
@@ -106,34 +104,5 @@
             height: 180 //设置编辑器高度
         }); //建立编辑器
     });
-
-    $('#digits').on('input propertychange', function() {
-        var data = $('#digits').val();
-        var str = digitsConversion(data);
-        var bid = parseInt(Math.random()*100000);
-        $("#digitsTip").html('<div class="docBubble" id="btip'+bid+'"><i class="triangle-t"></i><div class="tl"><div class="inner"><div class="cont"></div></div></div><div class="tr"></div><div class="bl"></div></div>');
-        var $btip = $("#btip"+bid);
-        var offset,h ,w ;
-        var timer;
-        clearInterval(timer);
-        offset = $(this).offset();
-        h = $(this).height();
-        w = $(this).width();
-        $(".cont").html(str);
-        $(".triangle-t").css('left',26);
-        $btip.css({ "left":offset.left-330  ,  "top":offset.top+h-60  }).show();
-    });
-
-
-    $('#digits').live("mousemove",function(){
-        clearInterval(window.timer);
-        $("#digitsTip").show();
-    });
-
-    $('#digits').live("mouseout",function(){
-        $("#digitsTip").hide();
-    });
-
-
 </script>
 #end

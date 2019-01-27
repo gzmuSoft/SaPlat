@@ -1289,10 +1289,39 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 通往邀请页面
+     * 通往申请介入页面
      */
-    public void projectAppleSOption() {
+    public void projectApplyView() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
         render("projectApplyView.html");
+    }
+
+    /**
+     * 通往邀请介入页面
+     */
+    public void projectInviteView() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
+        render("projectInviteView.html");
     }
 
     /**

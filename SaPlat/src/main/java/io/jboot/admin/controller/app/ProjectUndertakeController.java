@@ -135,26 +135,35 @@ public class ProjectUndertakeController extends BaseController {
             if (page != null && page.getList().size() > 0) {
                 page.getList().forEach(p -> {
                     //查找当前用户是否与当前项目有承接关系
-                    ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyID(p.getId(), facAgency.getId());
+                    ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyId(p.getId(), facAgency.getId());
                     if (projectUndertake != null) {
                         Integer status = projectUndertake.getStatus();
                         if (status == 0) {
-                            p.setRemark("待确认");
+                            if(projectUndertake.getApplyOrInvite() == true){
+                                p.setRemark("主体单位已向您发出委评邀请");
+                            }else {
+                                p.setRemark("已申请，待主体单位确认");
+                            }
                         } else if (status == 1) {
-                            p.setRemark("已拒绝");
+                            if(projectUndertake.getApplyOrInvite() == false){
+                                p.setRemark("主体单位已拒绝您的申请，可再次申请");
+                            }else {
+                                p.setRemark("您已拒绝主体单位的邀请，可主动申请");
+                            }
                         } else if (status == 2) {
-                            p.setRemark("已同意");
+                            p.setRemark("主体单位已同意您的申请");
                         } else if (status == 3) {
-                            p.setRemark("已被承接");
+                            p.setRemark("已被其他单位承接");
                         }
                     } else {
-                        p.setRemark("未承接");
+                        p.setRemark("未承接，可申请");
                     }
                 });
             }
-            renderJson(new DataTable<Project>(page));
+            renderJson(RestResult.buildSuccess(page));
         } else {
-            renderJson(new DataTable<Project>(null));
+            setAttr("TotalRow", 0);
+            renderJson(RestResult.buildSuccess(new Page<Project>()));
         }
     }
 
@@ -191,7 +200,7 @@ public class ProjectUndertakeController extends BaseController {
         }
 
         //获取项目id为id，创建用户编号为当前用户编号的项目承接信息
-        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyID(id, facAgency.getId());
+        ProjectUndertake projectUndertake = projectUndertakeService.findByProjectIdAndFacAgencyId(id, facAgency.getId());
         //获取项目信息
         Project project = projectService.findById(id);
         if (projectUndertake != null) {
@@ -246,8 +255,37 @@ public class ProjectUndertakeController extends BaseController {
     /**
      * 加载承接详情页面
      */
-    public void projectUndertakeIndex() {
-        render("projectUndertake.html");
+    public void projectUndertakeApplyIndex() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
+        render("projectUndertakeApply.html");
+    }
+
+    /**
+     * 加载承接详情页面
+     */
+    public void projectUndertakeInviteIndex() {
+        BaseStatus projectTypeStatus = new BaseStatus() {
+        };
+        ProjectAssType model = new ProjectAssType();
+        model.setIsEnable(true);
+        List<ProjectAssType> PaTypeList = projectAssTypeService.findAll(model);
+        if (PaTypeList != null) {
+            for (ProjectAssType item : PaTypeList) {
+                projectTypeStatus.add(item.getId().toString(), item.getName());
+            }
+        }
+        setAttr("PaTypeNameList", projectTypeStatus);
+        render("projectUndertakeInvite.html");
     }
 
     /**
@@ -263,6 +301,8 @@ public class ProjectUndertakeController extends BaseController {
         User user = AuthUtils.getLoginUser();
         Boolean applyOrInvite = getParaToBoolean("applyOrInvite");
         Boolean flag = getParaToBoolean("flag");
+        String name = getPara("name");
+        int status = getParaToInt("status", -1);
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Page<ProjectUndertake> page = null;
@@ -295,10 +335,14 @@ public class ProjectUndertakeController extends BaseController {
 
         if (!applyOrInvite && !flag) {//applyOrInvite: false, flag: false：查看申请介入您项目的请求(已通过验证)
             //此时，CreateUserID为申请介入项目评估的服务机构对应用户ID，需要通过user.getUserID()获得其拥有的project表再获取申请介入当前用户所拥有项目的承接关联列表
-            page = projectUndertakeService.findPageOfApplyIn(user.getId(), pageNumber, pageSize);
+            page = projectUndertakeService.findPageOfApplyIn(name, status, user.getId(), pageNumber, pageSize);
         } else {
             ProjectUndertake projectUndertake = new ProjectUndertake();
 
+            if(status!=-1)
+                projectUndertake.setStatus(status);
+
+            projectUndertake.setName(name);
             projectUndertake.setApplyOrInvite(applyOrInvite);
             projectUndertake.setIsEnable(true);
             if (applyOrInvite && flag) {
@@ -321,7 +365,7 @@ public class ProjectUndertakeController extends BaseController {
             page = projectUndertakeService.findPage(projectUndertake, pageNumber, pageSize);
         }
 
-        renderJson(new DataTable<ProjectUndertake>(page));
+        renderJson(RestResult.buildSuccess(page));
     }
 
     /**
@@ -364,12 +408,12 @@ public class ProjectUndertakeController extends BaseController {
             notification.setContent(user.getName() + "已拒绝您的申请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.REFUSE));
         }
-
+        Project project = null;
         if (flag && invite.equals(Integer.valueOf(ProjectUndertakeStatus.ACCEPT))) {
             notification.setName("邀请介入同意通知");
             notification.setContent(user.getName() + "已接受您的邀请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project = projectService.findById(projectUndertake.getProjectID());
+            project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
             if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
@@ -378,7 +422,7 @@ public class ProjectUndertakeController extends BaseController {
             notification.setName("申请介入同意通知");
             notification.setContent(user.getName() + "已接受您的申请！");
             projectUndertake.setStatus(Integer.valueOf(ProjectUndertakeStatus.ACCEPT));
-            Project project = projectService.findById(projectUndertake.getProjectID());
+            project = projectService.findById(projectUndertake.getProjectID());
             project.setStatus(ProjectStatus.REVIEW);
             if (!projectService.update(project)) {
                 throw new BusinessException("请求错误");
@@ -389,12 +433,14 @@ public class ProjectUndertakeController extends BaseController {
         projectUndertake.setLastUpdateUserID(user.getId());
         projectUndertake.setLastAccessTime(new Date());
 
-        Long projectID = projectUndertake.getProjectID();
         Long receiverID;
         if (flag) {
-            receiverID = projectService.findById(projectID).getUserId();
+            if(project != null)
+                receiverID = project.getUserId();
+            else
+                receiverID = projectService.findById(projectUndertake.getProjectID()).getUserId();
         } else {
-            receiverID = projectUndertake.getFacAgencyID();
+            receiverID = facAgencyService.findById(projectUndertake.getFacAgencyID()).getCreateUserID();
         }
 
         notification.setSource("/app/projectUndertake/invite");
@@ -411,7 +457,7 @@ public class ProjectUndertakeController extends BaseController {
             renderJson(RestResult.buildError("请求失败，请重新尝试！"));
             throw new BusinessException("请求失败，请重新尝试！");
         }
-        List<ProjectUndertake> list = projectUndertakeService.findListByProjectAndStatus(projectID, ProjectUndertakeStatus.WAITING);
+        List<ProjectUndertake> list = projectUndertakeService.findListByProjectAndStatus(projectUndertake.getProjectID(), ProjectUndertakeStatus.WAITING);
         for (ProjectUndertake model : list) {
             model.setStatus(Integer.valueOf(ProjectUndertakeStatus.UNDERTAKE));
             if (!projectUndertakeService.update(model)) {

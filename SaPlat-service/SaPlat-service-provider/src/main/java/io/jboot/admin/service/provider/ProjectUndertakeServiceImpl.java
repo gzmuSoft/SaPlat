@@ -116,10 +116,7 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
             columns.eq("isEnable", projectUndertake.getIsEnable());
         }
         if (StrKit.notBlank(projectUndertake.getName())) {
-            columns.eq("name", projectUndertake.getName());
-        }
-        if (projectUndertake.getFacAgencyID() != null) {
-            columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
+            columns.like("name", "%" + projectUndertake.getName() + "%");
         }
         if (projectUndertake.getCreateUserID() != null) {
             columns.eq("createUserID", projectUndertake.getCreateUserID());
@@ -128,8 +125,12 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
         if (projectUndertake.getFacAgencyID() != null) {
             columns.eq("facAgencyID", projectUndertake.getFacAgencyID());
         }
-        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
-
+        if (projectUndertake.getStatus() != null) {
+            columns.eq("status", projectUndertake.getStatus());
+        }else {
+            columns.ne("status", 2);//排除已承接的项目
+        }
+        return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "status asc"));
     }
 
     @Override
@@ -264,10 +265,14 @@ public class ProjectUndertakeServiceImpl extends JbootServiceBase<ProjectUnderta
     }
 
     @Override
-    public Page<ProjectUndertake> findPageOfApplyIn(Long buildProjectUserID, int pageNumber, int pageSize) {
+    public Page<ProjectUndertake> findPageOfApplyIn(String name, int status, Long buildProjectUserID, int pageNumber, int pageSize) {
         Kv c = null;
         SqlPara sqlPara = null;
         c = Kv.by("buildProjectUserID", buildProjectUserID);
+        if(StrKit.notBlank(name))
+            c.set("name", name);
+        if(status != -1)
+            c.set("status", status);
         sqlPara = Db.getSqlPara("app-project.project-undertake-ApplyIn", c);
         return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }

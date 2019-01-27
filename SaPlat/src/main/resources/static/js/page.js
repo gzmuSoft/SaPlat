@@ -52,7 +52,7 @@
 				}
 				/*尾部*/
 				obj.append('<span>'+'共'+'<b>'+pageinit.pageNum+'</b>'+'页，'+'</span>');
-				obj.append('<span>'+'到第'+'<input type="text" class="zxfinput" value="5"/>'+'页'+'</span>');
+				obj.append('<span>'+'到第'+'<input type="text" class="zxfinput" value="1"/>'+'页'+'</span>');
 				obj.append('<span class="zxfokbtn">'+'确定'+'</span>');
 			}());
 		},

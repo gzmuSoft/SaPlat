@@ -95,7 +95,7 @@ public interface ProjectUndertakeService {
      * @param pageSize 分页大小
      * @return
      */
-    public Page<ProjectUndertake> findPageOfApplyIn(Long buildProjectUserID, int pageNumber, int pageSize);
+    public Page<ProjectUndertake> findPageOfApplyIn(String name, int status, Long buildProjectUserID, int pageNumber, int pageSize);
 
     /**
      * 通过项目id和创建用户id

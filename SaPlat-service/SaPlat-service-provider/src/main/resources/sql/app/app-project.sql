@@ -137,7 +137,13 @@ WHERE
   and projectID in
   (
     SELECT ID FROM project where userId=#para(buildProjectUserID)
+    #if(name)
+    and name like concat('%', #para(name) ,'%')
+    #end
   )
+  #if(status)
+  and status=#para(status)
+  #end
   order by projectID, createTime desc
 #end
 

@@ -25,7 +25,7 @@
                     <div class="list-stat layui-row">
                         <div class="layui-col-xs3 layui-col-md2 Label">
                             <i class="layui-icon layui-icon-note"></i>
-                            <a href="javascript:;" onclick="showFacAgencyInfo({{item.facAgencyID}})">申请委评机构：{{item.facAgencyName}}</a>
+                            <a href="javascript:;">立项单位：{{item.project.buildOrgName}}</a>
                         </div>
 
                         <div class="layui-col-xs3 layui-col-md2 Label">
@@ -80,15 +80,16 @@
                         </div>
 
                         <div class="layui-col-xs3 layui-col-md2 alink">
-                            <a href="javascript:;" onclick="showProjectInfo({{item.projectID}})" class="layui-btn layui-btn-xs">项目详情</a>
+                            #shiroHasPermission('/app/projectUndertake/agency')
                             #[[
-                            {{#  if(item.status == '0'){ }}
+                            {{#  if(item.status == 1){ }}
                             ]]#
-                            <a class="layui-btn layui-btn-warm layui-btn-xs" onclick="agree({{item.id}})">同意</a>
-                            <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="refuse({{item.id}})">拒绝</a>
+                            <a href="javascript:;" onclick="apply({{item.projectID}})" class="layui-btn layui-btn-xs layui-btn-warm">重新申请</a>
                             #[[
                             {{#  } }}
                             ]]#
+                            #end
+                            <a href="javascript:;" onclick="showProjectInfo({{item.projectID}})" class="layui-btn layui-btn-xs">项目详情</a>
                         </div>
                     </div>
                 </div>
@@ -118,11 +119,7 @@
         });
     };
 
-    var showFacAgencyInfo = function (facAgencyID) {
-        pop_show_fixtop('查看服务机构资料', '#(ctxPath)/app/project/seeFacAgency?id=' + facAgencyID, '20', '1030', '', function () {
-        });
-    };
-    var agree, refuse;
+    var apply;
     var pageSize = 10;
     layui.use(['layer', 'laypage', 'laytpl', 'form'], function () {
         var $ = layui.jquery
@@ -134,54 +131,6 @@
             reloadData(1, data.field.status, data.field.name);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
-
-        agree = function (projectUndertakeID) {
-            layer.confirm('确定接受项目的委评申请吗？(此操作不可逆！)', function (index) {
-                $.post("#(ctxPath)/app/projectUndertake/invite", {
-                    id: projectUndertakeID,
-                    invite: 2,
-                    flag: false
-                }, function () {
-                    layer.msg("同意委评申请成功！");
-                    reloadData(1, $('#status').val(), $('#name').val());
-                });
-            });
-        };
-
-        refuse = function (projectUndertakeID) {
-            layer.open({
-                type: 1
-                , title: false //不显示标题栏
-                , closeBtn: false
-                , area: '300px;'
-                , shade: 0.8
-                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                , btn: ['残忍拒绝', '我再想想']
-                , btnAlign: 'c'
-                , moveType: 1 //拖拽模式，0或者1
-                , content: '' +
-                    '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
-                    '<label class="layui-form-label">拒绝缘由</label>' +
-                    '<textarea placeholder="请输入内容" class="layui-textarea" name="desc">' +
-                    '</textarea>' +
-                    '</div>'
-                , success: function (layero) {
-                    var btn = layero.find('.layui-layer-btn');
-                    btn.find('.layui-layer-btn0').on('click', function () {
-                        var textarea = layero.find('textarea')[0];
-                        $.post("#(ctxPath)/app/projectUndertake/invite", {
-                            id: projectUndertakeID,
-                            reply: textarea.value,
-                            invite: 1,
-                            flag: false
-                        }, function () {
-                            layer.msg("拒绝委评申请成功！");
-                            reloadData(1, $('#status').val(), $('#name').val());
-                        });
-                    });
-                }
-            });
-        };
 
         var doAjax = function(url, data, success, options) {
             var that = this;
@@ -227,8 +176,8 @@
                 pageNumber:curPage
                 , pageSize:pageSize
                 , applyOrInvite: false
-                , flag: false
-                , status: status
+                , flag: true
+                , status:status
                 , name : name
             };
             doAjax('#(ctxPath)/app/projectUndertake/projectUndertakeList',params,function(result){
@@ -249,7 +198,7 @@
                             pageNumber: conf.curr
                             , pageSize: pageSize
                             , applyOrInvite: false
-                            , flag: false
+                            , flag: true
                             , status: status
                             , name : name
                         });
@@ -257,8 +206,14 @@
                 });
             });
         };
-
         reloadData(1, $('#status').val(), $('#name').val());
+
+        apply = function (projectID) {
+            $.post("#(ctxPath)/app/projectUndertake/agency", {id: projectID}, function (msg) {
+                layer.msg(msg.msg);
+                reloadData(1, $('#status').val(), $('#name').val());
+            });
+        };
     });
 </script>
 #end
@@ -275,7 +230,6 @@
                             <option value=""></option>
                             <option value="0">待确认</option>
                             <option value="1">已拒绝</option>
-                            <option value="2">已同意</option>
                             <option value="3">已被其他单位承接</option>
                         </select>
                     </div>

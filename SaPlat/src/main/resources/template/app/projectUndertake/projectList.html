@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="../../../static/css/common.css">
 #include("/template/common/layout/_page_layout.html")
 #@layout()
 
@@ -12,6 +13,7 @@
         -moz-appearance: textfield;
     }
 </style>
+
 #end
 
 #define content()
@@ -52,148 +54,235 @@
     </form>
 
     <div class="layui-row">
-        <table id="dateTable" lay-filter="dateTable"></table>
+        <div id="view"></div>
+        <hr>
+        <div id="pageInfo" style="background-color: #fff"></div>
     </div>
 </div>
-
-<script type="text/html" id="barOption">
-
-
-    #[[
-    {{#  if(d.remark == "待确认"){ }}
-    ]]#
-    #shiroHasPermission('/app/projectUndertake/agency')
-    <a class="layui-btn layui-btn-xs">待确认</a>
-    #end
-    #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    #end
-    #[[
-    {{#  } }}
-    ]]#
-
-    #[[
-    {{#  if(d.remark == "已拒绝"){ }}
-    ]]#
-    #shiroHasPermission('/app/projectUndertake/agency')
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="agency">重新申请</a>
-    #end
-    #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    #end
-    #[[
-    {{#  } }}
-    ]]#
-
-    #[[
-    {{#  if(d.remark == "已同意"){ }}
-    ]]#
-    #shiroHasPermission('/app/projectUndertake/agency')
-    <a class="layui-btn layui-btn-warm layui-btn-xs">已同意</a>
-    #end
-    #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看详细资料</a>
-    #end
-    #[[
-    {{#  } }}
-    ]]#
-
-
-    #[[
-    {{#  if(d.remark == "未承接"){ }}
-    ]]#
-    #shiroHasPermission('/app/projectUndertake/agency')
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="agency">申请介入</a>
-    #end
-    #shiroHasPermission('/app/projectUndertake/see')
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目详情</a>
-    #end
-    #[[
-    {{#  } }}
-    ]]#
-
-    #[[
-    {{#  if(d.remark == "已被承接"){ }}
-    ]]#
-    #shiroHasPermission('/app/projectUndertake/agency')
-    <a class="layui-btn layui-btn-danger layui-btn-xs">无法承接</a>
-    #end
-    #[[
-    {{#  } }}
-    ]]#
-
-</script>
 #end
-<!--showMoney.js用于显示蓝色的金额提示-->
-<!--<script type="text/javascript" src="#(RESOURCE_HOST)/static/js/showMoney.js"></script>-->
-#define js()
-<script type="text/javascript">
-    layui.use(['table', 'layer', 'form'], function () {
-        var table = layui.table
-            , $ = layui.jquery
-            , form = layui.form;
-        // 表格渲染
-        var tableIns = table.render({
-            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
-            , id: 'dateTable'
-            , even: true //开启隔行背景
-            , size: 'sm' //小尺寸的表格
-            , height: 'full-120'    //容器高度
-            , cols: [[                  //标题栏
-                {field: 'name', title: '名称', minWidth: 100, sort: true}
-                , {field: 'projectAssTypeName', title: '类型', width: 200, sort: true}
-                , {field: 'buildOrgName', title: '立项机构', minWidth: 100, sort: true}
-                , {field: 'amount', title: '预计金额(单位：元)', width: 160, sort: true, templet: '#tplMoney'}
-                , {field: 'site', title: '地址', minWidth: 100}
-                , {field: 'brief', title: '简介', minWidth: 100}
-                , {field: 'createTime', title: '创建时间', width: 150, sort: true}
-                , {field: 'remark', title: '状态', width: 120}
-                , {fixed: 'right', title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
-            ]]
-            , url: '#(ctxPath)/app/projectUndertake/projectList'
-            , method: 'get'
-            , request: {
-                pageName: 'pageNumber' //页码的参数名称，默认：page
-                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
-            }
-            , page: true
-            , limits: [30, 60, 90, 150, 300]
-            , limit: 30 //默认采用30
-            , loading: true
-            , done: function (res, curr, count) {
-            }
-        });
 
-        table.on('tool(dateTable)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/projectUndertake/see?id=' + data.id, '1200', '750', function () {
-                });
-            } else if (obj.event === 'agency') {
-                var btn = obj.tr[0].lastElementChild.lastElementChild.lastElementChild;
-                $(btn).addClass("layui-disabled").removeClass("layui-btn-danger").addClass("layui-btn-normal")
-                    .removeAttr("lay-event").text("已申请");
-                $.post("#(ctxPath)/app/projectUndertake/agency", {id: data.id}, function (msg) {
-                    layer.msg(msg.msg);
-                    reloadTable();
-                });
-            }
+#define js()
+<script id="demo" type="text/html">
+    #[[
+    {{#  layui.each(d, function(index, item){ }}
+    ]]#
+    <div class="layui-col-md12">
+        <div class="main list">
+            <div class="subject">
+                <a href="javascript:;" class="caty">[{{item.projectAssTypeName}}]</a>
+                <a href="javascript:;" onclick="showProjectInfo({{item.id}})" title="{{item.name}}">{{item.name}}</a>
+                <em style="float:right;">{{item.publicTime}} 发布</em></div>
+            <div class="content layui-row">
+                <div class="layui-col-md12">
+                    <div class="list-text">{{item.brief}}</div>
+                    <div class="list-stat layui-row">
+                        <div class="layui-col-xs3 layui-col-md3 Label">
+                            <i class="layui-icon layui-icon-note"></i>
+                            <a href="javascript:;">立项单位：{{item.buildOrgName}}</a>
+                        </div>
+
+                        <div class="layui-col-xs3 layui-col-md3 Label">
+                            <i class="layui-icon layui-icon-note"></i>
+
+                            <a href="javascript:;">管理部门：{{item.managementName}}</a>
+                        </div>
+
+                        <div class="layui-col-xs3 layui-col-md2">
+                            <i class="layui-icon layui-icon-reply-fill"></i>
+                            <em>预计金额：{{formatCurrency(item.amount)}}</em>
+                        </div>
+
+                        <div class="layui-col-xs3 layui-col-md2">
+                            <i class="layui-icon layui-icon-read"></i>
+                            <em>状态：
+                                #[[
+                                {{#  if(item.remark == '未承接，可申请'){ }}
+                                ]]#
+                                <font color="#1E9FFF">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '主体单位已拒绝您的申请，可再次申请'){ }}
+                                ]]#
+                                <font color="red">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '您已拒绝主体单位的邀请，可主动申请'){ }}
+                                ]]#
+                                <font color="#ff1493">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '已申请，待主体单位确认'){ }}
+                                ]]#
+                                <font color="#228b22">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '主体单位已同意您的申请'){ }}
+                                ]]#
+                                <font color="green">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '主体单位已向您发出委评邀请'){ }}
+                                ]]#
+                                <font color="#a52a2a">{{item.remark}}</font>
+                                #[[
+                                {{#  } else if(item.remark == '已被其他单位承接'){ }}
+                                ]]#
+                                <font color="#d2691e">{{item.remark}}</font>
+                                #[[
+                                {{#  } }}
+                                ]]#
+                            </em>
+                        </div>
+
+                        <div class="layui-col-xs3 layui-col-md2 alink">
+                            #shiroHasPermission('/app/projectUndertake/agency')
+                            #[[
+                            {{#  if(item.remark == '未承接，可申请'){ }}
+                            ]]#
+                            <a href="javascript:;" onclick="apply({{item.id}})" class="layui-btn layui-btn-xs layui-btn-normal">申请介入</a>
+                            #[[
+                            {{#  } else if(item.remark == '主体单位已拒绝您的申请，可再次申请' || item.remark == '您已拒绝主体单位的邀请，可主动申请'){ }}
+                            ]]#
+                            <a href="javascript:;" onclick="apply({{item.id}})" class="layui-btn layui-btn-xs layui-btn-warm">重新申请</a>
+                            #[[
+                            {{#  } }}
+                            ]]#
+                            #end
+
+                            <a href="javascript:;" onclick="showProjectInfo({{item.id}})" class="layui-btn layui-btn-xs">项目详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12 margin20"></div>
+    #[[
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    ]]#
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">查询结果</div>
+            <div class="layui-card-body">
+                很遗憾的告知您，没有符合条件的数据，请换个筛选条件试试！
+            </div>
+        </div>
+    </div>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+<script type="text/javascript">
+    var showProjectInfo = function (projectID) {
+        pop_show('查看项目详情', '#(ctxPath)/app/projectUndertake/see?id=' + projectID, '1154', '645', function () {
         });
+    };
+
+    var apply;
+    var pageSize = 10;
+
+    layui.use(['layer', 'laypage', 'laytpl', 'form'], function () {
+        var $ = layui.jquery
+            , laypage = layui.laypage
+            , laytpl = layui.laytpl
+            , form = layui.form;
 
         form.on('submit(search)', function (data) {
-            reloadTable(data.field.projectType, data.field.name, data.field.minAmount, data.field.maxAmount);
+            reloadData(1, data.field.projectType, data.field.name, data.field.minAmount, data.field.maxAmount);
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+        var doAjax = function(url, data, success, options) {
+            var that = this;
+            options = options || {};
+            data = data || {};
+            return $.ajax({
+                type: options.type || 'post',
+                dataType: options.dataType || 'json',
+                data: data,
+                url: url,
+                success: function(res) {
+                    console.log(res);
+                    if(res.code == 0) {
+                        success && success(res);
+                    } else {
+                        layer.msg(res.msg || res.code, {
+                            shift: 6
+                        });
+                    }
+                },
+                error: function(e) {
+                    options.error || layer.msg('请求异常，请重试', {
+                        shift: 6
+                    });
+                }
+            });
+        }
 
-        var reloadTable = function (projectType, name, minAmount, maxAmount) {
-            table.reload('dateTable', {
-                url: '#(ctxPath)/app/projectUndertake/projectList'
-                , where: {
-                    projectType:projectType
-                    , name : name
-                    , minAmount: minAmount
-                    , maxAmount: maxAmount
-                } //设定异步数据接口的额外参数
+        var callback = function(params){
+            doAjax('#(ctxPath)/app/projectUndertake/projectList',params,function(result){
+                // 渲染数据
+                laytpl(demo.innerHTML).render(result.data.list, function(html){
+                    document.getElementById('view').innerHTML = html;
+                });
+                // 回到顶部
+                var speed=200;//滑动的速度
+                $('body').animate({ scrollTop: 0 }, speed);
+            });
+        }
+
+        //第三步：渲染模版
+        //var data = {}
+        // var reloadData = function (projectType, name, minAmount, maxAmount){
+        //     $.post('#(ctxPath)/app/projectUndertake/projectList', {
+        //         pageNum:1
+        //         , pageSize:10
+        //         , projectType:projectType
+        //         , name : name
+        //         , minAmount: minAmount
+        //         , maxAmount: maxAmount
+        //     }, function (res) {
+        //         data = res.data.list;
+        //         var getTpl = demo.innerHTML
+        //             ,view = document.getElementById('view');
+        //         laytpl(getTpl).render(data, function(html){
+        //             view.innerHTML = html;
+        //         });
+        //     });
+        // };
+
+        var reloadData = function (curPage, projectType, name, minAmount, maxAmount){
+            var params = {
+                pageNumber:curPage
+                , pageSize:pageSize
+                , projectType:projectType
+                , name : name
+                , minAmount: minAmount
+                , maxAmount: maxAmount
+            };
+            doAjax('#(ctxPath)/app/projectUndertake/projectList',params,function(result){
+                // 渲染数据
+                laytpl(demo.innerHTML).render(result.data.list, function(html){
+                    document.getElementById('view').innerHTML = html;
+                });
+                // 调用分页
+                laypage.render({
+                    elem: 'pageInfo'
+                    ,count: result.data.totalRow
+                    ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                    ,jump:  function(conf, first) {
+                        if (first) {
+                            return;
+                        }
+                        callback({
+                            pageNumber: conf.curr,
+                            pageSize: pageSize
+                        });
+                    }
+                });
+            });
+        };
+        reloadData();
+
+        apply = function (projectID) {
+            $.post("#(ctxPath)/app/projectUndertake/agency", {id: projectID}, function (msg) {
+                layer.msg(msg.msg);
+                reloadData();
             });
         };
     });
@@ -251,5 +340,4 @@
         $("#maxDigitsTip").hide();
     });
 </script>
-<script type="text/html" id="tplMoney">{{formatCurrency(d.amount)}}</script>
 #end
