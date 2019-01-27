@@ -15,6 +15,7 @@
     AND a.`isEnable` = ?
     AND b.`isEnable` = ?
     and d.`name` = ?
+ORDER BY a.parentID asc, a.sort asc
 #end
 
 #sql("findTopMenuByUserName")

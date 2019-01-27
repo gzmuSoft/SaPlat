@@ -1,0 +1,39 @@
+/*common styles*/
+body{background: #f1f1f1;}
+header{margin-bottom: 20px;height: 60px;}
+.layui-nav-child dd{text-align: center;}
+
+/*header styles*/
+.logo{padding-top: 9px;}
+.log a img{display: inline-block;}
+.userinfoBox{text-align: right;}
+.userinfoBox ul{padding: 0px;height: 60px;}
+.userinfoBox ul .search{font-size: 1.5em}
+
+/*main styles*/
+.main{padding: 10px 15px;background: #fff;}
+.margin20{width: 100%;height: 20px;}
+#pages{text-align: center;}
+
+/*footer styles*/
+/*.footer{height: 100px;width: 100%;margin-top: 20px;}*/
+footer{width: 100%;height: 60px;margin-top: 20px;color: #fff;text-align: center;position: none;bottom: 0px;padding-top: 40px;}
+footer a{color: #fff;}
+
+/*index page styles*/
+#carousel div{overflow: hidden;}
+#carousel div img{max-width: 100%;height: 280px;}
+.main .subject{font-size: 16px;border-bottom: 1px solid #eae6e6;padding-bottom: 5px;margin-bottom: 5px;}
+.main .subject b{padding-right: 5px;color: red;}
+.main .subject em{font-size: 12px;color: #999;}
+.main .subject .caty{display: inline-block;margin-right: 5px;background: #ff7575;color: #fff;padding: 3px 5px;font-size: 12px;border-radius: 2px;}
+.main .content{width: 100%;color: #999;}
+.main .content .list-img img{max-height: 150px;}
+.main .content .list-text {overflow: hidden;height: 80px;width: 100%;margin-bottom: 10px;line-height: 20.5px;}
+.main .content .list-stat {overflow: hidden;height: 20px;width: 100%;line-height: 20px;color: #999;}
+.main .content .list-stat div{text-align: left;}
+.main .content .list-stat div.Label{text-align: left;}
+.main .content .list-stat div.Label .layui-icon-note{}
+.main .content .list-stat div.Label a{color: #999;}
+.main .content .list-stat div.Label a:hover{color: #000;}
+.main .content .list-stat div.alink{text-align: right;}
