@@ -145,13 +145,13 @@
                     }
                 });
             } else if (obj.event === 'seeBackRecord') {
-                pop_show('查看备案文件', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordFileID, '', '', function () {
+                pop_show('查看 “'+ data.name + '” 项目的备案文件', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordFileID, '', '', function () {
                 });
             } else if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+                pop_show('查看 “'+ data.name + '” 项目的详细资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
                 });
             } else if (obj.event === 'fileSee') {
-                pop_show_full("项目文件", "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
+                top.pop_max_show('查看 “'+ data.name + '” 项目的相关文件', "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
                 });
             }
         });

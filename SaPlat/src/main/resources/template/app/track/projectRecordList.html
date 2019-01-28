@@ -152,15 +152,15 @@
                     }
                 });
             } else if (obj.event === 'seeBackRecordTransfer') {
-                pop_show('查看备案资料移交表', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordTransferFileID, '', '', function () {
+                pop_show('查看 “'+ data.name + '” 项目的备案资料移交表', '#(ctxPath)/util/pdfView?fileID=' + data.backRecordTransferFileID, '', '', function () {
                     reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'see') {
-                pop_show('查看项目资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
+                pop_show('查看 “'+ data.name + '” 项目的详细资料', '#(ctxPath)/app/project/see?id=' + data.id, '1200', '750', function () {
                     reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'fileSee') {
-                pop_show_full("项目文件", "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
+                top.pop_max_show('查看 “'+ data.name + '” 项目的相关文件', "#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + data.id + "&roleType=2", function () {
                     reloadTable($('#name').val(), $('#projectType').val(), $('#ownType').val());
                 });
             } else if (obj.event === 'edit') {

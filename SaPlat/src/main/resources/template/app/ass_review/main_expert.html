@@ -120,7 +120,7 @@
 
     $(document).ready(function () {
         $("a.media").media({
-            width:pageWidth()*2/3-40
+            width:pageWidth()-320
             ,height:pageHeight()-200
             , autoplay:true
             , src:"#(reportPath)"
@@ -160,14 +160,16 @@
 
 #define content()
 <div class="layui-fluid" style="height:100%;">
-    <div class="layui-row" style="min-height:600px">
-        <div id="pdfviewer" class="layui-col-md8">
+    <div style="width:100%; min-height:600px; margin:0 auto; display: inline-block">
+        <div id="pdfviewer" style="margin-right:310px;">
             <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
         </div>
-        <div class="layui-col-md4">
+
+        <div style="width:300px;float:right;position:absolute;top:0;right:0;">
             <ul id="recomment"></ul>
         </div>
     </div>
+
     <div class="layui-row">
         <div id="" class="layui-col-md12">
             <form id="rec" class="layui-form" action="">

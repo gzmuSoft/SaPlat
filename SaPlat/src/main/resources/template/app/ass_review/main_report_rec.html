@@ -14,6 +14,14 @@
     ul {
         padding: 0px 10px;
     }
+
+    #recommentDiv {
+        float: right; width: 300px;
+        position:absolute;
+    }
+    #content {
+        margin-right: 310px;
+    }
 </style>
 #end
 
@@ -120,8 +128,8 @@
 
     $(document).ready(function () {
         $("a.media").media({
-            width:pageWidth()*2/3-40
-            ,height:pageHeight()
+            width:pageWidth()-330
+            ,height:pageHeight()-10
             , autoplay:true
             , src:"#(reportPath)"
         });
@@ -154,14 +162,13 @@
 #end
 
 #define content()
-<div class="layui-fluid" style="height:100%;">
-    <div class="layui-row">
-        <div id="pdfviewer" class="layui-col-md8">
-            <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
-        </div>
-        <div class="layui-col-md4">
-            <ul id="recomment"></ul>
-        </div>
+<div style="width:100%; margin:0 auto; display: inline-block">
+    <div id="pdfviewer" style="margin-right:310px;">
+        <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
+    </div>
+
+    <div style="width:300px;float:right;position:absolute;top:0;right:0;">
+        <ul id="recomment"></ul>
     </div>
 </div>
 #end

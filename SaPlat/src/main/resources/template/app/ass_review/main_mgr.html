@@ -15,14 +15,11 @@
     ul {
         padding: 0px 10px;
     }
-    .ztree li a.level0 {width:260px;height: 30px; text-align: center; display:block; background-color: #008374;border-radius:3px; margin-bottom: 2px}
+    .ztree li a.level0 {width:300px;height: 30px; text-align: center; display:block; background-color: #008374;border-radius:3px; margin-bottom: 2px}
     .ztree li a.level0.cur {background-color: #66A3D2; }
     .ztree li a.level0 span {display: block; color: white; padding-top:3px; font-size:14px; font-weight: initial;word-spacing: 2px; line-height:22px;}
     .ztree li a.level0 span.button {	float:right; margin-left: 10px; visibility: visible;display:none;}
     .ztree li span.button.switch.level0 {display:none;}
-
-
-
 </style>
 #end
 
@@ -160,7 +157,7 @@
         $("#pdf-viewer").children().remove();
         $("#pdf-viewer").append("<a class='media' href=''></a>");
         $("a.media").media({
-            width:pageWidth()/2-80
+            width:pageWidth()-635
             ,height:pageHeight()
             , autoplay:true
             , src:treeNode.title
@@ -195,17 +192,17 @@
 #end
 
 #define content()
-<div class="layui-fluid">
-    <div class="layui-row">
-        <div class="layui-col-md3">
-            <ul id="tree" class="ztree"></ul>
-        </div>
-        <div id="pdf-viewer" class="layui-col-md6">
-            <a class="media" href=""></a>
-        </div>
-        <div class="layui-col-md3">
-            <ul id="recomment"></ul>
-        </div>
+<div style="width:100%; margin:0 auto; display: inline-block">
+    <div style="width:300px;position:absolute;top:0;left:0;float:left;">
+        <ul id="tree" class="ztree"></ul>
+    </div>
+
+    <div id="pdf-viewer" style="margin-left:310px;margin-right:310px;">
+        <a class="media" href=""></a>
+    </div>
+
+    <div style="width:300px;float:right;position:absolute;top:0;right:0;">
+        <ul id="recomment"></ul>
     </div>
 </div>
 #end
