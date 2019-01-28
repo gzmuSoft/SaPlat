@@ -67,7 +67,7 @@
                 layer.msg("您尚未认证为管理机构，无法查看。");
             }*/
             if('1' === authEva){
-                pop_show_full('查看 “'+ data.name + '” 项目的评估方案', "#(ctxPath)/app/projectUndertake/managementReviewSee?id=" + "#(model.id)", function () {
+                pop_show_full('查看 “#(model.name)” 项目的评估方案', "#(ctxPath)/app/projectUndertake/managementReviewSee?id=#(model.id)", function () {
                 });
             }else{
                 layer.msg("您无权查看评估方案。");
@@ -75,11 +75,11 @@
         });
 
         $("#eva-scheme-process").click(function(){
-            pop_show_full('查看 “'+ data.name + '” 项目的评估过程资料',"#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=" + "#(model.id)"+ "&entry=mgr",function(){});
+            pop_show_full('查看 “#(model.name)” 项目的评估过程资料',"#(ctxPath)/app/evaluation/evaluationInformation_mgr?id=#(model.id)&entry=mgr",function(){});
         });
 
         $("#pretrial-report").click(function(){
-            top.pop_max_show('查看 “'+ data.name + '” 项目的相关文件',"#(ctxPath)/app/ass_review/findPageAndShow?projectId=" + "#(model.id)" + "&roleType=2",function(){});
+            top.pop_max_show('查看 “#(model.name)” 项目的相关文件',"#(ctxPath)/app/ass_review/findPageAndShow?projectId=#(model.id)&roleType=2",function(){});
         });
 
         $("#final-report").click(function(){
