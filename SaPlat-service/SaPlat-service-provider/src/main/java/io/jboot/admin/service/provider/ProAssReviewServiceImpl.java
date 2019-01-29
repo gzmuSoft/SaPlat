@@ -166,4 +166,12 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
     public ProAssReview findByName(String name) {
         return DAO.findFirstByColumn("name", name);
     }
+
+    @Override
+    public List<ProAssReview> findListByProjectIDAndCreateUserID(Long projectID, Long createUserID) {
+        Columns columns = new Columns();
+        columns.eq("projectID", projectID);
+        columns.eq("createUserID", createUserID);
+        return DAO.findListByColumns(columns, "createTime desc");
+    }
 }

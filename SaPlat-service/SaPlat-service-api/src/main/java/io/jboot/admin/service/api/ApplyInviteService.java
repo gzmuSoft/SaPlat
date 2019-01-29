@@ -100,6 +100,7 @@ public interface ApplyInviteService  {
      */
     public Page<ApplyInvite> findPage(ApplyInvite model, int pageNumber, int pageSize);
 
+    public Long findCount(Long projectID, Long belongToID, Integer module);
     /**
      * find list
      *
@@ -114,7 +115,16 @@ public interface ApplyInviteService  {
      * @param projectID
      * @return
      */
-    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID);
+    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID, Long belongToID);
+
+    /**
+     * 分页获取审查历史列表
+     * @param userID
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    public Page<ApplyInvite> findReviewedHistoryPage(Long userID, int pageNumber, int pageSize);
 
     /**
      * delete model by primary key

@@ -304,7 +304,11 @@ WHERE ID IN
 SELECT * FROM person WHERE id IN(
 	SELECT userID FROM sys_user WHERE ID IN(
 		SELECT userID FROM apply_invite
-		WHERE projectID = #para(ID) AND  module = 1 AND isEnable = 1 AND createTime > (
+		WHERE projectID = #para(ID)
+    #if(belongToID)
+    and	belongToID = #para(belongToID)
+    #end
+		AND  module = 1 AND isEnable = 1 AND createTime > (
 		  SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
 		)
 	)
@@ -314,8 +318,21 @@ AND isEnable = 1
 
 #sql("lastInvited-by-projectID")
 SELECT * FROM apply_invite
-WHERE projectID = #para(ID) AND createTime > (
+WHERE projectID = #para(ID)
+  #if(belongToID)
+  and	belongToID = #para(belongToID)
+  #end
+ AND createTime > (
   SELECT IFNULL(MAX(createTime), '2000-1-1') FROM reject_project_info WHERE projectID = apply_invite.projectID
 )
+AND  module = 1 AND isEnable = 1
+#end
+
+#sql("reviewed-history")
+SELECT * FROM apply_invite
+WHERE userID = #para(userID)
+  AND	(remark = '审查完成' OR (status=2 AND deadTime < now()))
 AND isEnable = 1
+AND module = 1
+order by createTime desc
 #end

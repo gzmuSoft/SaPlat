@@ -742,17 +742,30 @@ public class OrgStructureController extends BaseController {
         }
         ApplyInvite applyInvite = new ApplyInvite();
         ApplyInvite tmp = null;
-        for (int i = 0; i < list.size(); i++) {
-            applyInvite.setIsEnable(true);
-            applyInvite.setProjectID(getParaToLong("projectID"));
-            applyInvite.setModule(1);
-            applyInvite.setUserID(userService.findByUserIdAndUserSource(list.get(i).getId(), 0L).getId());
-            tmp = applyInviteService.findFirstByModel(applyInvite);
-            if (tmp != null) {
-                list.get(i).setIsInvite(true);
-                list.get(i).setInviteId(tmp.getId());
-            } else {
-                list.get(i).setIsInvite(false);
+        if (list != null) {
+            for (Person item : list) {
+                applyInvite.setIsEnable(true);
+                applyInvite.setProjectID(getParaToLong("projectID"));
+                applyInvite.setModule(1);
+                applyInvite.setUserID(userService.findByUserIdAndUserSource(item.getId(), 0L).getId());
+                tmp = applyInviteService.findFirstByModel(applyInvite);
+                if (tmp != null) {
+                    if(tmp.getCreateUserID().equals(AuthUtils.getLoginUser().getId())){
+                        if(tmp.getStatus().equals("3"))
+                            item.setRemark("审查完成（通过），不可取消指派！");
+                        else if(tmp.getStatus().equals("4"))
+                            item.setRemark("审查完成（不通过），不可取消指派！");
+                        else
+                            item.setRemark("已指派其参与当前项目的审查，可取消指派！");
+                        item.setIsInvite(true);
+                        item.setInviteId(tmp.getId());
+                    }else {
+                        item.setRemark("已有其他单位指派其参与当前项目的审查，不可指派！");
+                    }
+                } else {
+                    item.setRemark("未指派其参与当前项目的审查，可以指派！");
+                    item.setIsInvite(false);
+                }
             }
         }
         renderJson(RestResult.buildSuccess(list));

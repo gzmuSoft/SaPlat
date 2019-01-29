@@ -74,7 +74,7 @@
                     });
                 });
             } else if (obj.event === 'invited') {
-                pop_show_full('"'+ data.name + '" 项目的审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.id, function () {
+                pop_show_full('查看"'+ data.name + '" 项目的审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.id, function () {
                 });
             } else if (obj.event === 'view') {
                 pop_max_show('查看 "'+ data.name + '" 项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.id + '&roleType=4', function () {

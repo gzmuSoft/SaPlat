@@ -72,7 +72,7 @@ public interface ProAssReviewService  {
      */
     public ProAssReview findByName(String name);
 
-
+    public List<ProAssReview> findListByProjectIDAndCreateUserID(Long projectID, Long createUserID);
     /**
      * 项目审查 是否存在
      * @param name

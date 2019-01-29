@@ -1355,7 +1355,10 @@ public class ProjectController extends BaseController {
     @NotNullPara({"id"})
     public void invitedExpert() {
         Long id = getParaToLong("id");
-        setAttr("id", id).render("invitedExpert.html");
+        Long belongToID = getParaToLong("belongToID", 0L);
+        setAttr("id", id)
+                .setAttr("belongToID", belongToID)
+                .render("invitedExpert.html");
     }
 
 
@@ -1366,16 +1369,24 @@ public class ProjectController extends BaseController {
     public void invitedExpertTable() {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
+        Long belongToID = getParaToLong("belongToID", 0L);
+        Long projectID = getParaToLong("id");
         //查找当前项目的所有被邀请的人员列表
-        Page<Person> page = personService.findPageByProjectID(getParaToLong("id"), pageNumber, pageSize);
-        if (page != null) {
-            List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(getParaToLong("id"));
+        Page<Person> page = personService.findPageByProjectID(projectID, belongToID, pageNumber, pageSize);
+        List<ApplyInvite> aiList = applyInviteService.findLastTimeListByProjectID(projectID, belongToID);
+        if (page != null && aiList != null && aiList.size()>0) {
             int rowCount = page.getList().size();
-            Date now = new Date();
             for (int i = 0; i < rowCount; i++) {
                 for (int j = 0; j < aiList.size(); j++) {
                     if (aiList.get(j).getUserID().equals(page.getList().get(i).getUser().getId())) {
-                        page.getList().get(i).setRemark(aiList.get(j).getStatus());
+                        if(aiList.get(j).getRemark() != null && aiList.get(j).getRemark().equals("超时未审查，自动通过审查")){
+                            page.getList().get(i).setRemark("7");
+                        }else {
+                            page.getList().get(i).setRemark(aiList.get(j).getStatus());
+                        }
+                        if(aiList.get(j).getReply() != null) {
+                            page.getList().get(i).setSpell(aiList.get(j).getReply());
+                        }
                         page.getList().get(i).setCreateTime(aiList.get(j).getCreateTime());
                         page.getList().get(i).setLastAccessTime(aiList.get(j).getDeadTime());
                         break;
@@ -1561,6 +1572,18 @@ public class ProjectController extends BaseController {
             notification.setIsEnable(true);
             notification.setStatus(0);
             notificationService.save(notification);
+            if(applyInviteService.findCount(getParaToLong("projectId"), user.getId(), 1) == 0){
+                ApplyInvite applyInvite = new ApplyInvite();
+                applyInvite.setModule(2);
+                applyInvite.setProjectID(getParaToLong("projectId"));
+                applyInvite.setUserID(user.getId());
+
+                applyInvite = applyInviteService.findFirstByModel(applyInvite);
+                applyInvite.setStatus(ApplyInviteStatus.CHOOSE_EXPERT);
+                if (!applyInviteService.update(applyInvite)) {
+                    throw new BusinessException("更新选择专家状态失败");
+                }
+            }
             json.put("status", true);
         }else{
             json.put("status", false);
@@ -1574,24 +1597,24 @@ public class ProjectController extends BaseController {
      */
     @NotNullPara({"id", "projectId", "num"})
     public void chooseExpert() {
+        Long projectId = getParaToLong("projectId");
         User user = AuthUtils.getLoginUser();
         JSONObject json = new JSONObject();
         ApplyInvite jud = new ApplyInvite();
         jud.setIsEnable(true);
-        jud.setProjectID(getParaToLong("projectId"));
+        jud.setProjectID(projectId);
         jud.setModule(2);
         jud.setBelongToID(null);
         jud.setUserID(user.getId());
 
         jud = applyInviteService.findFirstByModel(jud);
         if (jud != null) {
-            if (jud.getStatus() == ApplyInviteStatus.CHOOSE_OVER) {
+            if (jud.getStatus().equals(ApplyInviteStatus.CHOOSE_OVER)) {
                 json.put("status", false);
                 renderJson(json);
                 return;
             }
         }
-        Date nowDate = new Date();
 
         Notification notification = new Notification();
         notification.setName("项目审查工作通知");
@@ -1599,23 +1622,19 @@ public class ProjectController extends BaseController {
         notification.setContent("您好, " + user.getName() + " 指定您对项目 《" + projectService.findById(getParaToLong("projectId")).getName() + "》进行审查工作，请及时处理！");
         notification.setReceiverID(userService.findByUserIdAndUserSource(getParaToLong("id"), 0L).getId().intValue());
         notification.setCreateUserID(user.getId());
-        notification.setCreateTime(nowDate);
         notification.setLastUpdateUserID(user.getId());
-        notification.setLastAccessTime(nowDate);
         notification.setIsEnable(true);
         notification.setStatus(0);
 
         ApplyInvite applyInvite = new ApplyInvite();
-        applyInvite.setName(projectService.findById(getParaToLong("projectId")).getName());
+        applyInvite.setName(projectService.findById(projectId).getName());
         applyInvite.setModule(1);
         applyInvite.setCreateUserID(user.getId());
-        applyInvite.setProjectID(getParaToLong("projectId"));
+        applyInvite.setProjectID(projectId);
         applyInvite.setUserID(notification.getReceiverID().longValue());
         applyInvite.setBelongToID(user.getId());
         applyInvite.setApplyOrInvite(1);
         applyInvite.setStatus(ApplyInviteStatus.AGREE);
-        applyInvite.setCreateTime(nowDate);
-        applyInvite.setLastAccessTime(nowDate);
         applyInvite.setLastUpdateUserID(user.getId());
         applyInvite.setIsEnable(true);
         if (!applyInviteService.saveOrUpdateAndSend(applyInvite, notification)) {
@@ -1624,14 +1643,15 @@ public class ProjectController extends BaseController {
             //查询当前组织已经邀请的人数
             applyInvite = new ApplyInvite();
             applyInvite.setIsEnable(true);
-            applyInvite.setProjectID(getParaToLong("projectId"));
+            applyInvite.setProjectID(projectId);
             applyInvite.setModule(1);
             applyInvite.setBelongToID(user.getId());
-            List<ApplyInvite> list = applyInviteService.findList(applyInvite);
-            if (list.size() >= getParaToLong("num")) {
+            Long aiCount = applyInviteService.findCount(projectId, user.getId(), 1);
+            if (aiCount >= getParaToLong("num")) {
                 //若人数已经达到要求则查询当前组织的审查请求的状态为已选择完成
+                applyInvite = new ApplyInvite();
                 applyInvite.setModule(2);
-                applyInvite.setBelongToID(null);
+                applyInvite.setProjectID(getParaToLong("projectId"));
                 applyInvite.setUserID(user.getId());
 
                 applyInvite = applyInviteService.findFirstByModel(applyInvite);
@@ -1817,8 +1837,15 @@ public class ProjectController extends BaseController {
     /**
      * 专家团体审查项目
      */
-    public void reviewProject() {
-        render("reviewProject.html");
+    public void reviewingProject() {
+        render("reviewingProject.html");
+    }
+
+    /**
+     * 专家团体审查项目历史
+     */
+    public void reviewedProject() {
+        render("reviewedProject.html");
     }
 
     /**
@@ -1833,17 +1860,19 @@ public class ProjectController extends BaseController {
         int pageNumber = getParaToInt("pageNumber", 1);
         int pageSize = getParaToInt("pageSize", 30);
         Integer flag = getParaToInt("flag");
-        ApplyInvite applyInvite = new ApplyInvite();
-        applyInvite.setIsEnable(true);
-        applyInvite.setUserID(user.getId());
-        applyInvite.setModule(1);
+        Page<ApplyInvite> page = null;
         if (flag == 1) {
+            ApplyInvite applyInvite = new ApplyInvite();
+            applyInvite.setIsEnable(true);
+            applyInvite.setUserID(user.getId());
+            applyInvite.setModule(1);
+            applyInvite.setSpell("1");
             applyInvite.setStatus(ApplyInviteStatus.AGREE);
+            page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
         } else if (flag == 2) {
-            applyInvite.setStatus(null);
-            applyInvite.setRemark("审查完成");
+            page = applyInviteService.findReviewedHistoryPage(user.getId(), pageNumber, pageSize);
         }
-        Page<ApplyInvite> page = applyInviteService.findPage(applyInvite, pageNumber, pageSize);
+
         renderJson(new DataTable<ApplyInvite>(page));
     }
 

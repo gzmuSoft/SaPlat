@@ -13,68 +13,65 @@
 #end
 
 #define content()
-<div class="x-body">
-    <div class="layui-input-inline">
-        <form class="layui-form" action="">
-            <input type="checkbox" name="ObjType" title="审查团体" lay-filter="switchCheck" checked>
+<div class="layui-input-inline">
+    <form class="layui-form" action="">
+        <input type="checkbox" name="ObjType" title="审查团体" lay-filter="switchCheck" checked>
 
-            <div class="layui-input-inline">
-            <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+        <label class="layui-form-label">名称</label>
 
-                <input type="text" style="width: 400px;" id="name" name="name" placeholder="请输入要检索的组织名称" class="layui-input"/>
-            </div>
+            <input type="text" style="width: 400px;" id="name" name="name" placeholder="请输入要检索的组织名称" class="layui-input"/>
+        </div>
 
-            <div class="layui-input-inline" style="width : 80px">
-                <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
-                </button>
-            </div>
-        </form>
-    </div>
-    <div class="layui-input-inline" style="float: right;">
-        <button class="layui-btn layui-btn-normal" id="OK" style="margin: 0 auto">完成</button>
-    </div>
-
-    <!--隐藏id-->
-    <input type="text" id="id" name="id"
-           class="layui-input layui-disabled layui-hide" value="#(id)" required/>
-
-    <div class="layui-row">
-        <table id="dateTable" lay-filter="dateTable"></table>
-    </div>
-
-    <script type="text/html" id="barOption">
-        #shiroHasPermission('/app/project/inviteReview')
-        #[[
-        {{#  if(!d.isInvite){ }}
-        ]]#
-        <a class="layui-btn layui-btn-xs" lay-event="invite">邀请</a>
-        #[[
-        {{# } else if(d.isInvite && d.status == '0'){ }}
-        ]]#
-        <a class="layui-btn layui-btn-xs layui-btn-normal" disabled="disabled">待同意</a>
-        #[[
-        {{# } else if(d.isInvite && d.status == '1'){ }}
-        ]]#
-        <a class="layui-btn layui-btn-xs layui-btn-danger" disabled="disabled">被拒绝</a>
-        #[[
-        {{# } else if(d.isInvite && d.status == '5'){ }}
-        ]]#
-        <a class="layui-btn layui-btn-msblue layui-btn-xs" disabled="disabled">分配人员中</a>
-        #[[
-        {{# } else if(d.isInvite && d.status == '6'){ }}
-        ]]#
-        <a class="layui-btn layui-btn-green layui-btn-xs" disabled="disabled">人员分配完成</a>
-        #[[
-        {{# } else if(d.isInvite && d.status == '7'){ }}
-        ]]#
-        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invite">逾期，重发邀请</a>
-        #[[
-        {{#  } }}
-        ]]#
-        #end
-    </script>
-
+        <div class="layui-input-inline" style="width : 80px">
+            <button class="layui-btn" lay-submit="" id="search"><i class="layui-icon">&#xe615;</i>
+            </button>
+        </div>
+    </form>
 </div>
+<div class="layui-input-inline" style="float: right;">
+    <button class="layui-btn layui-btn-normal" id="OK" style="margin: 0 auto">完成</button>
+</div>
+
+<!--隐藏id-->
+<input type="text" id="id" name="id"
+       class="layui-input layui-disabled layui-hide" value="#(id)" required/>
+
+<div class="layui-row">
+    <table id="dateTable" lay-filter="dateTable"></table>
+</div>
+
+<script type="text/html" id="barOption">
+    #shiroHasPermission('/app/project/inviteReview')
+    #[[
+    {{#  if(!d.isInvite){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs" lay-event="invite">邀请</a>
+    #[[
+    {{# } else if(d.isInvite && d.status == '0'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-normal" disabled="disabled">待同意</a>
+    #[[
+    {{# } else if(d.isInvite && d.status == '1'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-danger" disabled="disabled">被拒绝</a>
+    #[[
+    {{# } else if(d.isInvite && d.status == '5'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-msblue layui-btn-xs" disabled="disabled">指派人员中</a>
+    #[[
+    {{# } else if(d.isInvite && d.status == '6'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-green layui-btn-xs" disabled="disabled">人员指派完成</a>
+    #[[
+    {{# } else if(d.isInvite && d.status == '7'){ }}
+    ]]#
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invite">逾期，重发邀请</a>
+    #[[
+    {{#  } }}
+    ]]#
+    #end
+</script>
 #end
 
 #define js()
@@ -168,7 +165,7 @@
                 if (data.status) {
                     pop_close();
                 } else if (!data.status) {
-                    layer.msg("邀请填写的需求总人数至少为6个，请返回继续邀请，否则可能导致审查失败！", setTimeout(1000));
+                    layer.alert("邀请填写的需求总人数至少为6个，请返回继续邀请，否则可能导致审查失败！", {icon: 5});
                     return false;
                 }
             });

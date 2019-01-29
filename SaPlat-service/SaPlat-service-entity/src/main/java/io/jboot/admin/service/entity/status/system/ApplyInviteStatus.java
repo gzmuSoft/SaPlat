@@ -32,13 +32,21 @@ public class ApplyInviteStatus extends BaseStatus {
      */
     public final static String NOPASS = "4";
     /**
-     * 选择审查人员
+     * 指派人员参与项目审查中...
      */
     public final static String CHOOSE_EXPERT = "5";
     /**
-     * 选择人员完成
+     * 完成指派人员参与项目审查
      */
     public final static String CHOOSE_OVER = "6";
+    /**
+     * 逾期未指派人员
+     */
+    public final static String NOT_ASSIGNED = "7";
+    /**
+     * 逾期未确认参与审查
+     */
+    public final static String UNCONFIRMED = "8";
 
     public ApplyInviteStatus() {
         add(WAITE, "待同意邀请");
@@ -46,8 +54,10 @@ public class ApplyInviteStatus extends BaseStatus {
         add(REFUSE, "拒绝审查");
         add(PASS, "审查通过");
         add(NOPASS, "审查不通过");
-        add(CHOOSE_EXPERT, "选择审查人员");
-        add(CHOOSE_OVER, "选择人员完成");
+        add(CHOOSE_EXPERT, "指派人员参与项目审查中...");
+        add(CHOOSE_OVER, "完成指派人员参与项目审查");
+        add(NOT_ASSIGNED, "逾期未指派人员");
+        add(UNCONFIRMED, "逾期未确认参与审查");
     }
 
     private static ApplyInviteStatus me;

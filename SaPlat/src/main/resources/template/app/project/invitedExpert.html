@@ -14,6 +14,7 @@
 
 #define content()   <!--隐藏id-->
     <input type="text" id="id" name="id" class="layui-input layui-disabled layui-hide" value="#(id)" required/>
+    <input type="text" id="belongToID" name="belongToID" class="layui-input layui-disabled layui-hide" value="#(belongToID)" required/>
 
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
@@ -59,9 +60,10 @@
                             return '状态异常';
                         }
                     }}
+                , {field: 'spell', title: '最终审查意见', minWidth: 150}
                 , {fixed: 'right', title: '操作', width:100, align: 'center', toolbar: '#barOption'} //这里的toolbar值是模板元素的选择器
             ]]
-            , url: '#(ctxPath)/app/project/invitedExpertTable?id=' + $('#id').val()
+            , url: '#(ctxPath)/app/project/invitedExpertTable?id=' + $('#id').val() + '&belongToID=' + $('#belongToID').val()
             , method: 'get'
             , request: {
                 pageName: 'pageNumber' //页码的参数名称，默认：page

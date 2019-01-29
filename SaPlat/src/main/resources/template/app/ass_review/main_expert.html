@@ -120,7 +120,7 @@
 
     $(document).ready(function () {
         $("a.media").media({
-            width:pageWidth()-320
+            width:windowWidth()-300
             ,height:pageHeight()-200
             , autoplay:true
             , src:"#(reportPath)"
@@ -160,7 +160,7 @@
 
 #define content()
 <div class="layui-fluid" style="height:100%;">
-    <div style="width:100%; min-height:600px; margin:0 auto; display: inline-block">
+    <div style="width:100%; margin:0 auto; display: inline-block">
         <div id="pdfviewer" style="margin-right:310px;">
             <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
         </div>

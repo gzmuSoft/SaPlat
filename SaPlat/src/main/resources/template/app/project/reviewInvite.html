@@ -9,15 +9,13 @@
 
 #define content()
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;color: #009688">
-        <legend style="font-size: 20px;font-weight: 500;">审查请求</legend>
-    </fieldset>
     <div class="layui-row">
         <table id="dateTable" lay-filter="dateTable"></table>
     </div>
 </div>
 
 <script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="see">项目详情</a>
     #[[
     {{#  if(d.status === '0'){ }}
     ]]#
@@ -26,19 +24,54 @@
     #[[
     {{# } else if(d.status === '5'){ }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="choose">选择审查人员</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="choose">指派人员</a>
     #[[
     {{# } else if(d.status === '6'){ }}
     ]]#
-    <!--<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invited">审查详情</a>-->
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="choose">调整人员</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="invited">审查详情</a>
     #[[
     {{#  } }}
     ]]#
-    <a class="layui-btn layui-btn-xs" lay-event="see">查看项目资料</a>
 </script>
 #end
 
 #define js()
+
+<script type="text/html" id="statusTpl">
+    #[[
+    {{#  if(d.status == '0'){ }}
+    ]]#
+    <span style="color: #1E9FFF">待确认邀请</span>
+    #[[
+    {{# } else if(d.status =='1'){ }}
+    ]]#
+    <span style="color: red">拒绝审查</span>
+    #[[
+    {{# } else if(d.status =='2'){ }}
+    ]]#
+    <span style="color: #00a89a">同意审查</span>
+    #[[
+    {{# } else if(d.status =='5'){ }}
+    ]]#
+    <span style="color: #6ce26c">指派人员参与项目审查中...</span>
+    #[[
+    {{# } else if(d.status =='6'){ }}
+    ]]#
+    <span style="color: #2fbb20">完成指派人员参与项目审查</span>
+    #[[
+    {{# } else if(d.status =='7'){ }}
+    ]]#
+    <span style="color: #FF00FF">逾期未指派人员</span>
+    #[[
+    {{#  } else { }}
+    ]]#
+    <span style="color: orchid">逾期未确认参与审查</span>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+
 <script type="text/javascript">
     layui.use(['table', 'layer'], function () {
         var id = null;
@@ -49,22 +82,17 @@
             , id: 'dateTable'
             , even: true //开启隔行背景
             , size: 'sm' //小尺寸的表格
-            , height: 'full-150'    //容器高度
+            , height: 'full-50'    //容器高度
 
             , cols: [[                  //标题栏
                 {type: 'numbers', fixed: true, unresize: 'true'}
                 , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
-                , {field: 'groupType', title: '被邀请的组织身份', minWidth: 200, sort: true}
-                , {field: 'sort', title: '所需人数', minWidth: 150, sort: true}
-                , {field: 'createTime', title: '邀请时间', minWidth: 150, sort: true}
-                , {
-                    field: 'status',
-                    title: '状态',
-                    minWidth: 100,
-                    sort: true,
-                    templet: '#statusTpl(io.jboot.admin.service.entity.status.system.ApplyInviteStatus::me(), "status")'
-                }
-                , {title: '操作', minWidth: 200, align: 'center', toolbar: '#barOption'}
+                , {field: 'groupType', title: '被邀请的组织身份', width: 150, sort: true}
+                , {field: 'sort', title: '所需人数', width: 100, sort: true}
+                , {field: 'createTime', title: '邀请时间', width: 150, sort: true}
+                , {field: 'deadTime', title: '截止时间', width: 150, sort: true}
+                , {field: 'status', title: '状态', minWidth: 100, sort: true, templet: '#statusTpl'}
+                , {title: '操作', width: 230, toolbar: '#barOption', fixed: 'right', unresize: 'true'}
             ]]
             , url: '#(ctxPath)/app/project/orgReviewTable'
             , method: 'get'
@@ -114,8 +142,6 @@
                     , btn: ['残忍拒绝', '我再想想']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
-
-
                     , content: '' +
                     '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">' +
                     '<label class="layui-form-label">拒绝缘由</label>' +
@@ -143,7 +169,7 @@
                 });
 
             } else if (obj.event === 'choose') {
-                pop_max_show('选择审查人员', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, function () {
+                pop_max_show('指派人员参与“' + data.name + '”的项目审查', '#(ctxPath)/app/project/toChooseExpert?orgType=' + data.userSource + "&projectID=" + data.projectID + "&num=" + data.sort, function () {
                     table.reload('dateTable', {
                         url: '#(ctxPath)/app/project/orgReviewTable'
                         , where: {
@@ -153,8 +179,7 @@
                     layer.msg("选择结束", setTimeout(500));
                 });
             } else if (obj.event === 'invited') {
-                pop_show_full('审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.id, function () {
-                    window.location.reload();
+                pop_show_full('"'+ data.name + '" 项目的审查详情', '#(ctxPath)/app/project/invitedExpert?id=' + data.projectID + '&belongToID=' + data.userID, function () {
                 });
             }
         });

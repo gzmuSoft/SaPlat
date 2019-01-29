@@ -9,6 +9,7 @@ import io.jboot.admin.service.api.NotificationService;
 import io.jboot.admin.service.api.SaPlatService;
 import io.jboot.admin.service.api.StructPersonLinkService;
 import io.jboot.admin.service.entity.model.Notification;
+import io.jboot.admin.service.entity.model.ProAssReview;
 import io.jboot.admin.service.entity.model.StructPersonLink;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.admin.service.api.ApplyInviteService;
@@ -33,6 +34,7 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
     @Inject
     private StructPersonLinkService structPersonLinkService;
 
+    private ProAssReviewServiceImpl proAssReviewServiceService = new ProAssReviewServiceImpl();
     /**
      * 装配单个实体对象的数据
      * @param model
@@ -40,8 +42,24 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
      */
     public ApplyInvite fitModel(ApplyInvite model){
         Date now = new Date();
-        if(model.getModule() == 2 && model.getDeadTime().before(now))
-            model.setStatus("7");
+        if(model.getDeadTime().before(now)){
+            if(model.getModule() == 2) {
+                if (model.getStatus().equals("5"))
+                    model.setStatus("7");
+                else if (model.getStatus().equals("0"))
+                    model.setStatus("8");
+            }else if(model.getModule() == 1){
+                if(!(model.getRemark()!=null && model.getRemark().equals("审查完成"))) {
+                    model.setRemark("超时未审查，自动通过审查");
+                    model.setReply("超时未审查，自动通过审查");
+                    model.setLastAccessTime(null);
+                }else{//未超时，则取得最后的审查意见
+                    List<ProAssReview> parList = proAssReviewServiceService.findListByProjectIDAndCreateUserID(model.getProjectID(), model.getUserID());
+                    if(parList != null && parList.size() > 0)
+                        model.setReply(parList.get(0).getRecomment());
+                }
+            }
+        }
         return model;
     }
     /**
@@ -136,12 +154,26 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getRemark() != null) {
             columns.eq("remark", model.getRemark());
         }
+        if (model.getBelongToID() != null) {
+            columns.eq("belongToID", model.getBelongToID());
+        }
+        if(StrKit.notBlank(model.getSpell()) && model.getSpell().equals("1")){
+            columns.gt("deadTime", new Date());
+        }
         return fitPage(DAO.paginateByColumns(pageNumber, pageSize, columns.getList(), "id desc"));
     }
 
     @Override
     public ApplyInvite findByProjectID(Long projectID) {
         return DAO.findFirstByColumn("projectID", projectID);
+    }
+
+    @Override
+    public Long findCount(Long projectID, Long belongToID, Integer module){
+        return Db.queryLong("SELECT COUNT(1) FROM apply_invite\n" +
+                "WHERE projectID = ?\n" +
+                "  AND belongToID = ?\n" +
+                "  AND module = ?", projectID, belongToID, module);
     }
 
     @Override
@@ -165,6 +197,9 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         if (model.getCreateUserID() != null) {
             columns.eq("createUserID", model.getCreateUserID());
         }
+        if (model.getBelongToID() != null) {
+            columns.eq("belongToID", model.getBelongToID());
+        }
         return fitList(DAO.findListByColumns(columns));
     }
 
@@ -175,12 +210,23 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
      * @return
      */
     @Override
-    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID){
+    public List<ApplyInvite> findLastTimeListByProjectID(Long projectID, Long belongToID){
         Kv c;
         SqlPara sqlPara = null;
         c = Kv.by("ID", projectID);
+
+        if (belongToID != null && belongToID > 0L) {
+            c.set("belongToID", belongToID);
+        }
         sqlPara = Db.getSqlPara("app-project.lastInvited-by-projectID", c);
         return fitList(DAO.paginate(1, Integer.MAX_VALUE, sqlPara).getList());
+    }
+
+    @Override
+    public Page<ApplyInvite> findReviewedHistoryPage(Long userID, int pageNumber, int pageSize){
+        Kv c = Kv.by("userID", userID);
+        SqlPara sqlPara = Db.getSqlPara("app-project.reviewed-history", c);
+        return fitPage(DAO.paginate(pageNumber, pageSize, sqlPara));
     }
 
     @Override
@@ -222,6 +268,9 @@ public class ApplyInviteServiceImpl extends JbootServiceBase<ApplyInvite> implem
         }
         if (model.getUserSource() != null) {
             columns.eq("userSource", model.getUserSource());
+        }
+        if (model.getBelongToID() != null) {
+            columns.eq("belongToID", model.getBelongToID());
         }
         return DAO.findFirstByColumns(columns);
     }

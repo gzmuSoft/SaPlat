@@ -68,7 +68,7 @@ public interface PersonService {
      * @param projectID 项目编号
      * @return 页
      */
-    public Page<Person> findPageByProjectID(Long projectID, int pageNumber, int pageSize);
+    public Page<Person> findPageByProjectID(Long projectID, Long belongToID, int pageNumber, int pageSize);
 
     /**
      * save model to database

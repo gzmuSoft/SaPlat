@@ -1,0 +1,93 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table
+            , $ = layui.jquery
+            , button;
+        // 表格渲染
+        var tableIns = table.render({
+            elem: '#dateTable'                  //指定原始表格元素选择器（推荐id选择器）
+            , id: 'dateTable'
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , height: 'full-50'    //容器高度
+
+            , cols: [[                  //标题栏
+                {type: 'numbers', fixed: true, unresize: 'true'}
+                , {field: 'name', title: '项目名称', minWidth: 200, sort: true}
+                , {field: 'createTime', title: '任务分配日期', width: 150, sort: true}
+                , {field: 'deadTime', title: '截止日期', width: 150, sort: true}
+                , {field: 'lastAccessTime', title: '完成日期', width: 150, sort: true}
+                , {field: 'status', title: '状态', minWidth: 100, sort: true, templet: '#statusTpl'}
+                , {field: 'reply', title: '最终审查意见', minWidth: 150}
+                , {title: '操作', width: 100, align: 'center', toolbar: '#barOption'}
+            ]]
+            , url: '#(ctxPath)/app/project/reviewProjectTable'
+            , method: 'get'
+            , request: {
+                pageName: 'pageNumber' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , page: true
+            , limits: [30, 60, 90, 150, 300]
+            , limit: 30 //默认采用30
+            , loading: true
+            , where: {
+                applyOrInvite: true, flag: 2
+            }
+            , done: function (res, curr, count) {
+            }
+        });
+
+        table.on('tool(dateTable)', function (obj) {
+            var data = obj.data;
+            console.log(obj);
+            if (obj.event === 'view') {
+                pop_show_full('查看“' + data.name + '”项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.projectID + '&roleType=4'
+                    , function () {
+                        window.location.reload();
+                    });
+            }
+        });
+    });
+</script>
+
+
+<script type="text/html" id="statusTpl">
+    #[[
+    {{#  if(d.status == '3'){ }}
+    ]]#
+    <span style="color: green">已通过</span>
+    #[[
+    {{# } else if(d.status =='4'){ }}
+    ]]#
+    <span style="color: red">拒绝通过</span>
+    #[[
+    {{# } else if(d.remark =='超时未审查，自动通过审查'){ }}
+    ]]#
+    <span style="color: #9012fe">{{d.remark}}</span>
+    #[[
+    {{#  } }}
+    ]]#
+</script>
+#end
+
+#define content()
+<div class="layui-row">
+    <table id="dateTable" lay-filter="dateTable"></table>
+</div>
+
+<script type="text/html" id="barOption">
+    <a class="layui-btn layui-btn-xs" lay-event="view">审查详情</a>
+</script>
+#end
+
