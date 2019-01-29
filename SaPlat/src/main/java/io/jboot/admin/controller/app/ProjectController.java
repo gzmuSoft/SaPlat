@@ -637,15 +637,20 @@ public class ProjectController extends BaseController {
     @NotNullPara({"fileId", "projectId", "fileTypeId"})
     public void upFile() {
         User user = AuthUtils.getLoginUser();
-        FileProject model = new FileProject();
-        model.setProjectID(getParaToLong("projectId"));
-        model.setFileTypeID(getParaToLong("fileTypeId"));
+        Long projectId = getParaToLong("projectId");
+        Long fileTypeId = getParaToLong("fileTypeId");
+        FileProject model = fileProjectService.findByProjectIDAndFileTypeID(projectId, fileTypeId);
+        if(model == null) {
+            model = new FileProject();
+            model.setProjectID(projectId);
+            model.setFileTypeID(fileTypeId);
+        }
         model.setCreateUserID(user.getId());
         model.setFileID(getParaToLong("fileId"));
         model.setLastUpdateUserID(user.getId());
         model.setIsEnable(true);
 
-        if (!fileProjectService.save(model)) {
+        if (!fileProjectService.saveOrUpdate(model)) {
             renderJson(RestResult.buildError("上传失败"));
             throw new BusinessException("上传失败");
         } else {

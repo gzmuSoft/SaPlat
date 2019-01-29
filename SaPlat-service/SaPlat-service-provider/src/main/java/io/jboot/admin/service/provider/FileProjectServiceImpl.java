@@ -114,6 +114,7 @@ public class FileProjectServiceImpl extends JbootServiceBase<FileProject> implem
         Columns columns = Columns.create();
         columns.eq("projectID", projectID);
         columns.eq("fileTypeID", fileTypeID);
+        columns.eq("isEnable", 1);
         return fitModel(DAO.findFirstByColumns(columns));
     }
 
