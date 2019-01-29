@@ -1726,6 +1726,7 @@ public class ProjectController extends BaseController {
                         if (aiModel != null) {
                             item.setIsInvite(true);
                             item.setRemark(sdf.format(aiModel.getDeadTime()));
+                            item.setSort(aiModel.getSort());
                             if(aiModel.getStatus().equals("0") && aiModel.getDeadTime().before(now.toDate())){
                                 item.setStatus("7");
                             }else{
@@ -1754,6 +1755,7 @@ public class ProjectController extends BaseController {
                         if (aiModel != null) {
                             item.setIsInvite(true);
                             item.setStatus(aiModel.getStatus());
+                            item.setSort(aiModel.getSort());
                             item.setRemark(sdf.format(aiModel.getDeadTime()));
                             if(aiModel.getStatus().equals("0") && aiModel.getDeadTime().before(now.toDate())){
                                 item.setStatus("7");
