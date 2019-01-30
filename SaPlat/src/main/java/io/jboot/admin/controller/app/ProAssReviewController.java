@@ -67,7 +67,7 @@ public class ProAssReviewController extends BaseController {
                 setAttr("projectId",projectId).
                 render("main_mgr.html");
                 break;
-            //专家页面，有提交意见的表单，只有预审报告文件
+            //专家审查中页面，有提交意见的表单，只有预审报告文件
             case 3:
                 setAttr("projectId",projectId).setAttr("reportPath",getPrepReport(projectId)).
                 render("main_expert.html");
@@ -81,6 +81,10 @@ public class ProAssReviewController extends BaseController {
                         .setAttr("fileId",reportFileId).
                         render("main_report_rec.html");
                 break;
+            //专家审查完成页面，无提交意见的表单，只有预审报告文件
+            case 5:
+                setAttr("projectId",projectId).setAttr("reportPath",getPrepReport(projectId)).
+                        render("main_expert_view.html");
             default:
         }
     }

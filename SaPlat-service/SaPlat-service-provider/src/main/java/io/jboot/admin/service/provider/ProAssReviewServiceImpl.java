@@ -122,7 +122,7 @@ public class ProAssReviewServiceImpl extends JbootServiceBase<ProAssReview> impl
         Columns columns = new Columns();
         columns.eq("fileID", fileId);
         columns.eq("projectID", projectId);
-        List<ProAssReview> pars = DAO.findListByColumns(columns);
+        List<ProAssReview> pars = DAO.findListByColumns(columns, "createTime desc");
         System.out.print("#############################################start######################################################");
         System.out.print("\n\n" + pars.size() + "\n\n");
         System.out.print("#############################################end######################################################");

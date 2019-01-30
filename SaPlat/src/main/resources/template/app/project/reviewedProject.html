@@ -52,7 +52,7 @@
             var data = obj.data;
             console.log(obj);
             if (obj.event === 'view') {
-                pop_show_full('查看“' + data.name + '”项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.projectID + '&roleType=4'
+                pop_show_full('查看“' + data.name + '”项目的预审报告', '#(ctxPath)/app/ass_review/findPageAndShow?projectId=' + data.projectID + '&roleType=5'
                     , function () {
                         window.location.reload();
                     });

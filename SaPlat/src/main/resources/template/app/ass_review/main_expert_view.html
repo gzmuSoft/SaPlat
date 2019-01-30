@@ -1,0 +1,134 @@
+#include("/template/common/layout/_page_layout.html")
+#@layout()
+
+#define css()
+<style>
+    .pdf-container {
+        padding: 5em 0;
+    }
+
+    html, body {
+        height: 97%;
+    }
+
+    ul {
+        padding: 0px 10px;
+    }
+</style>
+#end
+
+#define js()
+<script type="text/javascript">
+
+    function loadRecData(){
+        layui.use('layer', function () {
+        var $ = layui.jquery;
+        var ul;
+
+        /**
+         * 获取列表的数据，参考information edit.html
+         */
+        $.get("#(ctxPath)/app/ass_review/recDataFilterCreatorId", {projectId: "#(projectId)"}, function (res) {
+            var data = res.list;
+            $("ul#recomment").find("div").remove();
+            $("ul#recomment").find("li").remove();
+            if(data&&0 !=data.length){
+                var liTagS = '<li class="layui-timeline-item">';
+                var timeLineIcon = '<i class="layui-icon layui-timeline-axis">&#xe63f;</i>';
+                var timeLineContentDivS = '<div class="layui-timeline-content layui-text">';
+                var timeTxtTagS = '<h3 class="layui-timeline-title">';
+                var timeTxtTagE = '</h3>';
+                var reTitle = '审查意见：';
+                var timeLineContentDivE = '</div>';
+                var liTagE = '</li>';
+                var liItem = '';
+                data.forEach(function (ele) {
+                    liItem = '';
+                    liItem += liTagS;
+                    liItem += timeLineIcon;
+                    liItem += timeLineContentDivS;
+                    liItem += timeTxtTagS;
+                    liItem += ele.createTime;
+                    liItem += timeTxtTagE;
+                    liItem += reTitle;
+                    liItem += ele.recomment;
+                    /*liItem += '<hr class="layui-bg-gray">';
+                    liItem += '意见反馈：';
+                    if (ele.feedback) {
+                        liItem += ele.feedback;
+                    } else {
+                        liItem += '暂无';
+                    }*/
+                    liItem += timeLineContentDivE;
+                    liItem += liTagE;
+                    $("ul#recomment").append(liItem);
+                });
+            } else {
+                $("ul#recomment").append("<li><div>暂无评审意见</div></li>");
+            }});
+        });
+    }
+
+    ////////浏览器视口的高度
+    function windowHeight() {
+        var myHeight = 0;
+        if (typeof(window.innerHeight) == 'number') {
+            //Non-IE
+            myHeight = window.innerHeight;
+        } else if (document.documentElement && (document.documentElement.clientHeight)) {
+            //IE 6+ in 'standards compliant mode'
+            myHeight = document.documentElement.clientHeight;
+        } else if (document.body && (document.body.clientHeight)) {
+            //IE 4 compatible
+            myHeight = document.body.clientHeight;
+        }
+        return myHeight;
+    }
+    /////////浏览器视口的宽度
+    function windowWidth() {
+        var myWidth = 0;
+        if (typeof(window.innerWidth) == 'number') {
+            //Non-IE
+            myWidth = window.innerWidth;
+        } else if (document.documentElement && (document.documentElement.clientWidth)) {
+            //IE 6+ in 'standards compliant mode'
+            myWidth = document.documentElement.clientWidth;
+        } else if (document.body && (document.body.clientWidth)) {
+            //IE 4 compatible
+            myWidth = document.body.clientWidth;
+        }
+        return myWidth;
+    }
+    /**** 当前页面高度 ****/
+    function pageHeight() {
+        return document.body.scrollHeight;
+    }
+
+    /**** 当前页面宽度 ****/
+    function pageWidth() {
+        return document.body.scrollWidth;
+    }
+
+    $(document).ready(function () {
+        $("a.media").media({
+            width:pageWidth()-320
+            ,height:pageHeight()-10
+            , autoplay:true
+            , src:"#(reportPath)"
+        });
+        loadRecData();
+    });
+</script>
+#end
+
+#define content()
+    <div style="width:100%; margin:0 auto; display: inline-block">
+        <div id="pdfviewer" style="margin-right:310px;">
+            <a class="media" id="pdf-viewer" href="#(reportPath)"></a>
+        </div>
+
+        <div style="width:300px;float:right;position:absolute;top:0;right:0;">
+            <ul id="recomment"></ul>
+        </div>
+    </div>
+#end
